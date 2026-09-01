@@ -142,7 +142,7 @@
         "components": {
           "type": "array",
           "uniqueItems": true,
-          "items": {"enum": ["AdoptionCard", "BoundaryNotice", "CodeExample", "CodeTabs", "CommandExample", "DataCatalog", "DependencyGraph", "Diagram", "JsonSchemaViewer", "OpenApiReference", "ProjectCard", "StatusBadge"]}
+          "items": {"enum": ["AdoptionCard", "BoundaryNotice", "CodeExample", "CodeTabs", "CommandExample", "DataCatalog", "DependencyGraph", "Diagram", "EcosystemFamilyGateway", "EcosystemSwitcher", "JsonSchemaViewer", "OpenApiReference", "ProjectCard", "StatusBadge"]}
         }
       },
       "anyOf": [

@@ -95,10 +95,54 @@ HTML redirects.
 - `Diagram` for Mermaid source or generated SVG
 - `OpenApiReference` and `JsonSchemaViewer` for read-only OpenAPI 3.1 documents
 - `StatusBadge`, `BoundaryNotice`, `ProjectCard`, and `EcosystemSwitcher`
+- `EcosystemFamilyGateway` for a metadata-driven public entry experience
 - `AdoptionCard` and `ChangeTimelineEntry`
 
 Import `@beyond10x/docs-system/tokens.css` once. Components use stable `b10x-*` class names; project
-identity is data, while Website owns the unified shell.
+identity is data, while Website owns the unified shell. The semantic light/dark tokens meet at least
+WCAG AA contrast for normal text and 3:1 for component boundaries. Existing `--b10x-ink`,
+`--b10x-text`, and related names remain aliases; new integrations should prefer the
+`--b10x-color-*` tokens. Footer shell colors are available as `--b10x-footer-*`.
+
+`OpenApiReference` is an embeddable section, never a page landmark. It defaults to an h2 and can sit
+under an existing documentation h2 without introducing another h1 or `main`:
+
+```tsx
+<OpenApiReference document={openapi} sourceUrl={sourceUrl} headingLevel={3} />
+```
+
+Diagrams retain their full canvas inside one bounded, focusable, two-axis keyboard-scrollable
+viewport and center the initial view after Mermaid or SVG content is measured. A dependency graph
+always supplies a node and relationship list; generic diagrams can provide the same complete
+alternative with `alternative`. Set `minWidth` for a dense graph without adding a second viewport;
+use `initialPosition="start"` only when reading order should begin at the canvas origin:
+
+```tsx
+<DependencyGraph
+  nodes={nodes}
+  edges={edges}
+  title="Public repository relationships"
+  description="Provider and consumer relationships declared by owning repositories."
+  minWidth="112rem"
+/>
+```
+
+The family gateway accepts either the registry or its surface array. It treats an ungrouped
+`front-door` surface as Start, derives membership and item order from
+`surface.source.navigation.group/order`, and takes family order from the shell. Families not named
+by the caller follow in lexical order, so membership and taxonomy never live in component code:
+
+```tsx
+<EcosystemFamilyGateway
+  registry={registry}
+  current="harness/docs"
+  familyOrder={['Foundation', 'Build', 'Services', 'Products']}
+/>
+```
+
+For non-React preparation code, `deriveEcosystemNavigation` is available from the Node-safe
+`@beyond10x/docs-system/navigation` subpath. It also reports ungrouped surfaces rather than silently
+assigning them to an invented family.
 
 ## Gate
 

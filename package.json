@@ -1,6 +1,6 @@
 {
   "name": "@beyond10x/docs-system",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "private": true,
   "description": "Git-pinned documentation shell, components, renderers, and discovery contract for beyond10x.",
   "license": "Apache-2.0",
@@ -16,6 +16,7 @@
     "./docusaurus": "./dist/docusaurus.js",
     "./feeds": "./dist/feeds.js",
     "./manifest": "./dist/manifest.js",
+    "./navigation": "./dist/navigation.js",
     "./redirects": "./dist/redirects.js",
     "./renderers": "./dist/renderers.js",
     "./types": "./dist/types.js",

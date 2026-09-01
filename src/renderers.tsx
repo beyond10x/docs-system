@@ -31,6 +31,13 @@ export interface OpenApiDocument {
   components?: {schemas?: Record<string, JsonSchema>};
 }
 
+export interface OpenApiReferenceProps {
+  document: OpenApiDocument;
+  sourceUrl?: string;
+  /** Heading for the reference title. Use 3 when embedding beneath a documentation-page h2. */
+  headingLevel?: 2 | 3;
+}
+
 export function JsonSchemaViewer({schema, depth = 0}: {schema: JsonSchema; depth?: number}): ReactNode {
   const composition = schema.oneOf ?? schema.anyOf ?? schema.allOf;
   if (schema.$ref) return <a href={`#schema-${schema.$ref.split('/').at(-1)}`}><code>{schema.$ref.split('/').at(-1)}</code></a>;
@@ -41,19 +48,34 @@ export function JsonSchemaViewer({schema, depth = 0}: {schema: JsonSchema; depth
   return <dl className="b10x-schema-properties">{Object.entries(schema.properties).map(([name, property]) => <div key={name}><dt><code>{name}</code>{schema.required?.includes(name) && <b>required</b>}<span>{schemaType(property)}</span></dt>{property.description && <dd>{property.description}</dd>}<dd><JsonSchemaViewer schema={property} depth={depth + 1} /></dd></div>)}</dl>;
 }
 
-export function OpenApiReference({document, sourceUrl}: {document: OpenApiDocument; sourceUrl?: string}): ReactNode {
+export function OpenApiReference({document, sourceUrl, headingLevel = 2}: OpenApiReferenceProps): ReactNode {
   if (!document.openapi.startsWith('3.1.')) throw new Error(`OpenApiReference supports OpenAPI 3.1, received ${document.openapi}`);
   const operations = Object.entries(document.paths).flatMap(([path, methods]) => Object.entries(methods).map(([method, operation]) => ({path, method, operation: operation as OpenApiOperation})));
-  return <div className="b10x-openapi"><header><p className="b10x-eyebrow">OPENAPI {document.openapi}</p><h1>{document.info.title}</h1><p>{document.info.description}</p><dl className="b10x-facts"><div><dt>Version</dt><dd>{document.info.version}</dd></div><div><dt>Operations</dt><dd>{operations.length}</dd></div></dl>{sourceUrl && <a href={sourceUrl} download>Download OpenAPI source</a>}</header><nav aria-label="API operations">{operations.map(({path, method, operation}) => <a key={`${method}-${path}`} href={`#operation-${operation.operationId ?? slug(`${method}-${path}`)}`}><code>{method.toUpperCase()}</code> {operation.summary ?? path}</a>)}</nav><main>{operations.map(({path, method, operation}) => <Operation key={`${method}-${path}`} path={path} method={method} operation={operation} />)}</main>{document.components?.schemas && <section aria-labelledby="b10x-schema-title"><h2 id="b10x-schema-title">Schemas</h2><div className="b10x-schema-grid">{Object.entries(document.components.schemas).map(([name, schema]) => <details id={`schema-${name}`} key={name}><summary><code>{name}</code><span>{schemaType(schema)}</span></summary><div>{schema.description && <p>{schema.description}</p>}<JsonSchemaViewer schema={schema} /></div></details>)}</div></section>}</div>;
+  const TitleHeading = headingLevel === 2 ? 'h2' : 'h3';
+  const DetailHeading = headingLevel === 2 ? 'h3' : 'h4';
+  const titleId = `openapi-${slug(document.info.title)}-title`;
+  const schemaTitleId = `openapi-${slug(document.info.title)}-schemas`;
+  return <section className="b10x-openapi" aria-labelledby={titleId}>
+    <header>
+      <p className="b10x-eyebrow">OPENAPI {document.openapi}</p>
+      <TitleHeading id={titleId}>{document.info.title}</TitleHeading>
+      {document.info.description && <p>{document.info.description}</p>}
+      <dl className="b10x-facts"><div><dt>Version</dt><dd>{document.info.version}</dd></div><div><dt>Operations</dt><dd>{operations.length}</dd></div></dl>
+      {sourceUrl && <a className="b10x-touch-link" href={sourceUrl} download>Download OpenAPI source</a>}
+    </header>
+    <nav aria-label={`${document.info.title} operations`}>{operations.map(({path, method, operation}) => <a key={`${method}-${path}`} href={`#operation-${operation.operationId ?? slug(`${method}-${path}`)}`}><code>{method.toUpperCase()}</code> {operation.summary ?? path}</a>)}</nav>
+    <div className="b10x-api-operations">{operations.map(({path, method, operation}) => <Operation Heading={DetailHeading} key={`${method}-${path}`} path={path} method={method} operation={operation} />)}</div>
+    {document.components?.schemas && <section aria-labelledby={schemaTitleId}><DetailHeading id={schemaTitleId}>Schemas</DetailHeading><div className="b10x-schema-grid">{Object.entries(document.components.schemas).map(([name, schema]) => <details id={`schema-${name}`} key={name}><summary><code>{name}</code><span>{schemaType(schema)}</span></summary><div>{schema.description && <p>{schema.description}</p>}<JsonSchemaViewer schema={schema} /></div></details>)}</div></section>}
+  </section>;
 }
 
-function Operation({path, method, operation}: {path: string; method: string; operation: OpenApiOperation}): ReactNode {
+function Operation({path, method, operation, Heading}: {path: string; method: string; operation: OpenApiOperation; Heading: 'h3' | 'h4'}): ReactNode {
   const id = `operation-${operation.operationId ?? slug(`${method}-${path}`)}`;
-  return <article className="b10x-api-operation" id={id}><p className="b10x-api-route"><strong>{method.toUpperCase()}</strong> <code>{path}</code></p><h2>{operation.summary ?? operation.operationId ?? path}</h2>{operation.description && <p>{operation.description}</p>}{operation.parameters?.length ? <dl>{operation.parameters.map((parameter) => <div key={`${parameter.in}-${parameter.name}`}><dt><code>{parameter.name}</code>{parameter.required && <b>required</b>}</dt><dd>{parameter.in} · {schemaType(parameter.schema)}{parameter.description && ` · ${parameter.description}`}</dd></div>)}</dl> : null}<ResponseTable responses={operation.responses ?? {}} /></article>;
+  return <article className="b10x-api-operation" id={id}><p className="b10x-api-route"><strong>{method.toUpperCase()}</strong> <code>{path}</code></p><Heading>{operation.summary ?? operation.operationId ?? path}</Heading>{operation.description && <p>{operation.description}</p>}{operation.parameters?.length ? <dl>{operation.parameters.map((parameter) => <div key={`${parameter.in}-${parameter.name}`}><dt><code>{parameter.name}</code>{parameter.required && <b>required</b>}</dt><dd>{parameter.in} · {schemaType(parameter.schema)}{parameter.description && ` · ${parameter.description}`}</dd></div>)}</dl> : null}<ResponseTable responses={operation.responses ?? {}} /></article>;
 }
 
 function ResponseTable({responses}: {responses: NonNullable<OpenApiOperation['responses']>}): ReactNode {
-  return <div className="b10x-table-wrap"><table><thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead><tbody>{Object.entries(responses).map(([status, response]) => { const media = Object.values(response.content ?? {})[0]; return <tr key={status}><td><code>{status}</code></td><td>{response.description}</td><td>{media?.schema ? <JsonSchemaViewer schema={media.schema} /> : '—'}</td></tr>; })}</tbody></table></div>;
+  return <div className="b10x-table-wrap"><table><thead><tr><th scope="col">Status</th><th scope="col">Description</th><th scope="col">Schema</th></tr></thead><tbody>{Object.entries(responses).map(([status, response]) => { const media = Object.values(response.content ?? {})[0]; return <tr key={status}><td><code>{status}</code></td><td>{response.description}</td><td>{media?.schema ? <JsonSchemaViewer schema={media.schema} /> : '—'}</td></tr>; })}</tbody></table></div>;
 }
 
 function schemaType(schema?: JsonSchema): string {

@@ -43,6 +43,8 @@ export type SharedComponentName =
   | 'DataCatalog'
   | 'DependencyGraph'
   | 'Diagram'
+  | 'EcosystemFamilyGateway'
+  | 'EcosystemSwitcher'
   | 'JsonSchemaViewer'
   | 'OpenApiReference'
   | 'ProjectCard'

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0 — 2026-09-01
+
+- Make `OpenApiReference` an embeddable section with configurable h2/h3 roots, coherent subordinate
+  headings, and no nested `main` or component-owned h1.
+- Add deterministic, accessible `EcosystemFamilyGateway` and Node-safe navigation derivation driven
+  by each surface's declared navigation group/order plus shell-owned family order.
+- Keep diagrams full-size in one keyboard-scrollable viewport, add configurable minimum width, and
+  expose complete prose/node/relationship alternatives; dependency graphs provide those lists by
+  default.
+- Strengthen semantic light/dark colors, component boundaries, touch targets, focus treatment, card
+  rhythm, command/code framing, and shared footer tokens with automated WCAG contrast coverage.
+
 ## 0.3.3 — 2026-09-01
 
 - Admit syntactically closed, whole-line MDX comment expressions as inert source markers so

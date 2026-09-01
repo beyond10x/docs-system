@@ -51,12 +51,15 @@ export interface OpenApiDocument {
         schemas?: Record<string, JsonSchema>;
     };
 }
+export interface OpenApiReferenceProps {
+    document: OpenApiDocument;
+    sourceUrl?: string;
+    /** Heading for the reference title. Use 3 when embedding beneath a documentation-page h2. */
+    headingLevel?: 2 | 3;
+}
 export declare function JsonSchemaViewer({ schema, depth }: {
     schema: JsonSchema;
     depth?: number;
 }): ReactNode;
-export declare function OpenApiReference({ document, sourceUrl }: {
-    document: OpenApiDocument;
-    sourceUrl?: string;
-}): ReactNode;
+export declare function OpenApiReference({ document, sourceUrl, headingLevel }: OpenApiReferenceProps): ReactNode;
 export {};

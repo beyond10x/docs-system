@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity } from './types.js';
+import type { AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity, RegistrySurface } from './types.js';
 export declare function StatusBadge({ maturity, children }: {
     maturity: Maturity;
     children?: ReactNode;
@@ -45,20 +45,35 @@ export interface DependencyGraphEdge {
     to: string;
     label?: string;
 }
-export declare function DependencyGraph({ nodes, edges, title, description }: {
-    nodes: DependencyGraphNode[];
-    edges: DependencyGraphEdge[];
-    title?: string;
-    description?: string;
-}): ReactNode;
-export declare function Diagram({ kind, source, src, title, description, download }: {
+export interface DiagramAlternative {
+    /** Optional prose for relationships that do not fit a node/edge model. */
+    content?: ReactNode;
+    nodes?: readonly DependencyGraphNode[];
+    edges?: readonly DependencyGraphEdge[];
+    label?: string;
+}
+export interface DiagramProps {
     kind: 'mermaid' | 'svg';
     source?: string;
     src?: string;
     title: string;
     description: string;
     download?: string;
+    /** Minimum visual canvas width inside the keyboard-scrollable viewport. */
+    minWidth?: number | string;
+    /** Initial pan position after the visual renderer has measured its canvas. */
+    initialPosition?: 'center' | 'start';
+    /** Complete prose or node/edge representation offered alongside the visual. */
+    alternative?: DiagramAlternative;
+}
+export declare function DependencyGraph({ nodes, edges, title, description, minWidth }: {
+    nodes: DependencyGraphNode[];
+    edges: DependencyGraphEdge[];
+    title?: string;
+    description?: string;
+    minWidth?: number | string;
 }): ReactNode;
+export declare function Diagram({ kind, source, src, title, description, download, minWidth, initialPosition, alternative }: DiagramProps): ReactNode;
 export declare function ProjectCard({ surface }: {
     surface: AnyDocumentationSurface;
 }): ReactNode;
@@ -70,7 +85,27 @@ export declare function ChangeTimelineEntry({ change, surfaces }: {
     change: ChangeLedgerEntry;
     surfaces?: Map<string, AnyDocumentationSurface>;
 }): ReactNode;
-export declare function EcosystemSwitcher({ registry, current }: {
+export interface EcosystemSwitcherProps {
     registry: EcosystemRegistry;
     current?: string;
-}): ReactNode;
+    familyOrder?: readonly string[];
+    startUrl?: string;
+    allProjectsUrl?: string;
+}
+export declare function EcosystemSwitcher({ registry, current, familyOrder, startUrl, allProjectsUrl }: EcosystemSwitcherProps): ReactNode;
+export interface EcosystemFamilyGatewayOptions {
+    current?: string;
+    /** Shell-owned family sequence; membership still comes from source.navigation.group. */
+    familyOrder?: readonly string[];
+    title?: string;
+    description?: string;
+    headingLevel?: 2 | 3;
+}
+export type EcosystemFamilyGatewayProps = EcosystemFamilyGatewayOptions & ({
+    registry: EcosystemRegistry;
+    surfaces?: never;
+} | {
+    registry?: never;
+    surfaces: readonly RegistrySurface[];
+});
+export declare function EcosystemFamilyGateway({ registry, surfaces, current, familyOrder, title, description, headingLevel, }: EcosystemFamilyGatewayProps): ReactNode;

@@ -28,7 +28,7 @@ export interface AdoptionAction {
     prerequisites?: string[];
     outcome: string;
 }
-export type SharedComponentName = 'AdoptionCard' | 'BoundaryNotice' | 'CodeExample' | 'CodeTabs' | 'CommandExample' | 'DataCatalog' | 'DependencyGraph' | 'Diagram' | 'JsonSchemaViewer' | 'OpenApiReference' | 'ProjectCard' | 'StatusBadge';
+export type SharedComponentName = 'AdoptionCard' | 'BoundaryNotice' | 'CodeExample' | 'CodeTabs' | 'CommandExample' | 'DataCatalog' | 'DependencyGraph' | 'Diagram' | 'EcosystemFamilyGateway' | 'EcosystemSwitcher' | 'JsonSchemaViewer' | 'OpenApiReference' | 'ProjectCard' | 'StatusBadge';
 export interface SourceSelection {
     include: string[];
     exclude?: string[];

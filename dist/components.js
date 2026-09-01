@@ -1,6 +1,8 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import { useEffect, useId, useRef } from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Mermaid from '@theme/Mermaid';
+import { deriveEcosystemNavigation, surfaceNavigation } from './navigation.js';
 export function StatusBadge({ maturity, children }) {
     return _jsx("span", { className: `b10x-status b10x-status--${maturity}`, children: children ?? maturity });
 }
@@ -19,7 +21,8 @@ export function CodeTabs({ items }) {
 export function DataCatalog({ items, title = 'Data catalog' }) {
     return _jsx("section", { className: "b10x-data-catalog", "aria-label": title, children: items.map((item) => _jsxs("article", { children: [_jsxs("header", { children: [item.kind && _jsx("span", { children: item.kind }), _jsx("code", { children: item.id })] }), _jsx("h3", { children: item.url ? _jsx("a", { href: item.url, children: item.name }) : item.name }), item.summary && _jsx("p", { children: item.summary })] }, item.id)) });
 }
-export function DependencyGraph({ nodes, edges, title = 'Dependencies', description = 'Declared dependencies between components.' }) {
+export function DependencyGraph({ nodes, edges, title = 'Dependencies', description = 'Declared dependencies between components.', minWidth }) {
+    validateDiagramNodes(nodes, 'dependency graph');
     const identifiers = new Map(nodes.map((node, index) => [node.id, `n${index}`]));
     const lines = ['flowchart LR', ...nodes.map((node) => `  ${identifiers.get(node.id)}["${mermaidLabel(node.label)}"]`)];
     for (const edge of edges) {
@@ -29,14 +32,69 @@ export function DependencyGraph({ nodes, edges, title = 'Dependencies', descript
             throw new Error(`dependency edge ${edge.from} -> ${edge.to} references an unknown node`);
         lines.push(`  ${from} -->${edge.label ? `|"${mermaidLabel(edge.label)}"|` : ''} ${to}`);
     }
-    return _jsx(Diagram, { kind: "mermaid", source: lines.join('\n'), title: title, description: description });
+    return _jsx(Diagram, { kind: "mermaid", source: lines.join('\n'), title: title, description: description, minWidth: minWidth, alternative: { nodes, edges } });
 }
-export function Diagram({ kind, source, src, title, description, download }) {
+export function Diagram({ kind, source, src, title, description, download, minWidth = '48rem', initialPosition = 'center', alternative }) {
     if (kind === 'mermaid' && !source)
         throw new Error('a Mermaid diagram requires source');
     if (kind === 'svg' && !src)
         throw new Error('an SVG diagram requires src');
-    return _jsxs("figure", { className: "b10x-diagram", "aria-label": title, children: [kind === 'mermaid' ? _jsx(Mermaid, { value: source }) : _jsx("img", { src: src, alt: description, loading: "lazy" }), _jsxs("figcaption", { children: [_jsx("strong", { children: title }), _jsx("span", { children: description }), download && _jsx("a", { href: download, download: true, children: "Download source" })] })] });
+    validateDiagramAlternative(alternative);
+    const componentId = useId().replaceAll(':', '');
+    const titleId = `b10x-diagram-${componentId}-title`;
+    const descriptionId = `b10x-diagram-${componentId}-description`;
+    const instructionsId = `b10x-diagram-${componentId}-instructions`;
+    const alternativeId = `b10x-diagram-${componentId}-alternative`;
+    const minimum = typeof minWidth === 'number' ? `${minWidth}px` : minWidth;
+    const style = { '--b10x-diagram-min-width': minimum };
+    const viewport = useRef(null);
+    useEffect(() => {
+        const element = viewport.current;
+        if (!element || initialPosition === 'start')
+            return;
+        let animationFrame = 0;
+        let positioned = false;
+        let mutationObserver;
+        let resizeObserver;
+        const position = () => {
+            animationFrame = 0;
+            if (positioned)
+                return;
+            const visual = element.querySelector('svg, img');
+            if (!visual || visual.getBoundingClientRect().width === 0 || visual.getBoundingClientRect().height === 0)
+                return;
+            element.scrollLeft = Math.max(0, (element.scrollWidth - element.clientWidth) / 2);
+            element.scrollTop = Math.max(0, (element.scrollHeight - element.clientHeight) / 2);
+            positioned = true;
+            mutationObserver?.disconnect();
+            resizeObserver?.disconnect();
+        };
+        const schedule = () => {
+            if (positioned || animationFrame)
+                return;
+            animationFrame = window.requestAnimationFrame(() => {
+                animationFrame = window.requestAnimationFrame(position);
+            });
+        };
+        mutationObserver = new MutationObserver(schedule);
+        mutationObserver.observe(element, { attributes: true, childList: true, subtree: true });
+        if ('ResizeObserver' in window) {
+            resizeObserver = new ResizeObserver(schedule);
+            resizeObserver.observe(element);
+            resizeObserver.observe(element.querySelector('.b10x-diagram__canvas'));
+        }
+        const image = element.querySelector('img');
+        image?.addEventListener('load', schedule, { once: true });
+        schedule();
+        return () => {
+            if (animationFrame)
+                window.cancelAnimationFrame(animationFrame);
+            mutationObserver?.disconnect();
+            resizeObserver?.disconnect();
+            image?.removeEventListener('load', schedule);
+        };
+    }, [initialPosition, kind, minimum, source, src]);
+    return _jsxs("figure", { className: "b10x-diagram", "aria-labelledby": titleId, children: [_jsx("div", { ref: viewport, className: "b10x-diagram__viewport", style: style, tabIndex: 0, role: "region", "aria-labelledby": titleId, "aria-describedby": `${descriptionId} ${instructionsId}`, "aria-details": alternative ? alternativeId : undefined, children: _jsx("div", { className: "b10x-diagram__canvas", role: "img", "aria-label": description, children: _jsx("div", { "aria-hidden": "true", children: kind === 'mermaid' ? _jsx(Mermaid, { value: source }) : _jsx("img", { src: src, alt: "", loading: "lazy" }) }) }) }), _jsx("p", { className: "b10x-sr-only", id: instructionsId, children: "Scrollable diagram. Focus this region and use the arrow keys to explore the full-size visual." }), _jsxs("figcaption", { children: [_jsx("strong", { id: titleId, children: title }), _jsx("span", { id: descriptionId, children: description }), download && _jsx("a", { className: "b10x-touch-link", href: download, download: true, children: "Download source" })] }), alternative && _jsx(DiagramTextAlternative, { alternative: alternative, id: alternativeId })] });
 }
 export function ProjectCard({ surface }) {
     const action = surface.adoption ?? fallbackAdoption(surface);
@@ -49,16 +107,52 @@ export function AdoptionCard({ surface, journey }) {
 export function ChangeTimelineEntry({ change, surfaces }) {
     return _jsxs("article", { className: `b10x-change b10x-change--${change.impact}`, id: change.key.replaceAll('/', '-'), children: [_jsxs("header", { children: [_jsx("time", { dateTime: change.publishedAt, children: new Date(change.publishedAt).toLocaleDateString('en', { dateStyle: 'medium', timeZone: 'UTC' }) }), _jsx("span", { children: change.repository }), _jsx("span", { children: change.kind }), _jsx("strong", { children: change.impact.replaceAll('-', ' ') })] }), _jsx("h2", { children: _jsx("a", { href: change.source.url, children: change.title }) }), _jsx("p", { children: change.summary }), _jsx("ul", { "aria-label": "Affected public surfaces", children: change.affectedSurfaces.map((key) => _jsx("li", { children: _jsx("a", { href: surfaces?.get(key)?.canonicalUrl, children: surfaces?.get(key)?.name ?? key }) }, key)) }), change.relations?.length ? _jsx("dl", { className: "b10x-change-relations", children: change.relations.map((relation) => _jsxs("div", { children: [_jsx("dt", { children: relation.kind.replaceAll('-', ' ') }), _jsx("dd", { children: relation.label ?? relation.target.replace(/^(surface|change):/, '') })] }, `${relation.kind}-${relation.target}`)) }) : null, change.action && _jsxs("a", { className: "b10x-change-action", href: change.action.url, children: [change.action.label, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] });
 }
-export function EcosystemSwitcher({ registry, current }) {
-    const groups = new Map();
-    for (const surface of registry.surfaces) {
-        const journey = surface.journeys[0] ?? 'understand';
-        groups.set(journey, [...(groups.get(journey) ?? []), surface]);
-    }
-    return _jsxs("nav", { className: "b10x-switcher", "aria-label": "beyond10x ecosystem", children: [_jsx("a", { href: "https://beyond10x.github.io/", children: "Start" }), [...groups].map(([journey, surfaces]) => _jsxs("details", { children: [_jsx("summary", { children: journey.replaceAll('-', ' ') }), surfaces.map((surface) => _jsxs("a", { "aria-current": surface.key === current ? 'page' : undefined, href: surface.canonicalUrl, children: [surface.name, _jsx("small", { children: surface.summary })] }, surface.key))] }, journey)), _jsx("a", { href: "https://beyond10x.github.io/ecosystem/", children: "All projects" })] });
+export function EcosystemSwitcher({ registry, current, familyOrder, startUrl = 'https://beyond10x.github.io/', allProjectsUrl = 'https://beyond10x.github.io/ecosystem/' }) {
+    const navigation = deriveEcosystemNavigation(registry, { familyOrder });
+    return _jsxs("nav", { className: "b10x-switcher", "aria-label": "beyond10x ecosystem", children: [navigation.frontDoors.length ? navigation.frontDoors.map((surface) => _jsx("a", { className: "b10x-switcher__start", "aria-current": surface.key === current ? 'page' : undefined, href: surface.canonicalUrl, children: surfaceNavigation(surface)?.label ?? surface.name }, surface.key)) : _jsx("a", { className: "b10x-switcher__start", href: startUrl, children: "Start" }), navigation.families.map((family) => _jsxs("details", { children: [_jsx("summary", { children: family.name }), family.surfaces.map((surface) => _jsxs("a", { "aria-current": surface.key === current ? 'page' : undefined, href: surface.canonicalUrl, children: [surfaceNavigation(surface)?.label ?? surface.name, _jsx("small", { children: surface.summary })] }, surface.key))] }, family.name)), _jsx("a", { href: allProjectsUrl, children: "All projects" })] });
+}
+export function EcosystemFamilyGateway({ registry, surfaces, current, familyOrder, title = 'Explore the ecosystem', description = 'Choose a family, then follow the project path that matches your work.', headingLevel = 2, }) {
+    const available = surfaces ?? registry?.surfaces;
+    if (!available)
+        throw new Error('EcosystemFamilyGateway requires registry or surfaces');
+    const navigation = deriveEcosystemNavigation(available, { familyOrder });
+    const componentId = useId().replaceAll(':', '');
+    const titleId = `b10x-family-gateway-${componentId}-title`;
+    const TitleHeading = headingLevel === 2 ? 'h2' : 'h3';
+    const FamilyHeading = headingLevel === 2 ? 'h3' : 'h4';
+    return _jsxs("section", { className: "b10x-family-gateway", "aria-labelledby": titleId, children: [_jsxs("header", { className: "b10x-family-gateway__header", children: [_jsx("p", { className: "b10x-eyebrow", children: "Ecosystem" }), _jsx(TitleHeading, { id: titleId, children: title }), _jsx("p", { children: description })] }), navigation.frontDoors.length > 0 && _jsx("nav", { className: "b10x-family-gateway__start", "aria-label": "Start here", children: navigation.frontDoors.map((surface) => _jsxs("a", { "aria-current": surface.key === current ? 'page' : undefined, href: surface.canonicalUrl, children: [_jsxs("span", { children: [_jsx("strong", { children: surfaceNavigation(surface)?.label ?? surface.name }), _jsx("small", { children: surface.summary })] }), _jsx("span", { "aria-hidden": "true", children: "\u2192" })] }, surface.key)) }), _jsx("div", { className: "b10x-family-gateway__families", children: navigation.families.map((family, index) => {
+                    const familyId = `b10x-family-gateway-${componentId}-${slugId(family.name)}-${index}`;
+                    return _jsxs("section", { className: "b10x-family-card", "aria-labelledby": familyId, children: [_jsxs("header", { children: [_jsx(FamilyHeading, { id: familyId, children: family.name }), _jsxs("span", { children: [family.surfaces.length, " ", family.surfaces.length === 1 ? 'project' : 'projects'] })] }), _jsx("ul", { children: family.surfaces.map((surface) => _jsx("li", { children: _jsxs("a", { "aria-current": surface.key === current ? 'page' : undefined, href: surface.canonicalUrl, children: [_jsxs("span", { children: [_jsx("strong", { children: surfaceNavigation(surface)?.label ?? surface.name }), _jsx("small", { children: surface.summary })] }), _jsx("span", { "aria-hidden": "true", children: "\u2192" })] }) }, surface.key)) })] }, family.name);
+                }) })] });
 }
 function fallbackAdoption(surface) {
     const quickstart = surface.sections.find((section) => section.kind === 'quickstart' || section.kind === 'guide');
     return { label: quickstart?.label ?? `Explore ${surface.name}`, url: quickstart?.url ?? surface.canonicalUrl, mode: 'browser', estimatedMinutes: 10, outcome: surface.summary };
 }
 function mermaidLabel(value) { return value.replaceAll('"', "'").replaceAll('\n', ' '); }
+function slugId(value) { return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'family'; }
+function validateDiagramAlternative(alternative) {
+    if (!alternative)
+        return;
+    validateDiagramNodes(alternative.nodes ?? [], 'diagram alternative');
+    if (!alternative.edges?.length)
+        return;
+    const identifiers = new Set(alternative.nodes?.map((node) => node.id) ?? []);
+    for (const edge of alternative.edges) {
+        if (!identifiers.has(edge.from) || !identifiers.has(edge.to)) {
+            throw new Error(`diagram alternative edge ${edge.from} -> ${edge.to} references an unknown node`);
+        }
+    }
+}
+function validateDiagramNodes(nodes, context) {
+    const identifiers = new Set();
+    for (const node of nodes) {
+        if (identifiers.has(node.id))
+            throw new Error(`${context} contains duplicate node ${node.id}`);
+        identifiers.add(node.id);
+    }
+}
+function DiagramTextAlternative({ alternative, id }) {
+    const labels = new Map(alternative.nodes?.map((node) => [node.id, node.label]) ?? []);
+    return _jsxs("details", { className: "b10x-diagram__alternative", id: id, children: [_jsx("summary", { children: alternative.label ?? 'Diagram as text' }), _jsxs("div", { children: [alternative.content, alternative.nodes?.length ? _jsxs("section", { "aria-label": "Diagram nodes", children: [_jsx("p", { className: "b10x-eyebrow", children: "Nodes" }), _jsx("ul", { children: alternative.nodes.map((node) => _jsxs("li", { children: [_jsx("strong", { children: node.label }), " ", _jsx("code", { children: node.id })] }, node.id)) })] }) : null, alternative.edges?.length ? _jsxs("section", { "aria-label": "Diagram relationships", children: [_jsx("p", { className: "b10x-eyebrow", children: "Relationships" }), _jsx("ol", { children: alternative.edges.map((edge, index) => _jsxs("li", { children: [_jsx("strong", { children: labels.get(edge.from) ?? edge.from }), " to ", _jsx("strong", { children: labels.get(edge.to) ?? edge.to }), edge.label ? _jsxs(_Fragment, { children: [": ", edge.label] }) : null] }, `${edge.from}-${edge.to}-${index}`)) })] }) : null] })] });
+}
