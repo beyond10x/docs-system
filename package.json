@@ -1,6 +1,6 @@
 {
   "name": "@beyond10x/docs-system",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "private": true,
   "description": "Git-pinned documentation shell, components, renderers, and discovery contract for beyond10x.",
   "license": "Apache-2.0",
@@ -15,6 +15,8 @@
     "./renderers": "./dist/renderers.js",
     "./types": "./dist/types.js",
     "./schema": "./schema/b10x.docs.schema.json",
+    "./schema/v2": "./schema/b10x.docs.v2.schema.json",
+    "./schema/change": "./schema/b10x.change.schema.json",
     "./tokens.css": "./styles/tokens.css"
   },
   "files": [

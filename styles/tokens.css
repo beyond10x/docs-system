@@ -41,6 +41,23 @@
 .b10x-project-card > div { display: flex; justify-content: space-between; gap: 1rem; }
 .b10x-project-card ul { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0; list-style: none; }
 .b10x-project-card li { padding: .2rem .45rem; background: var(--b10x-ink-raised); font: .72rem var(--b10x-font-mono); }
+.b10x-adoption-link, .b10x-adoption-card > a, .b10x-change-action { display: inline-flex; margin-top: .75rem; font-weight: 700; }
+.b10x-adoption-card { padding: 1.25rem; border: 1px solid var(--b10x-line); border-left: 3px solid var(--b10x-project-accent); border-radius: var(--b10x-radius); }
+.b10x-adoption-card header, .b10x-change header { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; color: var(--b10x-muted); font: .7rem var(--b10x-font-mono); text-transform: uppercase; }
+.b10x-adoption-card dl { display: flex; gap: 1.5rem; }
+.b10x-adoption-card dl div { display: grid; gap: .15rem; }
+.b10x-adoption-card dt { color: var(--b10x-muted); font: .65rem var(--b10x-font-mono); text-transform: uppercase; }
+.b10x-adoption-card dd { margin: 0; }
+.b10x-change { padding: 1.5rem; border: 1px solid var(--b10x-line); border-left: 3px solid var(--b10x-project-accent); border-radius: var(--b10x-radius); }
+.b10x-change--significant { border-left-color: var(--b10x-warning); }
+.b10x-change--action-required { border-left-color: var(--b10x-danger); }
+.b10x-change h2 { margin: .75rem 0 .35rem; }
+.b10x-change > ul { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0; list-style: none; }
+.b10x-change > ul li { padding: .2rem .45rem; background: var(--b10x-ink-raised); font: .72rem var(--b10x-font-mono); }
+.b10x-change-relations { display: grid; gap: .35rem; }
+.b10x-change-relations div { display: grid; grid-template-columns: 8rem 1fr; gap: .75rem; }
+.b10x-change-relations dt { color: var(--b10x-muted); font: .68rem var(--b10x-font-mono); text-transform: uppercase; }
+.b10x-change-relations dd { margin: 0; }
 .b10x-switcher { display: flex; align-items: center; gap: .75rem; font: .75rem var(--b10x-font-mono); }
 .b10x-switcher details { position: relative; }
 .b10x-switcher details > a { display: block; min-width: 18rem; padding: .75rem; border: 1px solid var(--b10x-line); background: var(--b10x-ink); text-decoration: none; }

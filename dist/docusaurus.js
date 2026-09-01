@@ -7,3 +7,20 @@ export default function docsSystemPlugin() {
         },
     };
 }
+export function ecosystemNavbarItems() {
+    return [
+        { href: 'https://beyond10x.github.io/getting-started/', label: 'beyond10x', position: 'left' },
+        { href: 'https://beyond10x.github.io/getting-started/ecosystem', label: 'Ecosystem', position: 'left' },
+        { href: 'https://beyond10x.github.io/getting-started/changes', label: 'Changes', position: 'left' },
+    ];
+}
+export function ecosystemFooterGroup() {
+    return {
+        title: 'beyond10x',
+        items: [
+            { label: 'Start here', href: 'https://beyond10x.github.io/getting-started/' },
+            { label: 'Public ecosystem', href: 'https://beyond10x.github.io/getting-started/ecosystem' },
+            { label: 'Ecosystem changes', href: 'https://beyond10x.github.io/getting-started/changes' },
+        ],
+    };
+}

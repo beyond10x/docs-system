@@ -1,0 +1,29 @@
+schema: b10x-docs/v2
+repository:
+  id: agentplugins
+  url: https://github.com/beyond10x/agentplugins
+surfaces:
+  - id: docs
+    name: Agent Plugins
+    summary: Install focused guidance for planning, delivery, schemas, and workspace hygiene.
+    kind: documentation
+    canonicalUrl: https://beyond10x.github.io/agentplugins/
+    maturity: development
+    availability: published
+    discoverability: public
+    audiences: [adopter, developer]
+    journeys: [plan-work, build-agents]
+    capabilities: [plugin-installation]
+    sections:
+      - {label: Install, url: https://beyond10x.github.io/agentplugins/docs/install, kind: quickstart}
+      - {label: Choose, url: https://beyond10x.github.io/agentplugins/docs/choose-a-plugin, kind: guide}
+    relationships:
+      - {target: getting-started/docs, kind: supports}
+    adoption:
+      label: Install Agent Plugins
+      url: https://beyond10x.github.io/agentplugins/docs/install
+      mode: install
+      estimatedMinutes: 5
+      prerequisites: [Codex or Claude Code]
+      outcome: Install one focused agent capability from an exact marketplace release.
+    shell: {integration: docusaurus, revision: local}

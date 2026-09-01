@@ -1,0 +1,15 @@
+schema: b10x-change/v1
+id: agentplugins/0.3.1
+repository: agentplugins
+publishedAt: 2026-09-01T12:00:00Z
+title: Workspace hygiene becomes an installable plugin
+summary: Agents can discover and follow the same safe worktree lifecycle across repositories.
+kind: capability
+impact: significant
+source:
+  url: https://github.com/beyond10x/agentplugins/releases/tag/0.3.1
+  version: 0.3.1
+journeys: [plan-work, build-agents]
+affectedSurfaces: [agentplugins/docs]
+relations:
+  - {target: surface:getting-started/docs, kind: integrates-with, label: Becomes discoverable from the public front door}

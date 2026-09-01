@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 — 2026-09-01
+
+- Add the dual-read `b10x-docs/v2` contract with explicit adoption actions, the planning journey,
+  and the section and relationship vocabulary already needed by Agent Plugins.
+- Add repository-owned `b10x-change/v1` impact records and deterministic registry, change-ledger,
+  RSS, and JSON Feed snapshot generation with optional verified release facts.
+- Add shared adoption and ecosystem-change components plus standard Docusaurus navigation helpers.
+
 ## 0.1.3 — 2026-09-01
 
 - Upgrade the manifest validator and YAML parser to patched releases so consumer dependency audits

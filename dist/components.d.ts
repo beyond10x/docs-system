@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { DocumentationSurface, EcosystemRegistry, Maturity } from './types.js';
+import type { ChangeLedgerEntry, DocumentationSurface, EcosystemRegistry, Journey, Maturity } from './types.js';
 export declare function StatusBadge({ maturity, children }: {
     maturity: Maturity;
     children?: ReactNode;
@@ -35,6 +35,14 @@ export declare function Diagram({ kind, source, src, title, description, downloa
 }): ReactNode;
 export declare function ProjectCard({ surface }: {
     surface: DocumentationSurface;
+}): ReactNode;
+export declare function AdoptionCard({ surface, journey }: {
+    surface: DocumentationSurface;
+    journey?: Journey;
+}): ReactNode;
+export declare function ChangeTimelineEntry({ change, surfaces }: {
+    change: ChangeLedgerEntry;
+    surfaces?: Map<string, DocumentationSurface>;
 }): ReactNode;
 export declare function EcosystemSwitcher({ registry, current }: {
     registry: EcosystemRegistry;
