@@ -10,6 +10,6 @@ source:
   url: https://github.com/beyond10x/docs-system/releases/tag/0.2.0
   version: 0.2.0
 journeys: [understand, plan-work, specify, build-agents, operate-services]
-affectedSurfaces: [docs-system/docs, getting-started/docs]
+affectedSurfaces: [docs-system/docs, website/docs]
 relations:
-  - {target: surface:getting-started/docs, kind: enables, label: Powers Ecosystem changes}
+  - {target: surface:website/docs, kind: enables, label: Powers Ecosystem changes at the unified successor}

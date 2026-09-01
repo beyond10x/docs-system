@@ -1,7 +1,7 @@
 schema: b10x-change/v2
 id: docs-system/node-safe-manifest-export-0.3.2
 repository: docs-system
-publishedAt: 2026-09-01T20:30:00Z
+publishedAt: 2026-09-01T14:52:23Z
 title: Website collection receives a Node-safe manifest entry point
 summary: Docs System 0.3.2 exposes manifest and source-lock operations without importing the Docusaurus UI graph into plain Node builds.
 kind: migration
