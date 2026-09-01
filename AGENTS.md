@@ -36,3 +36,11 @@ fixture manifests, and exercises package exports.
 
 Use conventional commits. Commits, tags, pushes, and repository mutations use Atlas-owned bot
 tooling from outside this public repository.
+
+<!-- b10x-docs-operations:start -->
+## Public documentation operations
+
+This repository owns the public source and presentation allowlist in `b10x.docs.yaml`; the unified [beyond10x Website](https://beyond10x.github.io/docs/docs-system/) passively collects those declared files from the exact commit in `website/sources.lock.json`. Website and Docs System own rendering, navigation, shared components, search, and feeds. Do not add a standalone docs deployer or put App credentials in this public repository. Project Pages at `/docs-system/` is only the generated redirect façade in `.github/workflows/b10x-docs-pages.yml`.
+
+From a complete organization workspace, run `cargo run --manifest-path atlas/Cargo.toml -- docs reconcile --workspace . --check` to verify the contract. Keep internal plans, stories, ADRs, decisions, worklogs, security material, and research out of the public allowlist unless a repository authority explicitly declares them public.
+<!-- b10x-docs-operations:end -->

@@ -81,8 +81,9 @@ surfaces:
       - README.md
       - CHANGELOG.md
     navigation:
+      group: Build
       label: Docs System
-      order: 90
+      order: 70
       sidebar: flat
     root: .
     specifications:

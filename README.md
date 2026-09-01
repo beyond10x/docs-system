@@ -112,3 +112,9 @@ Apache-2.0. See [LICENSE](LICENSE).
 <!-- b10x-docs:discovery:start -->
 > **Docs System in beyond10x:** [Start](https://beyond10x.github.io/) · [Project](https://beyond10x.github.io/ecosystem/docs-system/) · [Documentation](https://beyond10x.github.io/docs/docs-system/) · [Ecosystem](https://beyond10x.github.io/ecosystem/) · [Changes](https://beyond10x.github.io/changes/)
 <!-- b10x-docs:discovery:end -->
+
+<!-- b10x-docs:start -->
+## Documentation
+
+[Docs System documentation](https://beyond10x.github.io/docs/docs-system/) · [Start](https://beyond10x.github.io/) · [Ecosystem](https://beyond10x.github.io/ecosystem/) · [Impact](https://beyond10x.github.io/changes/) · [Releases](https://beyond10x.github.io/releases/)
+<!-- b10x-docs:end -->
