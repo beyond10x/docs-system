@@ -31,6 +31,7 @@ export async function collectManifestSources(manifest, repositoryRoot, options =
         const availableFiles = await enumerateFiles(sourceReal, repositoryReal);
         const allowedComponents = surface.source.components ?? [];
         await addSelection(files, manifest.repository.id, surface.id, 'document', sourceReal, repositoryReal, availableFiles, surface.source.documents, allowedComponents);
+        await addSelection(files, manifest.repository.id, surface.id, 'data', sourceReal, repositoryReal, availableFiles, surface.source.data, allowedComponents);
         await addSelection(files, manifest.repository.id, surface.id, 'blog', sourceReal, repositoryReal, availableFiles, surface.source.blog, allowedComponents);
         await addSelection(files, manifest.repository.id, surface.id, 'asset', sourceReal, repositoryReal, availableFiles, surface.source.assets, allowedComponents);
         for (const specification of surface.source.specifications ?? []) {

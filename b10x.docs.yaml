@@ -49,4 +49,4 @@ surfaces:
         - {id: source-lock, format: json-schema, path: schema/b10x.sources.schema.json, route: /api/docs-system/source-lock/, title: Documentation source lock}
         - {id: redirects, format: json-schema, path: schema/b10x.redirects.schema.json, route: /api/docs-system/redirects/, title: Compatibility route map}
       navigation: {label: Docs System, order: 90, sidebar: flat}
-      components: [BoundaryNotice, CodeExample, CommandExample, Diagram, JsonSchemaViewer, OpenApiReference]
+      components: [BoundaryNotice, CodeExample, CommandExample, DataCatalog, DependencyGraph, Diagram, JsonSchemaViewer, OpenApiReference]

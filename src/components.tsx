@@ -23,6 +23,33 @@ export function CodeTabs({items}: {items: Array<{label: string; language: string
   return <div className="b10x-code-tabs">{items.map((item) => <details key={item.label} open={items[0] === item}><summary>{item.label}</summary><CodeExample language={item.language}>{item.code}</CodeExample></details>)}</div>;
 }
 
+export interface DataCatalogItem {
+  id: string;
+  name: string;
+  summary?: string;
+  kind?: string;
+  url?: string;
+}
+
+export function DataCatalog({items, title = 'Data catalog'}: {items: DataCatalogItem[]; title?: string}): ReactNode {
+  return <section className="b10x-data-catalog" aria-label={title}>{items.map((item) => <article key={item.id}><header>{item.kind && <span>{item.kind}</span>}<code>{item.id}</code></header><h3>{item.url ? <a href={item.url}>{item.name}</a> : item.name}</h3>{item.summary && <p>{item.summary}</p>}</article>)}</section>;
+}
+
+export interface DependencyGraphNode {id: string; label: string}
+export interface DependencyGraphEdge {from: string; to: string; label?: string}
+
+export function DependencyGraph({nodes, edges, title = 'Dependencies', description = 'Declared dependencies between components.'}: {nodes: DependencyGraphNode[]; edges: DependencyGraphEdge[]; title?: string; description?: string}): ReactNode {
+  const identifiers = new Map(nodes.map((node, index) => [node.id, `n${index}`]));
+  const lines = ['flowchart LR', ...nodes.map((node) => `  ${identifiers.get(node.id)}["${mermaidLabel(node.label)}"]`)];
+  for (const edge of edges) {
+    const from = identifiers.get(edge.from);
+    const to = identifiers.get(edge.to);
+    if (!from || !to) throw new Error(`dependency edge ${edge.from} -> ${edge.to} references an unknown node`);
+    lines.push(`  ${from} -->${edge.label ? `|"${mermaidLabel(edge.label)}"|` : ''} ${to}`);
+  }
+  return <Diagram kind="mermaid" source={lines.join('\n')} title={title} description={description} />;
+}
+
 export function Diagram({kind, source, src, title, description, download}: {kind: 'mermaid' | 'svg'; source?: string; src?: string; title: string; description: string; download?: string}): ReactNode {
   if (kind === 'mermaid' && !source) throw new Error('a Mermaid diagram requires source');
   if (kind === 'svg' && !src) throw new Error('an SVG diagram requires src');
@@ -68,3 +95,5 @@ function fallbackAdoption(surface: AnyDocumentationSurface): NonNullable<AnyDocu
   const quickstart = surface.sections.find((section) => section.kind === 'quickstart' || section.kind === 'guide');
   return {label: quickstart?.label ?? `Explore ${surface.name}`, url: quickstart?.url ?? surface.canonicalUrl, mode: 'browser', estimatedMinutes: 10, outcome: surface.summary};
 }
+
+function mermaidLabel(value: string): string { return value.replaceAll('"', "'").replaceAll('\n', ' '); }

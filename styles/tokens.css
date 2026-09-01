@@ -41,6 +41,10 @@
 .b10x-project-card > div { display: flex; justify-content: space-between; gap: 1rem; }
 .b10x-project-card ul { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0; list-style: none; }
 .b10x-project-card li { padding: .2rem .45rem; background: var(--b10x-ink-raised); font: .72rem var(--b10x-font-mono); }
+.b10x-data-catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .75rem; }
+.b10x-data-catalog article { padding: 1rem; border: 1px solid var(--b10x-line); border-radius: var(--b10x-radius); }
+.b10x-data-catalog article header { display: flex; justify-content: space-between; gap: .75rem; color: var(--b10x-muted); font: .7rem var(--b10x-font-mono); text-transform: uppercase; }
+.b10x-data-catalog article h3 { margin: .65rem 0 .35rem; }
 .b10x-adoption-link, .b10x-adoption-card > a, .b10x-change-action { display: inline-flex; margin-top: .75rem; font-weight: 700; }
 .b10x-adoption-card { padding: 1.25rem; border: 1px solid var(--b10x-line); border-left: 3px solid var(--b10x-project-accent); border-radius: var(--b10x-radius); }
 .b10x-adoption-card header, .b10x-change header { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; color: var(--b10x-muted); font: .7rem var(--b10x-font-mono); text-transform: uppercase; }

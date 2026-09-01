@@ -28,7 +28,7 @@ export interface AdoptionAction {
     prerequisites?: string[];
     outcome: string;
 }
-export type SharedComponentName = 'AdoptionCard' | 'BoundaryNotice' | 'CodeExample' | 'CodeTabs' | 'CommandExample' | 'Diagram' | 'JsonSchemaViewer' | 'OpenApiReference' | 'ProjectCard' | 'StatusBadge';
+export type SharedComponentName = 'AdoptionCard' | 'BoundaryNotice' | 'CodeExample' | 'CodeTabs' | 'CommandExample' | 'DataCatalog' | 'DependencyGraph' | 'Diagram' | 'JsonSchemaViewer' | 'OpenApiReference' | 'ProjectCard' | 'StatusBadge';
 export interface SourceSelection {
     include: string[];
     exclude?: string[];
@@ -50,6 +50,7 @@ export interface SourceNavigation {
 export interface SurfaceSource {
     root: string;
     documents?: SourceSelection;
+    data?: SourceSelection;
     assets?: SourceSelection;
     blog?: SourceSelection;
     specifications?: SpecificationSource[];
@@ -185,7 +186,7 @@ export interface ChangeLedger {
     schema: 'b10x-change-ledger/v1';
     changes: ChangeLedgerEntry[];
 }
-export type CollectedSourceKind = 'document' | 'blog' | 'asset' | 'openapi' | 'json-schema';
+export type CollectedSourceKind = 'document' | 'data' | 'blog' | 'asset' | 'openapi' | 'json-schema';
 export interface CollectedSource {
     repository: string;
     surface: string;

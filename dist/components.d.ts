@@ -25,6 +25,32 @@ export declare function CodeTabs({ items }: {
         code: string;
     }>;
 }): ReactNode;
+export interface DataCatalogItem {
+    id: string;
+    name: string;
+    summary?: string;
+    kind?: string;
+    url?: string;
+}
+export declare function DataCatalog({ items, title }: {
+    items: DataCatalogItem[];
+    title?: string;
+}): ReactNode;
+export interface DependencyGraphNode {
+    id: string;
+    label: string;
+}
+export interface DependencyGraphEdge {
+    from: string;
+    to: string;
+    label?: string;
+}
+export declare function DependencyGraph({ nodes, edges, title, description }: {
+    nodes: DependencyGraphNode[];
+    edges: DependencyGraphEdge[];
+    title?: string;
+    description?: string;
+}): ReactNode;
 export declare function Diagram({ kind, source, src, title, description, download }: {
     kind: 'mermaid' | 'svg';
     source?: string;

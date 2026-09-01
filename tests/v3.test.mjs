@@ -57,10 +57,13 @@ test('collector copies only declared passive inputs and produces a stable digest
   await fs.mkdir(path.join(repository, 'docs'), {recursive: true});
   await fs.mkdir(path.join(repository, 'static'), {recursive: true});
   await fs.mkdir(path.join(repository, 'api'), {recursive: true});
+  await fs.mkdir(path.join(repository, 'data'), {recursive: true});
   await fs.writeFile(path.join(repository, 'README.md'), '# Example\n');
   await fs.writeFile(path.join(repository, 'docs', 'guide.mdx'), '# Guide\n\n<Diagram kind="mermaid" source="graph TD; A-->B" title="Flow" description="Flow" />\n');
   await fs.writeFile(path.join(repository, 'static', 'mark.svg'), '<svg xmlns="http://www.w3.org/2000/svg"></svg>\n');
   await fs.writeFile(path.join(repository, 'api', 'openapi.yaml'), 'openapi: 3.1.0\ninfo: {title: Example, version: 1.0.0}\npaths: {}\n');
+  await fs.writeFile(path.join(repository, 'data', 'principles.json'), '{"code":"import is data, not executable"}\n');
+  await fs.writeFile(path.join(repository, 'data', 'lab.yaml'), 'scenario: billing\n');
   await fs.writeFile(path.join(repository, 'not-public.txt'), 'private by omission\n');
   await fs.mkdir(path.join(repository, 'build'), {recursive: true});
   await fs.writeFile(path.join(repository, 'build', 'generated.md'), '# Generated and ignored\n');
@@ -70,16 +73,19 @@ test('collector copies only declared passive inputs and produces a stable digest
   const manifest = v3Manifest({
     root: '.',
     documents: {include: ['README.md', 'docs/**/*.mdx']},
+    data: {include: ['data/**/*.*']},
     assets: {include: ['static/*.svg']},
     specifications: [{id: 'http', format: 'openapi', path: 'api/openapi.yaml', route: '/api/example/http/'}],
-    components: ['Diagram'],
+    components: ['DataCatalog', 'DependencyGraph', 'Diagram'],
   });
   const first = await collectManifestSources(manifest, repository, {outputRoot: output});
   await fs.writeFile(path.join(repository, 'build', 'generated.md'), '# Generated changed without affecting collection\n');
   const second = await collectManifestSources(manifest, repository);
   assert.equal(first.contentSha256, second.contentSha256);
-  assert.deepEqual(first.files.map((file) => file.sourcePath), ['static/mark.svg', 'docs/guide.mdx', 'README.md', 'api/openapi.yaml']);
+  assert.deepEqual(first.files.map((file) => file.sourcePath), ['static/mark.svg', 'data/lab.yaml', 'data/principles.json', 'docs/guide.mdx', 'README.md', 'api/openapi.yaml']);
   assert.equal(await fs.readFile(path.join(output, 'example', 'docs', 'document', 'README.md'), 'utf8'), '# Example\n');
+  assert.equal(await fs.readFile(path.join(output, 'example', 'docs', 'data', 'data', 'lab.yaml'), 'utf8'), 'scenario: billing\n');
+  assert.deepEqual(first.files.filter((file) => file.kind === 'data').map((file) => file.sourcePath), ['data/lab.yaml', 'data/principles.json']);
   assert.equal(first.files.at(-1).route, '/api/example/http/');
   assert.ok(!first.files.some((file) => file.sourcePath === 'not-public.txt'));
 

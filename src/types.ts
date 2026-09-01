@@ -40,6 +40,8 @@ export type SharedComponentName =
   | 'CodeExample'
   | 'CodeTabs'
   | 'CommandExample'
+  | 'DataCatalog'
+  | 'DependencyGraph'
   | 'Diagram'
   | 'JsonSchemaViewer'
   | 'OpenApiReference'
@@ -70,6 +72,7 @@ export interface SourceNavigation {
 export interface SurfaceSource {
   root: string;
   documents?: SourceSelection;
+  data?: SourceSelection;
   assets?: SourceSelection;
   blog?: SourceSelection;
   specifications?: SpecificationSource[];
@@ -214,7 +217,7 @@ export interface ChangeLedger {
   changes: ChangeLedgerEntry[];
 }
 
-export type CollectedSourceKind = 'document' | 'blog' | 'asset' | 'openapi' | 'json-schema';
+export type CollectedSourceKind = 'document' | 'data' | 'blog' | 'asset' | 'openapi' | 'json-schema';
 
 export interface CollectedSource {
   repository: string;

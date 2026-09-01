@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1 — 2026-09-01
+
+- Add a typed `source.data` channel so repository-owned JSON, YAML, and other passive datasets can
+  feed the unified site without being treated as MDX, assets, or executable repository code.
+- Add generic `DataCatalog` and `DependencyGraph` shared components and include data inputs in the
+  same deterministic collection, digest, copy, and source-lock boundary as other declared inputs.
+
 ## 0.3.0 — 2026-09-01
 
 - Add the additive `b10x-docs/v3` contract for repository-owned, data-only sources delivered by the

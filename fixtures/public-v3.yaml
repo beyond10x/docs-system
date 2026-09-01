@@ -39,7 +39,9 @@ surfaces:
       root: .
       documents:
         include: [README.md]
+      data:
+        include: [fixtures/*.yaml]
       specifications:
         - {id: manifest-v3, format: json-schema, path: schema/b10x.docs.v3.schema.json, route: /api/docs-system/manifest-v3/}
       navigation: {label: Docs System, order: 90, sidebar: flat}
-      components: [CodeExample, JsonSchemaViewer]
+      components: [CodeExample, DataCatalog, DependencyGraph, JsonSchemaViewer]

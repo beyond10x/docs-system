@@ -16,6 +16,21 @@ export function CommandExample({ command, output, title }) {
 export function CodeTabs({ items }) {
     return _jsx("div", { className: "b10x-code-tabs", children: items.map((item) => _jsxs("details", { open: items[0] === item, children: [_jsx("summary", { children: item.label }), _jsx(CodeExample, { language: item.language, children: item.code })] }, item.label)) });
 }
+export function DataCatalog({ items, title = 'Data catalog' }) {
+    return _jsx("section", { className: "b10x-data-catalog", "aria-label": title, children: items.map((item) => _jsxs("article", { children: [_jsxs("header", { children: [item.kind && _jsx("span", { children: item.kind }), _jsx("code", { children: item.id })] }), _jsx("h3", { children: item.url ? _jsx("a", { href: item.url, children: item.name }) : item.name }), item.summary && _jsx("p", { children: item.summary })] }, item.id)) });
+}
+export function DependencyGraph({ nodes, edges, title = 'Dependencies', description = 'Declared dependencies between components.' }) {
+    const identifiers = new Map(nodes.map((node, index) => [node.id, `n${index}`]));
+    const lines = ['flowchart LR', ...nodes.map((node) => `  ${identifiers.get(node.id)}["${mermaidLabel(node.label)}"]`)];
+    for (const edge of edges) {
+        const from = identifiers.get(edge.from);
+        const to = identifiers.get(edge.to);
+        if (!from || !to)
+            throw new Error(`dependency edge ${edge.from} -> ${edge.to} references an unknown node`);
+        lines.push(`  ${from} -->${edge.label ? `|"${mermaidLabel(edge.label)}"|` : ''} ${to}`);
+    }
+    return _jsx(Diagram, { kind: "mermaid", source: lines.join('\n'), title: title, description: description });
+}
 export function Diagram({ kind, source, src, title, description, download }) {
     if (kind === 'mermaid' && !source)
         throw new Error('a Mermaid diagram requires source');
@@ -46,3 +61,4 @@ function fallbackAdoption(surface) {
     const quickstart = surface.sections.find((section) => section.kind === 'quickstart' || section.kind === 'guide');
     return { label: quickstart?.label ?? `Explore ${surface.name}`, url: quickstart?.url ?? surface.canonicalUrl, mode: 'browser', estimatedMinutes: 10, outcome: surface.summary };
 }
+function mermaidLabel(value) { return value.replaceAll('"', "'").replaceAll('\n', ' '); }

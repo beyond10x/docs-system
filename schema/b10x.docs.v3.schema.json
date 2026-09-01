@@ -124,6 +124,7 @@
       "properties": {
         "root": {"$ref": "#/$defs/safePath"},
         "documents": {"$ref": "#/$defs/selection"},
+        "data": {"$ref": "#/$defs/selection"},
         "assets": {"$ref": "#/$defs/selection"},
         "blog": {"$ref": "#/$defs/selection"},
         "specifications": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/specification"}},
@@ -141,11 +142,12 @@
         "components": {
           "type": "array",
           "uniqueItems": true,
-          "items": {"enum": ["AdoptionCard", "BoundaryNotice", "CodeExample", "CodeTabs", "CommandExample", "Diagram", "JsonSchemaViewer", "OpenApiReference", "ProjectCard", "StatusBadge"]}
+          "items": {"enum": ["AdoptionCard", "BoundaryNotice", "CodeExample", "CodeTabs", "CommandExample", "DataCatalog", "DependencyGraph", "Diagram", "JsonSchemaViewer", "OpenApiReference", "ProjectCard", "StatusBadge"]}
         }
       },
       "anyOf": [
         {"properties": {"documents": true}, "required": ["documents"]},
+        {"properties": {"data": true}, "required": ["data"]},
         {"properties": {"assets": true}, "required": ["assets"]},
         {"properties": {"blog": true}, "required": ["blog"]},
         {"properties": {"specifications": true}, "required": ["specifications"]}

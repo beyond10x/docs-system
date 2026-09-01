@@ -23,7 +23,7 @@ repository's data-only source declaration from delivery by the central Website. 
 
 - the repository display name and public documentation surfaces;
 - canonical route bases, audiences, primary journeys, relationships, and adoption actions;
-- allowlisted Markdown/MDX, blog, asset, OpenAPI, and JSON Schema inputs;
+- allowlisted Markdown/MDX, structured data, blog, asset, OpenAPI, and JSON Schema inputs;
 - an optional fixed vocabulary of shared components; and
 - the Website publisher and `beyond10x.github.io` delivery origin.
 
@@ -79,6 +79,7 @@ HTML redirects.
 ## Shared components
 
 - `CodeExample`, `CommandExample`, and `CodeTabs`
+- `DataCatalog` and `DependencyGraph` for typed repository-owned data
 - `Diagram` for Mermaid source or generated SVG
 - `OpenApiReference` and `JsonSchemaViewer` for read-only OpenAPI 3.1 documents
 - `StatusBadge`, `BoundaryNotice`, `ProjectCard`, and `EcosystemSwitcher`

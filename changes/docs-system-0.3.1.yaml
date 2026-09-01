@@ -1,0 +1,19 @@
+schema: b10x-change/v2
+id: docs-system/passive-data-sources-0.3.1
+repository: docs-system
+publishedAt: 2026-09-01T20:00:00Z
+title: Repository datasets become typed documentation inputs
+summary: Docs System 0.3.1 collects declared passive data for principle catalogs, labs, and dependency views without executing repository code.
+kind: capability
+impact: significant
+source:
+  url: https://github.com/beyond10x/docs-system/releases/tag/0.3.1
+  version: 0.3.1
+journeys: [understand, specify, build-agents, operate-services]
+affected:
+  repositories: [agentic-principles, docs-system, ess, website]
+  surfaces: [agentic-principles/docs, docs-system/docs, ess/docs, website/docs]
+  components: [docs-system/collector, docs-system/data-catalog, docs-system/dependency-graph]
+  apis: [docs-system/manifest-v3]
+relations:
+  - {target: surface:website/docs, kind: enables, label: Supplies passive structured data to unified documentation views}
