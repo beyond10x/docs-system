@@ -123,9 +123,11 @@ export async function sha256File(file: string | URL): Promise<string> {
 
 /** Refuse executable MDX while allowing a small, explicitly declared shared-component vocabulary. */
 export function assertPassiveMdx(source: string, file: string, allowedComponents: SharedComponentName[] = []): void {
-  const prose = withoutCodeAndFrontmatter(source);
+  const proseWithInlineCode = withoutFencedCodeAndFrontmatter(source);
+  const prose = withoutInlineCode(proseWithInlineCode);
+  const expressionProse = withoutInlineCode(withoutInertMdxSyntax(proseWithInlineCode));
   if (/^\s*(?:import|export)(?:\s|\{)/m.test(prose)) throw new Error(`${file} contains an import or export; public documentation must be data-only`);
-  if (/(^|[^\\])\{[^}\n]*\}/m.test(prose)) throw new Error(`${file} contains an MDX expression; public documentation must be data-only`);
+  if (hasUnescapedOpeningBrace(expressionProse)) throw new Error(`${file} contains an MDX expression; public documentation must be data-only`);
   if (/\bon[a-z]+\s*=/i.test(prose) || /dangerouslySetInnerHTML/i.test(prose) || /(?:href|src)\s*=\s*["']\s*javascript:/i.test(prose)) {
     throw new Error(`${file} contains executable markup`);
   }
@@ -284,7 +286,7 @@ function globMatcher(pattern: string): RegExp {
   return new RegExp(`${expression}$`);
 }
 
-function withoutCodeAndFrontmatter(source: string): string {
+function withoutFencedCodeAndFrontmatter(source: string): string {
   const lines = source.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '').split(/\r?\n/);
   let fence: string | undefined;
   return lines.map((line) => {
@@ -295,8 +297,38 @@ function withoutCodeAndFrontmatter(source: string): string {
       return '';
     }
     if (fence) return '';
-    return line.replace(/`[^`]*`/g, '');
+    return line;
   }).join('\n');
+}
+
+function withoutInlineCode(source: string): string {
+  return source.replace(/`[^`]*`/g, '');
+}
+
+/**
+ * Remove only passive syntax that MDX represents with braces. The source itself is never changed:
+ * this projection exists solely so the executable-expression check can distinguish inert comments
+ * and explicit heading ids from JavaScript expressions.
+ */
+function withoutInertMdxSyntax(source: string): string {
+  return source.split('\n').map((line) => {
+    if (isWholeLineMdxComment(line)) return '';
+    return line.replace(/^(\s{0,3}#{1,6}(?!#)\s+.+?)\s+\{#[-A-Za-z0-9_:.]+\}\s*$/, '$1');
+  }).join('\n');
+}
+
+function isWholeLineMdxComment(line: string): boolean {
+  return /^\s*\{\s*\/\*(?:(?!\*\/)[^\r\n])*\*\/\s*\}\s*$/.test(line);
+}
+
+function hasUnescapedOpeningBrace(source: string): boolean {
+  for (let index = 0; index < source.length; index += 1) {
+    if (source[index] !== '{') continue;
+    let escapes = 0;
+    for (let before = index - 1; before >= 0 && source[before] === '\\'; before -= 1) escapes += 1;
+    if (escapes % 2 === 0) return true;
+  }
+  return false;
 }
 
 function compareSources(left: CollectedSource, right: CollectedSource): number {

@@ -106,11 +106,60 @@ test('collector copies only declared passive inputs and produces a stable digest
   await fs.rm(generatedEnvironment, {recursive: true});
 });
 
+test('collector retains inert MDX comment markers and explicit heading ids byte for byte', async () => {
+  const source = `---
+title: A real-shaped field note
+date: 2026-09-01
+---
+
+The introduction remains part of the owning repository.
+
+{/* truncate */}
+
+{/* generated:currency:begin — do not edit; run \`task status\` */}
+Current as of the verified release.
+{ /* generated:currency:end */ }
+
+### Name an agent {#name-an-agent}
+
+The explicit id is stable across the compatibility redirect.
+`;
+  assert.doesNotThrow(() => assertPassiveMdx(source, 'blog/field-note.md'));
+
+  const repository = await fs.mkdtemp(path.join(os.tmpdir(), 'b10x-passive-blog-'));
+  const output = await fs.mkdtemp(path.join(os.tmpdir(), 'b10x-passive-blog-out-'));
+  try {
+    await fs.mkdir(path.join(repository, 'blog'), {recursive: true});
+    await fs.writeFile(path.join(repository, 'blog', 'field-note.md'), source);
+    const index = await collectManifestSources(v3Manifest({root: '.', blog: {include: ['blog/*.md']}}), repository, {outputRoot: output});
+    assert.deepEqual(index.files.map((file) => file.sourcePath), ['blog/field-note.md']);
+    assert.equal(await fs.readFile(path.join(output, 'example', 'docs', 'blog', 'blog', 'field-note.md'), 'utf8'), source);
+  } finally {
+    await fs.rm(repository, {recursive: true});
+    await fs.rm(output, {recursive: true});
+  }
+});
+
 test('collector rejects executable MDX, undeclared widgets, escaping links, and unmatched declarations', async () => {
   assert.throws(() => assertPassiveMdx('import Thing from "./Thing"\n', 'guide.mdx'), /import or export/);
   assert.throws(() => assertPassiveMdx('<LabLaunch />\n', 'guide.mdx'), /undeclared shared component LabLaunch/);
   assert.throws(() => assertPassiveMdx('Hello {process.env.SECRET}\n', 'guide.mdx'), /MDX expression/);
   assert.doesNotThrow(() => assertPassiveMdx('```tsx\nexport const ignored = true\n```\n', 'guide.mdx'));
+  assert.doesNotThrow(() => assertPassiveMdx('Escaped \\{braces remain prose.\n', 'guide.mdx'));
+  for (const unsafe of [
+    'Lead {/* truncate */}\n',
+    '{/* truncate */} trailing code\n',
+    '{/* inert */} {process.env.SECRET}\n',
+    '{/* inert */ process.env.SECRET}\n',
+    '{/* unterminated\n',
+    '{/* multiline\nstill a comment */}\n',
+    'Paragraph {#not-a-heading}\n',
+    '### Name {#name onmouseover=alert}\n',
+    '### Name {#name} trailing\n',
+    '### Name {#name} {process.env.SECRET}\n',
+  ]) {
+    assert.throws(() => assertPassiveMdx(unsafe, 'guide.mdx'), /MDX expression/);
+  }
 
   const repository = await fs.mkdtemp(path.join(os.tmpdir(), 'b10x-collect-unsafe-'));
   const outside = await fs.mkdtemp(path.join(os.tmpdir(), 'b10x-collect-outside-'));

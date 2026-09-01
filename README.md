@@ -35,7 +35,10 @@ b10x-docs validate b10x.docs.yaml changes/*.yaml sources.lock.json redirects.yam
 
 The v3 collector never imports repository code. It refuses path traversal, symlinks, executable MDX,
 undeclared components, invalid source types, unmatched declarations, duplicate outputs, and duplicate
-specification routes. It can validate and hash in place or copy only the declared bytes:
+specification routes. Whole-line MDX comment expressions and validated trailing explicit heading ids
+are accepted as inert Docusaurus syntax; inline or executable expressions remain refused. Validation
+never rewrites those markers, so collected and copied files retain their original bytes. The
+collector can validate and hash in place or copy only the declared bytes:
 
 ```console
 b10x-docs collect --manifest b10x.docs.yaml --repository-root . \

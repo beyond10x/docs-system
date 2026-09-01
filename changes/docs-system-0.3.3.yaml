@@ -1,0 +1,20 @@
+schema: b10x-change/v2
+id: docs-system/passive-docusaurus-markers-0.3.3
+repository: docs-system
+publishedAt: 2026-09-01T15:18:01Z
+title: Passive Docusaurus markers enter the locked documentation corpus
+summary: Docs System 0.3.3 admits inert whole-line MDX comments and explicit heading ids without allowing executable expressions or changing collected bytes.
+kind: migration
+impact: significant
+source:
+  url: https://github.com/beyond10x/docs-system/releases/tag/0.3.3
+  version: 0.3.3
+journeys: [understand, plan-work, specify, build-agents]
+affected:
+  repositories: [aep, agentic-principles, docs-system, ess, harness, website]
+  surfaces: [aep/docs, agentic-principles/docs, docs-system/docs, ess/docs, harness/docs, website/docs]
+  components: [docs-system/collector, website/source-collector]
+relations:
+  - target: surface:website/docs
+    kind: enables
+    label: Collects source-owned field notes, generated status markers, and stable heading ids without executing MDX

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.3 — 2026-09-01
+
+- Admit syntactically closed, whole-line MDX comment expressions as inert source markers so
+  repository-owned Docusaurus field notes and generated status boundaries remain passive inputs.
+- Admit validated trailing explicit heading ids while continuing to reject inline, unterminated,
+  multiline, attribute-bearing, adjacent, and executable MDX expressions.
+- Preserve every accepted marker byte in collected and staged output; the exception exists only in
+  the collector's validation projection.
+
 ## 0.3.2 — 2026-09-01
 
 - Export `@beyond10x/docs-system/manifest` as a Node-safe entry point for manifest, source-lock,

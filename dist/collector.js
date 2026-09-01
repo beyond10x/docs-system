@@ -96,10 +96,12 @@ export async function sha256File(file) {
 }
 /** Refuse executable MDX while allowing a small, explicitly declared shared-component vocabulary. */
 export function assertPassiveMdx(source, file, allowedComponents = []) {
-    const prose = withoutCodeAndFrontmatter(source);
+    const proseWithInlineCode = withoutFencedCodeAndFrontmatter(source);
+    const prose = withoutInlineCode(proseWithInlineCode);
+    const expressionProse = withoutInlineCode(withoutInertMdxSyntax(proseWithInlineCode));
     if (/^\s*(?:import|export)(?:\s|\{)/m.test(prose))
         throw new Error(`${file} contains an import or export; public documentation must be data-only`);
-    if (/(^|[^\\])\{[^}\n]*\}/m.test(prose))
+    if (hasUnescapedOpeningBrace(expressionProse))
         throw new Error(`${file} contains an MDX expression; public documentation must be data-only`);
     if (/\bon[a-z]+\s*=/i.test(prose) || /dangerouslySetInnerHTML/i.test(prose) || /(?:href|src)\s*=\s*["']\s*javascript:/i.test(prose)) {
         throw new Error(`${file} contains executable markup`);
@@ -249,7 +251,7 @@ function globMatcher(pattern) {
     }
     return new RegExp(`${expression}$`);
 }
-function withoutCodeAndFrontmatter(source) {
+function withoutFencedCodeAndFrontmatter(source) {
     const lines = source.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '').split(/\r?\n/);
     let fence;
     return lines.map((line) => {
@@ -263,8 +265,38 @@ function withoutCodeAndFrontmatter(source) {
         }
         if (fence)
             return '';
-        return line.replace(/`[^`]*`/g, '');
+        return line;
     }).join('\n');
+}
+function withoutInlineCode(source) {
+    return source.replace(/`[^`]*`/g, '');
+}
+/**
+ * Remove only passive syntax that MDX represents with braces. The source itself is never changed:
+ * this projection exists solely so the executable-expression check can distinguish inert comments
+ * and explicit heading ids from JavaScript expressions.
+ */
+function withoutInertMdxSyntax(source) {
+    return source.split('\n').map((line) => {
+        if (isWholeLineMdxComment(line))
+            return '';
+        return line.replace(/^(\s{0,3}#{1,6}(?!#)\s+.+?)\s+\{#[-A-Za-z0-9_:.]+\}\s*$/, '$1');
+    }).join('\n');
+}
+function isWholeLineMdxComment(line) {
+    return /^\s*\{\s*\/\*(?:(?!\*\/)[^\r\n])*\*\/\s*\}\s*$/.test(line);
+}
+function hasUnescapedOpeningBrace(source) {
+    for (let index = 0; index < source.length; index += 1) {
+        if (source[index] !== '{')
+            continue;
+        let escapes = 0;
+        for (let before = index - 1; before >= 0 && source[before] === '\\'; before -= 1)
+            escapes += 1;
+        if (escapes % 2 === 0)
+            return true;
+    }
+    return false;
 }
 function compareSources(left, right) {
     return left.outputPath.localeCompare(right.outputPath) || left.sourcePath.localeCompare(right.sourcePath);
