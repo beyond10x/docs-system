@@ -52,7 +52,7 @@
         "name": {"type": "string", "minLength": 1},
         "summary": {"type": "string", "minLength": 1, "maxLength": 240},
         "kind": {"enum": ["front-door", "documentation", "research", "service-docs", "reference", "updates"]},
-        "canonicalUrl": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "canonicalUrl": {"type": "string", "format": "uri", "pattern": "^(https://|http://(127\\.0\\.0\\.1|localhost)(:[0-9]+)?/)"},
         "maturity": {"enum": ["stable", "development", "experimental"]},
         "availability": {"enum": ["published", "local-only", "planned"]},
         "discoverability": {"enum": ["public", "unlisted", "internal"]},
@@ -73,7 +73,13 @@
             "revision": {"type": "string", "pattern": "^(local|[0-9a-f]{40})$"}
           }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"discoverability": {"const": "public"}}, "required": ["discoverability"]},
+          "then": {"properties": {"canonicalUrl": {"type": "string", "pattern": "^https://"}}}
+        }
+      ]
     }
   }
 }

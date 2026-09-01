@@ -1,6 +1,6 @@
 {
   "name": "@beyond10x/docs-system",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Git-pinned documentation shell, components, renderers, and discovery contract for beyond10x.",
   "license": "Apache-2.0",
