@@ -1,0 +1,31 @@
+schema: b10x-docs/v2
+repository:
+  id: docs-system
+  url: https://github.com/beyond10x/docs-system
+surfaces:
+  - id: docs
+    name: Docs System
+    summary: Shared documentation contracts, design tokens, React primitives, renderers, and deterministic discovery tooling.
+    kind: reference
+    canonicalUrl: https://github.com/beyond10x/docs-system#readme
+    maturity: development
+    availability: published
+    discoverability: public
+    audiences: [developer]
+    journeys: [build-agents, operate-services]
+    capabilities: [documentation-contracts, shared-components, ecosystem-change-feeds]
+    sections:
+      - {label: Integration guide, url: https://github.com/beyond10x/docs-system#readme, kind: guide}
+      - {label: Releases, url: https://github.com/beyond10x/docs-system/releases, kind: feed}
+      - {label: Source, url: https://github.com/beyond10x/docs-system, kind: source}
+    relationships:
+      - {target: getting-started/docs, kind: supports, label: Generates the public discovery snapshot}
+    adoption:
+      label: Pin the shared docs package
+      url: https://github.com/beyond10x/docs-system#surface-manifests
+      mode: install
+      estimatedMinutes: 5
+      prerequisites: [Node.js]
+      outcome: Validate one repository manifest and reuse the shared documentation shell.
+    accent: "#59d89d"
+    shell: {integration: portable, revision: local}

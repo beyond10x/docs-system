@@ -1,0 +1,15 @@
+schema: b10x-change/v1
+id: docs-system/adoption-and-change-contracts-0.2.0
+repository: docs-system
+publishedAt: 2026-09-01T11:22:04Z
+title: Adoption and ecosystem changes become typed public contracts
+summary: Docs System 0.2.0 adds explicit first-run outcomes, repository-owned impact records, deterministic release enrichment, and RSS and JSON feeds.
+kind: capability
+impact: significant
+source:
+  url: https://github.com/beyond10x/docs-system/releases/tag/0.2.0
+  version: 0.2.0
+journeys: [understand, plan-work, specify, build-agents, operate-services]
+affectedSurfaces: [docs-system/docs, getting-started/docs]
+relations:
+  - {target: surface:getting-started/docs, kind: enables, label: Powers Ecosystem changes}
