@@ -1,10 +1,12 @@
 # docs-system
 
-The shared presentation and discovery system for beyond10x public documentation. It provides one
-Git-pinned package containing the Docusaurus integration, React/MDX components, OpenAPI and diagram
-renderers, design tokens, the `b10x-docs/v1` manifest schema, and deterministic registry tooling.
+The public contract and reusable tooling behind the unified beyond10x documentation site. Docs
+System validates repository-owned publication declarations, safely collects their passive content,
+builds deterministic discovery and change data, and supplies shared React renderers and GitHub Pages
+compatibility routes.
 
-Consumer sites depend on an immutable Git commit; this package is not published to npm:
+Consumer repositories pin an immutable Git commit. This package is private to the Git transport and
+is not published to npm:
 
 ```json
 {
@@ -14,43 +16,76 @@ Consumer sites depend on an immutable Git commit; this package is not published 
 }
 ```
 
-## Components
+## Documentation sources
+
+Every participating repository owns a root `b10x.docs.yaml`. `b10x-docs/v3` separates the owning
+repository's data-only source declaration from delivery by the central Website. It declares:
+
+- the repository display name and public documentation surfaces;
+- canonical route bases, audiences, primary journeys, relationships, and adoption actions;
+- allowlisted Markdown/MDX, blog, asset, OpenAPI, and JSON Schema inputs;
+- an optional fixed vocabulary of shared components; and
+- the Website publisher and `beyond10x.github.io` delivery origin.
+
+Versions 1 and 2 remain readable during migration. Validate any supported contract with:
+
+```console
+b10x-docs validate b10x.docs.yaml changes/*.yaml sources.lock.json redirects.yaml
+```
+
+The v3 collector never imports repository code. It refuses path traversal, symlinks, executable MDX,
+undeclared components, invalid source types, unmatched declarations, duplicate outputs, and duplicate
+specification routes. It can validate and hash in place or copy only the declared bytes:
+
+```console
+b10x-docs collect --manifest b10x.docs.yaml --repository-root . \
+  --index-out collection.json --out .generated/sources
+```
+
+The deterministic index contains every repository-relative source path, staged output path, byte
+size, SHA-256 digest, and one aggregate `contentSha256`. A `b10x-sources/v1` lock binds that digest and
+the manifest digest to an exact 40-character Git commit.
+
+## Discovery, changes, and compatibility
+
+Generate or check the standard marked README entry block rather than hand-writing cross-ecosystem
+links:
+
+```console
+b10x-docs readme --manifest b10x.docs.yaml --file README.md
+b10x-docs readme --manifest b10x.docs.yaml --file README.md --check
+```
+
+`b10x-change/v2` adds typed affected repositories, surfaces, components, and APIs. Existing v1 change
+documents remain valid. Snapshot generation keeps explicit impact records and unenriched technical
+releases in distinct typed channels while retaining a deterministic combined ledger:
+
+```console
+b10x-docs snapshot --registry-out ecosystem.json --ledger-out changes.json \
+  --rss-out changes/feed.xml --json-feed-out changes/feed.json \
+  --release-facts release-facts.json ../*/b10x.docs.yaml ../*/changes/*.yaml
+```
+
+Generate repository Pages compatibility façades from `b10x-redirects/v1`:
+
+```console
+b10x-docs redirects --map redirects.yaml --out public --alias-root unified-artifact
+```
+
+HTML routes receive deterministic canonical/noindex redirect pages that preserve the query and
+fragment. RSS, JSON, OpenAPI, schemas, and downloads use byte-preserving static aliases instead of
+HTML redirects.
+
+## Shared components
 
 - `CodeExample`, `CommandExample`, and `CodeTabs`
 - `Diagram` for Mermaid source or generated SVG
 - `OpenApiReference` and `JsonSchemaViewer` for read-only OpenAPI 3.1 documents
 - `StatusBadge`, `BoundaryNotice`, `ProjectCard`, and `EcosystemSwitcher`
-- `AdoptionCard` and `ChangeTimelineEntry` for outcome-first entry and ecosystem impact
+- `AdoptionCard` and `ChangeTimelineEntry`
 
-Import the shared stylesheet once from `@beyond10x/docs-system/tokens.css`. Components use stable
-`b10x-*` class names so projects can apply an accent without copying the shell.
-
-## Surface manifests
-
-Each participating repository owns a root `b10x.docs.yaml`. Version 2 adds one explicit adoption
-action per surface while the validator continues to accept version 1 during migration. Important
-public changes are owned by the repository making the claim as `b10x-change/v1` YAML documents.
-Validate and aggregate them with:
-
-```console
-b10x-docs validate ../getting-started/b10x.docs.yaml
-b10x-docs registry --out ecosystem.json ../*/b10x.docs.yaml
-```
-
-Produce a complete deterministic public snapshot—including a typed change ledger and feed files—with:
-
-```console
-b10x-docs snapshot --registry-out ecosystem.json --ledger-out changes.json \
-  --rss-out changes/rss.xml --json-feed-out changes/feed.json \
-  --release-facts release-facts.json ../*/b10x.docs.yaml ../*/changes/*.yaml
-```
-
-Release facts add the complete technical release stream. A repository-owned change document with
-the same repository and version enriches that fact and promotes it as an impactful ecosystem
-change rather than creating a duplicate.
-
-The registry command includes only published, publicly discoverable surfaces and refuses a public
-surface that links a non-public relationship.
+Import `@beyond10x/docs-system/tokens.css` once. Components use stable `b10x-*` class names; project
+identity is data, while Website owns the unified shell.
 
 ## Gate
 
@@ -60,3 +95,7 @@ npm run gate
 ```
 
 Apache-2.0. See [LICENSE](LICENSE).
+
+<!-- b10x-docs:discovery:start -->
+> **Docs System in beyond10x:** [Start](https://beyond10x.github.io/) · [Project](https://beyond10x.github.io/ecosystem/docs-system/) · [Documentation](https://beyond10x.github.io/docs/docs-system/) · [Ecosystem](https://beyond10x.github.io/ecosystem/) · [Changes](https://beyond10x.github.io/changes/)
+<!-- b10x-docs:discovery:end -->

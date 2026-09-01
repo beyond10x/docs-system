@@ -40,7 +40,7 @@ export function EcosystemSwitcher({ registry, current }) {
         const journey = surface.journeys[0] ?? 'understand';
         groups.set(journey, [...(groups.get(journey) ?? []), surface]);
     }
-    return _jsxs("nav", { className: "b10x-switcher", "aria-label": "beyond10x ecosystem", children: [_jsx("a", { href: "https://beyond10x.github.io/getting-started/", children: "Start" }), [...groups].map(([journey, surfaces]) => _jsxs("details", { children: [_jsx("summary", { children: journey.replaceAll('-', ' ') }), surfaces.map((surface) => _jsxs("a", { "aria-current": surface.key === current ? 'page' : undefined, href: surface.canonicalUrl, children: [surface.name, _jsx("small", { children: surface.summary })] }, surface.key))] }, journey)), _jsx("a", { href: "https://beyond10x.github.io/getting-started/ecosystem", children: "All projects" })] });
+    return _jsxs("nav", { className: "b10x-switcher", "aria-label": "beyond10x ecosystem", children: [_jsx("a", { href: "https://beyond10x.github.io/", children: "Start" }), [...groups].map(([journey, surfaces]) => _jsxs("details", { children: [_jsx("summary", { children: journey.replaceAll('-', ' ') }), surfaces.map((surface) => _jsxs("a", { "aria-current": surface.key === current ? 'page' : undefined, href: surface.canonicalUrl, children: [surface.name, _jsx("small", { children: surface.summary })] }, surface.key))] }, journey)), _jsx("a", { href: "https://beyond10x.github.io/ecosystem/", children: "All projects" })] });
 }
 function fallbackAdoption(surface) {
     const quickstart = surface.sections.find((section) => section.kind === 'quickstart' || section.kind === 'guide');

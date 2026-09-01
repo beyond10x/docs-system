@@ -1,0 +1,45 @@
+schema: b10x-docs/v3
+repository:
+  id: docs-system
+  url: https://github.com/beyond10x/docs-system
+  displayName: Docs System
+delivery:
+  publisher: website
+  repository: beyond10x.github.io
+  origin: https://beyond10x.github.io
+surfaces:
+  - id: docs
+    name: Docs System
+    summary: Validate and collect public documentation sources for the unified beyond10x website.
+    kind: reference
+    canonicalUrl: https://beyond10x.github.io/docs/docs-system/
+    maturity: development
+    availability: published
+    discoverability: public
+    audiences: [developer]
+    primaryJourney: build-agents
+    journeys: [build-agents, operate-services]
+    capabilities: [documentation-contracts, source-collection]
+    sections:
+      - {label: Documentation, url: https://beyond10x.github.io/docs/docs-system/, kind: docs}
+      - {label: Source, url: https://github.com/beyond10x/docs-system, kind: source}
+    relationships:
+      - {target: agentplugins/docs, kind: supports, label: Supplies shared publication contracts}
+    feeds:
+      - {label: Impact feed, url: https://beyond10x.github.io/changes/feed.xml, kind: feed, format: rss, scope: impact}
+    adoption:
+      label: Validate a manifest
+      url: https://beyond10x.github.io/docs/docs-system/
+      mode: source-build
+      estimatedMinutes: 5
+      prerequisites: [Node.js]
+      outcome: Validate one repository's declared public documentation inputs.
+    routeBase: /docs/docs-system/
+    source:
+      root: .
+      documents:
+        include: [README.md]
+      specifications:
+        - {id: manifest-v3, format: json-schema, path: schema/b10x.docs.v3.schema.json, route: /api/docs-system/manifest-v3/}
+      navigation: {label: Docs System, order: 90, sidebar: flat}
+      components: [CodeExample, JsonSchemaViewer]

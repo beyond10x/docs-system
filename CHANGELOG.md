@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 — 2026-09-01
+
+- Add the additive `b10x-docs/v3` contract for repository-owned, data-only sources delivered by the
+  unified website, including display names, canonical route bases, primary journeys, typed feeds,
+  safe source selections, API/schema declarations, and central delivery metadata.
+- Add deterministic source locking and collection with content digests, traversal and executable
+  MDX rejection, optional byte-for-byte staging, and typed v2 ecosystem-change targets.
+- Add GitHub Pages compatibility route generation, byte-preserving machine aliases, scoped impact
+  and release feeds, and generated README discovery blocks with drift checking.
+
 ## 0.2.0 — 2026-09-01
 
 - Add the dual-read `b10x-docs/v2` contract with explicit adoption actions, the planning journey,

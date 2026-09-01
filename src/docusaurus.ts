@@ -13,9 +13,9 @@ export default function docsSystemPlugin(): {name: string; getClientModules(): s
 
 export function ecosystemNavbarItems(): Array<Record<string, string>> {
   return [
-    {href: 'https://beyond10x.github.io/getting-started/', label: 'beyond10x', position: 'left'},
-    {href: 'https://beyond10x.github.io/getting-started/ecosystem', label: 'Ecosystem', position: 'left'},
-    {href: 'https://beyond10x.github.io/getting-started/changes', label: 'Changes', position: 'left'},
+    {href: 'https://beyond10x.github.io/', label: 'beyond10x', position: 'left'},
+    {href: 'https://beyond10x.github.io/ecosystem/', label: 'Ecosystem', position: 'left'},
+    {href: 'https://beyond10x.github.io/changes/', label: 'Changes', position: 'left'},
   ];
 }
 
@@ -23,9 +23,9 @@ export function ecosystemFooterGroup(): {title: string; items: Array<{label: str
   return {
     title: 'beyond10x',
     items: [
-      {label: 'Start here', href: 'https://beyond10x.github.io/getting-started/'},
-      {label: 'Public ecosystem', href: 'https://beyond10x.github.io/getting-started/ecosystem'},
-      {label: 'Ecosystem changes', href: 'https://beyond10x.github.io/getting-started/changes'},
+      {label: 'Start here', href: 'https://beyond10x.github.io/'},
+      {label: 'Public ecosystem', href: 'https://beyond10x.github.io/ecosystem/'},
+      {label: 'Ecosystem changes', href: 'https://beyond10x.github.io/changes/'},
     ],
   };
 }

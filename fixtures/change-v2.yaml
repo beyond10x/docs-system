@@ -1,0 +1,19 @@
+schema: b10x-change/v2
+id: docs-system/0.3.0
+repository: docs-system
+publishedAt: 2026-09-02T12:00:00Z
+title: Unified documentation source contracts
+summary: Public repositories can declare passive source inputs, canonical delivery, affected components, and APIs.
+kind: migration
+impact: significant
+source:
+  url: https://github.com/beyond10x/docs-system/releases/tag/0.3.0
+  version: 0.3.0
+journeys: [build-agents, operate-services]
+affected:
+  repositories: [docs-system]
+  surfaces: [docs-system/docs]
+  components: [docs-system/collector]
+  apis: [docs-system/manifest-v3]
+relations:
+  - {target: surface:agentplugins/docs, kind: integrates-with, label: Agent documentation remains repository-owned}

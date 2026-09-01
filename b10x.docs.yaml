@@ -1,31 +1,52 @@
-schema: b10x-docs/v2
+schema: b10x-docs/v3
 repository:
   id: docs-system
   url: https://github.com/beyond10x/docs-system
+  displayName: Docs System
+delivery:
+  publisher: website
+  repository: beyond10x.github.io
+  origin: https://beyond10x.github.io
 surfaces:
   - id: docs
     name: Docs System
-    summary: Shared documentation contracts, design tokens, React primitives, renderers, and deterministic discovery tooling.
+    summary: Shared documentation contracts, safe source collection, React primitives, renderers, redirects, and deterministic discovery tooling.
     kind: reference
-    canonicalUrl: https://github.com/beyond10x/docs-system#readme
+    canonicalUrl: https://beyond10x.github.io/docs/docs-system/
     maturity: development
     availability: published
     discoverability: public
-    audiences: [developer]
+    audiences: [developer, operator]
+    primaryJourney: build-agents
     journeys: [build-agents, operate-services]
-    capabilities: [documentation-contracts, shared-components, ecosystem-change-feeds]
+    capabilities: [documentation-contracts, safe-source-collection, shared-components, ecosystem-change-feeds]
     sections:
-      - {label: Integration guide, url: https://github.com/beyond10x/docs-system#readme, kind: guide}
+      - {label: Integration guide, url: https://beyond10x.github.io/docs/docs-system/, kind: guide}
+      - {label: Schemas, url: https://beyond10x.github.io/api/docs-system/manifest-v3/, kind: api}
       - {label: Releases, url: https://github.com/beyond10x/docs-system/releases, kind: feed}
       - {label: Source, url: https://github.com/beyond10x/docs-system, kind: source}
     relationships:
-      - {target: getting-started/docs, kind: supports, label: Generates the public discovery snapshot}
+      - {target: website/docs, kind: supports, label: Supplies the unified publication contracts and tooling}
+    feeds:
+      - {label: Ecosystem impact, url: https://beyond10x.github.io/changes/feed.xml, kind: feed, format: rss, scope: impact}
+      - {label: Technical releases, url: https://beyond10x.github.io/releases/feed.json, kind: feed, format: json-feed, scope: releases}
     adoption:
-      label: Pin the shared docs package
-      url: https://github.com/beyond10x/docs-system#surface-manifests
-      mode: install
+      label: Validate a documentation source
+      url: https://beyond10x.github.io/docs/docs-system/
+      mode: source-build
       estimatedMinutes: 5
       prerequisites: [Node.js]
-      outcome: Validate one repository manifest and reuse the shared documentation shell.
+      outcome: Validate and safely collect one repository's declared public documentation inputs.
     accent: "#59d89d"
-    shell: {integration: portable, revision: local}
+    routeBase: /docs/docs-system/
+    source:
+      root: .
+      documents:
+        include: [README.md, CHANGELOG.md]
+      specifications:
+        - {id: manifest-v3, format: json-schema, path: schema/b10x.docs.v3.schema.json, route: /api/docs-system/manifest-v3/, title: Documentation manifest v3}
+        - {id: change-v2, format: json-schema, path: schema/b10x.change.v2.schema.json, route: /api/docs-system/change-v2/, title: Ecosystem change v2}
+        - {id: source-lock, format: json-schema, path: schema/b10x.sources.schema.json, route: /api/docs-system/source-lock/, title: Documentation source lock}
+        - {id: redirects, format: json-schema, path: schema/b10x.redirects.schema.json, route: /api/docs-system/redirects/, title: Compatibility route map}
+      navigation: {label: Docs System, order: 90, sidebar: flat}
+      components: [BoundaryNotice, CodeExample, CommandExample, Diagram, JsonSchemaViewer, OpenApiReference]

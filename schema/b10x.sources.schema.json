@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.sources.v1.json",
+  "title": "b10x unified documentation source lock",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "sources"],
+  "properties": {
+    "schema": {"const": "b10x-sources/v1"},
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["repository", "url", "commit", "manifestPath", "manifestSha256", "contentSha256"],
+        "properties": {
+          "repository": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "url": {"type": "string", "format": "uri", "pattern": "^https://github\\.com/beyond10x/"},
+          "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "manifestPath": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"},
+          "manifestSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "contentSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}

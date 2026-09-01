@@ -1,0 +1,5 @@
+schema: b10x-redirects/v1
+origin: https://beyond10x.github.io
+redirects:
+  - {type: html, from: /getting-started/, to: /}
+  - {type: alias, from: /legacy/feed.json, source: changes/feed.json, mediaType: application/feed+json}

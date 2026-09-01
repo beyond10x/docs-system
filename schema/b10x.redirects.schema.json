@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.redirects.v1.json",
+  "title": "b10x Pages compatibility routes",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "origin", "redirects"],
+  "properties": {
+    "schema": {"const": "b10x-redirects/v1"},
+    "origin": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "redirects": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to", "type"],
+            "properties": {
+              "from": {"type": "string", "pattern": "^/(?!.*(?:^|/)\\.\\.(?:/|$))"},
+              "to": {"type": "string", "pattern": "^(?:https://|/)"},
+              "type": {"const": "html"}
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "source", "type"],
+            "properties": {
+              "from": {"type": "string", "pattern": "^/(?!.*(?:^|/)\\.\\.(?:/|$))"},
+              "source": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"},
+              "type": {"const": "alias"},
+              "mediaType": {"type": "string", "pattern": "^[a-z0-9.+-]+/[a-z0-9.+-]+(?:;.*)?$"}
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+schema: b10x-change/v2
+id: docs-system/unified-source-contracts-0.3.0
+repository: docs-system
+publishedAt: 2026-09-01T18:00:00Z
+title: Documentation becomes one safely collected public system
+summary: Docs System 0.3.0 adds repository-owned passive source declarations, pinned content digests, central delivery, compatibility redirects, and generated discovery blocks.
+kind: migration
+impact: significant
+source:
+  url: https://github.com/beyond10x/docs-system/releases/tag/0.3.0
+  version: 0.3.0
+journeys: [understand, plan-work, specify, build-agents, operate-services]
+affected:
+  repositories: [docs-system, website]
+  surfaces: [docs-system/docs, website/docs]
+  components: [docs-system/collector, docs-system/redirect-generator]
+  apis: [docs-system/manifest-v3, docs-system/source-lock]
+relations:
+  - {target: surface:website/docs, kind: enables, label: Supplies the safe publication and compatibility contracts}

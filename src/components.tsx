@@ -1,7 +1,7 @@
 import type {ReactNode} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Mermaid from '@theme/Mermaid';
-import type {ChangeLedgerEntry, DocumentationSurface, EcosystemRegistry, Journey, Maturity} from './types.js';
+import type {AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity} from './types.js';
 
 export function StatusBadge({maturity, children}: {maturity: Maturity; children?: ReactNode}): ReactNode {
   return <span className={`b10x-status b10x-status--${maturity}`}>{children ?? maturity}</span>;
@@ -29,12 +29,12 @@ export function Diagram({kind, source, src, title, description, download}: {kind
   return <figure className="b10x-diagram" aria-label={title}>{kind === 'mermaid' ? <Mermaid value={source!} /> : <img src={src} alt={description} loading="lazy" />}<figcaption><strong>{title}</strong><span>{description}</span>{download && <a href={download} download>Download source</a>}</figcaption></figure>;
 }
 
-export function ProjectCard({surface}: {surface: DocumentationSurface}): ReactNode {
+export function ProjectCard({surface}: {surface: AnyDocumentationSurface}): ReactNode {
   const action = surface.adoption ?? fallbackAdoption(surface);
   return <article className="b10x-project-card" style={{'--b10x-project-accent': surface.accent} as React.CSSProperties}><div><StatusBadge maturity={surface.maturity} /><span>{surface.kind}</span></div><h3><a href={surface.canonicalUrl}>{surface.name}</a></h3><p>{surface.summary}</p><ul>{surface.capabilities.map((capability) => <li key={capability}>{capability.replaceAll('-', ' ')}</li>)}</ul><a className="b10x-adoption-link" href={action.url}>{action.label} <span aria-hidden="true">→</span></a></article>;
 }
 
-export function AdoptionCard({surface, journey}: {surface: DocumentationSurface; journey?: Journey}): ReactNode {
+export function AdoptionCard({surface, journey}: {surface: AnyDocumentationSurface; journey?: Journey}): ReactNode {
   const action = surface.adoption ?? fallbackAdoption(surface);
   return <article className="b10x-adoption-card" style={{'--b10x-project-accent': surface.accent} as React.CSSProperties}>
     <header><StatusBadge maturity={surface.maturity} />{journey && <span>{journey.replaceAll('-', ' ')}</span>}</header>
@@ -45,7 +45,7 @@ export function AdoptionCard({surface, journey}: {surface: DocumentationSurface;
   </article>;
 }
 
-export function ChangeTimelineEntry({change, surfaces}: {change: ChangeLedgerEntry; surfaces?: Map<string, DocumentationSurface>}): ReactNode {
+export function ChangeTimelineEntry({change, surfaces}: {change: ChangeLedgerEntry; surfaces?: Map<string, AnyDocumentationSurface>}): ReactNode {
   return <article className={`b10x-change b10x-change--${change.impact}`} id={change.key.replaceAll('/', '-')}>
     <header><time dateTime={change.publishedAt}>{new Date(change.publishedAt).toLocaleDateString('en', {dateStyle: 'medium', timeZone: 'UTC'})}</time><span>{change.repository}</span><span>{change.kind}</span><strong>{change.impact.replaceAll('-', ' ')}</strong></header>
     <h2><a href={change.source.url}>{change.title}</a></h2><p>{change.summary}</p>
@@ -61,10 +61,10 @@ export function EcosystemSwitcher({registry, current}: {registry: EcosystemRegis
     const journey = surface.journeys[0] ?? 'understand';
     groups.set(journey, [...(groups.get(journey) ?? []), surface]);
   }
-  return <nav className="b10x-switcher" aria-label="beyond10x ecosystem"><a href="https://beyond10x.github.io/getting-started/">Start</a>{[...groups].map(([journey, surfaces]) => <details key={journey}><summary>{journey.replaceAll('-', ' ')}</summary>{surfaces.map((surface) => <a aria-current={surface.key === current ? 'page' : undefined} key={surface.key} href={surface.canonicalUrl}>{surface.name}<small>{surface.summary}</small></a>)}</details>)}<a href="https://beyond10x.github.io/getting-started/ecosystem">All projects</a></nav>;
+  return <nav className="b10x-switcher" aria-label="beyond10x ecosystem"><a href="https://beyond10x.github.io/">Start</a>{[...groups].map(([journey, surfaces]) => <details key={journey}><summary>{journey.replaceAll('-', ' ')}</summary>{surfaces.map((surface) => <a aria-current={surface.key === current ? 'page' : undefined} key={surface.key} href={surface.canonicalUrl}>{surface.name}<small>{surface.summary}</small></a>)}</details>)}<a href="https://beyond10x.github.io/ecosystem/">All projects</a></nav>;
 }
 
-function fallbackAdoption(surface: DocumentationSurface): NonNullable<DocumentationSurface['adoption']> {
+function fallbackAdoption(surface: AnyDocumentationSurface): NonNullable<AnyDocumentationSurface['adoption']> {
   const quickstart = surface.sections.find((section) => section.kind === 'quickstart' || section.kind === 'guide');
   return {label: quickstart?.label ?? `Explore ${surface.name}`, url: quickstart?.url ?? surface.canonicalUrl, mode: 'browser', estimatedMinutes: 10, outcome: surface.summary};
 }

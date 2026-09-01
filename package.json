@@ -1,6 +1,6 @@
 {
   "name": "@beyond10x/docs-system",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Git-pinned documentation shell, components, renderers, and discovery contract for beyond10x.",
   "license": "Apache-2.0",
@@ -11,12 +11,20 @@
   "exports": {
     ".": "./dist/index.js",
     "./components": "./dist/components.js",
+    "./collector": "./dist/collector.js",
+    "./discovery": "./dist/discovery.js",
     "./docusaurus": "./dist/docusaurus.js",
+    "./feeds": "./dist/feeds.js",
+    "./redirects": "./dist/redirects.js",
     "./renderers": "./dist/renderers.js",
     "./types": "./dist/types.js",
     "./schema": "./schema/b10x.docs.schema.json",
     "./schema/v2": "./schema/b10x.docs.v2.schema.json",
+    "./schema/v3": "./schema/b10x.docs.v3.schema.json",
     "./schema/change": "./schema/b10x.change.schema.json",
+    "./schema/change/v2": "./schema/b10x.change.v2.schema.json",
+    "./schema/sources": "./schema/b10x.sources.schema.json",
+    "./schema/redirects": "./schema/b10x.redirects.schema.json",
     "./tokens.css": "./styles/tokens.css"
   },
   "files": [
@@ -26,7 +34,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "build:check": "npm run build && git diff --exit-code -- dist",
+    "build:check": "node scripts/check-build.mjs",
     "test": "node --test tests/*.test.mjs",
     "validate:fixtures": "node dist/cli.js validate fixtures/*.yaml",
     "gate": "npm run build:check && npm test && npm run validate:fixtures"
