@@ -4,6 +4,7 @@ import test from 'node:test';
 test('documented Node-safe package subpaths load without Docusaurus theme aliases', async () => {
   const modules = await Promise.all([
     import('@beyond10x/docs-system/manifest'),
+    import('@beyond10x/docs-system/code'),
     import('@beyond10x/docs-system/collector'),
     import('@beyond10x/docs-system/discovery'),
     import('@beyond10x/docs-system/feeds'),
@@ -13,12 +14,13 @@ test('documented Node-safe package subpaths load without Docusaurus theme aliase
   ]);
   assert.equal(typeof modules[0].readManifest, 'function');
   assert.equal(typeof modules[0].readSourceLock, 'function');
-  assert.equal(typeof modules[1].collectManifestSources, 'function');
-  assert.equal(typeof modules[2].renderDiscoveryBlock, 'function');
-  assert.equal(typeof modules[3].writeJsonFeed, 'function');
-  assert.equal(typeof modules[4].deriveEcosystemNavigation, 'function');
-  assert.equal(typeof modules[5].writeRedirectMap, 'function');
-  assert.deepEqual(Object.keys(modules[6]), []);
+  assert.equal(typeof modules[1].normalizeMarkdownFenceLanguage, 'function');
+  assert.equal(typeof modules[2].collectManifestSources, 'function');
+  assert.equal(typeof modules[3].renderDiscoveryBlock, 'function');
+  assert.equal(typeof modules[4].writeJsonFeed, 'function');
+  assert.equal(typeof modules[5].deriveEcosystemNavigation, 'function');
+  assert.equal(typeof modules[6].writeRedirectMap, 'function');
+  assert.deepEqual(Object.keys(modules[7]), []);
 });
 
 test('published schema subpaths load as JSON in plain Node', async () => {

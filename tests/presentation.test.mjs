@@ -6,9 +6,114 @@ import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {deriveEcosystemNavigation} from '../dist/navigation.js';
 import {OpenApiReference} from '../dist/renderers.js';
+import {normalizeMarkdownFenceLanguage, PRISM_ADDITIONAL_LANGUAGES, PRISM_LANGUAGES} from '../dist/code.js';
 
 register('./theme-loader.mjs', import.meta.url);
-const {DependencyGraph, Diagram, EcosystemFamilyGateway} = await import('../dist/components.js');
+const {
+  AdoptionCard,
+  BoundaryNotice,
+  Callout,
+  CardGrid,
+  CodeExample,
+  CommandExample,
+  ContentCard,
+  DependencyGraph,
+  Diagram,
+  EcosystemFamilyGateway,
+  FactGrid,
+  FilterChipGroup,
+  PageHeader,
+  ProjectCard,
+  SearchField,
+  SectionHeader,
+} = await import('../dist/components.js');
+
+test('shared page, section, fact, callout, search, filter, and card primitives render semantic contracts', () => {
+  const markup = renderToStaticMarkup(createElement('main', null,
+    createElement(PageHeader, {
+      eyebrow: 'Foundation',
+      title: 'Build with beyond10x',
+      description: createElement('p', null, 'Choose a path.'),
+      actions: createElement('a', {href: '/docs/'}, 'Explore'),
+    }, createElement('span', null, 'Public ecosystem')),
+    createElement(SectionHeader, {eyebrow: 'Adopt', title: 'Choose a journey', description: 'Start with an outcome.', action: createElement('a', {href: '/journeys/'}, 'All journeys'), headingLevel: 3, id: 'journeys'}),
+    createElement(FactGrid, {items: [{label: 'Projects', value: '19'}, {label: 'Status', value: 'Public', detail: 'Verified from Atlas', url: '/status/'}]}),
+    createElement(Callout, {tone: 'success', title: 'Verified'}, createElement('p', null, 'All gates pass.')),
+    createElement(BoundaryNotice, null, createElement('p', null, 'Preview only.')),
+    createElement(SearchField, {name: 'query', placeholder: 'Search the ecosystem', hint: 'Try “agents”.'}),
+    createElement(FilterChipGroup, {label: 'Families', selected: ['build'], options: [{value: 'foundation', label: 'Foundation', count: 4}, {value: 'build', label: 'Build', count: 7}]}),
+    createElement(CardGrid, {columns: 2, label: 'Journeys'},
+      createElement(ContentCard, {eyebrow: 'Journey', title: 'Build agents', titleUrl: '/journeys/build-agents/', description: 'Compose reliable agents.', actionUrl: '/journeys/build-agents/', actionLabel: 'Start building'}),
+    ),
+  ));
+  assert.match(markup, /<header class="b10x-page-header">[\s\S]*?<h1>Build with beyond10x<\/h1>/);
+  assert.match(markup, /<h3 id="journeys">Choose a journey<\/h3>/);
+  assert.match(markup, /<dl class="b10x-fact-grid" aria-label="Key facts">/);
+  assert.match(markup, /class="b10x-callout b10x-callout--success"/);
+  assert.match(markup, /class="b10x-callout b10x-callout--warning b10x-boundary"/);
+  assert.match(markup, /<label for="b10x-search-/);
+  assert.match(markup, /type="search"/);
+  assert.match(markup, /aria-describedby="b10x-search-[^"]+-hint"/);
+  assert.match(markup, /<fieldset class="b10x-filter-chips"><legend>Families<\/legend>/);
+  assert.match(markup, /aria-pressed="true"[^>]*><span>Build<\/span><small>7<\/small>/);
+  assert.match(markup, /class="b10x-card-grid b10x-card-grid--2" aria-label="Journeys"/);
+  assert.match(markup, /class="b10x-content-card"/);
+  assert.match(markup, /<h3><a href="\/journeys\/build-agents\/">Build agents<\/a><\/h3>/);
+  assert.match(markup, />Start building <span aria-hidden="true">→<\/span><\/a>/);
+});
+
+test('project and adoption cards preserve defaults and accept heading, title, and action overrides', () => {
+  const project = surface('build/harness', 'Harness', 'documentation', {group: 'Build', order: 10});
+  const defaults = renderToStaticMarkup(createElement(ProjectCard, {surface: project}));
+  assert.match(defaults, /<h3><a href="https:\/\/example\.test\/build\/harness\/">Harness<\/a><\/h3>/);
+  assert.match(defaults, /href="https:\/\/example\.test\/build\/harness\/">Open Harness/);
+
+  const projectOverride = renderToStaticMarkup(createElement(ProjectCard, {
+    surface: project,
+    headingLevel: 2,
+    title: 'Agent Harness',
+    titleUrl: '/ecosystem/harness/',
+    actionUrl: '/journeys/build-agents/',
+    actionLabel: 'Build an agent',
+  }));
+  assert.match(projectOverride, /<h2><a href="\/ecosystem\/harness\/">Agent Harness<\/a><\/h2>/);
+  assert.match(projectOverride, /href="\/journeys\/build-agents\/">Build an agent/);
+
+  const adoptionDefault = renderToStaticMarkup(createElement(AdoptionCard, {surface: project}));
+  assert.match(adoptionDefault, /<h3>Harness<\/h3>/);
+  const adoptionOverride = renderToStaticMarkup(createElement(AdoptionCard, {
+    surface: project,
+    headingLevel: 4,
+    title: 'Compose an agent',
+    titleUrl: '/ecosystem/harness/',
+    actionUrl: '/docs/harness/quickstart/',
+    actionLabel: 'Open quickstart',
+  }));
+  assert.match(adoptionOverride, /<h4><a href="\/ecosystem\/harness\/">Compose an agent<\/a><\/h4>/);
+  assert.match(adoptionOverride, /href="\/docs\/harness\/quickstart\/">Open quickstart/);
+});
+
+test('canonical Prism languages normalize Markdown aliases without discarding extensions', () => {
+  assert.equal(new Set(PRISM_LANGUAGES).size, PRISM_LANGUAGES.length, 'canonical Prism languages must be unique');
+  assert.ok(PRISM_ADDITIONAL_LANGUAGES.every((language) => PRISM_LANGUAGES.includes(language)), 'every loaded grammar must be canonical');
+  for (const language of ['toml', 'http', 'shell-session', 'rust', 'go', 'python', 'c', 'cpp', 'bash']) {
+    assert.ok(PRISM_ADDITIONAL_LANGUAGES.includes(language), `${language} must be loaded by Docusaurus`);
+    assert.ok(PRISM_LANGUAGES.includes(language), `${language} must be accepted in shared examples`);
+    assert.equal(normalizeMarkdownFenceLanguage(language), language);
+  }
+  assert.equal(normalizeMarkdownFenceLanguage('console'), 'shell-session');
+  assert.equal(normalizeMarkdownFenceLanguage('sh'), 'bash');
+  assert.equal(normalizeMarkdownFenceLanguage('YML'), 'yaml');
+  assert.equal(normalizeMarkdownFenceLanguage('language-rs'), 'rust');
+  assert.equal(normalizeMarkdownFenceLanguage(), 'text');
+  assert.equal(normalizeMarkdownFenceLanguage('project-dsl'), 'project-dsl');
+
+  const code = renderToStaticMarkup(createElement(CodeExample, {language: 'sh'}, 'cargo test'));
+  const transcript = renderToStaticMarkup(createElement(CommandExample, {command: 'cargo test', output: 'ok'}));
+  assert.match(code, /data-language="bash"/);
+  assert.match(transcript, /data-language="shell-session"/);
+  assert.match(transcript, /\$ cargo test\nok/);
+});
 
 test('OpenApiReference embeds as a section with configurable coherent headings', () => {
   const document = {
@@ -39,7 +144,9 @@ test('DependencyGraph keeps one full-size keyboard viewport and a complete edge-
     minWidth: '112rem',
   }));
   assert.match(markup, /class="b10x-diagram__viewport"[^>]*style="--b10x-diagram-min-width:112rem"[^>]*tabindex="0"[^>]*role="region"/);
-  assert.match(markup, /Scrollable diagram\. Focus this region and use the arrow keys/);
+  assert.match(markup, /class="b10x-diagram__guidance"/);
+  assert.match(markup, /<strong>Pan the full-size diagram:<\/strong> swipe or scroll, or focus the canvas and use the arrow keys/);
+  assert.doesNotMatch(markup, /b10x-sr-only[^>]*>Scrollable diagram/);
   assert.match(markup, /<summary>Diagram as text<\/summary>/);
   assert.match(markup, /<strong>Atlas<\/strong> <code>atlas<\/code>/);
   assert.match(markup, /<strong>Atlas<\/strong> to <strong>Website<\/strong>: publishes registry/);
@@ -106,15 +213,23 @@ test('semantic color pairs meet WCAG text and component contrast thresholds', as
   assert.ok(contrast(light['footer-text'], light['footer-background']) >= 4.5);
   assert.ok(contrast(light['footer-accent'], light['footer-background']) >= 4.5);
   assert.match(css, /--b10x-touch-target:\s*2\.75rem/);
+  assert.equal((css.match(/\{/g) ?? []).length, (css.match(/\}/g) ?? []).length, 'shared CSS blocks must be balanced');
   assert.match(css, /max-block-size:\s*min\(70vh, 44rem\)/);
   assert.match(css, /\.b10x-diagram__canvas \{[\s\S]*?inline-size:\s*max\(100%, var\(--b10x-diagram-min-width/);
-  assert.match(css, /\.b10x-project-card h2,\n\.b10x-project-card h3/);
+  assert.match(css, /\.b10x-project-card :is\(h2, h3, h4\)/);
+  assert.match(css, /\.b10x-page-header \{/);
+  assert.match(css, /\.b10x-content-card \{/);
+  assert.match(css, /\.b10x-filter-chips button\[aria-pressed='true'\]/);
+  assert.match(css, /pre\[class\*='language-'\]/);
+  assert.match(css, /\.b10x-diagram__guidance \{/);
 });
 
-test('v3 passive component vocabulary includes the family gateway', async () => {
+test('v3 passive component vocabulary includes the shared presentation primitives', async () => {
   const schema = JSON.parse(await fs.readFile(new URL('../schema/b10x.docs.v3.schema.json', import.meta.url), 'utf8'));
-  assert.ok(schema.$defs.source.properties.components.items.enum.includes('EcosystemFamilyGateway'));
-  assert.ok(schema.$defs.source.properties.components.items.enum.includes('EcosystemSwitcher'));
+  const vocabulary = schema.$defs.source.properties.components.items.enum;
+  for (const component of ['Callout', 'CardGrid', 'ContentCard', 'EcosystemFamilyGateway', 'EcosystemSwitcher', 'FactGrid', 'FilterChipGroup', 'PageHeader', 'SearchField', 'SectionHeader']) {
+    assert.ok(vocabulary.includes(component), `${component} must be allowed by v3 source manifests`);
+  }
 });
 
 function surface(key, name, kind, navigation) {

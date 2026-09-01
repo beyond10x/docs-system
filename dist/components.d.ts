@@ -1,5 +1,82 @@
-import type { ReactNode } from 'react';
+import type { InputHTMLAttributes, ReactNode } from 'react';
 import type { AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity, RegistrySurface } from './types.js';
+export type HeadingLevel = 1 | 2 | 3 | 4;
+export interface PageHeaderProps {
+    title: ReactNode;
+    description?: ReactNode;
+    eyebrow?: ReactNode;
+    actions?: ReactNode;
+    children?: ReactNode;
+    headingLevel?: 1 | 2;
+}
+export declare function PageHeader({ title, description, eyebrow, actions, children, headingLevel }: PageHeaderProps): ReactNode;
+export interface SectionHeaderProps {
+    title: ReactNode;
+    description?: ReactNode;
+    eyebrow?: ReactNode;
+    action?: ReactNode;
+    headingLevel?: 2 | 3 | 4;
+    id?: string;
+}
+export declare function SectionHeader({ title, description, eyebrow, action, headingLevel, id }: SectionHeaderProps): ReactNode;
+export interface FactGridItem {
+    label: ReactNode;
+    value: ReactNode;
+    detail?: ReactNode;
+    url?: string;
+}
+export interface FactGridProps {
+    items: readonly FactGridItem[];
+    label?: string;
+}
+export declare function FactGrid({ items, label }: FactGridProps): ReactNode;
+export type CalloutTone = 'note' | 'success' | 'warning' | 'danger';
+export interface CalloutProps {
+    children: ReactNode;
+    title?: ReactNode;
+    tone?: CalloutTone;
+    className?: string;
+}
+export declare function Callout({ children, title, tone, className }: CalloutProps): ReactNode;
+export interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+    label?: string;
+    hint?: ReactNode;
+    containerClassName?: string;
+}
+export declare function SearchField({ label, hint, containerClassName, id, ...input }: SearchFieldProps): ReactNode;
+export interface FilterChipOption {
+    value: string;
+    label: ReactNode;
+    count?: number;
+    disabled?: boolean;
+}
+export interface FilterChipGroupProps {
+    label: string;
+    options: readonly FilterChipOption[];
+    selected: readonly string[];
+    onToggle?: (value: string, selected: boolean) => void;
+}
+export declare function FilterChipGroup({ label, options, selected, onToggle }: FilterChipGroupProps): ReactNode;
+export interface CardGridProps {
+    children: ReactNode;
+    columns?: 'auto' | 2 | 3 | 4;
+    label?: string;
+}
+export declare function CardGrid({ children, columns, label }: CardGridProps): ReactNode;
+export interface ContentCardProps {
+    title: ReactNode;
+    description?: ReactNode;
+    eyebrow?: ReactNode;
+    meta?: ReactNode;
+    children?: ReactNode;
+    footer?: ReactNode;
+    titleUrl?: string;
+    actionUrl?: string;
+    actionLabel?: ReactNode;
+    accent?: string;
+    headingLevel?: 2 | 3 | 4;
+}
+export declare function ContentCard({ title, description, eyebrow, meta, children, footer, titleUrl, actionUrl, actionLabel, accent, headingLevel }: ContentCardProps): ReactNode;
 export declare function StatusBadge({ maturity, children }: {
     maturity: Maturity;
     children?: ReactNode;
@@ -74,13 +151,25 @@ export declare function DependencyGraph({ nodes, edges, title, description, minW
     minWidth?: number | string;
 }): ReactNode;
 export declare function Diagram({ kind, source, src, title, description, download, minWidth, initialPosition, alternative }: DiagramProps): ReactNode;
-export declare function ProjectCard({ surface }: {
+export interface ProjectCardProps {
     surface: AnyDocumentationSurface;
-}): ReactNode;
-export declare function AdoptionCard({ surface, journey }: {
+    headingLevel?: 2 | 3 | 4;
+    title?: ReactNode;
+    titleUrl?: string;
+    actionUrl?: string;
+    actionLabel?: ReactNode;
+}
+export declare function ProjectCard({ surface, headingLevel, title, titleUrl, actionUrl, actionLabel }: ProjectCardProps): ReactNode;
+export interface AdoptionCardProps {
     surface: AnyDocumentationSurface;
     journey?: Journey;
-}): ReactNode;
+    headingLevel?: 2 | 3 | 4;
+    title?: ReactNode;
+    titleUrl?: string;
+    actionUrl?: string;
+    actionLabel?: ReactNode;
+}
+export declare function AdoptionCard({ surface, journey, headingLevel, title, titleUrl, actionUrl, actionLabel }: AdoptionCardProps): ReactNode;
 export declare function ChangeTimelineEntry({ change, surfaces }: {
     change: ChangeLedgerEntry;
     surfaces?: Map<string, AnyDocumentationSurface>;

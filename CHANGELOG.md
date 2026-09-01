@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.0 — 2026-09-01
+
+- Add shared page and section headers, fact grids, callouts, search fields, filter chips, card grids,
+  and content cards so discovery pages can use one responsive, accessible visual language.
+- Let project and adoption cards opt into page-appropriate headings and internal profile/action URLs
+  without duplicating their rendering in the Website.
+- Publish a Node-safe Prism language contract and normalize fence aliases while distinguishing
+  copyable Bash from shell transcripts; load Go, Rust, TOML, HTTP, C/C++, Python, and other public
+  documentation grammars consistently.
+- Standardize fenced code styling, light/dark interaction states, elevation and radius tokens, and
+  visible keyboard/touch guidance for full-size diagrams.
+
 ## 0.4.0 — 2026-09-01
 
 - Make `OpenApiReference` an embeddable section with configurable h2/h3 roots, coherent subordinate

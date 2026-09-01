@@ -1,24 +1,188 @@
 import {useEffect, useId, useRef} from 'react';
-import type {CSSProperties, ReactNode} from 'react';
+import type {CSSProperties, InputHTMLAttributes, ReactNode} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Mermaid from '@theme/Mermaid';
+import {normalizeMarkdownFenceLanguage} from './code.js';
 import {deriveEcosystemNavigation, surfaceNavigation} from './navigation.js';
 import type {AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity, RegistrySurface} from './types.js';
+
+export type HeadingLevel = 1 | 2 | 3 | 4;
+
+export interface PageHeaderProps {
+  title: ReactNode;
+  description?: ReactNode;
+  eyebrow?: ReactNode;
+  actions?: ReactNode;
+  children?: ReactNode;
+  headingLevel?: 1 | 2;
+}
+
+export function PageHeader({title, description, eyebrow, actions, children, headingLevel = 1}: PageHeaderProps): ReactNode {
+  const Heading = headingTag(headingLevel);
+  return <header className="b10x-page-header">
+    <div className="b10x-page-header__copy">
+      {eyebrow && <p className="b10x-eyebrow">{eyebrow}</p>}
+      <Heading>{title}</Heading>
+      {description && <div className="b10x-page-header__description">{description}</div>}
+      {children && <div className="b10x-page-header__meta">{children}</div>}
+    </div>
+    {actions && <div className="b10x-page-header__actions">{actions}</div>}
+  </header>;
+}
+
+export interface SectionHeaderProps {
+  title: ReactNode;
+  description?: ReactNode;
+  eyebrow?: ReactNode;
+  action?: ReactNode;
+  headingLevel?: 2 | 3 | 4;
+  id?: string;
+}
+
+export function SectionHeader({title, description, eyebrow, action, headingLevel = 2, id}: SectionHeaderProps): ReactNode {
+  const Heading = headingTag(headingLevel);
+  return <header className="b10x-section-header">
+    <div>
+      {eyebrow && <p className="b10x-eyebrow">{eyebrow}</p>}
+      <Heading id={id}>{title}</Heading>
+      {description && <div className="b10x-section-header__description">{description}</div>}
+    </div>
+    {action && <div className="b10x-section-header__action">{action}</div>}
+  </header>;
+}
+
+export interface FactGridItem {
+  label: ReactNode;
+  value: ReactNode;
+  detail?: ReactNode;
+  url?: string;
+}
+
+export interface FactGridProps {
+  items: readonly FactGridItem[];
+  label?: string;
+}
+
+export function FactGrid({items, label = 'Key facts'}: FactGridProps): ReactNode {
+  return <dl className="b10x-fact-grid" aria-label={label}>{items.map((item, index) => <div key={index}>
+    <dt>{item.label}</dt>
+    <dd>{item.url ? <a href={item.url}>{item.value}</a> : item.value}</dd>
+    {item.detail && <dd className="b10x-fact-grid__detail">{item.detail}</dd>}
+  </div>)}</dl>;
+}
+
+export type CalloutTone = 'note' | 'success' | 'warning' | 'danger';
+
+export interface CalloutProps {
+  children: ReactNode;
+  title?: ReactNode;
+  tone?: CalloutTone;
+  className?: string;
+}
+
+const calloutTitles: Record<CalloutTone, string> = {note: 'Note', success: 'Ready', warning: 'Attention', danger: 'Important'};
+
+export function Callout({children, title, tone = 'note', className}: CalloutProps): ReactNode {
+  return <aside className={['b10x-callout', `b10x-callout--${tone}`, className].filter(Boolean).join(' ')}>
+    <p className="b10x-callout__title b10x-eyebrow">{title ?? calloutTitles[tone]}</p>
+    <div className="b10x-callout__content">{children}</div>
+  </aside>;
+}
+
+export interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+  label?: string;
+  hint?: ReactNode;
+  containerClassName?: string;
+}
+
+export function SearchField({label = 'Search', hint, containerClassName, id, ...input}: SearchFieldProps): ReactNode {
+  const generatedId = useId().replaceAll(':', '');
+  const inputId = id ?? `b10x-search-${generatedId}`;
+  const hintId = hint ? `${inputId}-hint` : undefined;
+  return <div className={['b10x-search-field', containerClassName].filter(Boolean).join(' ')}>
+    <label htmlFor={inputId}>{label}</label>
+    <div><span aria-hidden="true">⌕</span><input {...input} id={inputId} type="search" aria-describedby={joinIds(input['aria-describedby'], hintId)} /></div>
+    {hint && <small id={hintId}>{hint}</small>}
+  </div>;
+}
+
+export interface FilterChipOption {
+  value: string;
+  label: ReactNode;
+  count?: number;
+  disabled?: boolean;
+}
+
+export interface FilterChipGroupProps {
+  label: string;
+  options: readonly FilterChipOption[];
+  selected: readonly string[];
+  onToggle?: (value: string, selected: boolean) => void;
+}
+
+export function FilterChipGroup({label, options, selected, onToggle}: FilterChipGroupProps): ReactNode {
+  const active = new Set(selected);
+  return <fieldset className="b10x-filter-chips">
+    <legend>{label}</legend>
+    <div>{options.map((option) => {
+      const isSelected = active.has(option.value);
+      return <button key={option.value} type="button" aria-pressed={isSelected} disabled={option.disabled} onClick={() => onToggle?.(option.value, !isSelected)}>
+        <span>{option.label}</span>{option.count !== undefined && <small>{option.count}</small>}
+      </button>;
+    })}</div>
+  </fieldset>;
+}
+
+export interface CardGridProps {
+  children: ReactNode;
+  columns?: 'auto' | 2 | 3 | 4;
+  label?: string;
+}
+
+export function CardGrid({children, columns = 'auto', label}: CardGridProps): ReactNode {
+  return <section className={`b10x-card-grid b10x-card-grid--${columns}`} aria-label={label}>{children}</section>;
+}
+
+export interface ContentCardProps {
+  title: ReactNode;
+  description?: ReactNode;
+  eyebrow?: ReactNode;
+  meta?: ReactNode;
+  children?: ReactNode;
+  footer?: ReactNode;
+  titleUrl?: string;
+  actionUrl?: string;
+  actionLabel?: ReactNode;
+  accent?: string;
+  headingLevel?: 2 | 3 | 4;
+}
+
+export function ContentCard({title, description, eyebrow, meta, children, footer, titleUrl, actionUrl, actionLabel = 'Learn more', accent, headingLevel = 3}: ContentCardProps): ReactNode {
+  const Heading = headingTag(headingLevel);
+  const style = accent ? {'--b10x-project-accent': accent} as CSSProperties : undefined;
+  return <article className="b10x-content-card" style={style}>
+    {(eyebrow || meta) && <header>{eyebrow && <span className="b10x-eyebrow">{eyebrow}</span>}{meta && <span>{meta}</span>}</header>}
+    <Heading>{titleUrl ? <a href={titleUrl}>{title}</a> : title}</Heading>
+    {description && <div className="b10x-content-card__description">{description}</div>}
+    {children && <div className="b10x-content-card__body">{children}</div>}
+    {(footer || actionUrl) && <footer>{footer}{actionUrl && <a className="b10x-card-action" href={actionUrl}>{actionLabel} <span aria-hidden="true">→</span></a>}</footer>}
+  </article>;
+}
 
 export function StatusBadge({maturity, children}: {maturity: Maturity; children?: ReactNode}): ReactNode {
   return <span className={`b10x-status b10x-status--${maturity}`}>{children ?? maturity}</span>;
 }
 
 export function BoundaryNotice({title = 'Current boundary', children}: {title?: string; children: ReactNode}): ReactNode {
-  return <aside className="b10x-boundary"><p className="b10x-eyebrow">{title}</p><div>{children}</div></aside>;
+  return <Callout className="b10x-boundary" title={title} tone="warning">{children}</Callout>;
 }
 
 export function CodeExample({language, title, children}: {language: string; title?: string; children: string}): ReactNode {
-  return <div className="b10x-code"><CodeBlock language={language} title={title} showLineNumbers>{children.trimEnd()}</CodeBlock></div>;
+  return <div className="b10x-code"><CodeBlock language={normalizeMarkdownFenceLanguage(language)} title={title} showLineNumbers>{children.trimEnd()}</CodeBlock></div>;
 }
 
 export function CommandExample({command, output, title}: {command: string; output?: string; title?: string}): ReactNode {
-  return <div className="b10x-command"><CodeBlock language="console" title={title ?? 'Terminal'}>{`$ ${command.trim()}${output ? `\n${output.trimEnd()}` : ''}`}</CodeBlock></div>;
+  return <div className="b10x-command"><CodeBlock language="shell-session" title={title ?? 'Terminal'}>{`$ ${command.trim()}${output ? `\n${output.trimEnd()}` : ''}`}</CodeBlock></div>;
 }
 
 export function CodeTabs({items}: {items: Array<{label: string; language: string; code: string}>}): ReactNode {
@@ -144,25 +308,46 @@ export function Diagram({kind, source, src, title, description, download, minWid
         <div aria-hidden="true">{kind === 'mermaid' ? <Mermaid value={source!} /> : <img src={src} alt="" loading="lazy" />}</div>
       </div>
     </div>
-    <p className="b10x-sr-only" id={instructionsId}>Scrollable diagram. Focus this region and use the arrow keys to explore the full-size visual.</p>
+    <p className="b10x-diagram__guidance" id={instructionsId}><span aria-hidden="true">↔</span><span><strong>Pan the full-size diagram:</strong> swipe or scroll, or focus the canvas and use the arrow keys.</span></p>
     <figcaption><strong id={titleId}>{title}</strong><span id={descriptionId}>{description}</span>{download && <a className="b10x-touch-link" href={download} download>Download source</a>}</figcaption>
     {alternative && <DiagramTextAlternative alternative={alternative} id={alternativeId} />}
   </figure>;
 }
 
-export function ProjectCard({surface}: {surface: AnyDocumentationSurface}): ReactNode {
-  const action = surface.adoption ?? fallbackAdoption(surface);
-  return <article className="b10x-project-card" style={{'--b10x-project-accent': surface.accent} as React.CSSProperties}><div><StatusBadge maturity={surface.maturity} /><span>{surface.kind}</span></div><h3><a href={surface.canonicalUrl}>{surface.name}</a></h3><p>{surface.summary}</p><ul>{surface.capabilities.map((capability) => <li key={capability}>{capability.replaceAll('-', ' ')}</li>)}</ul><a className="b10x-adoption-link" href={action.url}>{action.label} <span aria-hidden="true">→</span></a></article>;
+export interface ProjectCardProps {
+  surface: AnyDocumentationSurface;
+  headingLevel?: 2 | 3 | 4;
+  title?: ReactNode;
+  titleUrl?: string;
+  actionUrl?: string;
+  actionLabel?: ReactNode;
 }
 
-export function AdoptionCard({surface, journey}: {surface: AnyDocumentationSurface; journey?: Journey}): ReactNode {
+export function ProjectCard({surface, headingLevel = 3, title = surface.name, titleUrl = surface.canonicalUrl, actionUrl, actionLabel}: ProjectCardProps): ReactNode {
   const action = surface.adoption ?? fallbackAdoption(surface);
-  return <article className="b10x-adoption-card" style={{'--b10x-project-accent': surface.accent} as React.CSSProperties}>
+  const Heading = headingTag(headingLevel);
+  return <article className="b10x-project-card" style={{'--b10x-project-accent': surface.accent} as CSSProperties}><div><StatusBadge maturity={surface.maturity} /><span>{surface.kind}</span></div><Heading><a href={titleUrl}>{title}</a></Heading><p>{surface.summary}</p><ul>{surface.capabilities.map((capability) => <li key={capability}>{capability.replaceAll('-', ' ')}</li>)}</ul><a className="b10x-adoption-link" href={actionUrl ?? action.url}>{actionLabel ?? action.label} <span aria-hidden="true">→</span></a></article>;
+}
+
+export interface AdoptionCardProps {
+  surface: AnyDocumentationSurface;
+  journey?: Journey;
+  headingLevel?: 2 | 3 | 4;
+  title?: ReactNode;
+  titleUrl?: string;
+  actionUrl?: string;
+  actionLabel?: ReactNode;
+}
+
+export function AdoptionCard({surface, journey, headingLevel = 3, title = surface.name, titleUrl, actionUrl, actionLabel}: AdoptionCardProps): ReactNode {
+  const action = surface.adoption ?? fallbackAdoption(surface);
+  const Heading = headingTag(headingLevel);
+  return <article className="b10x-adoption-card" style={{'--b10x-project-accent': surface.accent} as CSSProperties}>
     <header><StatusBadge maturity={surface.maturity} />{journey && <span>{journey.replaceAll('-', ' ')}</span>}</header>
-    <h3>{surface.name}</h3><p>{action.outcome}</p>
+    <Heading>{titleUrl ? <a href={titleUrl}>{title}</a> : title}</Heading><p>{action.outcome}</p>
     <dl><div><dt>Path</dt><dd>{action.mode.replaceAll('-', ' ')}</dd></div><div><dt>Time</dt><dd>about {action.estimatedMinutes} min</dd></div></dl>
     {action.prerequisites?.length ? <p><strong>Needs:</strong> {action.prerequisites.join(', ')}</p> : null}
-    <a href={action.url}>{action.label} <span aria-hidden="true">→</span></a>
+    <a href={actionUrl ?? action.url}>{actionLabel ?? action.label} <span aria-hidden="true">→</span></a>
   </article>;
 }
 
@@ -239,6 +424,15 @@ export function EcosystemFamilyGateway({
 function fallbackAdoption(surface: AnyDocumentationSurface): NonNullable<AnyDocumentationSurface['adoption']> {
   const quickstart = surface.sections.find((section) => section.kind === 'quickstart' || section.kind === 'guide');
   return {label: quickstart?.label ?? `Explore ${surface.name}`, url: quickstart?.url ?? surface.canonicalUrl, mode: 'browser', estimatedMinutes: 10, outcome: surface.summary};
+}
+
+function headingTag(level: HeadingLevel): 'h1' | 'h2' | 'h3' | 'h4' {
+  return `h${level}` as 'h1' | 'h2' | 'h3' | 'h4';
+}
+
+function joinIds(...ids: Array<string | undefined>): string | undefined {
+  const value = ids.filter(Boolean).join(' ');
+  return value || undefined;
 }
 
 function mermaidLabel(value: string): string { return value.replaceAll('"', "'").replaceAll('\n', ' '); }

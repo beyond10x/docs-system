@@ -29,7 +29,7 @@ repository's data-only source declaration from delivery by the central Website. 
 
 Versions 1 and 2 remain readable during migration. Validate any supported contract with:
 
-```console
+```bash
 b10x-docs validate b10x.docs.yaml changes/*.yaml sources.lock.json redirects.yaml
 ```
 
@@ -40,7 +40,7 @@ are accepted as inert Docusaurus syntax; inline or executable expressions remain
 never rewrites those markers, so collected and copied files retain their original bytes. The
 collector can validate and hash in place or copy only the declared bytes:
 
-```console
+```bash
 b10x-docs collect --manifest b10x.docs.yaml --repository-root . \
   --index-out collection.json --out .generated/sources
 ```
@@ -63,7 +63,7 @@ import {writeRedirectMap} from '@beyond10x/docs-system/redirects';
 Generate or check the standard marked README entry block rather than hand-writing cross-ecosystem
 links:
 
-```console
+```bash
 b10x-docs readme --manifest b10x.docs.yaml --file README.md
 b10x-docs readme --manifest b10x.docs.yaml --file README.md --check
 ```
@@ -72,7 +72,7 @@ b10x-docs readme --manifest b10x.docs.yaml --file README.md --check
 documents remain valid. Snapshot generation keeps explicit impact records and unenriched technical
 releases in distinct typed channels while retaining a deterministic combined ledger:
 
-```console
+```bash
 b10x-docs snapshot --registry-out ecosystem.json --ledger-out changes.json \
   --rss-out changes/feed.xml --json-feed-out changes/feed.json \
   --release-facts release-facts.json ../*/b10x.docs.yaml ../*/changes/*.yaml
@@ -80,7 +80,7 @@ b10x-docs snapshot --registry-out ecosystem.json --ledger-out changes.json \
 
 Generate repository Pages compatibility façades from `b10x-redirects/v1`:
 
-```console
+```bash
 b10x-docs redirects --map redirects.yaml --out public --alias-root unified-artifact
 ```
 
@@ -90,19 +90,42 @@ HTML redirects.
 
 ## Shared components
 
+- `PageHeader` and `SectionHeader` for consistent page hierarchy
+- `CardGrid`, `ContentCard`, `ProjectCard`, and `AdoptionCard`
+- `FactGrid`, `SearchField`, and `FilterChipGroup` for discovery views
+- `Callout` with note, success, warning, and danger tones; `BoundaryNotice` is its compatibility wrapper
 - `CodeExample`, `CommandExample`, and `CodeTabs`
 - `DataCatalog` and `DependencyGraph` for typed repository-owned data
 - `Diagram` for Mermaid source or generated SVG
 - `OpenApiReference` and `JsonSchemaViewer` for read-only OpenAPI 3.1 documents
-- `StatusBadge`, `BoundaryNotice`, `ProjectCard`, and `EcosystemSwitcher`
+- `StatusBadge` and `EcosystemSwitcher`
 - `EcosystemFamilyGateway` for a metadata-driven public entry experience
-- `AdoptionCard` and `ChangeTimelineEntry`
+- `ChangeTimelineEntry` for ecosystem impact feeds
 
 Import `@beyond10x/docs-system/tokens.css` once. Components use stable `b10x-*` class names; project
 identity is data, while Website owns the unified shell. The semantic light/dark tokens meet at least
 WCAG AA contrast for normal text and 3:1 for component boundaries. Existing `--b10x-ink`,
 `--b10x-text`, and related names remain aliases; new integrations should prefer the
 `--b10x-color-*` tokens. Footer shell colors are available as `--b10x-footer-*`.
+
+Every Docusaurus consumer should also load the shared Prism grammar list. It covers Bash, C/C++,
+Go, HTTP, Python, Rust, shell transcripts, TOML, YAML, and the other languages present in public
+repository documentation:
+
+```ts
+import {PRISM_ADDITIONAL_LANGUAGES} from '@beyond10x/docs-system/code';
+
+export default {
+  themeConfig: {
+    prism: {additionalLanguages: [...PRISM_ADDITIONAL_LANGUAGES]},
+  },
+};
+```
+
+Use `normalizeMarkdownFenceLanguage` when preparing repository-owned Markdown. It makes common
+aliases deterministic: `sh` becomes `bash`, `console` becomes `shell-session`, and `yml` becomes
+`yaml`. Unknown project-specific grammars are retained instead of silently losing highlighting.
+`CommandExample` always uses `shell-session`; `CodeExample` normalizes the requested language.
 
 `OpenApiReference` is an embeddable section, never a page landmark. It defaults to an h2 and can sit
 under an existing documentation h2 without introducing another h1 or `main`:
@@ -146,7 +169,7 @@ assigning them to an invented family.
 
 ## Gate
 
-```console
+```bash
 npm ci --ignore-scripts
 npm run gate
 ```

@@ -2,18 +2,55 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useEffect, useId, useRef } from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Mermaid from '@theme/Mermaid';
+import { normalizeMarkdownFenceLanguage } from './code.js';
 import { deriveEcosystemNavigation, surfaceNavigation } from './navigation.js';
+export function PageHeader({ title, description, eyebrow, actions, children, headingLevel = 1 }) {
+    const Heading = headingTag(headingLevel);
+    return _jsxs("header", { className: "b10x-page-header", children: [_jsxs("div", { className: "b10x-page-header__copy", children: [eyebrow && _jsx("p", { className: "b10x-eyebrow", children: eyebrow }), _jsx(Heading, { children: title }), description && _jsx("div", { className: "b10x-page-header__description", children: description }), children && _jsx("div", { className: "b10x-page-header__meta", children: children })] }), actions && _jsx("div", { className: "b10x-page-header__actions", children: actions })] });
+}
+export function SectionHeader({ title, description, eyebrow, action, headingLevel = 2, id }) {
+    const Heading = headingTag(headingLevel);
+    return _jsxs("header", { className: "b10x-section-header", children: [_jsxs("div", { children: [eyebrow && _jsx("p", { className: "b10x-eyebrow", children: eyebrow }), _jsx(Heading, { id: id, children: title }), description && _jsx("div", { className: "b10x-section-header__description", children: description })] }), action && _jsx("div", { className: "b10x-section-header__action", children: action })] });
+}
+export function FactGrid({ items, label = 'Key facts' }) {
+    return _jsx("dl", { className: "b10x-fact-grid", "aria-label": label, children: items.map((item, index) => _jsxs("div", { children: [_jsx("dt", { children: item.label }), _jsx("dd", { children: item.url ? _jsx("a", { href: item.url, children: item.value }) : item.value }), item.detail && _jsx("dd", { className: "b10x-fact-grid__detail", children: item.detail })] }, index)) });
+}
+const calloutTitles = { note: 'Note', success: 'Ready', warning: 'Attention', danger: 'Important' };
+export function Callout({ children, title, tone = 'note', className }) {
+    return _jsxs("aside", { className: ['b10x-callout', `b10x-callout--${tone}`, className].filter(Boolean).join(' '), children: [_jsx("p", { className: "b10x-callout__title b10x-eyebrow", children: title ?? calloutTitles[tone] }), _jsx("div", { className: "b10x-callout__content", children: children })] });
+}
+export function SearchField({ label = 'Search', hint, containerClassName, id, ...input }) {
+    const generatedId = useId().replaceAll(':', '');
+    const inputId = id ?? `b10x-search-${generatedId}`;
+    const hintId = hint ? `${inputId}-hint` : undefined;
+    return _jsxs("div", { className: ['b10x-search-field', containerClassName].filter(Boolean).join(' '), children: [_jsx("label", { htmlFor: inputId, children: label }), _jsxs("div", { children: [_jsx("span", { "aria-hidden": "true", children: "\u2315" }), _jsx("input", { ...input, id: inputId, type: "search", "aria-describedby": joinIds(input['aria-describedby'], hintId) })] }), hint && _jsx("small", { id: hintId, children: hint })] });
+}
+export function FilterChipGroup({ label, options, selected, onToggle }) {
+    const active = new Set(selected);
+    return _jsxs("fieldset", { className: "b10x-filter-chips", children: [_jsx("legend", { children: label }), _jsx("div", { children: options.map((option) => {
+                    const isSelected = active.has(option.value);
+                    return _jsxs("button", { type: "button", "aria-pressed": isSelected, disabled: option.disabled, onClick: () => onToggle?.(option.value, !isSelected), children: [_jsx("span", { children: option.label }), option.count !== undefined && _jsx("small", { children: option.count })] }, option.value);
+                }) })] });
+}
+export function CardGrid({ children, columns = 'auto', label }) {
+    return _jsx("section", { className: `b10x-card-grid b10x-card-grid--${columns}`, "aria-label": label, children: children });
+}
+export function ContentCard({ title, description, eyebrow, meta, children, footer, titleUrl, actionUrl, actionLabel = 'Learn more', accent, headingLevel = 3 }) {
+    const Heading = headingTag(headingLevel);
+    const style = accent ? { '--b10x-project-accent': accent } : undefined;
+    return _jsxs("article", { className: "b10x-content-card", style: style, children: [(eyebrow || meta) && _jsxs("header", { children: [eyebrow && _jsx("span", { className: "b10x-eyebrow", children: eyebrow }), meta && _jsx("span", { children: meta })] }), _jsx(Heading, { children: titleUrl ? _jsx("a", { href: titleUrl, children: title }) : title }), description && _jsx("div", { className: "b10x-content-card__description", children: description }), children && _jsx("div", { className: "b10x-content-card__body", children: children }), (footer || actionUrl) && _jsxs("footer", { children: [footer, actionUrl && _jsxs("a", { className: "b10x-card-action", href: actionUrl, children: [actionLabel, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] })] });
+}
 export function StatusBadge({ maturity, children }) {
     return _jsx("span", { className: `b10x-status b10x-status--${maturity}`, children: children ?? maturity });
 }
 export function BoundaryNotice({ title = 'Current boundary', children }) {
-    return _jsxs("aside", { className: "b10x-boundary", children: [_jsx("p", { className: "b10x-eyebrow", children: title }), _jsx("div", { children: children })] });
+    return _jsx(Callout, { className: "b10x-boundary", title: title, tone: "warning", children: children });
 }
 export function CodeExample({ language, title, children }) {
-    return _jsx("div", { className: "b10x-code", children: _jsx(CodeBlock, { language: language, title: title, showLineNumbers: true, children: children.trimEnd() }) });
+    return _jsx("div", { className: "b10x-code", children: _jsx(CodeBlock, { language: normalizeMarkdownFenceLanguage(language), title: title, showLineNumbers: true, children: children.trimEnd() }) });
 }
 export function CommandExample({ command, output, title }) {
-    return _jsx("div", { className: "b10x-command", children: _jsx(CodeBlock, { language: "console", title: title ?? 'Terminal', children: `$ ${command.trim()}${output ? `\n${output.trimEnd()}` : ''}` }) });
+    return _jsx("div", { className: "b10x-command", children: _jsx(CodeBlock, { language: "shell-session", title: title ?? 'Terminal', children: `$ ${command.trim()}${output ? `\n${output.trimEnd()}` : ''}` }) });
 }
 export function CodeTabs({ items }) {
     return _jsx("div", { className: "b10x-code-tabs", children: items.map((item) => _jsxs("details", { open: items[0] === item, children: [_jsx("summary", { children: item.label }), _jsx(CodeExample, { language: item.language, children: item.code })] }, item.label)) });
@@ -94,15 +131,17 @@ export function Diagram({ kind, source, src, title, description, download, minWi
             image?.removeEventListener('load', schedule);
         };
     }, [initialPosition, kind, minimum, source, src]);
-    return _jsxs("figure", { className: "b10x-diagram", "aria-labelledby": titleId, children: [_jsx("div", { ref: viewport, className: "b10x-diagram__viewport", style: style, tabIndex: 0, role: "region", "aria-labelledby": titleId, "aria-describedby": `${descriptionId} ${instructionsId}`, "aria-details": alternative ? alternativeId : undefined, children: _jsx("div", { className: "b10x-diagram__canvas", role: "img", "aria-label": description, children: _jsx("div", { "aria-hidden": "true", children: kind === 'mermaid' ? _jsx(Mermaid, { value: source }) : _jsx("img", { src: src, alt: "", loading: "lazy" }) }) }) }), _jsx("p", { className: "b10x-sr-only", id: instructionsId, children: "Scrollable diagram. Focus this region and use the arrow keys to explore the full-size visual." }), _jsxs("figcaption", { children: [_jsx("strong", { id: titleId, children: title }), _jsx("span", { id: descriptionId, children: description }), download && _jsx("a", { className: "b10x-touch-link", href: download, download: true, children: "Download source" })] }), alternative && _jsx(DiagramTextAlternative, { alternative: alternative, id: alternativeId })] });
+    return _jsxs("figure", { className: "b10x-diagram", "aria-labelledby": titleId, children: [_jsx("div", { ref: viewport, className: "b10x-diagram__viewport", style: style, tabIndex: 0, role: "region", "aria-labelledby": titleId, "aria-describedby": `${descriptionId} ${instructionsId}`, "aria-details": alternative ? alternativeId : undefined, children: _jsx("div", { className: "b10x-diagram__canvas", role: "img", "aria-label": description, children: _jsx("div", { "aria-hidden": "true", children: kind === 'mermaid' ? _jsx(Mermaid, { value: source }) : _jsx("img", { src: src, alt: "", loading: "lazy" }) }) }) }), _jsxs("p", { className: "b10x-diagram__guidance", id: instructionsId, children: [_jsx("span", { "aria-hidden": "true", children: "\u2194" }), _jsxs("span", { children: [_jsx("strong", { children: "Pan the full-size diagram:" }), " swipe or scroll, or focus the canvas and use the arrow keys."] })] }), _jsxs("figcaption", { children: [_jsx("strong", { id: titleId, children: title }), _jsx("span", { id: descriptionId, children: description }), download && _jsx("a", { className: "b10x-touch-link", href: download, download: true, children: "Download source" })] }), alternative && _jsx(DiagramTextAlternative, { alternative: alternative, id: alternativeId })] });
 }
-export function ProjectCard({ surface }) {
+export function ProjectCard({ surface, headingLevel = 3, title = surface.name, titleUrl = surface.canonicalUrl, actionUrl, actionLabel }) {
     const action = surface.adoption ?? fallbackAdoption(surface);
-    return _jsxs("article", { className: "b10x-project-card", style: { '--b10x-project-accent': surface.accent }, children: [_jsxs("div", { children: [_jsx(StatusBadge, { maturity: surface.maturity }), _jsx("span", { children: surface.kind })] }), _jsx("h3", { children: _jsx("a", { href: surface.canonicalUrl, children: surface.name }) }), _jsx("p", { children: surface.summary }), _jsx("ul", { children: surface.capabilities.map((capability) => _jsx("li", { children: capability.replaceAll('-', ' ') }, capability)) }), _jsxs("a", { className: "b10x-adoption-link", href: action.url, children: [action.label, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] });
+    const Heading = headingTag(headingLevel);
+    return _jsxs("article", { className: "b10x-project-card", style: { '--b10x-project-accent': surface.accent }, children: [_jsxs("div", { children: [_jsx(StatusBadge, { maturity: surface.maturity }), _jsx("span", { children: surface.kind })] }), _jsx(Heading, { children: _jsx("a", { href: titleUrl, children: title }) }), _jsx("p", { children: surface.summary }), _jsx("ul", { children: surface.capabilities.map((capability) => _jsx("li", { children: capability.replaceAll('-', ' ') }, capability)) }), _jsxs("a", { className: "b10x-adoption-link", href: actionUrl ?? action.url, children: [actionLabel ?? action.label, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] });
 }
-export function AdoptionCard({ surface, journey }) {
+export function AdoptionCard({ surface, journey, headingLevel = 3, title = surface.name, titleUrl, actionUrl, actionLabel }) {
     const action = surface.adoption ?? fallbackAdoption(surface);
-    return _jsxs("article", { className: "b10x-adoption-card", style: { '--b10x-project-accent': surface.accent }, children: [_jsxs("header", { children: [_jsx(StatusBadge, { maturity: surface.maturity }), journey && _jsx("span", { children: journey.replaceAll('-', ' ') })] }), _jsx("h3", { children: surface.name }), _jsx("p", { children: action.outcome }), _jsxs("dl", { children: [_jsxs("div", { children: [_jsx("dt", { children: "Path" }), _jsx("dd", { children: action.mode.replaceAll('-', ' ') })] }), _jsxs("div", { children: [_jsx("dt", { children: "Time" }), _jsxs("dd", { children: ["about ", action.estimatedMinutes, " min"] })] })] }), action.prerequisites?.length ? _jsxs("p", { children: [_jsx("strong", { children: "Needs:" }), " ", action.prerequisites.join(', ')] }) : null, _jsxs("a", { href: action.url, children: [action.label, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] });
+    const Heading = headingTag(headingLevel);
+    return _jsxs("article", { className: "b10x-adoption-card", style: { '--b10x-project-accent': surface.accent }, children: [_jsxs("header", { children: [_jsx(StatusBadge, { maturity: surface.maturity }), journey && _jsx("span", { children: journey.replaceAll('-', ' ') })] }), _jsx(Heading, { children: titleUrl ? _jsx("a", { href: titleUrl, children: title }) : title }), _jsx("p", { children: action.outcome }), _jsxs("dl", { children: [_jsxs("div", { children: [_jsx("dt", { children: "Path" }), _jsx("dd", { children: action.mode.replaceAll('-', ' ') })] }), _jsxs("div", { children: [_jsx("dt", { children: "Time" }), _jsxs("dd", { children: ["about ", action.estimatedMinutes, " min"] })] })] }), action.prerequisites?.length ? _jsxs("p", { children: [_jsx("strong", { children: "Needs:" }), " ", action.prerequisites.join(', ')] }) : null, _jsxs("a", { href: actionUrl ?? action.url, children: [actionLabel ?? action.label, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] });
 }
 export function ChangeTimelineEntry({ change, surfaces }) {
     return _jsxs("article", { className: `b10x-change b10x-change--${change.impact}`, id: change.key.replaceAll('/', '-'), children: [_jsxs("header", { children: [_jsx("time", { dateTime: change.publishedAt, children: new Date(change.publishedAt).toLocaleDateString('en', { dateStyle: 'medium', timeZone: 'UTC' }) }), _jsx("span", { children: change.repository }), _jsx("span", { children: change.kind }), _jsx("strong", { children: change.impact.replaceAll('-', ' ') })] }), _jsx("h2", { children: _jsx("a", { href: change.source.url, children: change.title }) }), _jsx("p", { children: change.summary }), _jsx("ul", { "aria-label": "Affected public surfaces", children: change.affectedSurfaces.map((key) => _jsx("li", { children: _jsx("a", { href: surfaces?.get(key)?.canonicalUrl, children: surfaces?.get(key)?.name ?? key }) }, key)) }), change.relations?.length ? _jsx("dl", { className: "b10x-change-relations", children: change.relations.map((relation) => _jsxs("div", { children: [_jsx("dt", { children: relation.kind.replaceAll('-', ' ') }), _jsx("dd", { children: relation.label ?? relation.target.replace(/^(surface|change):/, '') })] }, `${relation.kind}-${relation.target}`)) }) : null, change.action && _jsxs("a", { className: "b10x-change-action", href: change.action.url, children: [change.action.label, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] });
@@ -128,6 +167,13 @@ export function EcosystemFamilyGateway({ registry, surfaces, current, familyOrde
 function fallbackAdoption(surface) {
     const quickstart = surface.sections.find((section) => section.kind === 'quickstart' || section.kind === 'guide');
     return { label: quickstart?.label ?? `Explore ${surface.name}`, url: quickstart?.url ?? surface.canonicalUrl, mode: 'browser', estimatedMinutes: 10, outcome: surface.summary };
+}
+function headingTag(level) {
+    return `h${level}`;
+}
+function joinIds(...ids) {
+    const value = ids.filter(Boolean).join(' ');
+    return value || undefined;
 }
 function mermaidLabel(value) { return value.replaceAll('"', "'").replaceAll('\n', ' '); }
 function slugId(value) { return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'family'; }
