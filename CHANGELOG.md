@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.2 — 2026-09-01
+
+- Export `@beyond10x/docs-system/manifest` as a Node-safe entry point for manifest, source-lock,
+  registry, and change-ledger operations without loading Docusaurus theme aliases from the UI root.
+- Exercise every documented Node-safe JavaScript and JSON Schema subpath from plain Node so server
+  orchestration cannot regress to importing the browser/Docusaurus component graph.
+
 ## 0.3.1 — 2026-09-01
 
 - Add a typed `source.data` channel so repository-owned JSON, YAML, and other passive datasets can

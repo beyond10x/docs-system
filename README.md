@@ -46,6 +46,15 @@ The deterministic index contains every repository-relative source path, staged o
 size, SHA-256 digest, and one aggregate `contentSha256`. A `b10x-sources/v1` lock binds that digest and
 the manifest digest to an exact 40-character Git commit.
 
+Node orchestration imports the dedicated server-safe subpaths. The package root also exports React
+components and therefore belongs in Docusaurus, not a plain Node collector process:
+
+```js
+import {readManifest, readSourceLock} from '@beyond10x/docs-system/manifest';
+import {collectManifestSources} from '@beyond10x/docs-system/collector';
+import {writeRedirectMap} from '@beyond10x/docs-system/redirects';
+```
+
 ## Discovery, changes, and compatibility
 
 Generate or check the standard marked README entry block rather than hand-writing cross-ecosystem
