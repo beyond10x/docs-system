@@ -1,0 +1,25 @@
+schema: b10x-docs/v1
+repository:
+  id: getting-started
+  url: https://github.com/beyond10x/getting-started
+surfaces:
+  - id: docs
+    name: beyond10x
+    summary: Start with the public beyond10x ecosystem and choose a path through it.
+    kind: front-door
+    canonicalUrl: https://beyond10x.github.io/getting-started/
+    maturity: development
+    availability: published
+    discoverability: public
+    audiences: [evaluator, adopter, developer, operator, researcher]
+    journeys: [understand, specify, build-agents, operate-services]
+    capabilities: [ecosystem-discovery]
+    sections:
+      - label: Start here
+        url: https://beyond10x.github.io/getting-started/
+        kind: docs
+    accent: "#59d89d"
+    mark: website/static/img/mark.svg
+    shell:
+      integration: docusaurus
+      revision: local
