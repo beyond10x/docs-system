@@ -1,11 +1,13 @@
 import {createHash} from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {buildDocumentPageIndex} from './documents.js';
 import type {
   CollectedSource,
   CollectedSourceKind,
   CollectionIndex,
   DocumentationManifestV3,
+  DocumentationManifestV4,
   SharedComponentName,
   SourceLock,
   SourceSelection,
@@ -36,15 +38,17 @@ const neverCollectDirectories = new Set([
 ]);
 
 /**
- * Collect only paths explicitly declared by a v3 manifest. The collector never imports or executes
+ * Collect only paths explicitly declared by a v3 or v4 manifest. The collector never imports or executes
  * repository code. It optionally copies the validated bytes and always returns their stable index.
  */
 export async function collectManifestSources(
-  manifest: DocumentationManifestV3,
+  manifest: DocumentationManifestV3 | DocumentationManifestV4,
   repositoryRoot: string,
   options: CollectOptions = {},
 ): Promise<CollectionIndex> {
-  if (manifest.schema !== 'b10x-docs/v3') throw new Error('source collection requires b10x-docs/v3');
+  if (manifest.schema !== 'b10x-docs/v3' && manifest.schema !== 'b10x-docs/v4') {
+    throw new Error('source collection requires b10x-docs/v3 or b10x-docs/v4');
+  }
   const repositoryReal = await fs.realpath(repositoryRoot);
   const files: CollectedSource[] = [];
 
@@ -82,11 +86,12 @@ export async function collectManifestSources(
   files.sort(compareSources);
   assertUniqueOutputs(files);
   const index = buildCollectionIndex(manifest, files);
+  if (manifest.schema === 'b10x-docs/v4') await buildDocumentPageIndex(manifest, index, repositoryReal);
   if (options.outputRoot) await copyCollection(repositoryReal, options.outputRoot, files);
   return index;
 }
 
-export function buildCollectionIndex(manifest: DocumentationManifestV3, files: CollectedSource[]): CollectionIndex {
+export function buildCollectionIndex(manifest: DocumentationManifestV3 | DocumentationManifestV4, files: CollectedSource[]): CollectionIndex {
   const normalized = [...files].sort(compareSources);
   const contentSha256 = sha256(JSON.stringify(normalized.map((file) => ({
     repository: file.repository,

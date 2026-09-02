@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.experiences.v1.json",
+  "title": "beyond10x adoption experiences v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "artifacts", "experiences"],
+  "properties": {
+    "schema": {"const": "b10x-experiences/v1"},
+    "artifacts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "experiences": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/experience"}
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "access": {"enum": ["public", "account-required", "approval-required", "private"]},
+    "support": {"enum": ["supported", "preview", "experimental", "paused", "planned", "retired"]},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "availability", "access"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["documentation", "source", "package", "binary", "container", "helm-chart", "hosted-service"]},
+        "availability": {"enum": ["available", "unpublished", "planned", "retired"]},
+        "access": {"$ref": "#/$defs/access"},
+        "url": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "version": {"type": "string", "minLength": 1, "maxLength": 100},
+        "note": {"type": "string", "minLength": 1, "maxLength": 300}
+      }
+    },
+    "adoptionPath": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "support", "access", "artifactIds"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "label": {"type": "string", "minLength": 1, "maxLength": 100},
+        "support": {"$ref": "#/$defs/support"},
+        "access": {"$ref": "#/$defs/access"},
+        "artifactIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "url": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "estimatedMinutes": {"type": "integer", "minimum": 1, "maximum": 1440},
+        "prerequisites": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 160}
+        },
+        "outcome": {"type": "string", "minLength": 1, "maxLength": 300},
+        "note": {"type": "string", "minLength": 1, "maxLength": 300}
+      }
+    },
+    "experience": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "summary", "audiences", "adoptionPaths"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "label": {"type": "string", "minLength": 1, "maxLength": 100},
+        "summary": {"type": "string", "minLength": 1, "maxLength": 300},
+        "audiences": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["evaluator", "adopter", "developer", "operator", "researcher"]}
+        },
+        "adoptionPaths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/adoptionPath"}
+        }
+      }
+    }
+  }
+}

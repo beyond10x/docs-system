@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 — 2026-09-03
+
+- Add the additive `b10x-docs/v4`, `b10x-experiences/v1`, and `b10x-doc-page/v1`
+  contracts so publication, reader access, support status, artifact availability, experience paths,
+  and effective per-page audiences can be represented without changing v1-v3.
+- Evaluate adoption calls to action from the most restrictive path/artifact access, actionable
+  support state, complete artifact availability, and an explicit URL; legacy manifests normalize
+  to non-actionable compatibility experiences with unspecified access and support.
+- Validate page metadata inside ordinary Markdown/MDX `b10x:` frontmatter and emit a separate
+  normalized document index while preserving `b10x-sources/v1` and `b10x-docs-collection/v1`.
+
 ## 0.5.0 — 2026-09-01
 
 - Add shared page and section headers, fact grids, callouts, search fields, filter chips, card grids,

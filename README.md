@@ -18,22 +18,25 @@ is not published to npm:
 
 ## Documentation sources
 
-Every participating repository owns a root `b10x.docs.yaml`. `b10x-docs/v3` separates the owning
-repository's data-only source declaration from delivery by the central Website. It declares:
+Every participating repository owns a root `b10x.docs.yaml`. `b10x-docs/v4` keeps the v3 data-only
+source and central-delivery boundary and adds explicit experience and page contracts. It declares:
 
 - the repository display name and public documentation surfaces;
-- canonical route bases, audiences, primary journeys, relationships, and adoption actions;
+- canonical route bases, publication state, experience IDs, relationships, and document defaults;
 - allowlisted Markdown/MDX, structured data, blog, asset, OpenAPI, and JSON Schema inputs;
 - an optional fixed vocabulary of shared components; and
 - the Website publisher and `beyond10x.github.io` delivery origin.
 
-Versions 1 and 2 remain readable during migration. Validate any supported contract with:
+Publication answers whether and where documentation is delivered. Access answers who can use an
+adoption path or artifact; publishing a page never implies that its required product artifact is
+public. Versions 1 through 3 remain byte-immutable and readable during migration. Validate any
+supported contract with:
 
 ```bash
 b10x-docs validate b10x.docs.yaml changes/*.yaml sources.lock.json redirects.yaml
 ```
 
-The v3 collector never imports repository code. It refuses path traversal, symlinks, executable MDX,
+The v3/v4 collector never imports repository code. It refuses path traversal, symlinks, executable MDX,
 undeclared components, invalid source types, unmatched declarations, duplicate outputs, and duplicate
 specification routes. Whole-line MDX comment expressions and validated trailing explicit heading ids
 are accepted as inert Docusaurus syntax; inline or executable expressions remain refused. Validation
@@ -42,12 +45,54 @@ collector can validate and hash in place or copy only the declared bytes:
 
 ```bash
 b10x-docs collect --manifest b10x.docs.yaml --repository-root . \
-  --index-out collection.json --out .generated/sources
+  --index-out collection.json --document-index-out documents.json --out .generated/sources
 ```
 
 The deterministic index contains every repository-relative source path, staged output path, byte
 size, SHA-256 digest, and one aggregate `contentSha256`. A `b10x-sources/v1` lock binds that digest and
-the manifest digest to an exact 40-character Git commit.
+the manifest digest to an exact 40-character Git commit. `b10x-docs-collection/v1` and
+`b10x-sources/v1` are unchanged by v4; effective page metadata is emitted in the separate
+`b10x-doc-index/v1` sidecar.
+
+## Experiences and page metadata
+
+The Website owns one `b10x-experiences/v1` catalog. Repository v4 surfaces and pages reference its
+stable experience IDs. An experience contains ordered adoption paths. Each path declares support,
+its own access requirement, an optional URL, and every required artifact ID. Artifacts independently
+declare kind, availability, and access.
+
+Effective path access is the most restrictive of the path and all required artifacts:
+
+```text
+public < account-required < approval-required < private
+```
+
+A path is actionable only when support is `supported`, `preview`, or `experimental`, every required
+artifact is `available`, effective access is not `private`, and the path has a URL. Otherwise the
+evaluator returns typed blockers and a human-readable explanation for a status-only presentation.
+Immutable v1-v3 adoption actions normalize with `unspecified` access/support, no artifacts, and
+`actionable: false`; `unspecified` is never accepted in a v4 declaration.
+
+V4 `documentDefaults` always declare audiences, experience IDs, support, and access. A page may
+replace them by placing a `b10x-doc-page/v1` value under the ordinary top-level `b10x` frontmatter
+property; unrelated Docusaurus frontmatter remains untouched:
+
+```yaml
+---
+title: Validate a documentation source
+b10x:
+  schema: b10x-doc-page/v1
+  audiences: [operator]
+  experienceIds: [validate-documentation]
+  support: preview
+  access: account-required
+---
+```
+
+Validate embedded page metadata directly with `b10x-docs validate-page docs/example.md`. Node
+orchestration can use `readExperienceCatalog`, `normalizeManifestExperiences`,
+`resolveDocumentPageMetadata`, and `buildDocumentPageIndex` from the Node-safe `experiences`,
+`documents`, and `manifest` package subpaths.
 
 Node orchestration imports the dedicated server-safe subpaths. The package root also exports React
 components and therefore belongs in Docusaurus, not a plain Node collector process:

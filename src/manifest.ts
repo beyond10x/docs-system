@@ -7,10 +7,13 @@ import {parse} from 'yaml';
 import type {
   ChangeLedger,
   ChangeLedgerEntry,
+  DocumentPageMetadata,
   DocumentationManifest,
   DocumentationManifestV3,
+  DocumentationManifestV4,
   EcosystemChange,
   EcosystemRegistry,
+  ExperienceCatalog,
   Journey,
   RedirectMap,
   RegistrySurface,
@@ -22,6 +25,9 @@ const schemaPaths = {
   'b10x-docs/v1': fileURLToPath(new URL('../schema/b10x.docs.schema.json', import.meta.url)),
   'b10x-docs/v2': fileURLToPath(new URL('../schema/b10x.docs.v2.schema.json', import.meta.url)),
   'b10x-docs/v3': fileURLToPath(new URL('../schema/b10x.docs.v3.schema.json', import.meta.url)),
+  'b10x-docs/v4': fileURLToPath(new URL('../schema/b10x.docs.v4.schema.json', import.meta.url)),
+  'b10x-experiences/v1': fileURLToPath(new URL('../schema/b10x.experiences.schema.json', import.meta.url)),
+  'b10x-doc-page/v1': fileURLToPath(new URL('../schema/b10x.doc-page.schema.json', import.meta.url)),
   'b10x-change/v1': fileURLToPath(new URL('../schema/b10x.change.schema.json', import.meta.url)),
   'b10x-change/v2': fileURLToPath(new URL('../schema/b10x.change.v2.schema.json', import.meta.url)),
   'b10x-sources/v1': fileURLToPath(new URL('../schema/b10x.sources.schema.json', import.meta.url)),
@@ -29,7 +35,7 @@ const schemaPaths = {
 } as const;
 
 type DocumentSchema = keyof typeof schemaPaths;
-export type B10xDocument = DocumentationManifest | EcosystemChange | SourceLock | RedirectMap;
+export type B10xDocument = DocumentationManifest | EcosystemChange | SourceLock | RedirectMap | ExperienceCatalog | DocumentPageMetadata;
 
 interface ValidateFunction {
   (document: unknown): boolean;
@@ -40,9 +46,22 @@ const Ajv2020 = Ajv2020Module as unknown as new (options: {allErrors: boolean; s
 const addFormats = addFormatsModule as unknown as (ajv: AjvLike) => AjvLike;
 
 export async function readManifest(file: string | URL): Promise<DocumentationManifest> {
-  const document = await readTypedDocument(file, ['b10x-docs/v1', 'b10x-docs/v2', 'b10x-docs/v3']) as DocumentationManifest;
-  if (document.schema === 'b10x-docs/v3') validateV3Semantics(document, String(file));
+  const document = await readTypedDocument(file, ['b10x-docs/v1', 'b10x-docs/v2', 'b10x-docs/v3', 'b10x-docs/v4']) as DocumentationManifest;
+  validateManifestSemantics(document, String(file));
   return document;
+}
+
+export async function readExperienceCatalog(file: string | URL): Promise<ExperienceCatalog> {
+  const catalog = await readTypedDocument(file, ['b10x-experiences/v1']) as ExperienceCatalog;
+  const {validateExperienceCatalogSemantics} = await import('./experiences.js');
+  validateExperienceCatalogSemantics(catalog, String(file));
+  return catalog;
+}
+
+export async function validateDocumentPageMetadata(document: unknown, context = 'document page metadata'): Promise<DocumentPageMetadata> {
+  const validate = await validatorFor('b10x-doc-page/v1');
+  if (!validate(document)) throw new Error(formatErrors(context, 'b10x-doc-page/v1', validate.errors ?? []));
+  return document as DocumentPageMetadata;
 }
 
 export async function readChange(file: string | URL): Promise<EcosystemChange> {
@@ -77,7 +96,11 @@ export async function readRedirectMap(file: string | URL): Promise<RedirectMap> 
 
 export async function readDocument(file: string | URL): Promise<B10xDocument> {
   const document = await readTypedDocument(file, Object.keys(schemaPaths) as DocumentSchema[]);
-  if (document.schema === 'b10x-docs/v3') validateV3Semantics(document, String(file));
+  if (document.schema.startsWith('b10x-docs/')) validateManifestSemantics(document as DocumentationManifest, String(file));
+  if (document.schema === 'b10x-experiences/v1') {
+    const {validateExperienceCatalogSemantics} = await import('./experiences.js');
+    validateExperienceCatalogSemantics(document as ExperienceCatalog, String(file));
+  }
   return document;
 }
 
@@ -88,10 +111,7 @@ async function readTypedDocument(file: string | URL, accepted: DocumentSchema[])
   if (!accepted.includes(schema as DocumentSchema)) {
     throw new Error(`${String(file)} has unsupported schema ${schema || '(missing)'}`);
   }
-  const schemaSource = await fs.readFile(schemaPaths[schema as DocumentSchema], 'utf8');
-  const ajv = new Ajv2020({allErrors: true, strict: true});
-  addFormats(ajv);
-  const validate = ajv.compile(JSON.parse(schemaSource));
+  const validate = await validatorFor(schema as DocumentSchema);
   if (!validate(document)) throw new Error(formatErrors(String(file), schema, validate.errors ?? []));
   return document as B10xDocument;
 }
@@ -103,7 +123,19 @@ export function buildRegistry(manifests: DocumentationManifest[]): EcosystemRegi
     for (const surface of manifest.surfaces) {
       const key = `${manifest.repository.id}/${surface.id}`;
       if (all.has(key)) throw new Error(`duplicate documentation surface ${key}`);
-      all.set(key, {...surface, key, repository: manifest.repository} as RegistrySurface);
+      const v4Surface = manifest.schema === 'b10x-docs/v4' ? surface as DocumentationManifestV4['surfaces'][number] : undefined;
+      const registrySurface = v4Surface
+        ? {
+            ...v4Surface,
+            availability: v4Surface.publication.availability,
+            discoverability: v4Surface.publication.discoverability,
+            audiences: v4Surface.documentDefaults.audiences,
+            journeys: v4Surface.journeys ?? [],
+            key,
+            repository: manifest.repository,
+          }
+        : {...surface, key, repository: manifest.repository};
+      all.set(key, registrySurface as RegistrySurface);
       if ('routeBase' in surface) {
         const conflict = routes.get(surface.routeBase);
         if (conflict) throw new Error(`documentation route ${surface.routeBase} is declared by both ${conflict} and ${key}`);
@@ -177,7 +209,7 @@ export function buildLedger(registry: EcosystemRegistry, changes: EcosystemChang
       kind: 'release',
       impact: 'notable',
       source: {url: release.url, version: release.version},
-      journeys: unique(surfaces.flatMap((surface) => surface.journeys)),
+      journeys: unique(surfaces.flatMap((surface) => surface.journeys ?? [])),
       affectedSurfaces: surfaces.map((surface) => surface.key),
       automatic: true,
       channel: 'releases',
@@ -233,6 +265,57 @@ function validateV3Semantics(manifest: DocumentationManifestV3, file: string): v
       specificationRoutes.add(specification.route);
     }
   }
+}
+
+function validateManifestSemantics(manifest: DocumentationManifest, file: string): void {
+  if (manifest.schema === 'b10x-docs/v3') validateV3Semantics(manifest, file);
+  if (manifest.schema === 'b10x-docs/v4') validateV4Semantics(manifest, file);
+}
+
+function validateV4Semantics(manifest: DocumentationManifestV4, file: string): void {
+  const expectedRepositoryUrl = `https://github.com/beyond10x/${manifest.repository.id}`;
+  if (manifest.repository.url !== expectedRepositoryUrl) {
+    throw new Error(`${file} repository.url must be ${expectedRepositoryUrl}`);
+  }
+  const ids = new Set<string>();
+  for (const surface of manifest.surfaces) {
+    if (ids.has(surface.id)) throw new Error(`${file} contains duplicate surface ${surface.id}`);
+    ids.add(surface.id);
+    if (surface.primaryJourney && !surface.journeys?.includes(surface.primaryJourney)) {
+      throw new Error(`${file} surface ${surface.id} primaryJourney must also appear in journeys`);
+    }
+    const expectedCanonicalUrl = new URL(surface.routeBase, `${manifest.delivery.origin}/`).href;
+    if (surface.canonicalUrl !== expectedCanonicalUrl) {
+      throw new Error(`${file} surface ${surface.id} canonicalUrl must be ${expectedCanonicalUrl}`);
+    }
+    for (const experienceId of surface.documentDefaults.experienceIds) {
+      if (!surface.experienceIds.includes(experienceId)) {
+        throw new Error(`${file} surface ${surface.id} document default experience ${experienceId} is not declared by the surface`);
+      }
+    }
+    const specificationIds = new Set<string>();
+    const specificationRoutes = new Set<string>();
+    for (const specification of surface.source.specifications ?? []) {
+      if (specificationIds.has(specification.id)) throw new Error(`${file} surface ${surface.id} contains duplicate specification ${specification.id}`);
+      if (specificationRoutes.has(specification.route)) throw new Error(`${file} surface ${surface.id} contains duplicate specification route ${specification.route}`);
+      specificationIds.add(specification.id);
+      specificationRoutes.add(specification.route);
+    }
+  }
+}
+
+const validators = new Map<DocumentSchema, Promise<ValidateFunction>>();
+
+function validatorFor(schema: DocumentSchema): Promise<ValidateFunction> {
+  const existing = validators.get(schema);
+  if (existing) return existing;
+  const pending = fs.readFile(schemaPaths[schema], 'utf8').then((source) => {
+    const ajv = new Ajv2020({allErrors: true, strict: true});
+    addFormats(ajv);
+    return ajv.compile(JSON.parse(source));
+  });
+  validators.set(schema, pending);
+  return pending;
 }
 
 function normalizeChange(change: EcosystemChange): ChangeLedgerEntry {

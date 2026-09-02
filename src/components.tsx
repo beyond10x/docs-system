@@ -4,7 +4,7 @@ import CodeBlock from '@theme/CodeBlock';
 import Mermaid from '@theme/Mermaid';
 import {normalizeMarkdownFenceLanguage} from './code.js';
 import {deriveEcosystemNavigation, surfaceNavigation} from './navigation.js';
-import type {AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity, RegistrySurface} from './types.js';
+import type {AdoptionAction, AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity, RegistrySurface} from './types.js';
 
 export type HeadingLevel = 1 | 2 | 3 | 4;
 
@@ -324,7 +324,7 @@ export interface ProjectCardProps {
 }
 
 export function ProjectCard({surface, headingLevel = 3, title = surface.name, titleUrl = surface.canonicalUrl, actionUrl, actionLabel}: ProjectCardProps): ReactNode {
-  const action = surface.adoption ?? fallbackAdoption(surface);
+  const action = declaredAdoption(surface) ?? fallbackAdoption(surface);
   const Heading = headingTag(headingLevel);
   return <article className="b10x-project-card" style={{'--b10x-project-accent': surface.accent} as CSSProperties}><div><StatusBadge maturity={surface.maturity} /><span>{surface.kind}</span></div><Heading><a href={titleUrl}>{title}</a></Heading><p>{surface.summary}</p><ul>{surface.capabilities.map((capability) => <li key={capability}>{capability.replaceAll('-', ' ')}</li>)}</ul><a className="b10x-adoption-link" href={actionUrl ?? action.url}>{actionLabel ?? action.label} <span aria-hidden="true">→</span></a></article>;
 }
@@ -340,7 +340,7 @@ export interface AdoptionCardProps {
 }
 
 export function AdoptionCard({surface, journey, headingLevel = 3, title = surface.name, titleUrl, actionUrl, actionLabel}: AdoptionCardProps): ReactNode {
-  const action = surface.adoption ?? fallbackAdoption(surface);
+  const action = declaredAdoption(surface) ?? fallbackAdoption(surface);
   const Heading = headingTag(headingLevel);
   return <article className="b10x-adoption-card" style={{'--b10x-project-accent': surface.accent} as CSSProperties}>
     <header><StatusBadge maturity={surface.maturity} />{journey && <span>{journey.replaceAll('-', ' ')}</span>}</header>
@@ -421,7 +421,11 @@ export function EcosystemFamilyGateway({
   </section>;
 }
 
-function fallbackAdoption(surface: AnyDocumentationSurface): NonNullable<AnyDocumentationSurface['adoption']> {
+function declaredAdoption(surface: AnyDocumentationSurface): AdoptionAction | undefined {
+  return 'adoption' in surface ? surface.adoption : undefined;
+}
+
+function fallbackAdoption(surface: AnyDocumentationSurface): AdoptionAction {
   const quickstart = surface.sections.find((section) => section.kind === 'quickstart' || section.kind === 'guide');
   return {label: quickstart?.label ?? `Explore ${surface.name}`, url: quickstart?.url ?? surface.canonicalUrl, mode: 'browser', estimatedMinutes: 10, outcome: surface.summary};
 }

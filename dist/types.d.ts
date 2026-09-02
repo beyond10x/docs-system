@@ -3,6 +3,63 @@ export type Availability = 'published' | 'local-only' | 'planned';
 export type Discoverability = 'public' | 'unlisted' | 'internal';
 export type Journey = 'understand' | 'plan-work' | 'specify' | 'build-agents' | 'operate-services';
 export type Audience = 'evaluator' | 'adopter' | 'developer' | 'operator' | 'researcher';
+/** Access values accepted in explicit v4 and experience declarations, ordered least to most restrictive. */
+export type DeclaredAccess = 'public' | 'account-required' | 'approval-required' | 'private';
+/** `unspecified` is derived only while normalizing immutable v1-v3 manifests. */
+export type Access = DeclaredAccess | 'unspecified';
+export type DeclaredSupport = 'supported' | 'preview' | 'experimental' | 'paused' | 'planned' | 'retired';
+/** `unspecified` is derived only while normalizing immutable v1-v3 manifests. */
+export type Support = DeclaredSupport | 'unspecified';
+export type ArtifactKind = 'documentation' | 'source' | 'package' | 'binary' | 'container' | 'helm-chart' | 'hosted-service';
+export type ArtifactAvailability = 'available' | 'unpublished' | 'planned' | 'retired';
+export interface ExperienceArtifact {
+    id: string;
+    kind: ArtifactKind;
+    availability: ArtifactAvailability;
+    access: DeclaredAccess;
+    url?: string;
+    version?: string;
+    note?: string;
+}
+export interface AdoptionPath {
+    id: string;
+    label: string;
+    support: DeclaredSupport;
+    access: DeclaredAccess;
+    artifactIds: string[];
+    url?: string;
+    estimatedMinutes?: number;
+    prerequisites?: string[];
+    outcome?: string;
+    note?: string;
+}
+export interface DocumentationExperience {
+    id: string;
+    label: string;
+    summary: string;
+    audiences: Audience[];
+    /** Array order is presentation and adoption-path order. */
+    adoptionPaths: AdoptionPath[];
+}
+export interface ExperienceCatalog {
+    schema: 'b10x-experiences/v1';
+    artifacts: ExperienceArtifact[];
+    experiences: DocumentationExperience[];
+}
+export type AdoptionPathBlocker = 'unspecified-contract' | 'missing-url' | 'private-access' | 'non-actionable-support' | 'unavailable-artifact';
+export interface EvaluatedAdoptionPath extends Omit<AdoptionPath, 'access' | 'support'> {
+    access: Access;
+    support: Support;
+    artifacts: ExperienceArtifact[];
+    effectiveAccess: Access;
+    actionable: boolean;
+    blockers: AdoptionPathBlocker[];
+    explanation?: string;
+}
+export interface EvaluatedDocumentationExperience extends Omit<DocumentationExperience, 'adoptionPaths'> {
+    compatibility: boolean;
+    adoptionPaths: EvaluatedAdoptionPath[];
+}
 export interface SurfaceLink {
     label: string;
     url: string;
@@ -112,15 +169,84 @@ export interface DocumentationManifestV3 {
     journeyPaths?: Partial<Record<Journey, string[]>>;
     surfaces: DocumentationSurfaceV3[];
 }
-export type DocumentationManifest = DocumentationManifestLegacy | DocumentationManifestV3;
-export type AnyDocumentationSurface = DocumentationSurface | DocumentationSurfaceV3;
-export type RegistrySurface = AnyDocumentationSurface & {
+export interface DocumentationPublication {
+    availability: Availability;
+    discoverability: Discoverability;
+}
+export interface DocumentMetadataDefaults {
+    audiences: Audience[];
+    experienceIds: string[];
+    support: DeclaredSupport;
+    access: DeclaredAccess;
+}
+/** The validated value of the top-level `b10x` Markdown/MDX frontmatter property. */
+export interface DocumentPageMetadata {
+    schema: 'b10x-doc-page/v1';
+    audiences: Audience[];
+    experienceIds: string[];
+    support?: DeclaredSupport;
+    access?: DeclaredAccess;
+}
+export interface EffectiveDocumentPageMetadata {
+    audiences: Audience[];
+    experienceIds: string[];
+    support: Support;
+    access: Access;
+    compatibility: boolean;
+}
+export interface ResolvedDocumentPageMetadata {
+    declared?: DocumentPageMetadata;
+    effective: EffectiveDocumentPageMetadata;
+}
+export interface DocumentationSurfaceV4 {
+    id: string;
+    name: string;
+    summary: string;
+    kind: DocumentationSurface['kind'];
+    canonicalUrl: string;
+    maturity: Maturity;
+    publication: DocumentationPublication;
+    experienceIds: string[];
+    documentDefaults: DocumentMetadataDefaults;
+    /** Retained only for compatibility projections; experiences are authoritative in v4. */
+    primaryJourney?: Journey;
+    /** Retained only for compatibility projections; experiences are authoritative in v4. */
+    journeys?: Journey[];
+    capabilities: string[];
+    sections: SurfaceLink[];
+    relationships?: SurfaceRelationship[];
+    feeds?: SurfaceFeed[];
+    accent?: string;
+    mark?: string;
+    routeBase: string;
+    source: SurfaceSource;
+}
+export interface DocumentationManifestV4 {
+    schema: 'b10x-docs/v4';
+    repository: DocumentationRepositoryV3;
+    delivery: DocumentationDelivery;
+    surfaces: DocumentationSurfaceV4[];
+}
+export type DocumentationManifest = DocumentationManifestLegacy | DocumentationManifestV3 | DocumentationManifestV4;
+export type AnyDocumentationSurface = DocumentationSurface | DocumentationSurfaceV3 | DocumentationSurfaceV4;
+export type RegistrySurface = (DocumentationSurface | DocumentationSurfaceV3 | (DocumentationSurfaceV4 & {
+    availability: Availability;
+    discoverability: Discoverability;
+    audiences: Audience[];
+    journeys: Journey[];
+})) & {
     key: string;
     repository: DocumentationRepository;
 };
 export interface EcosystemRegistry {
     schema: 'b10x-docs-registry/v2';
     surfaces: RegistrySurface[];
+}
+export interface ManifestExperienceSurface {
+    surfaceKey: string;
+    compatibility: boolean;
+    experienceIds: string[];
+    experiences: EvaluatedDocumentationExperience[];
 }
 export type ChangeKind = 'release' | 'capability' | 'migration' | 'breaking' | 'deprecation' | 'security' | 'research';
 export type ChangeImpact = 'notable' | 'significant' | 'action-required';
@@ -203,6 +329,21 @@ export interface CollectionIndex {
     repository: DocumentationRepositoryV3;
     files: CollectedSource[];
     contentSha256: string;
+}
+export interface IndexedDocumentPage {
+    repository: string;
+    surface: string;
+    kind: 'document' | 'blog';
+    sourcePath: string;
+    outputPath: string;
+    declared?: DocumentPageMetadata;
+    effective: EffectiveDocumentPageMetadata;
+}
+/** Metadata projection kept separate so b10x-docs-collection/v1 remains byte-for-byte stable. */
+export interface DocumentPageIndex {
+    schema: 'b10x-doc-index/v1';
+    repository: DocumentationRepositoryV3;
+    pages: IndexedDocumentPage[];
 }
 export interface SourceLockEntry {
     repository: string;

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import process from 'node:process';
 import { collectManifestSources } from './collector.js';
+import { buildDocumentPageIndex, readDocumentPageMetadata } from './documents.js';
 import { discoveryOptionsFromManifest, writeDiscoveryBlock } from './discovery.js';
 import { writeJsonFeed, writeRss } from './feeds.js';
 import { buildLedger, buildRegistry, readDocument, readManifest, readRedirectMap, readReleaseFacts, writeJson } from './manifest.js';
@@ -17,6 +18,10 @@ try {
                 detail = `${document.surfaces.length} surface(s)`;
             else if (document.schema.startsWith('b10x-change/'))
                 detail = 'ecosystem change';
+            else if (document.schema === 'b10x-experiences/v1')
+                detail = `${document.experiences.length} experience(s), ${document.artifacts.length} artifact(s)`;
+            else if (document.schema === 'b10x-doc-page/v1')
+                detail = 'document page metadata';
             else if (document.schema === 'b10x-sources/v1')
                 detail = `${document.sources.length} locked source(s)`;
             else if (document.schema === 'b10x-redirects/v1')
@@ -24,6 +29,16 @@ try {
             else
                 throw new Error(`${file} has unsupported schema`);
             process.stdout.write(`${file}: ${detail} valid\n`);
+        }
+    }
+    else if (command === 'validate-page') {
+        if (args.length === 0)
+            throw new Error('usage: b10x-docs validate-page <markdown-or-mdx>...');
+        for (const file of args) {
+            const metadata = await readDocumentPageMetadata(file);
+            if (!metadata)
+                throw new Error(`${file} has no top-level b10x frontmatter metadata`);
+            process.stdout.write(`${file}: ${metadata.schema} valid\n`);
         }
     }
     else if (command === 'registry') {
@@ -71,17 +86,25 @@ try {
         rest = rootOption.rest;
         const indexOption = takeOption(rest, '--index-out');
         rest = indexOption.rest;
+        const documentIndexOption = takeOption(rest, '--document-index-out');
+        rest = documentIndexOption.rest;
         const outOption = takeOption(rest, '--out');
         rest = outOption.rest;
         if (!manifestOption.value || !rootOption.value || !indexOption.value || rest.length > 0) {
-            throw new Error('usage: b10x-docs collect --manifest <file> --repository-root <dir> --index-out <file> [--out <dir>]');
+            throw new Error('usage: b10x-docs collect --manifest <file> --repository-root <dir> --index-out <file> [--document-index-out <file>] [--out <dir>]');
         }
         const manifest = await readManifest(manifestOption.value);
-        if (manifest.schema !== 'b10x-docs/v3')
-            throw new Error('b10x-docs collect requires a b10x-docs/v3 manifest');
+        if (manifest.schema !== 'b10x-docs/v3' && manifest.schema !== 'b10x-docs/v4')
+            throw new Error('b10x-docs collect requires a b10x-docs/v3 or b10x-docs/v4 manifest');
         const index = await collectManifestSources(manifest, rootOption.value, { outputRoot: outOption.value });
         await writeJson(indexOption.value, index);
-        process.stdout.write(`${indexOption.value}: ${index.files.length} source file(s), ${index.contentSha256}\n`);
+        let documentDetail = '';
+        if (documentIndexOption.value) {
+            const documentIndex = await buildDocumentPageIndex(manifest, index, rootOption.value);
+            await writeJson(documentIndexOption.value, documentIndex);
+            documentDetail = `${documentIndexOption.value}: ${documentIndex.pages.length} document page(s)\n`;
+        }
+        process.stdout.write(`${indexOption.value}: ${index.files.length} source file(s), ${index.contentSha256}\n${documentDetail}`);
     }
     else if (command === 'redirects') {
         let rest = args;
@@ -114,7 +137,7 @@ try {
         process.stdout.write(`${fileOption.value}: discovery block ${changed ? 'updated' : 'current'}\n`);
     }
     else {
-        throw new Error('usage: b10x-docs <validate|registry|snapshot|collect|redirects|readme> ...');
+        throw new Error('usage: b10x-docs <validate|validate-page|registry|snapshot|collect|redirects|readme> ...');
     }
 }
 catch (error) {

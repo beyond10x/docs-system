@@ -1,0 +1,5 @@
+schema: b10x-doc-page/v1
+audiences: [developer]
+experienceIds: [validate-documentation]
+support: preview
+access: account-required

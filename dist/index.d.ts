@@ -2,6 +2,8 @@ export * from './components.js';
 export * from './code.js';
 export * from './collector.js';
 export * from './discovery.js';
+export * from './documents.js';
+export * from './experiences.js';
 export * from './feeds.js';
 export * from './manifest.js';
 export * from './navigation.js';

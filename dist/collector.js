@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { buildDocumentPageIndex } from './documents.js';
 const markdownExtensions = new Set(['.md', '.mdx']);
 const forbiddenHtmlTags = new Set(['embed', 'form', 'iframe', 'input', 'link', 'meta', 'object', 'script', 'style']);
 const neverCollectDirectories = new Set([
@@ -15,12 +16,13 @@ const neverCollectDirectories = new Set([
     'target',
 ]);
 /**
- * Collect only paths explicitly declared by a v3 manifest. The collector never imports or executes
+ * Collect only paths explicitly declared by a v3 or v4 manifest. The collector never imports or executes
  * repository code. It optionally copies the validated bytes and always returns their stable index.
  */
 export async function collectManifestSources(manifest, repositoryRoot, options = {}) {
-    if (manifest.schema !== 'b10x-docs/v3')
-        throw new Error('source collection requires b10x-docs/v3');
+    if (manifest.schema !== 'b10x-docs/v3' && manifest.schema !== 'b10x-docs/v4') {
+        throw new Error('source collection requires b10x-docs/v3 or b10x-docs/v4');
+    }
     const repositoryReal = await fs.realpath(repositoryRoot);
     const files = [];
     for (const surface of manifest.surfaces) {
@@ -56,6 +58,8 @@ export async function collectManifestSources(manifest, repositoryRoot, options =
     files.sort(compareSources);
     assertUniqueOutputs(files);
     const index = buildCollectionIndex(manifest, files);
+    if (manifest.schema === 'b10x-docs/v4')
+        await buildDocumentPageIndex(manifest, index, repositoryReal);
     if (options.outputRoot)
         await copyCollection(repositoryReal, options.outputRoot, files);
     return index;

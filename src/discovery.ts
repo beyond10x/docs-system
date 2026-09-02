@@ -16,13 +16,15 @@ export interface WriteDiscoveryOptions {
 }
 
 export function discoveryOptionsFromManifest(manifest: DocumentationManifest): DiscoveryBlockOptions {
-  const publicSurface = manifest.surfaces.find((surface) => surface.discoverability === 'public' && surface.availability === 'published');
+  const publicSurface = manifest.surfaces.find((surface) => 'publication' in surface
+    ? surface.publication.discoverability === 'public' && surface.publication.availability === 'published'
+    : surface.discoverability === 'public' && surface.availability === 'published');
   if (!publicSurface) throw new Error(`${manifest.repository.id} has no published public documentation surface`);
   return {
     repository: manifest.repository.id,
     displayName: manifest.repository.displayName ?? publicSurface.name,
     docsUrl: publicSurface.canonicalUrl,
-    ...(manifest.schema === 'b10x-docs/v3' ? {origin: manifest.delivery.origin} : {}),
+    ...(manifest.schema === 'b10x-docs/v3' || manifest.schema === 'b10x-docs/v4' ? {origin: manifest.delivery.origin} : {}),
   };
 }
 

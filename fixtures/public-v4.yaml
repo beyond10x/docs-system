@@ -1,0 +1,40 @@
+schema: b10x-docs/v4
+repository:
+  id: docs-system
+  url: https://github.com/beyond10x/docs-system
+  displayName: Docs System
+delivery:
+  publisher: website
+  repository: beyond10x.github.io
+  origin: https://beyond10x.github.io
+surfaces:
+  - id: docs
+    name: Docs System
+    summary: Validate and collect public documentation sources for the unified beyond10x website.
+    kind: reference
+    canonicalUrl: https://beyond10x.github.io/docs/docs-system/
+    maturity: development
+    publication:
+      availability: published
+      discoverability: public
+    experienceIds: [validate-documentation]
+    documentDefaults:
+      audiences: [developer]
+      experienceIds: [validate-documentation]
+      support: supported
+      access: public
+    journeys: [build-agents, operate-services]
+    primaryJourney: build-agents
+    capabilities: [documentation-contracts, source-collection]
+    sections:
+      - {label: Documentation, url: https://beyond10x.github.io/docs/docs-system/, kind: docs}
+      - {label: Source, url: https://github.com/beyond10x/docs-system, kind: source}
+    routeBase: /docs/docs-system/
+    source:
+      root: .
+      documents:
+        include: [README.md]
+      specifications:
+        - {id: manifest-v4, format: json-schema, path: schema/b10x.docs.v4.schema.json, route: /api/docs-system/manifest-v4/}
+      navigation: {label: Docs System, order: 90, sidebar: flat}
+      components: [CodeExample, DataCatalog, DependencyGraph, JsonSchemaViewer]

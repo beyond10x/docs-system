@@ -1,0 +1,43 @@
+schema: b10x-experiences/v1
+artifacts:
+  - id: docs-system-documentation
+    kind: documentation
+    availability: available
+    access: public
+    url: https://beyond10x.github.io/docs/docs-system/
+  - id: docs-system-source
+    kind: source
+    availability: available
+    access: public
+    url: https://github.com/beyond10x/docs-system
+  - id: devcenter-container
+    kind: container
+    availability: unpublished
+    access: private
+    note: The production image is not publicly distributed.
+experiences:
+  - id: validate-documentation
+    label: Validate documentation
+    summary: Validate and collect one repository's public documentation declaration.
+    audiences: [developer, operator]
+    adoptionPaths:
+      - id: source
+        label: Validate from source
+        support: supported
+        access: public
+        artifactIds: [docs-system-documentation, docs-system-source]
+        url: https://beyond10x.github.io/docs/docs-system/
+        estimatedMinutes: 5
+        prerequisites: [Node.js]
+        outcome: Validate one repository manifest and its selected sources.
+  - id: deploy-devcenter
+    label: Deploy Devcenter
+    summary: Evaluate the declared production deployment path and its distribution boundary.
+    audiences: [operator]
+    adoptionPaths:
+      - id: production-container
+        label: Deploy the production container
+        support: paused
+        access: public
+        artifactIds: [docs-system-documentation, devcenter-container]
+        url: https://beyond10x.github.io/docs/devcenter/install/

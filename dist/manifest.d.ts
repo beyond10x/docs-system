@@ -1,6 +1,8 @@
-import type { ChangeLedger, DocumentationManifest, EcosystemChange, EcosystemRegistry, RedirectMap, ReleaseFactsDocument, SourceLock } from './types.js';
-export type B10xDocument = DocumentationManifest | EcosystemChange | SourceLock | RedirectMap;
+import type { ChangeLedger, DocumentPageMetadata, DocumentationManifest, EcosystemChange, EcosystemRegistry, ExperienceCatalog, RedirectMap, ReleaseFactsDocument, SourceLock } from './types.js';
+export type B10xDocument = DocumentationManifest | EcosystemChange | SourceLock | RedirectMap | ExperienceCatalog | DocumentPageMetadata;
 export declare function readManifest(file: string | URL): Promise<DocumentationManifest>;
+export declare function readExperienceCatalog(file: string | URL): Promise<ExperienceCatalog>;
+export declare function validateDocumentPageMetadata(document: unknown, context?: string): Promise<DocumentPageMetadata>;
 export declare function readChange(file: string | URL): Promise<EcosystemChange>;
 export declare function readSourceLock(file: string | URL): Promise<SourceLock>;
 export declare function readRedirectMap(file: string | URL): Promise<RedirectMap>;
