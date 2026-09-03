@@ -2,7 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { useEffect, useId, useRef } from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Mermaid from '@theme/Mermaid';
-import { normalizeMarkdownFenceLanguage } from './code.js';
+import { describeMarkdownFenceLanguage } from './code.js';
 import { deriveEcosystemNavigation, surfaceNavigation } from './navigation.js';
 export function PageHeader({ title, description, eyebrow, actions, children, headingLevel = 1 }) {
     const Heading = headingTag(headingLevel);
@@ -47,10 +47,12 @@ export function BoundaryNotice({ title = 'Current boundary', children }) {
     return _jsx(Callout, { className: "b10x-boundary", title: title, tone: "warning", children: children });
 }
 export function CodeExample({ language, title, children }) {
-    return _jsx("div", { className: "b10x-code", children: _jsx(CodeBlock, { language: normalizeMarkdownFenceLanguage(language), title: title, showLineNumbers: true, children: children.trimEnd() }) });
+    const presentation = describeMarkdownFenceLanguage(language);
+    return _jsx("div", { className: "b10x-code", "data-b10x-code-language": presentation.language, "data-b10x-code-kind": presentation.kind, "data-b10x-code-label": presentation.label, children: _jsx(CodeBlock, { language: presentation.language, title: title, showLineNumbers: true, children: children.trimEnd() }) });
 }
 export function CommandExample({ command, output, title }) {
-    return _jsx("div", { className: "b10x-command", children: _jsx(CodeBlock, { language: "shell-session", title: title ?? 'Terminal', children: `$ ${command.trim()}${output ? `\n${output.trimEnd()}` : ''}` }) });
+    const presentation = describeMarkdownFenceLanguage('shell-session');
+    return _jsx("div", { className: "b10x-command", "data-b10x-code-language": presentation.language, "data-b10x-code-kind": presentation.kind, "data-b10x-code-label": presentation.label, children: _jsx(CodeBlock, { language: presentation.language, title: title ?? presentation.label, children: `$ ${command.trim()}${output ? `\n${output.trimEnd()}` : ''}` }) });
 }
 export function CodeTabs({ items }) {
     return _jsx("div", { className: "b10x-code-tabs", children: items.map((item) => _jsxs("details", { open: items[0] === item, children: [_jsx("summary", { children: item.label }), _jsx(CodeExample, { language: item.language, children: item.code })] }, item.label)) });

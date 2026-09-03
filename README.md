@@ -170,7 +170,10 @@ export default {
 Use `normalizeMarkdownFenceLanguage` when preparing repository-owned Markdown. It makes common
 aliases deterministic: `sh` becomes `bash`, `console` becomes `shell-session`, and `yml` becomes
 `yaml`. Unknown project-specific grammars are retained instead of silently losing highlighting.
-`CommandExample` always uses `shell-session`; `CodeExample` normalizes the requested language.
+`describeMarkdownFenceLanguage` adds the canonical visible label and distinguishes commands,
+terminal transcripts, plain output, and source. `CommandExample` always uses `shell-session`;
+`CodeExample` normalizes the requested language. The shared tokens apply the same labelled,
+horizontally scrollable code surface to ordinary Docusaurus Markdown fences.
 
 `OpenApiReference` is an embeddable section, never a page landmark. It defaults to an h2 and can sit
 under an existing documentation h2 without introducing another h1 or `main`:

@@ -38,6 +38,35 @@ export const PRISM_LANGUAGES = [
     'typescript',
     'tsx',
 ];
+/** Human-facing labels and semantics for every grammar in the shared shell. */
+export const PRISM_LANGUAGE_PRESENTATIONS = {
+    bash: { label: 'Bash', kind: 'command' },
+    c: { label: 'C', kind: 'source' },
+    cpp: { label: 'C++', kind: 'source' },
+    diff: { label: 'Diff', kind: 'source' },
+    docker: { label: 'Dockerfile', kind: 'source' },
+    go: { label: 'Go', kind: 'source' },
+    graphql: { label: 'GraphQL', kind: 'source' },
+    http: { label: 'HTTP', kind: 'source' },
+    ini: { label: 'INI', kind: 'source' },
+    json: { label: 'JSON', kind: 'source' },
+    json5: { label: 'JSON5', kind: 'source' },
+    markdown: { label: 'Markdown', kind: 'source' },
+    powershell: { label: 'PowerShell', kind: 'command' },
+    properties: { label: 'Properties', kind: 'source' },
+    python: { label: 'Python', kind: 'source' },
+    rust: { label: 'Rust', kind: 'source' },
+    'shell-session': { label: 'Terminal', kind: 'transcript' },
+    toml: { label: 'TOML', kind: 'source' },
+    yaml: { label: 'YAML', kind: 'source' },
+    css: { label: 'CSS', kind: 'source' },
+    javascript: { label: 'JavaScript', kind: 'source' },
+    jsx: { label: 'JSX', kind: 'source' },
+    markup: { label: 'HTML', kind: 'source' },
+    text: { label: 'Plain text', kind: 'output' },
+    typescript: { label: 'TypeScript', kind: 'source' },
+    tsx: { label: 'TSX', kind: 'source' },
+};
 const FENCE_LANGUAGE_ALIASES = {
     console: 'shell-session',
     dockerfile: 'docker',
@@ -72,4 +101,12 @@ export function normalizeMarkdownFenceLanguage(language) {
     if (canonicalLanguages.has(normalized))
         return normalized;
     return FENCE_LANGUAGE_ALIASES[normalized] ?? normalized;
+}
+/** Resolve the label and visual semantics used by shared code surfaces. */
+export function describeMarkdownFenceLanguage(language) {
+    const normalized = normalizeMarkdownFenceLanguage(language);
+    const presentation = PRISM_LANGUAGE_PRESENTATIONS[normalized];
+    if (presentation)
+        return { language: normalized, ...presentation, canonical: true };
+    return { language: normalized, label: normalized, kind: 'source', canonical: false };
 }

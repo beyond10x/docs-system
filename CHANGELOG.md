@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Label every canonical Prism fence consistently and refine the shared code surface with semantic
+  accents, light/dark chrome, visible touch controls, keyboard focus, and narrow-screen scrolling.
+
 ## 0.6.0 — 2026-09-03
 
 - Add the additive `b10x-docs/v4`, `b10x-experiences/v1`, and `b10x-doc-page/v1`

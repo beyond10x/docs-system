@@ -6,7 +6,13 @@ import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {deriveEcosystemNavigation} from '../dist/navigation.js';
 import {OpenApiReference} from '../dist/renderers.js';
-import {normalizeMarkdownFenceLanguage, PRISM_ADDITIONAL_LANGUAGES, PRISM_LANGUAGES} from '../dist/code.js';
+import {
+  describeMarkdownFenceLanguage,
+  normalizeMarkdownFenceLanguage,
+  PRISM_ADDITIONAL_LANGUAGES,
+  PRISM_LANGUAGES,
+  PRISM_LANGUAGE_PRESENTATIONS,
+} from '../dist/code.js';
 
 register('./theme-loader.mjs', import.meta.url);
 const {
@@ -96,6 +102,7 @@ test('project and adoption cards preserve defaults and accept heading, title, an
 test('canonical Prism languages normalize Markdown aliases without discarding extensions', () => {
   assert.equal(new Set(PRISM_LANGUAGES).size, PRISM_LANGUAGES.length, 'canonical Prism languages must be unique');
   assert.ok(PRISM_ADDITIONAL_LANGUAGES.every((language) => PRISM_LANGUAGES.includes(language)), 'every loaded grammar must be canonical');
+  assert.deepEqual(Object.keys(PRISM_LANGUAGE_PRESENTATIONS).sort(), [...PRISM_LANGUAGES].sort(), 'every canonical grammar needs presentation metadata');
   for (const language of ['toml', 'http', 'shell-session', 'rust', 'go', 'python', 'c', 'cpp', 'bash']) {
     assert.ok(PRISM_ADDITIONAL_LANGUAGES.includes(language), `${language} must be loaded by Docusaurus`);
     assert.ok(PRISM_LANGUAGES.includes(language), `${language} must be accepted in shared examples`);
@@ -107,10 +114,16 @@ test('canonical Prism languages normalize Markdown aliases without discarding ex
   assert.equal(normalizeMarkdownFenceLanguage('language-rs'), 'rust');
   assert.equal(normalizeMarkdownFenceLanguage(), 'text');
   assert.equal(normalizeMarkdownFenceLanguage('project-dsl'), 'project-dsl');
+  assert.deepEqual(describeMarkdownFenceLanguage('language-sh'), {language: 'bash', label: 'Bash', kind: 'command', canonical: true});
+  assert.deepEqual(describeMarkdownFenceLanguage('console'), {language: 'shell-session', label: 'Terminal', kind: 'transcript', canonical: true});
+  assert.deepEqual(describeMarkdownFenceLanguage(), {language: 'text', label: 'Plain text', kind: 'output', canonical: true});
+  assert.deepEqual(describeMarkdownFenceLanguage('project-dsl'), {language: 'project-dsl', label: 'project-dsl', kind: 'source', canonical: false});
 
   const code = renderToStaticMarkup(createElement(CodeExample, {language: 'sh'}, 'cargo test'));
   const transcript = renderToStaticMarkup(createElement(CommandExample, {command: 'cargo test', output: 'ok'}));
+  assert.match(code, /class="b10x-code" data-b10x-code-language="bash" data-b10x-code-kind="command" data-b10x-code-label="Bash"/);
   assert.match(code, /data-language="bash"/);
+  assert.match(transcript, /class="b10x-command" data-b10x-code-language="shell-session" data-b10x-code-kind="transcript" data-b10x-code-label="Terminal"/);
   assert.match(transcript, /data-language="shell-session"/);
   assert.match(transcript, /\$ cargo test\nok/);
 });
@@ -209,6 +222,8 @@ test('semantic color pairs meet WCAG text and component contrast thresholds', as
     }
     assert.ok(contrast(palette['color-line'], palette['color-canvas']) >= 3, 'line on canvas must reach 3:1');
     assert.ok(contrast(palette['color-line'], palette['color-surface']) >= 3, 'line on surface must reach 3:1');
+    assert.ok(contrast(palette['code-control-text'], palette['code-control']) >= 4.5, 'code controls must reach 4.5:1');
+    assert.ok(contrast(palette['color-muted'], palette['code-chrome']) >= 4.5, 'code labels must reach 4.5:1');
   }
   assert.ok(contrast(light['footer-text'], light['footer-background']) >= 4.5);
   assert.ok(contrast(light['footer-accent'], light['footer-background']) >= 4.5);
@@ -221,6 +236,13 @@ test('semantic color pairs meet WCAG text and component contrast thresholds', as
   assert.match(css, /\.b10x-content-card \{/);
   assert.match(css, /\.b10x-filter-chips button\[aria-pressed='true'\]/);
   assert.match(css, /pre\[class\*='language-'\]/);
+  for (const [language, presentation] of Object.entries(PRISM_LANGUAGE_PRESENTATIONS)) {
+    assert.match(css, new RegExp(`\\.theme-code-block\\.language-${escapeRegExp(language)} \\{ --b10x-code-label: '${escapeRegExp(presentation.label)}'; \\}`), `${language} needs its canonical visible label`);
+  }
+  assert.match(css, /\.theme-code-block\[class\*='language-'\]::before \{[\s\S]*?content: var\(--b10x-code-label\);/);
+  assert.match(css, /pre\[class\*='language-'\] \{[\s\S]*?overflow-x: auto;[\s\S]*?overscroll-behavior-inline: contain;[\s\S]*?touch-action: pan-x pan-y;/);
+  assert.match(css, /\.theme-code-block pre:focus-visible \{ outline: 2px solid var\(--b10x-color-focus\); outline-offset: -2px; \}/);
+  assert.match(css, /@media \(hover: none\), \(pointer: coarse\) \{[\s\S]*?min-inline-size: var\(--b10x-touch-target\);[\s\S]*?opacity: 0\.9;/);
   assert.match(css, /\.b10x-diagram__guidance \{/);
 });
 
@@ -271,4 +293,8 @@ function luminance(hex) {
   const channels = hex.match(/[\da-f]{2}/gi).map((channel) => Number.parseInt(channel, 16) / 255);
   const linear = channels.map((channel) => channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4);
   return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

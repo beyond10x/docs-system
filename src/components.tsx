@@ -2,7 +2,7 @@ import {useEffect, useId, useRef} from 'react';
 import type {CSSProperties, InputHTMLAttributes, ReactNode} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Mermaid from '@theme/Mermaid';
-import {normalizeMarkdownFenceLanguage} from './code.js';
+import {describeMarkdownFenceLanguage} from './code.js';
 import {deriveEcosystemNavigation, surfaceNavigation} from './navigation.js';
 import type {AdoptionAction, AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity, RegistrySurface} from './types.js';
 
@@ -178,11 +178,17 @@ export function BoundaryNotice({title = 'Current boundary', children}: {title?: 
 }
 
 export function CodeExample({language, title, children}: {language: string; title?: string; children: string}): ReactNode {
-  return <div className="b10x-code"><CodeBlock language={normalizeMarkdownFenceLanguage(language)} title={title} showLineNumbers>{children.trimEnd()}</CodeBlock></div>;
+  const presentation = describeMarkdownFenceLanguage(language);
+  return <div className="b10x-code" data-b10x-code-language={presentation.language} data-b10x-code-kind={presentation.kind} data-b10x-code-label={presentation.label}>
+    <CodeBlock language={presentation.language} title={title} showLineNumbers>{children.trimEnd()}</CodeBlock>
+  </div>;
 }
 
 export function CommandExample({command, output, title}: {command: string; output?: string; title?: string}): ReactNode {
-  return <div className="b10x-command"><CodeBlock language="shell-session" title={title ?? 'Terminal'}>{`$ ${command.trim()}${output ? `\n${output.trimEnd()}` : ''}`}</CodeBlock></div>;
+  const presentation = describeMarkdownFenceLanguage('shell-session');
+  return <div className="b10x-command" data-b10x-code-language={presentation.language} data-b10x-code-kind={presentation.kind} data-b10x-code-label={presentation.label}>
+    <CodeBlock language={presentation.language} title={title ?? presentation.label}>{`$ ${command.trim()}${output ? `\n${output.trimEnd()}` : ''}`}</CodeBlock>
+  </div>;
 }
 
 export function CodeTabs({items}: {items: Array<{label: string; language: string; code: string}>}): ReactNode {
