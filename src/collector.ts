@@ -2,7 +2,9 @@ import {createHash} from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fromMarkdown} from 'mdast-util-from-markdown';
+import {gfmFromMarkdown} from 'mdast-util-gfm';
 import {mdxFromMarkdown} from 'mdast-util-mdx';
+import {gfm} from 'micromark-extension-gfm';
 import {mdxjs} from 'micromark-extension-mdxjs';
 import {buildDocumentPageIndex} from './documents.js';
 import type {
@@ -132,7 +134,7 @@ export async function sha256File(file: string | URL): Promise<string> {
 /** Refuse executable MDX while allowing a small, explicitly declared shared-component vocabulary. */
 export function assertPassiveMdx(source: string, file: string, allowedComponents: SharedComponentName[] = []): void {
   const sourceWithoutFrontmatter = withoutFrontmatter(source);
-  const tree = parseMarkdownMdx(sourceWithoutFrontmatter);
+  const tree = parseDocumentationMarkdown(sourceWithoutFrontmatter, file);
   const prose = withoutCode(sourceWithoutFrontmatter, tree);
   const expressionProse = withoutInertMdxSyntax(prose);
   if (/^\s*(?:import|export)(?:\s|\{)/m.test(prose)) throw new Error(`${file} contains an import or export; public documentation must be data-only`);
@@ -300,12 +302,12 @@ function withoutFrontmatter(source: string): string {
   return source.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
 }
 
-function parseMarkdownMdx(source: string): MarkdownNode | undefined {
+function parseDocumentationMarkdown(source: string, file: string): MarkdownNode | undefined {
   try {
-    return fromMarkdown(source, {
-      extensions: [mdxjs()],
-      mdastExtensions: [mdxFromMarkdown()],
-    }) as unknown as MarkdownNode;
+    const options = path.extname(file).toLowerCase() === '.mdx'
+      ? {extensions: [gfm(), mdxjs()], mdastExtensions: [gfmFromMarkdown(), mdxFromMarkdown()]}
+      : {extensions: [gfm()], mdastExtensions: [gfmFromMarkdown()]};
+    return fromMarkdown(source, options) as unknown as MarkdownNode;
   } catch {
     return undefined;
   }

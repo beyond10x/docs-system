@@ -242,6 +242,7 @@ test('passive MDX matches inline-code delimiters by backtick run length', () => 
     /undeclared shared component Undeclared/,
   );
   assert.doesNotThrow(() => assertPassiveMdx('<div>Passive HTML remains allowed.</div>', 'guide.mdx'));
+  assert.doesNotThrow(() => assertPassiveMdx('<!-- generated marker -->\n```bash\nexport SAFE_EXAMPLE=1\n```\n', 'README.md'));
 });
 
 test('typed v2 changes split deterministic impact and release channels', async () => {

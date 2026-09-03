@@ -5,6 +5,7 @@
 - Fix passive-MDX validation to mask only parser-confirmed MDX code blocks and spans and validate
   component names structurally, preventing legal examples from shifting tag detection without
   hiding executable markup near malformed fences, stray backticks, or non-letter component names.
+  Markdown and MDX inputs now use their matching Docusaurus grammar with GFM enabled.
 - Label every canonical Prism fence consistently and refine the shared code surface with semantic
   accents, light/dark chrome, visible touch controls, keyboard focus, and narrow-screen scrolling.
 
