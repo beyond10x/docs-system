@@ -173,6 +173,34 @@ test('collector rejects executable MDX, undeclared widgets, escaping links, and 
   await fs.rm(outside, {recursive: true});
 });
 
+test('passive MDX matches inline-code delimiters by backtick run length', () => {
+  const source = [
+    'A `review-result` may carry one fenced ` ```findings ` block.',
+    '',
+    '`--model <MODEL>` is forwarded to `metaharness run claude --model`.',
+    'A ``multi-line code span with a `shorter` run and',
+    '<InlineExample /> inside`` remains inert.',
+  ].join('\n');
+
+  assert.doesNotThrow(() => assertPassiveMdx(source, 'reference/cli.md'));
+  assert.throws(
+    () => assertPassiveMdx(`${source}\n<Undeclared />`, 'guide.mdx'),
+    /undeclared shared component Undeclared/,
+  );
+  assert.throws(
+    () => assertPassiveMdx('An unmatched ` marker must not hide <Undeclared />.', 'guide.mdx'),
+    /undeclared shared component Undeclared/,
+  );
+  assert.throws(
+    () => assertPassiveMdx('An escaped \\` marker must not hide <Undeclared />.', 'guide.mdx'),
+    /undeclared shared component Undeclared/,
+  );
+  assert.throws(
+    () => assertPassiveMdx('Lead ``safe\nspan``\nimport Thing from "./Thing"', 'guide.mdx'),
+    /import or export/,
+  );
+});
+
 test('typed v2 changes split deterministic impact and release channels', async () => {
   const manifests = await Promise.all([
     readManifest(new URL('../fixtures/public.yaml', import.meta.url)),

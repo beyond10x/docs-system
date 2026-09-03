@@ -273,7 +273,55 @@ function withoutFencedCodeAndFrontmatter(source) {
     }).join('\n');
 }
 function withoutInlineCode(source) {
-    return source.replace(/`[^`]*`/g, '');
+    let output = '';
+    let cursor = 0;
+    while (cursor < source.length) {
+        if (source[cursor] !== '`') {
+            output += source[cursor];
+            cursor += 1;
+            continue;
+        }
+        const openerEnd = endOfBacktickRun(source, cursor);
+        if (isEscaped(source, cursor)) {
+            output += source.slice(cursor, openerEnd);
+            cursor = openerEnd;
+            continue;
+        }
+        const delimiterLength = openerEnd - cursor;
+        let candidate = openerEnd;
+        let closerEnd;
+        while (candidate < source.length) {
+            const next = source.indexOf('`', candidate);
+            if (next === -1)
+                break;
+            const runEnd = endOfBacktickRun(source, next);
+            if (!isEscaped(source, next) && runEnd - next === delimiterLength) {
+                closerEnd = runEnd;
+                break;
+            }
+            candidate = runEnd;
+        }
+        if (closerEnd === undefined) {
+            output += source.slice(cursor, openerEnd);
+            cursor = openerEnd;
+            continue;
+        }
+        output += source.slice(cursor, closerEnd).replace(/[^\r\n]/g, ' ');
+        cursor = closerEnd;
+    }
+    return output;
+}
+function endOfBacktickRun(source, start) {
+    let end = start + 1;
+    while (source[end] === '`')
+        end += 1;
+    return end;
+}
+function isEscaped(source, index) {
+    let backslashes = 0;
+    for (let before = index - 1; before >= 0 && source[before] === '\\'; before -= 1)
+        backslashes += 1;
+    return backslashes % 2 === 1;
 }
 /**
  * Remove only passive syntax that MDX represents with braces. The source itself is never changed:

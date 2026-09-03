@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix passive-MDX validation to recognize CommonMark-style code-span delimiter runs, preventing
+  legal inline examples containing backticks from shifting tag detection into later prose.
 - Label every canonical Prism fence consistently and refine the shared code surface with semantic
   accents, light/dark chrome, visible touch controls, keyboard focus, and narrow-screen scrolling.
 
