@@ -1,6 +1,9 @@
 import {createHash} from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {fromMarkdown} from 'mdast-util-from-markdown';
+import {mdxFromMarkdown} from 'mdast-util-mdx';
+import {mdxjs} from 'micromark-extension-mdxjs';
 import {buildDocumentPageIndex} from './documents.js';
 import type {
   CollectedSource,
@@ -128,15 +131,17 @@ export async function sha256File(file: string | URL): Promise<string> {
 
 /** Refuse executable MDX while allowing a small, explicitly declared shared-component vocabulary. */
 export function assertPassiveMdx(source: string, file: string, allowedComponents: SharedComponentName[] = []): void {
-  const proseWithInlineCode = withoutFencedCodeAndFrontmatter(source);
-  const prose = withoutInlineCode(proseWithInlineCode);
-  const expressionProse = withoutInlineCode(withoutInertMdxSyntax(proseWithInlineCode));
+  const sourceWithoutFrontmatter = withoutFrontmatter(source);
+  const tree = parseMarkdownMdx(sourceWithoutFrontmatter);
+  const prose = withoutCode(sourceWithoutFrontmatter, tree);
+  const expressionProse = withoutInertMdxSyntax(prose);
   if (/^\s*(?:import|export)(?:\s|\{)/m.test(prose)) throw new Error(`${file} contains an import or export; public documentation must be data-only`);
   if (hasUnescapedOpeningBrace(expressionProse)) throw new Error(`${file} contains an MDX expression; public documentation must be data-only`);
   if (/\bon[a-z]+\s*=/i.test(prose) || /dangerouslySetInnerHTML/i.test(prose) || /(?:href|src)\s*=\s*["']\s*javascript:/i.test(prose)) {
     throw new Error(`${file} contains executable markup`);
   }
   const allowed = new Set<string>(allowedComponents);
+  if (tree) assertDeclaredMdxElements(tree, file, allowed);
   for (const match of prose.matchAll(/<\/?([A-Za-z][A-Za-z0-9.-]*)\b/g)) {
     const tag = match[1];
     if (tag[0] === tag[0].toUpperCase()) {
@@ -291,77 +296,66 @@ function globMatcher(pattern: string): RegExp {
   return new RegExp(`${expression}$`);
 }
 
-function withoutFencedCodeAndFrontmatter(source: string): string {
-  const lines = source.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '').split(/\r?\n/);
-  let fence: string | undefined;
-  return lines.map((line) => {
-    const marker = line.match(/^\s*(```+|~~~+)/)?.[1];
-    if (marker) {
-      if (!fence) fence = marker[0];
-      else if (marker[0] === fence) fence = undefined;
-      return '';
-    }
-    if (fence) return '';
-    return line;
-  }).join('\n');
+function withoutFrontmatter(source: string): string {
+  return source.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
 }
 
-function withoutInlineCode(source: string): string {
+function parseMarkdownMdx(source: string): MarkdownNode | undefined {
+  try {
+    return fromMarkdown(source, {
+      extensions: [mdxjs()],
+      mdastExtensions: [mdxFromMarkdown()],
+    }) as unknown as MarkdownNode;
+  } catch {
+    return undefined;
+  }
+}
+
+function withoutCode(source: string, tree: MarkdownNode | undefined): string {
+  if (!tree) return source;
+  const ranges: Array<{start: number; end: number}> = [];
+  visitMarkdown(tree, (node) => {
+    const start = node.position?.start.offset;
+    const end = node.position?.end.offset;
+    if ((node.type === 'code' || node.type === 'inlineCode') && start !== undefined && end !== undefined) ranges.push({start, end});
+  });
+  if (ranges.length === 0) return source;
+
   let output = '';
   let cursor = 0;
-
-  while (cursor < source.length) {
-    if (source[cursor] !== '`') {
-      output += source[cursor];
-      cursor += 1;
-      continue;
-    }
-
-    const openerEnd = endOfBacktickRun(source, cursor);
-    if (isEscaped(source, cursor)) {
-      output += source.slice(cursor, openerEnd);
-      cursor = openerEnd;
-      continue;
-    }
-
-    const delimiterLength = openerEnd - cursor;
-    let candidate = openerEnd;
-    let closerEnd: number | undefined;
-
-    while (candidate < source.length) {
-      const next = source.indexOf('`', candidate);
-      if (next === -1) break;
-      const runEnd = endOfBacktickRun(source, next);
-      if (runEnd - next === delimiterLength) {
-        closerEnd = runEnd;
-        break;
-      }
-      candidate = runEnd;
-    }
-
-    if (closerEnd === undefined) {
-      output += source.slice(cursor, openerEnd);
-      cursor = openerEnd;
-      continue;
-    }
-
-    output += source.slice(cursor, closerEnd).replace(/[^\r\n]/g, ' ');
-    cursor = closerEnd;
+  for (const range of ranges.sort((left, right) => left.start - right.start)) {
+    output += source.slice(cursor, range.start);
+    output += source.slice(range.start, range.end).replace(/[^\r\n]/g, ' ');
+    cursor = range.end;
   }
-
-  return output;
+  return output + source.slice(cursor);
 }
 
-function endOfBacktickRun(source: string, start: number): number {
-  let end = start + 1;
-  while (source[end] === '`') end += 1;
-  return end;
+interface MarkdownNode {
+  type: string;
+  name?: string | null;
+  position?: {
+    start: {offset?: number};
+    end: {offset?: number};
+  };
+  children?: MarkdownNode[];
 }
 
-function isEscaped(source: string, index: number): boolean {
-  let backslashes = 0;
-  for (let before = index - 1; before >= 0 && source[before] === '\\'; before -= 1) backslashes += 1;
-  return backslashes % 2 === 1;
+function visitMarkdown(node: MarkdownNode, visitor: (node: MarkdownNode) => void): void {
+  visitor(node);
+  for (const child of node.children ?? []) visitMarkdown(child, visitor);
+}
+
+function assertDeclaredMdxElements(tree: MarkdownNode, file: string, allowed: Set<string>): void {
+  visitMarkdown(tree, (node) => {
+    if (node.type !== 'mdxJsxFlowElement' && node.type !== 'mdxJsxTextElement') return;
+    if (node.name === null || node.name === undefined) return;
+    if (/^[a-z][a-z0-9-]*$/.test(node.name)) {
+      if (forbiddenHtmlTags.has(node.name)) throw new Error(`${file} contains forbidden HTML element ${node.name}`);
+      return;
+    }
+    if (!allowed.has(node.name)) throw new Error(`${file} uses undeclared shared component ${node.name}`);
+  });
 }
 
 /**

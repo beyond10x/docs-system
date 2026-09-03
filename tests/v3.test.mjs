@@ -208,6 +208,40 @@ test('passive MDX matches inline-code delimiters by backtick run length', () => 
       /undeclared shared component Undeclared/,
     );
   }
+  for (const crossBlockBoundary of [
+    'lead ``\n<Undeclared />\n``',
+    'lead ``<Undeclared />\n\n``',
+  ]) {
+    assert.throws(
+      () => assertPassiveMdx(crossBlockBoundary, 'guide.mdx'),
+      /undeclared shared component Undeclared/,
+    );
+  }
+  for (const backticksOutsideMarkdownCode of [
+    '<div data-x="`"><Undeclared />`</div>',
+    '<span title="`">safe <Undeclared /> tail`</span>',
+  ]) {
+    assert.throws(
+      () => assertPassiveMdx(backticksOutsideMarkdownCode, 'guide.mdx'),
+      /undeclared shared component Undeclared/,
+    );
+  }
+  for (const executableComponentName of [
+    '<_Undeclared />',
+    '<$Undeclared />',
+    '<ÄUndeclared />',
+    '<lower.Member />',
+  ]) {
+    assert.throws(
+      () => assertPassiveMdx(executableComponentName, 'guide.mdx'),
+      /undeclared shared component/,
+    );
+  }
+  assert.throws(
+    () => assertPassiveMdx('```<Undeclared />`\n', 'guide.mdx'),
+    /undeclared shared component Undeclared/,
+  );
+  assert.doesNotThrow(() => assertPassiveMdx('<div>Passive HTML remains allowed.</div>', 'guide.mdx'));
 });
 
 test('typed v2 changes split deterministic impact and release channels', async () => {

@@ -12,7 +12,7 @@ tags:
 refs:
 - provider: website-artifact
   reference: story:site-wide-code-fence-rendering-audit
-revision: 4
+revision: 6
 ---
 # Parse Markdown code spans before passive MDX checks
 
@@ -22,7 +22,8 @@ The passive-MDX collector removes inline code with a single-backtick regular exp
 
 ## Acceptance
 
-- Code-span delimiters are matched by equal run length, including spans containing shorter backtick runs and spans crossing a line break.
-- Unmatched or escaped backticks do not hide subsequent executable MDX.
-- The exact AEP reference-page pattern no longer produces a false component finding.
-- Existing passive-MDX refusals remain enforced.
+- Only parser-confirmed CommonMark `inlineCode` nodes are masked before passive-MDX validation.
+- Code spans containing shorter backtick runs or legal line breaks are recognized according to Markdown block structure.
+- Unmatched or escaped opening backticks do not hide subsequent executable MDX.
+- Backticks inside HTML or MDX attributes are not mistaken for Markdown delimiters.
+- The exact AEP reference-page pattern no longer produces a false component finding, while existing passive-MDX refusals remain enforced.
