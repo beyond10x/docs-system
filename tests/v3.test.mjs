@@ -199,6 +199,15 @@ test('passive MDX matches inline-code delimiters by backtick run length', () => 
     () => assertPassiveMdx('Lead ``safe\nspan``\nimport Thing from "./Thing"', 'guide.mdx'),
     /import or export/,
   );
+  for (const escapedLookingCloser of [
+    '`\\`<Undeclared />`',
+    '``\\``<Undeclared />``',
+  ]) {
+    assert.throws(
+      () => assertPassiveMdx(escapedLookingCloser, 'guide.mdx'),
+      /undeclared shared component Undeclared/,
+    );
+  }
 });
 
 test('typed v2 changes split deterministic impact and release channels', async () => {

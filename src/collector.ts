@@ -332,7 +332,7 @@ function withoutInlineCode(source: string): string {
       const next = source.indexOf('`', candidate);
       if (next === -1) break;
       const runEnd = endOfBacktickRun(source, next);
-      if (!isEscaped(source, next) && runEnd - next === delimiterLength) {
+      if (runEnd - next === delimiterLength) {
         closerEnd = runEnd;
         break;
       }
