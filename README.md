@@ -54,6 +54,51 @@ the manifest digest to an exact 40-character Git commit. `b10x-docs-collection/v
 `b10x-sources/v1` are unchanged by v4; effective page metadata is emitted in the separate
 `b10x-doc-index/v1` sidecar.
 
+## Normalized producer bundles
+
+`b10x-docs-bundle/v1` is the immutable handoff from source CI to the aggregate Website. Its root
+contains exactly:
+
+```text
+bundle.json
+b10x.docs.yaml
+collection.json
+tree/<repository-relative source path>
+```
+
+`tree/` is the union of every `sourcePath` in `b10x-docs-collection/v1` and every regular
+`changes/**/*.yaml` impact record. The sorted `bundle.json.files` inventory binds each path, byte
+size, and SHA-256 digest. `contentSha256` is the SHA-256 of that inventory's compact canonical JSON;
+`manifestSha256` and `collectionSha256` bind the two exact input files. The builder also independently
+recomputes `collection.json.contentSha256`, refuses overlaps, traversal, symbolic links, non-regular
+files, unsupported change schemas, and changed source bytes, and creates only a new output directory.
+The JSON Schema is available at `schema/b10x.docs.bundle.v1.schema.json` and through the
+`@beyond10x/docs-system/schema/bundle/v1` package subpath.
+
+Build and independently validate a bundle with the Rust CLI:
+
+```bash
+node dist/cli.js collect --manifest b10x.docs.yaml --repository-root . \
+  --index-out .generated/collection.json
+cargo run --locked --bin b10x-docs-bundle -- build \
+  --repository-root . --collection .generated/collection.json \
+  --out .generated/bundle --commit "$GITHUB_SHA" --producer-run-id "$GITHUB_RUN_ID"
+cargo run --locked --bin b10x-docs-bundle -- validate \
+  --bundle .generated/bundle --commit "$GITHUB_SHA" --producer-run-id "$GITHUB_RUN_ID"
+```
+
+The manifest always records the producer run. `artifactId` and `artifactDigest` are an optional pair
+for contexts where both already exist; a normal upload learns them only after construction and
+records that post-upload identity in Atlas. The credential-free composite action at
+`.github/actions/bundle/action.yml` wraps collection and construction for exact Git-pinned callers.
+Producer workflows must trigger for `b10x.docs.yaml`, every manifest-declared source path, and
+`changes/**/*.yaml`, or impact and release feeds can become stale.
+
+Bundle versions move consumer first. Website and Atlas first accept versions N and N+1, producers
+then emit N+1, durable published inputs migrate, and support for N is removed only in a later
+control-plane change. A v1 validator deliberately refuses an unknown version with this ordering in
+its error rather than guessing compatibility.
+
 ## Experiences and page metadata
 
 The Website owns one `b10x-experiences/v1` catalog. Repository v4 surfaces and pages reference its

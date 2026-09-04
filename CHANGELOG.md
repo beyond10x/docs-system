@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add the immutable `b10x-docs-bundle/v1` schema, Rust builder and validator, deterministic source
+  and `changes/**/*.yaml` inventory, credential-free composite producer action, and consumer-first
+  compatibility rule for fast aggregate Website publication.
 - Fix passive-MDX validation to mask only parser-confirmed MDX code blocks and spans and validate
   component names structurally, preventing legal examples from shifting tag detection without
   hiding executable markup near malformed fences, stray backticks, or non-letter component names.

@@ -1,0 +1,50 @@
+name: Build normalized documentation bundle
+description: Collect passive public documentation and build one immutable b10x-docs-bundle/v1 directory.
+inputs:
+  repository-root:
+    description: Source repository checkout containing b10x.docs.yaml.
+    required: false
+    default: .
+  output:
+    description: New directory to receive the normalized bundle; it must not already exist.
+    required: true
+  run-id:
+    description: Exact successful producer workflow run id.
+    required: true
+  commit:
+    description: Exact lowercase 40-character source commit.
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Install pinned Docs System dependencies
+      shell: bash
+      env:
+        DOCS_SYSTEM_ACTION_ROOT: ${{ github.action_path }}
+      run: npm ci --ignore-scripts --prefix "$DOCS_SYSTEM_ACTION_ROOT"
+    - name: Collect and bundle passive documentation
+      shell: bash
+      env:
+        DOCS_SYSTEM_ACTION_ROOT: ${{ github.action_path }}
+        DOCS_SOURCE_ROOT: ${{ inputs['repository-root'] }}
+        DOCS_BUNDLE_OUTPUT: ${{ inputs.output }}
+        DOCS_PRODUCER_RUN_ID: ${{ inputs['run-id'] }}
+        DOCS_SOURCE_COMMIT: ${{ inputs.commit }}
+      run: |
+        bundle_scratch="$(mktemp -d "${RUNNER_TEMP:?}/b10x-docs-bundle.XXXXXX")"
+        trap 'rm -rf "$bundle_scratch"' EXIT
+        node "$DOCS_SYSTEM_ACTION_ROOT/dist/cli.js" collect \
+          --manifest "$DOCS_SOURCE_ROOT/b10x.docs.yaml" \
+          --repository-root "$DOCS_SOURCE_ROOT" \
+          --index-out "$bundle_scratch/collection.json"
+        CARGO_TARGET_DIR="$bundle_scratch/target" cargo run \
+          --locked \
+          --quiet \
+          --manifest-path "$DOCS_SYSTEM_ACTION_ROOT/Cargo.toml" \
+          --bin b10x-docs-bundle \
+          -- build \
+          --repository-root "$DOCS_SOURCE_ROOT" \
+          --collection "$bundle_scratch/collection.json" \
+          --out "$DOCS_BUNDLE_OUTPUT" \
+          --commit "$DOCS_SOURCE_COMMIT" \
+          --producer-run-id "$DOCS_PRODUCER_RUN_ID"

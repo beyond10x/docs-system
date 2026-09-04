@@ -40,6 +40,7 @@ test('published schema subpaths load as JSON in plain Node', async () => {
     import('@beyond10x/docs-system/schema/change/v2', {with: {type: 'json'}}),
     import('@beyond10x/docs-system/schema/sources', {with: {type: 'json'}}),
     import('@beyond10x/docs-system/schema/redirects', {with: {type: 'json'}}),
+    import('@beyond10x/docs-system/schema/bundle/v1', {with: {type: 'json'}}),
   ]);
   assert.deepEqual(schemas.map((schema) => schema.default.$schema), Array(schemas.length).fill('https://json-schema.org/draft/2020-12/schema'));
 });

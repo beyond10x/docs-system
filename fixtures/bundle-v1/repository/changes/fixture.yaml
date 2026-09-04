@@ -1,0 +1,13 @@
+schema: b10x-change/v1
+id: fixture/1.0.0
+title: Bundle fixture
+summary: Proves that impact records travel with collected documentation.
+publishedAt: 2026-09-04T12:00:00Z
+repository: fixture
+kind: capability
+impact: notable
+source:
+  url: https://github.com/beyond10x/fixture/releases/tag/1.0.0
+  version: 1.0.0
+journeys: [build-agents]
+affectedSurfaces: [fixture/docs]

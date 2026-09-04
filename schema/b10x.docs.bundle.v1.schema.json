@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.docs.bundle.v1.json",
+  "title": "Beyond10x normalized documentation bundle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "repository",
+    "commit",
+    "producer",
+    "manifestSha256",
+    "collectionSha256",
+    "contentSha256",
+    "files"
+  ],
+  "properties": {
+    "schema": {"const": "b10x-docs-bundle/v1"},
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "url"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "url": {"type": "string", "format": "uri", "pattern": "^https://github\\.com/beyond10x/[a-z0-9-]+$"}
+      }
+    },
+    "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runId"],
+      "dependentRequired": {
+        "artifactId": ["artifactDigest"],
+        "artifactDigest": ["artifactId"]
+      },
+      "properties": {
+        "runId": {"type": "integer", "minimum": 1},
+        "artifactId": {"type": "integer", "minimum": 1},
+        "artifactDigest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "manifestSha256": {"$ref": "#/$defs/sha256"},
+    "collectionSha256": {"$ref": "#/$defs/sha256"},
+    "contentSha256": {"$ref": "#/$defs/sha256"},
+    "files": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/file"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\\\)(?!.*//)[^\\u0000]+$"
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size"],
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

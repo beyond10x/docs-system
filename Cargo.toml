@@ -1,0 +1,22 @@
+[package]
+name = "b10x-docs-bundle"
+version = "0.1.0"
+edition = "2021"
+publish = false
+license = "Apache-2.0"
+description = "Canonical builder and validator for b10x-docs-bundle/v1"
+
+[lib]
+path = "rust/bundle/lib.rs"
+
+[[bin]]
+name = "b10x-docs-bundle"
+path = "rust/bundle/main.rs"
+
+[dependencies]
+clap = { version = "=4.5.47", features = ["derive"] }
+serde = { version = "=1.0.219", features = ["derive"] }
+serde_json = "=1.0.143"
+serde_yaml = "=0.9.34"
+sha2 = "=0.10.9"
+tempfile = "=3.21.0"

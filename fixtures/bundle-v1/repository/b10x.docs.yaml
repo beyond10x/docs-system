@@ -1,0 +1,37 @@
+schema: b10x-docs/v3
+repository:
+  id: fixture
+  url: https://github.com/beyond10x/fixture
+  displayName: Bundle fixture
+delivery:
+  publisher: website
+  repository: beyond10x.github.io
+  origin: https://beyond10x.github.io
+surfaces:
+  - id: docs
+    name: Bundle fixture
+    summary: Exercises normalized documentation bundle construction.
+    kind: reference
+    canonicalUrl: https://beyond10x.github.io/docs/fixture/
+    maturity: development
+    availability: published
+    discoverability: public
+    audiences: [developer]
+    primaryJourney: build-agents
+    journeys: [build-agents]
+    capabilities: [documentation-bundles]
+    adoption:
+      label: Validate a bundle
+      url: https://beyond10x.github.io/docs/fixture/
+      mode: source-build
+      estimatedMinutes: 1
+      prerequisites: [Rust]
+      outcome: Validate one normalized documentation bundle.
+    sections:
+      - {label: Documentation, url: https://beyond10x.github.io/docs/fixture/, kind: docs}
+    routeBase: /docs/fixture/
+    source:
+      root: .
+      documents:
+        include: [docs/guide.md]
+      navigation: {sidebar: flat}

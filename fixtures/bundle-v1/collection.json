@@ -1,0 +1,20 @@
+{
+  "schema": "b10x-docs-collection/v1",
+  "repository": {
+    "id": "fixture",
+    "url": "https://github.com/beyond10x/fixture",
+    "displayName": "Bundle fixture"
+  },
+  "files": [
+    {
+      "repository": "fixture",
+      "surface": "docs",
+      "kind": "document",
+      "sourcePath": "docs/guide.md",
+      "outputPath": "fixture/docs/document/docs/guide.md",
+      "sha256": "3c9737a06936bf1b6d91c40bd1b630c194d790151ce145f1eb7642b199347495",
+      "size": 77
+    }
+  ],
+  "contentSha256": "aa80c1027f56280ee60e97cab14a5a40d3b938a39c4451336586549bf8b322cf"
+}

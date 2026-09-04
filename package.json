@@ -33,6 +33,7 @@
     "./schema/change/v2": "./schema/b10x.change.v2.schema.json",
     "./schema/sources": "./schema/b10x.sources.schema.json",
     "./schema/redirects": "./schema/b10x.redirects.schema.json",
+    "./schema/bundle/v1": "./schema/b10x.docs.bundle.v1.schema.json",
     "./tokens.css": "./styles/tokens.css"
   },
   "files": [
@@ -44,8 +45,9 @@
     "build": "tsc -p tsconfig.build.json",
     "build:check": "node scripts/check-build.mjs",
     "test": "node --test tests/*.test.mjs",
+    "test:bundle": "cargo test --locked",
     "validate:fixtures": "node dist/cli.js validate fixtures/*.yaml",
-    "gate": "npm run build:check && npm test && npm run validate:fixtures"
+    "gate": "npm run build:check && npm test && npm run test:bundle && npm run validate:fixtures"
   },
   "dependencies": {
     "ajv": "8.20.0",
