@@ -107,4 +107,9 @@ surfaces:
       path: schema/b10x.redirects.schema.json
       route: /api/docs-system/redirects/
       title: Compatibility route map
+    - format: json-schema
+      id: bundle-v1
+      path: schema/b10x.docs.bundle.v1.schema.json
+      route: /api/docs-system/bundle-v1/
+      title: Normalized documentation bundle v1
   summary: Shared documentation contracts, safe source collection, React primitives, renderers, redirects, and deterministic discovery tooling.
