@@ -20,12 +20,12 @@ runs:
     - name: Install pinned Docs System dependencies
       shell: bash
       env:
-        DOCS_SYSTEM_ACTION_ROOT: ${{ github.action_path }}
+        DOCS_SYSTEM_ACTION_ROOT: ${{ github.action_path }}/../../..
       run: npm ci --ignore-scripts --prefix "$DOCS_SYSTEM_ACTION_ROOT"
     - name: Collect and bundle passive documentation
       shell: bash
       env:
-        DOCS_SYSTEM_ACTION_ROOT: ${{ github.action_path }}
+        DOCS_SYSTEM_ACTION_ROOT: ${{ github.action_path }}/../../..
         DOCS_SOURCE_ROOT: ${{ inputs['repository-root'] }}
         DOCS_BUNDLE_OUTPUT: ${{ inputs.output }}
         DOCS_PRODUCER_RUN_ID: ${{ inputs['run-id'] }}

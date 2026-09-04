@@ -32,6 +32,14 @@ test('composite producer action is credential-free and delegates collection and 
   const action = parseYaml(text);
   assert.equal(action.runs.using, 'composite');
   assert.deepEqual(Object.keys(action.inputs), ['repository-root', 'output', 'run-id', 'commit']);
+  assert.equal(
+    action.runs.steps[0].env.DOCS_SYSTEM_ACTION_ROOT,
+    '${{ github.action_path }}/../../..',
+  );
+  assert.equal(
+    action.runs.steps[1].env.DOCS_SYSTEM_ACTION_ROOT,
+    '${{ github.action_path }}/../../..',
+  );
   assert.match(text, /dist\/cli\.js" collect/);
   assert.match(text, /--locked/);
   assert.match(text, /--bin b10x-docs-bundle/);
