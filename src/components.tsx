@@ -289,7 +289,7 @@ function DiagramViewport({children, title, description, download, minWidth = 0, 
     const position = (): void => {
       animationFrame = 0;
       const visual = element.querySelector('svg, img');
-      if (!visual || visual.getBoundingClientRect().width === 0 || visual.getBoundingClientRect().height === 0) return;
+      if (!visual) return;
       const width = visual instanceof SVGSVGElement ? visual.viewBox.baseVal.width : (visual as HTMLImageElement).naturalWidth;
       if (Number.isFinite(width) && width > 0) {
         const intrinsic = `${width}px`;
@@ -297,7 +297,7 @@ function DiagramViewport({children, title, description, download, minWidth = 0, 
           canvas.style.setProperty('--b10x-diagram-intrinsic-width', intrinsic);
         }
       }
-      if (positioned) return;
+      if (positioned || element.clientWidth === 0 || visual.getBoundingClientRect().width === 0) return;
       element.scrollLeft = initialPosition === 'center' ? Math.max(0, (element.scrollWidth - element.clientWidth) / 2) : 0;
       element.scrollTop = initialPosition === 'center' ? Math.max(0, (element.scrollHeight - element.clientHeight) / 2) : 0;
       positioned = true;
