@@ -467,7 +467,7 @@ pre[class*='language-'] ::selection { background: var(--b10x-code-selection); }
 .b10x-diagram__canvas {
   display: grid;
   place-items: center;
-  inline-size: max(100%, var(--b10x-diagram-min-width, 48rem));
+  inline-size: max(100%, var(--b10x-diagram-min-width, 48rem), var(--b10x-diagram-intrinsic-width, 0px));
   min-block-size: 20rem;
   padding: var(--b10x-space-4);
 }
@@ -477,7 +477,7 @@ pre[class*='language-'] ::selection { background: var(--b10x-code-selection); }
 .b10x-diagram__canvas img,
 .b10x-diagram__canvas svg {
   display: block;
-  inline-size: auto !important;
+  inline-size: var(--b10x-diagram-intrinsic-width, auto) !important;
   max-inline-size: none !important;
   min-inline-size: var(--b10x-diagram-min-width, 48rem);
   block-size: auto !important;
@@ -700,6 +700,9 @@ pre[class*='language-'] ::selection { background: var(--b10x-code-selection); }
 .b10x-schema-properties dt b { color: var(--b10x-color-danger); font: 0.68rem var(--b10x-font-mono); text-transform: uppercase; }
 .b10x-schema-composition { display: flex; flex-wrap: wrap; gap: var(--b10x-space-1); }
 .b10x-table-wrap { max-width: 100%; overflow-x: auto; scrollbar-color: var(--b10x-color-line) transparent; }
+.b10x-table-wrap > table { display: table; inline-size: 100%; max-inline-size: none; overflow: visible; }
+.b10x-table-wrap:focus-visible { outline: 2px solid var(--b10x-color-link); outline-offset: 2px; }
+.b10x-table-guidance { color: var(--b10x-color-muted); font-size: 0.85rem; margin-top: 0.5rem; }
 
 @media (hover: none), (pointer: coarse) {
   .theme-code-block button.clean-btn {

@@ -25,12 +25,14 @@ const {
   ContentCard,
   DependencyGraph,
   Diagram,
+  DiagramFrame,
   EcosystemFamilyGateway,
   FactGrid,
   FilterChipGroup,
   PageHeader,
   ProjectCard,
   SearchField,
+  ScrollableTable,
   SectionHeader,
 } = await import('../dist/components.js');
 
@@ -179,6 +181,34 @@ test('Diagram validates a caller-supplied edge alternative', () => {
     nodes: [{id: 'duplicate', label: 'First'}, {id: 'duplicate', label: 'Second'}],
     edges: [],
   })), /duplicate node duplicate/);
+});
+
+test('DiagramFrame preserves native accessible content and does not nest framed renderers', () => {
+  const markup = renderToStaticMarkup(createElement(DiagramFrame, {
+    title: 'Request flow', description: 'A caller reaches the service.',
+  }, createElement(DiagramFrame, {
+    title: 'Inner renderer', description: 'This renderer is already framed.',
+  }, createElement('svg', {viewBox: '0 0 960 400', role: 'img', 'aria-label': 'Caller to service'},
+    createElement('text', null, 'Caller to service'),
+  ))));
+  assert.equal((markup.match(/class="b10x-diagram__viewport"/g) ?? []).length, 1);
+  assert.match(markup, /<svg[^>]*role="img"[^>]*aria-label="Caller to service"/);
+  assert.doesNotMatch(markup, /aria-hidden="true"><svg/);
+  assert.doesNotMatch(markup, /Inner renderer/);
+  assert.match(markup, /--b10x-diagram-min-width:0px/);
+});
+
+test('ScrollableTable retains the caption, headers, attributes, and every column', () => {
+  const markup = renderToStaticMarkup(createElement(ScrollableTable, {'aria-label': 'Subsystem ownership'},
+    createElement('caption', null, 'Implementation owners'),
+    createElement('thead', null, createElement('tr', null, ...['Subsystem', 'Owns', 'Source'].map(label => createElement('th', {key: label, scope: 'col'}, label)))),
+    createElement('tbody', null, createElement('tr', null, ...['Catalog', 'Operations', 'catalog-build'].map(value => createElement('td', {key: value}, value)))),
+  ));
+  assert.match(markup, /class="b10x-table-wrap"><table aria-label="Subsystem ownership">/);
+  assert.match(markup, /<caption>Implementation owners<\/caption>/);
+  assert.equal((markup.match(/scope="col"/g) ?? []).length, 3);
+  assert.match(markup, /<td>catalog-build<\/td>/);
+  assert.match(markup, /hidden="" data-pagefind-ignore="true"/);
 });
 
 test('ecosystem families derive only from navigation metadata and honor caller order', () => {

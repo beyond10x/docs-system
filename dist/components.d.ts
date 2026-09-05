@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, InputHTMLAttributes, ReactNode } from 'react';
 import type { AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity, RegistrySurface } from './types.js';
 export type HeadingLevel = 1 | 2 | 3 | 4;
 export interface PageHeaderProps {
@@ -129,10 +129,8 @@ export interface DiagramAlternative {
     edges?: readonly DependencyGraphEdge[];
     label?: string;
 }
-export interface DiagramProps {
-    kind: 'mermaid' | 'svg';
-    source?: string;
-    src?: string;
+export interface DiagramFrameProps {
+    children: ReactNode;
     title: string;
     description: string;
     download?: string;
@@ -143,6 +141,11 @@ export interface DiagramProps {
     /** Complete prose or node/edge representation offered alongside the visual. */
     alternative?: DiagramAlternative;
 }
+export interface DiagramProps extends Omit<DiagramFrameProps, 'children'> {
+    kind: 'mermaid' | 'svg';
+    source?: string;
+    src?: string;
+}
 export declare function DependencyGraph({ nodes, edges, title, description, minWidth }: {
     nodes: DependencyGraphNode[];
     edges: DependencyGraphEdge[];
@@ -151,6 +154,13 @@ export declare function DependencyGraph({ nodes, edges, title, description, minW
     minWidth?: number | string;
 }): ReactNode;
 export declare function Diagram({ kind, source, src, title, description, download, minWidth, initialPosition, alternative }: DiagramProps): ReactNode;
+/** Frame already-rendered content without invoking a diagram renderer or nesting viewports. */
+export declare function DiagramFrame(props: DiagramFrameProps): ReactNode;
+export interface ScrollableTableProps extends ComponentPropsWithoutRef<'table'> {
+    label?: string;
+}
+/** Keep native table semantics while making overflowing columns reachable without page scrolling. */
+export declare function ScrollableTable({ children, label, ...props }: ScrollableTableProps): ReactNode;
 export interface ProjectCardProps {
     surface: AnyDocumentationSurface;
     headingLevel?: 2 | 3 | 4;

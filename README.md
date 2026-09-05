@@ -186,7 +186,8 @@ HTML redirects.
 - `Callout` with note, success, warning, and danger tones; `BoundaryNotice` is its compatibility wrapper
 - `CodeExample`, `CommandExample`, and `CodeTabs`
 - `DataCatalog` and `DependencyGraph` for typed repository-owned data
-- `Diagram` for Mermaid source or generated SVG
+- `Diagram` for Mermaid source or generated SVG; `DiagramFrame` for an existing renderer
+- `ScrollableTable` for native tables with keyboard access to overflowing columns
 - `OpenApiReference` and `JsonSchemaViewer` for read-only OpenAPI 3.1 documents
 - `StatusBadge` and `EcosystemSwitcher`
 - `EcosystemFamilyGateway` for a metadata-driven public entry experience
@@ -228,7 +229,7 @@ under an existing documentation h2 without introducing another h1 or `main`:
 ```
 
 Diagrams retain their full canvas inside one bounded, focusable, two-axis keyboard-scrollable
-viewport and center the initial view after Mermaid or SVG content is measured. A dependency graph
+viewport. `Diagram` centers the initial view after Mermaid or SVG content is measured. A dependency graph
 always supplies a node and relationship list; generic diagrams can provide the same complete
 alternative with `alternative`. Set `minWidth` for a dense graph without adding a second viewport;
 use `initialPosition="start"` only when reading order should begin at the canvas origin:
@@ -241,6 +242,29 @@ use `initialPosition="start"` only when reading order should begin at the canvas
   description="Provider and consumer relationships declared by owning repositories."
   minWidth="112rem"
 />
+```
+
+`DiagramFrame` wraps an existing renderer without calling Mermaid itself. It preserves the child's
+accessible SVG description, uses the visual's intrinsic width, and starts at the canvas origin by
+default. Nested frames reuse the outer viewport, so a theme can frame ordinary Mermaid fences
+without adding another viewport to `Diagram` or `DependencyGraph`:
+
+```tsx
+<DiagramFrame title="Request flow" description="A request passes through admission to execution.">
+  <OriginalMermaid value={source} />
+</DiagramFrame>
+```
+
+`ScrollableTable` accepts native table props and children, including captions and header scopes.
+It adds a focusable, named scroll region and visible keyboard instructions only when columns
+overflow. Use `label` to name the region when the surrounding context is insufficient:
+
+```tsx
+<ScrollableTable label="Operation outcomes">
+  <caption>Operation outcomes</caption>
+  <thead><tr><th scope="col">Outcome</th><th scope="col">Meaning</th></tr></thead>
+  <tbody><tr><th scope="row">Refused</th><td>No provider request was sent.</td></tr></tbody>
+</ScrollableTable>
 ```
 
 The family gateway accepts either the registry or its surface array. It treats an ungrouped

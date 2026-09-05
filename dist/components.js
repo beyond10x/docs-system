@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { useEffect, useId, useRef } from 'react';
+import { createContext, useContext, useEffect, useId, useRef, useState } from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Mermaid from '@theme/Mermaid';
 import { describeMarkdownFenceLanguage } from './code.js';
@@ -60,6 +60,7 @@ export function CodeTabs({ items }) {
 export function DataCatalog({ items, title = 'Data catalog' }) {
     return _jsx("section", { className: "b10x-data-catalog", "aria-label": title, children: items.map((item) => _jsxs("article", { children: [_jsxs("header", { children: [item.kind && _jsx("span", { children: item.kind }), _jsx("code", { children: item.id })] }), _jsx("h3", { children: item.url ? _jsx("a", { href: item.url, children: item.name }) : item.name }), item.summary && _jsx("p", { children: item.summary })] }, item.id)) });
 }
+const DiagramFrameContext = createContext(false);
 export function DependencyGraph({ nodes, edges, title = 'Dependencies', description = 'Declared dependencies between components.', minWidth }) {
     validateDiagramNodes(nodes, 'dependency graph');
     const identifiers = new Map(nodes.map((node, index) => [node.id, `n${index}`]));
@@ -78,6 +79,14 @@ export function Diagram({ kind, source, src, title, description, download, minWi
         throw new Error('a Mermaid diagram requires source');
     if (kind === 'svg' && !src)
         throw new Error('an SVG diagram requires src');
+    return _jsx(DiagramFrame, { title: title, description: description, download: download, minWidth: minWidth, initialPosition: initialPosition, alternative: alternative, children: _jsx("div", { role: "img", "aria-label": description, children: _jsx("div", { "aria-hidden": "true", children: kind === 'mermaid' ? _jsx(Mermaid, { value: source }) : _jsx("img", { src: src, alt: "", loading: "lazy" }) }) }) }, source ?? src);
+}
+/** Frame already-rendered content without invoking a diagram renderer or nesting viewports. */
+export function DiagramFrame(props) {
+    const framed = useContext(DiagramFrameContext);
+    return framed ? props.children : _jsx(DiagramViewport, { ...props });
+}
+function DiagramViewport({ children, title, description, download, minWidth = 0, initialPosition = 'start', alternative }) {
     validateDiagramAlternative(alternative);
     const componentId = useId().replaceAll(':', '');
     const titleId = `b10x-diagram-${componentId}-title`;
@@ -89,27 +98,33 @@ export function Diagram({ kind, source, src, title, description, download, minWi
     const viewport = useRef(null);
     useEffect(() => {
         const element = viewport.current;
-        if (!element || initialPosition === 'start')
+        if (!element)
             return;
+        const canvas = element.querySelector('.b10x-diagram__canvas');
         let animationFrame = 0;
         let positioned = false;
         let mutationObserver;
         let resizeObserver;
         const position = () => {
             animationFrame = 0;
-            if (positioned)
-                return;
             const visual = element.querySelector('svg, img');
             if (!visual || visual.getBoundingClientRect().width === 0 || visual.getBoundingClientRect().height === 0)
                 return;
-            element.scrollLeft = Math.max(0, (element.scrollWidth - element.clientWidth) / 2);
-            element.scrollTop = Math.max(0, (element.scrollHeight - element.clientHeight) / 2);
+            const width = visual instanceof SVGSVGElement ? visual.viewBox.baseVal.width : visual.naturalWidth;
+            if (Number.isFinite(width) && width > 0) {
+                const intrinsic = `${width}px`;
+                if (canvas.style.getPropertyValue('--b10x-diagram-intrinsic-width') !== intrinsic) {
+                    canvas.style.setProperty('--b10x-diagram-intrinsic-width', intrinsic);
+                }
+            }
+            if (positioned)
+                return;
+            element.scrollLeft = initialPosition === 'center' ? Math.max(0, (element.scrollWidth - element.clientWidth) / 2) : 0;
+            element.scrollTop = initialPosition === 'center' ? Math.max(0, (element.scrollHeight - element.clientHeight) / 2) : 0;
             positioned = true;
-            mutationObserver?.disconnect();
-            resizeObserver?.disconnect();
         };
         const schedule = () => {
-            if (positioned || animationFrame)
+            if (animationFrame)
                 return;
             animationFrame = window.requestAnimationFrame(() => {
                 animationFrame = window.requestAnimationFrame(position);
@@ -120,7 +135,7 @@ export function Diagram({ kind, source, src, title, description, download, minWi
         if ('ResizeObserver' in window) {
             resizeObserver = new ResizeObserver(schedule);
             resizeObserver.observe(element);
-            resizeObserver.observe(element.querySelector('.b10x-diagram__canvas'));
+            resizeObserver.observe(canvas);
         }
         const image = element.querySelector('img');
         image?.addEventListener('load', schedule, { once: true });
@@ -132,8 +147,26 @@ export function Diagram({ kind, source, src, title, description, download, minWi
             resizeObserver?.disconnect();
             image?.removeEventListener('load', schedule);
         };
-    }, [initialPosition, kind, minimum, source, src]);
-    return _jsxs("figure", { className: "b10x-diagram", "aria-labelledby": titleId, children: [_jsx("div", { ref: viewport, className: "b10x-diagram__viewport", style: style, tabIndex: 0, role: "region", "aria-labelledby": titleId, "aria-describedby": `${descriptionId} ${instructionsId}`, "aria-details": alternative ? alternativeId : undefined, children: _jsx("div", { className: "b10x-diagram__canvas", role: "img", "aria-label": description, children: _jsx("div", { "aria-hidden": "true", children: kind === 'mermaid' ? _jsx(Mermaid, { value: source }) : _jsx("img", { src: src, alt: "", loading: "lazy" }) }) }) }), _jsxs("p", { className: "b10x-diagram__guidance", id: instructionsId, children: [_jsx("span", { "aria-hidden": "true", children: "\u2194" }), _jsxs("span", { children: [_jsx("strong", { children: "Pan the full-size diagram:" }), " swipe or scroll, or focus the canvas and use the arrow keys."] })] }), _jsxs("figcaption", { children: [_jsx("strong", { id: titleId, children: title }), _jsx("span", { id: descriptionId, children: description }), download && _jsx("a", { className: "b10x-touch-link", href: download, download: true, children: "Download source" })] }), alternative && _jsx(DiagramTextAlternative, { alternative: alternative, id: alternativeId })] });
+    }, [initialPosition, minimum]);
+    return _jsx(DiagramFrameContext.Provider, { value: true, children: _jsxs("figure", { className: "b10x-diagram", "aria-labelledby": titleId, children: [_jsx("div", { ref: viewport, className: "b10x-diagram__viewport", style: style, tabIndex: 0, role: "region", "aria-labelledby": titleId, "aria-describedby": `${descriptionId} ${instructionsId}`, "aria-details": alternative ? alternativeId : undefined, children: _jsx("div", { className: "b10x-diagram__canvas", children: _jsx("div", { children: children }) }) }), _jsxs("p", { className: "b10x-diagram__guidance", id: instructionsId, "data-pagefind-ignore": true, children: [_jsx("span", { "aria-hidden": "true", children: "\u2194" }), _jsxs("span", { children: [_jsx("strong", { children: "Pan the full-size diagram:" }), " swipe or scroll, or focus the canvas and use the arrow keys."] })] }), _jsxs("figcaption", { children: [_jsx("strong", { id: titleId, children: title }), _jsx("span", { id: descriptionId, children: description }), download && _jsx("a", { className: "b10x-touch-link", href: download, download: true, children: "Download source" })] }), alternative && _jsx(DiagramTextAlternative, { alternative: alternative, id: alternativeId })] }) });
+}
+/** Keep native table semantics while making overflowing columns reachable without page scrolling. */
+export function ScrollableTable({ children, label = 'Table', ...props }) {
+    const viewport = useRef(null);
+    const instructionsId = `b10x-table-${useId().replaceAll(':', '')}-instructions`;
+    const [overflow, setOverflow] = useState(false);
+    useEffect(() => {
+        const element = viewport.current;
+        if (!element)
+            return;
+        const measure = () => setOverflow(element.scrollWidth > element.clientWidth + 1);
+        measure();
+        const observer = new ResizeObserver(measure);
+        observer.observe(element);
+        observer.observe(element.querySelector('table'));
+        return () => observer.disconnect();
+    }, []);
+    return _jsxs(_Fragment, { children: [_jsx("div", { ref: viewport, className: "b10x-table-wrap", tabIndex: overflow ? 0 : undefined, role: overflow ? 'region' : undefined, "aria-label": overflow ? label : undefined, "aria-describedby": overflow ? instructionsId : undefined, children: _jsx("table", { ...props, children: children }) }), _jsx("p", { className: "b10x-table-guidance", id: instructionsId, hidden: !overflow, "data-pagefind-ignore": true, children: "More columns: swipe horizontally, or focus the table and use the arrow keys." })] });
 }
 export function ProjectCard({ surface, headingLevel = 3, title = surface.name, titleUrl = surface.canonicalUrl, actionUrl, actionLabel }) {
     const action = declaredAdoption(surface) ?? fallbackAdoption(surface);

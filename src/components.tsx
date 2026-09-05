@@ -1,5 +1,5 @@
-import {useEffect, useId, useRef} from 'react';
-import type {CSSProperties, InputHTMLAttributes, ReactNode} from 'react';
+import {createContext, useContext, useEffect, useId, useRef, useState} from 'react';
+import type {ComponentPropsWithoutRef, CSSProperties, InputHTMLAttributes, ReactNode} from 'react';
 import CodeBlock from '@theme/CodeBlock';
 import Mermaid from '@theme/Mermaid';
 import {describeMarkdownFenceLanguage} from './code.js';
@@ -218,10 +218,8 @@ export interface DiagramAlternative {
   label?: string;
 }
 
-export interface DiagramProps {
-  kind: 'mermaid' | 'svg';
-  source?: string;
-  src?: string;
+export interface DiagramFrameProps {
+  children: ReactNode;
   title: string;
   description: string;
   download?: string;
@@ -232,6 +230,14 @@ export interface DiagramProps {
   /** Complete prose or node/edge representation offered alongside the visual. */
   alternative?: DiagramAlternative;
 }
+
+export interface DiagramProps extends Omit<DiagramFrameProps, 'children'> {
+  kind: 'mermaid' | 'svg';
+  source?: string;
+  src?: string;
+}
+
+const DiagramFrameContext = createContext(false);
 
 export function DependencyGraph({nodes, edges, title = 'Dependencies', description = 'Declared dependencies between components.', minWidth}: {nodes: DependencyGraphNode[]; edges: DependencyGraphEdge[]; title?: string; description?: string; minWidth?: number | string}): ReactNode {
   validateDiagramNodes(nodes, 'dependency graph');
@@ -249,6 +255,20 @@ export function DependencyGraph({nodes, edges, title = 'Dependencies', descripti
 export function Diagram({kind, source, src, title, description, download, minWidth = '48rem', initialPosition = 'center', alternative}: DiagramProps): ReactNode {
   if (kind === 'mermaid' && !source) throw new Error('a Mermaid diagram requires source');
   if (kind === 'svg' && !src) throw new Error('an SVG diagram requires src');
+  return <DiagramFrame key={source ?? src} title={title} description={description} download={download} minWidth={minWidth} initialPosition={initialPosition} alternative={alternative}>
+    <div role="img" aria-label={description}>
+      <div aria-hidden="true">{kind === 'mermaid' ? <Mermaid value={source!} /> : <img src={src} alt="" loading="lazy" />}</div>
+    </div>
+  </DiagramFrame>;
+}
+
+/** Frame already-rendered content without invoking a diagram renderer or nesting viewports. */
+export function DiagramFrame(props: DiagramFrameProps): ReactNode {
+  const framed = useContext(DiagramFrameContext);
+  return framed ? props.children : <DiagramViewport {...props} />;
+}
+
+function DiagramViewport({children, title, description, download, minWidth = 0, initialPosition = 'start', alternative}: DiagramFrameProps): ReactNode {
   validateDiagramAlternative(alternative);
   const componentId = useId().replaceAll(':', '');
   const titleId = `b10x-diagram-${componentId}-title`;
@@ -260,24 +280,30 @@ export function Diagram({kind, source, src, title, description, download, minWid
   const viewport = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const element = viewport.current;
-    if (!element || initialPosition === 'start') return;
+    if (!element) return;
+    const canvas = element.querySelector<HTMLElement>('.b10x-diagram__canvas')!;
     let animationFrame = 0;
     let positioned = false;
     let mutationObserver: MutationObserver | undefined;
     let resizeObserver: ResizeObserver | undefined;
     const position = (): void => {
       animationFrame = 0;
-      if (positioned) return;
       const visual = element.querySelector('svg, img');
       if (!visual || visual.getBoundingClientRect().width === 0 || visual.getBoundingClientRect().height === 0) return;
-      element.scrollLeft = Math.max(0, (element.scrollWidth - element.clientWidth) / 2);
-      element.scrollTop = Math.max(0, (element.scrollHeight - element.clientHeight) / 2);
+      const width = visual instanceof SVGSVGElement ? visual.viewBox.baseVal.width : (visual as HTMLImageElement).naturalWidth;
+      if (Number.isFinite(width) && width > 0) {
+        const intrinsic = `${width}px`;
+        if (canvas.style.getPropertyValue('--b10x-diagram-intrinsic-width') !== intrinsic) {
+          canvas.style.setProperty('--b10x-diagram-intrinsic-width', intrinsic);
+        }
+      }
+      if (positioned) return;
+      element.scrollLeft = initialPosition === 'center' ? Math.max(0, (element.scrollWidth - element.clientWidth) / 2) : 0;
+      element.scrollTop = initialPosition === 'center' ? Math.max(0, (element.scrollHeight - element.clientHeight) / 2) : 0;
       positioned = true;
-      mutationObserver?.disconnect();
-      resizeObserver?.disconnect();
     };
     const schedule = (): void => {
-      if (positioned || animationFrame) return;
+      if (animationFrame) return;
       animationFrame = window.requestAnimationFrame(() => {
         animationFrame = window.requestAnimationFrame(position);
       });
@@ -287,7 +313,7 @@ export function Diagram({kind, source, src, title, description, download, minWid
     if ('ResizeObserver' in window) {
       resizeObserver = new ResizeObserver(schedule);
       resizeObserver.observe(element);
-      resizeObserver.observe(element.querySelector('.b10x-diagram__canvas')!);
+      resizeObserver.observe(canvas);
     }
     const image = element.querySelector('img');
     image?.addEventListener('load', schedule, {once: true});
@@ -298,8 +324,8 @@ export function Diagram({kind, source, src, title, description, download, minWid
       resizeObserver?.disconnect();
       image?.removeEventListener('load', schedule);
     };
-  }, [initialPosition, kind, minimum, source, src]);
-  return <figure className="b10x-diagram" aria-labelledby={titleId}>
+  }, [initialPosition, minimum]);
+  return <DiagramFrameContext.Provider value={true}><figure className="b10x-diagram" aria-labelledby={titleId}>
     <div
       ref={viewport}
       className="b10x-diagram__viewport"
@@ -310,14 +336,39 @@ export function Diagram({kind, source, src, title, description, download, minWid
       aria-describedby={`${descriptionId} ${instructionsId}`}
       aria-details={alternative ? alternativeId : undefined}
     >
-      <div className="b10x-diagram__canvas" role="img" aria-label={description}>
-        <div aria-hidden="true">{kind === 'mermaid' ? <Mermaid value={source!} /> : <img src={src} alt="" loading="lazy" />}</div>
-      </div>
+      <div className="b10x-diagram__canvas"><div>{children}</div></div>
     </div>
-    <p className="b10x-diagram__guidance" id={instructionsId}><span aria-hidden="true">↔</span><span><strong>Pan the full-size diagram:</strong> swipe or scroll, or focus the canvas and use the arrow keys.</span></p>
+    <p className="b10x-diagram__guidance" id={instructionsId} data-pagefind-ignore><span aria-hidden="true">↔</span><span><strong>Pan the full-size diagram:</strong> swipe or scroll, or focus the canvas and use the arrow keys.</span></p>
     <figcaption><strong id={titleId}>{title}</strong><span id={descriptionId}>{description}</span>{download && <a className="b10x-touch-link" href={download} download>Download source</a>}</figcaption>
     {alternative && <DiagramTextAlternative alternative={alternative} id={alternativeId} />}
-  </figure>;
+  </figure></DiagramFrameContext.Provider>;
+}
+
+export interface ScrollableTableProps extends ComponentPropsWithoutRef<'table'> {
+  label?: string;
+}
+
+/** Keep native table semantics while making overflowing columns reachable without page scrolling. */
+export function ScrollableTable({children, label = 'Table', ...props}: ScrollableTableProps): ReactNode {
+  const viewport = useRef<HTMLDivElement>(null);
+  const instructionsId = `b10x-table-${useId().replaceAll(':', '')}-instructions`;
+  const [overflow, setOverflow] = useState(false);
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const measure = (): void => setOverflow(element.scrollWidth > element.clientWidth + 1);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    observer.observe(element.querySelector('table')!);
+    return () => observer.disconnect();
+  }, []);
+  return <>
+    <div ref={viewport} className="b10x-table-wrap" tabIndex={overflow ? 0 : undefined} role={overflow ? 'region' : undefined} aria-label={overflow ? label : undefined} aria-describedby={overflow ? instructionsId : undefined}>
+      <table {...props}>{children}</table>
+    </div>
+    <p className="b10x-table-guidance" id={instructionsId} hidden={!overflow} data-pagefind-ignore>More columns: swipe horizontally, or focus the table and use the arrow keys.</p>
+  </>;
 }
 
 export interface ProjectCardProps {
