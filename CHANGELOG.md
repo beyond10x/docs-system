@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.7.0 — 2026-09-10
 
 - Add the immutable `b10x-docs-bundle/v1` schema, Rust builder and validator, deterministic source
   and `changes/**/*.yaml` inventory, credential-free composite producer action, and consumer-first
@@ -11,6 +11,9 @@
   Markdown and MDX inputs now use their matching Docusaurus grammar with GFM enabled.
 - Label every canonical Prism fence consistently and refine the shared code surface with semantic
   accents, light/dark chrome, visible touch controls, keyboard focus, and narrow-screen scrolling.
+- Share one readable, keyboard-scrollable viewport between full-size diagrams and wide tables, and
+  measure a percentage-width diagram from its `viewBox` so the first layout still establishes a
+  readable canvas.
 
 ## 0.6.0 — 2026-09-03
 
