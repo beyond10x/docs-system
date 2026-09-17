@@ -6,6 +6,8 @@ status: active
 title: Explore ESS contracts through shared documentation UI
 scope:
 - confidence: cited
+  path: .github/workflows/gate.yml
+- confidence: cited
   path: .gitignore
 - confidence: cited
   path: README.md
@@ -23,7 +25,7 @@ scope:
   path: styles
 - confidence: cited
   path: tests
-revision: 6
+revision: 7
 ---
 # Explore ESS contracts through the shared documentation UI
 
