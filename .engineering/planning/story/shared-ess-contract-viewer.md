@@ -25,7 +25,7 @@ scope:
   path: styles
 - confidence: cited
   path: tests
-revision: 7
+revision: 8
 ---
 # Explore ESS contracts through the shared documentation UI
 
@@ -65,3 +65,7 @@ One implementation story; no decomposition panel is needed because there are no 
 - Real fixtures retain all 16 Mandate pages and 26 Connectors pages, exact projection bytes and provenance. Mandate's fixture is byte-identical to its generated documentation projection.
 
 The viewer is implemented locally. Source publication and the user's website review remain pending; no service enforcement or website delivery is claimed. The v3 manifest schema stays byte-identical. Only v4 adds the optional named viewer component; existing v3 data selection already supports automatic Website rendering.
+
+## Published review candidate
+
+Shared renderer source is published on mandate-contract-viewer at 1d4c0262911761118ffdd7037890f541a0688714. Its CI run 35176810774 passed; the actual pinned Website integration passed its full gate and CI run 35178316003 at 6e54791b99e0a4202ff2cc351d3cbf202c1f6cc8. Main and website delivery remain held for the operator's requested local Brave review. The refreshed Mandate fixture is copied byte-for-byte from a new ESS generation after contract review corrections. npm run gate and the browser suite against the actual local Website preview both passed again. Production renderer bytes are unchanged by this fixture refresh.
