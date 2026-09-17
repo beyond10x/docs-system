@@ -758,3 +758,44 @@ pre[class*='language-'] ::selection { background: var(--b10x-code-selection); }
     animation-duration: 0.001ms !important;
   }
 }
+
+/* ESS contract reference: passive documentation shared by contract owners. */
+.b10x-contract-viewer { --contract-line: var(--b10x-color-line, #d7dfdc); border: 1px solid var(--contract-line); border-radius: 16px; overflow: clip; margin-block: 1.5rem; background: var(--b10x-color-surface, #fff); color: var(--b10x-color-text, #182823); }
+.b10x-contract-header { padding: 1.6rem 1.8rem; display: flex; gap: 2rem; justify-content: space-between; align-items: start; border-bottom: 1px solid var(--contract-line); }
+.b10x-contract-header h2 { margin-block: .35rem .6rem; }
+.b10x-contract-header p { max-width: 52rem; margin-bottom: 0; }
+.b10x-contract-header dl { display: flex; gap: 1.5rem; flex-shrink: 0; margin: 0; }
+.b10x-contract-header dt, .b10x-contract-sidebar small { font-size: .75rem; color: var(--b10x-color-muted, #52665d); }
+.b10x-contract-header dd { margin: .25rem 0 0; font-weight: 600; }
+.b10x-contract-boundary { padding: .75rem 1.8rem; margin: 0; background: var(--b10x-color-surface-muted, #f1f6f3); border-bottom: 1px solid var(--contract-line); font-size: .875rem; }
+.b10x-contract-layout { display: grid; grid-template-columns: minmax(14rem, 19rem) minmax(0, 1fr); align-items: start; }
+.b10x-contract-sidebar { padding: 1.25rem; border-right: 1px solid var(--contract-line); min-width: 0; }
+.b10x-contract-sidebar label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .5rem; }
+.b10x-contract-sidebar input { box-sizing: border-box; width: 100%; padding: .7rem .8rem; margin-bottom: 1rem; border: 1px solid var(--contract-line); border-radius: 8px; color: inherit; background: var(--b10x-color-surface, #fff); }
+.b10x-contract-sidebar nav { display: grid; gap: .2rem; }
+.b10x-contract-sidebar a { display: flex; flex-direction: column; text-decoration: none; padding: .6rem .7rem; border-radius: 7px; overflow-wrap: anywhere; font-size: .875rem; }
+.b10x-contract-sidebar a[aria-current="page"] { background: var(--b10x-color-surface-muted, #edf5ef); color: var(--b10x-color-link, #125c43); box-shadow: inset 3px 0 currentColor; font-weight: 650; }
+.b10x-contract-sidebar a:hover { background: var(--b10x-color-surface-muted, #edf5ef); }
+.b10x-contract-page { min-width: 0; padding: 1.6rem 2rem; overflow-wrap: anywhere; }
+.b10x-contract-page h3 { font-size: 1.65rem; margin-block: .4rem 1.4rem; }
+.b10x-contract-page h4 { margin-top: 1.8rem; font-size: 1.25rem; }
+.b10x-contract-page h5 { font-size: 1rem; }
+.b10x-contract-page [id] { scroll-margin-top: 6rem; }
+.b10x-contract-contents { padding: .85rem 1rem; background: var(--b10x-color-surface-muted, #f1f6f3); border-radius: 8px; margin-bottom: 1.5rem; }
+.b10x-contract-contents nav { display: grid; gap: .4rem; margin-top: .8rem; }
+.b10x-contract-diagram { margin-block: 1rem; border: 1px solid var(--contract-line); border-radius: 8px; padding: .85rem; }
+.b10x-contract-viewer summary { cursor: pointer; font-weight: 600; }
+.b10x-contract-viewer :focus-visible { outline: 3px solid var(--b10x-color-focus, #167953); outline-offset: 3px; }
+.b10x-contract-provenance { border-top: 1px solid var(--contract-line); margin-top: 2rem; padding-top: 1rem; font-size: .85rem; }
+.b10x-contract-provenance dl { display: grid; gap: .35rem; }
+.b10x-contract-provenance dd { margin-left: 0; overflow-wrap: anywhere; }
+.b10x-contract-unresolved { text-decoration: underline dotted; }
+.b10x-contract-error { padding: 1rem; border: 1px solid var(--contract-line, #a22); border-radius: 8px; }
+@media (max-width: 800px) {
+  .b10x-contract-header { flex-direction: column; padding: 1.2rem; gap: 1rem; }
+  .b10x-contract-layout { grid-template-columns: minmax(0, 1fr); }
+  .b10x-contract-sidebar { border-right: 0; border-bottom: 1px solid var(--contract-line); }
+  .b10x-contract-sidebar nav { max-height: 17rem; overflow: auto; }
+  .b10x-contract-page { padding: 1.2rem; }
+  .b10x-contract-boundary { padding-inline: 1.2rem; }
+}

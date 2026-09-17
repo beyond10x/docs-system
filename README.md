@@ -291,6 +291,55 @@ npm ci --ignore-scripts
 npm run gate
 ```
 
+## ESS contract viewer
+
+`EssContractViewer` renders ESS's existing `ess-docs/1` documentation projection. It provides page
+navigation, searchable declarations, typed cross references, lifecycle and relationship diagrams,
+shareable section links, and source provenance. It is passive: it executes no command, accepts no
+credential, and makes no claim that a declared behavior is implemented.
+
+Generate the input with ESS, using the shared output root:
+
+```bash
+ess generate --path systems/example --kind docs-ir --out generated
+```
+
+In a Docusaurus host using the shared tokens and Mermaid theme:
+
+```tsx
+import {EssContractViewer} from '@beyond10x/docs-system/ess-contract-viewer';
+import contract from './generated/docs-ir/document.json';
+
+export function ContractReference() {
+  return <EssContractViewer document={contract} id="example" sourceUrl="/data/example/document.json" />;
+}
+```
+
+Keep `id` stable and unique when embedding several viewers. `title`, `sourceRepository`, and
+`initialPage` are optional. Use Mermaid's `securityLevel: 'strict'` and `flowchart.htmlLabels: false`;
+active directives and external diagram resources are refused by the document reader. Unknown link
+destinations remain visibly unresolved. Unsupported document formats and malformed structures render
+an error instead of a partial contract. Provenance is displayed as supplied by ESS; the viewer does
+not recompute model digests.
+
+Node preparation code imports `parseEssDocument`, `essText`, and `resolveEssTarget` from the
+Node-safe `@beyond10x/docs-system/ess-document` subpath. Declare the generated JSON in `source.data.include`. A v4 manifest can also name
+`EssContractViewer` in `source.components`; the immutable v3 component vocabulary stays unchanged. Website recognizes
+`ess-docs/1` data and supplies the shared viewer, a static contents summary, and the exact JSON
+download. Other data catalogs retain their existing rendering.
+
+The unit suite consumes complete ESS 0.25.0 projections from Mandate and Connectors. Browser checks
+build a standalone Docusaurus fixture in this repository and exercise both consumers:
+
+```bash
+npx playwright install chromium
+npm run test:browser
+```
+
+Set `B10X_CHROME_BIN` to use an installed Chromium browser. `ESS_VIEWER_PREVIEW_URL` can instead
+exercise a running Mandate preview with a `/contracts/` route. The browser test is separate from
+`npm run gate` because it requires a browser installation.
+
 Apache-2.0. See [LICENSE](LICENSE).
 
 <!-- b10x-docs:discovery:start -->

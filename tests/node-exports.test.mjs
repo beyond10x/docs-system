@@ -13,6 +13,7 @@ test('documented Node-safe package subpaths load without Docusaurus theme aliase
     import('@beyond10x/docs-system/navigation'),
     import('@beyond10x/docs-system/redirects'),
     import('@beyond10x/docs-system/types'),
+    import('@beyond10x/docs-system/ess-document'),
   ]);
   assert.equal(typeof modules[0].readManifest, 'function');
   assert.equal(typeof modules[0].readSourceLock, 'function');
@@ -26,6 +27,7 @@ test('documented Node-safe package subpaths load without Docusaurus theme aliase
   assert.equal(typeof modules[7].deriveEcosystemNavigation, 'function');
   assert.equal(typeof modules[8].writeRedirectMap, 'function');
   assert.deepEqual(Object.keys(modules[9]), []);
+  assert.equal(typeof modules[10].parseEssDocument, 'function');
 });
 
 test('published schema subpaths load as JSON in plain Node', async () => {

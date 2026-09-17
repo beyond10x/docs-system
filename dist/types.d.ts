@@ -85,7 +85,7 @@ export interface AdoptionAction {
     prerequisites?: string[];
     outcome: string;
 }
-export type SharedComponentName = 'AdoptionCard' | 'BoundaryNotice' | 'Callout' | 'CardGrid' | 'CodeExample' | 'CodeTabs' | 'CommandExample' | 'ContentCard' | 'DataCatalog' | 'DependencyGraph' | 'Diagram' | 'EcosystemFamilyGateway' | 'EcosystemSwitcher' | 'FactGrid' | 'FilterChipGroup' | 'JsonSchemaViewer' | 'OpenApiReference' | 'PageHeader' | 'ProjectCard' | 'SearchField' | 'SectionHeader' | 'StatusBadge';
+export type SharedComponentName = 'AdoptionCard' | 'BoundaryNotice' | 'Callout' | 'CardGrid' | 'CodeExample' | 'CodeTabs' | 'CommandExample' | 'ContentCard' | 'DataCatalog' | 'DependencyGraph' | 'Diagram' | 'EcosystemFamilyGateway' | 'EcosystemSwitcher' | 'EssContractViewer' | 'FactGrid' | 'FilterChipGroup' | 'JsonSchemaViewer' | 'OpenApiReference' | 'PageHeader' | 'ProjectCard' | 'SearchField' | 'SectionHeader' | 'StatusBadge';
 export interface SourceSelection {
     include: string[];
     exclude?: string[];

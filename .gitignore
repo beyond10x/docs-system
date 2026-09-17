@@ -2,3 +2,5 @@ node_modules/
 coverage/
 target/
 *.tgz
+.cache/
+tests/viewer-site/.docusaurus/

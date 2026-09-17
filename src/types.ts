@@ -118,6 +118,7 @@ export type SharedComponentName =
   | 'Diagram'
   | 'EcosystemFamilyGateway'
   | 'EcosystemSwitcher'
+  | 'EssContractViewer'
   | 'FactGrid'
   | 'FilterChipGroup'
   | 'JsonSchemaViewer'
