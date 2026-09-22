@@ -6,6 +6,7 @@ import {discoveryOptionsFromManifest, writeDiscoveryBlock} from './discovery.js'
 import {writeJsonFeed, writeRss} from './feeds.js';
 import {buildLedger, buildRegistry, readDocument, readManifest, readRedirectMap, readReleaseFacts, writeJson} from './manifest.js';
 import {writeRedirectMap} from './redirects.js';
+import {checkSource, formatSourceCheckFailure} from './source-check.js';
 import type {DocumentationManifest, EcosystemChange} from './types.js';
 
 const [, , command, ...args] = process.argv;
@@ -24,6 +25,16 @@ try {
       else if (document.schema === 'b10x-redirects/v1') detail = `${document.redirects.length} compatibility route(s)`;
       else throw new Error(`${file} has unsupported schema`);
       process.stdout.write(`${file}: ${detail} valid\n`);
+    }
+  } else if (command === 'check-source') {
+    if (args.length !== 1) throw new Error('usage: b10x-docs check-source <repository-root>');
+    const result = await checkSource(args[0]);
+    for (const failure of result.failures) process.stderr.write(`${formatSourceCheckFailure(failure)}\n`);
+    if (result.failures.length > 0) {
+      process.stderr.write(`${args[0]}: ${result.failures.length} source check failure(s)\n`);
+      process.exitCode = 1;
+    } else {
+      process.stdout.write(`${args[0]}: ${result.documents} document(s), ${result.changes} change(s), ${result.fences} code fence(s) checked\n`);
     }
   } else if (command === 'validate-page') {
     if (args.length === 0) throw new Error('usage: b10x-docs validate-page <markdown-or-mdx>...');
@@ -105,7 +116,7 @@ try {
     const changed = await writeDiscoveryBlock(fileOption.value, discoveryOptionsFromManifest(manifest), {check: checkOption.present});
     process.stdout.write(`${fileOption.value}: discovery block ${changed ? 'updated' : 'current'}\n`);
   } else {
-    throw new Error('usage: b10x-docs <validate|validate-page|registry|snapshot|collect|redirects|readme> ...');
+    throw new Error('usage: b10x-docs <validate|check-source|validate-page|registry|snapshot|collect|redirects|readme> ...');
   }
 } catch (error) {
   process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);

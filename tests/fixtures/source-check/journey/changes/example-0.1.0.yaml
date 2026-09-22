@@ -1,0 +1,14 @@
+schema: b10x-change/v2
+id: example/first-release-0.1.0
+repository: example
+publishedAt: 2026-09-22T10:00:00Z
+title: Example ships its first release
+summary: Example 0.1.0 is the first release of the fixture repository.
+kind: release
+impact: notable
+source:
+  url: https://github.com/beyond10x/example/releases/tag/0.1.0
+  version: 0.1.0
+journeys: [build-agents, operate]
+affected:
+  repositories: [example]

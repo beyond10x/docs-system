@@ -1,0 +1,46 @@
+schema: b10x-docs/v3
+repository:
+  id: example
+  displayName: Example
+  url: https://github.com/beyond10x/example
+delivery:
+  origin: https://beyond10x.github.io
+  publisher: website
+  repository: beyond10x.github.io
+surfaces:
+  - id: docs
+    name: Example
+    summary: A clean source-check fixture repository.
+    kind: reference
+    canonicalUrl: https://beyond10x.github.io/docs/example/
+    maturity: development
+    availability: published
+    discoverability: public
+    audiences: [developer]
+    primaryJourney: build-agents
+    journeys: [build-agents]
+    capabilities: [source-check]
+    sections:
+      - kind: source
+        label: Source
+        url: https://github.com/beyond10x/example
+    routeBase: /docs/example/
+    source:
+      root: .
+      documents:
+        include:
+          - README.md
+          - docs/**/*.md
+      specifications:
+        - format: json-schema
+          id: broken
+          path: schema/broken.json
+          route: /api/example/broken/
+          title: Broken schema
+    adoption:
+      label: Check a documentation source
+      mode: source-build
+      outcome: Check one repository's declared documentation.
+      estimatedMinutes: 5
+      prerequisites: [Node.js]
+      url: https://beyond10x.github.io/docs/example/
