@@ -7,6 +7,7 @@ import type {
   DocumentationExperience,
   DocumentationManifest,
   DocumentationManifestV4,
+  DocumentationManifestV5,
   EvaluatedAdoptionPath,
   EvaluatedDocumentationExperience,
   ExperienceArtifact,
@@ -100,8 +101,8 @@ export function normalizeManifestExperiences(
   manifest: DocumentationManifest,
   catalog?: ExperienceCatalog,
 ): ManifestExperienceSurface[] {
-  if (manifest.schema !== 'b10x-docs/v4') return normalizeLegacyManifestExperiences(manifest);
-  if (!catalog) throw new Error(`${manifest.repository.id} b10x-docs/v4 normalization requires a b10x-experiences/v1 catalog`);
+  if (manifest.schema !== 'b10x-docs/v4' && manifest.schema !== 'b10x-docs/v5') return normalizeLegacyManifestExperiences(manifest);
+  if (!catalog) throw new Error(`${manifest.repository.id} ${manifest.schema} normalization requires a b10x-experiences/v1 catalog`);
   validateManifestExperienceReferences(manifest, catalog);
   const evaluated = new Map(evaluateExperienceCatalog(catalog).map((experience) => [experience.id, experience]));
   return manifest.surfaces.map((surface) => ({
@@ -112,7 +113,7 @@ export function normalizeManifestExperiences(
   }));
 }
 
-export function validateManifestExperienceReferences(manifest: DocumentationManifestV4, catalog: ExperienceCatalog): void {
+export function validateManifestExperienceReferences(manifest: DocumentationManifestV4 | DocumentationManifestV5, catalog: ExperienceCatalog): void {
   validateExperienceCatalogSemantics(catalog);
   const experienceIds = new Set(catalog.experiences.map((experience) => experience.id));
   for (const surface of manifest.surfaces) {
@@ -126,7 +127,7 @@ export function validateManifestExperienceReferences(manifest: DocumentationMani
   }
 }
 
-function normalizeLegacyManifestExperiences(manifest: Exclude<DocumentationManifest, DocumentationManifestV4>): ManifestExperienceSurface[] {
+function normalizeLegacyManifestExperiences(manifest: Exclude<DocumentationManifest, DocumentationManifestV4 | DocumentationManifestV5>): ManifestExperienceSurface[] {
   return manifest.surfaces.map((surface) => {
     const journeys = uniqueJourneys(surface.journeys);
     const experienceIds = journeys.map(compatibilityExperienceId);

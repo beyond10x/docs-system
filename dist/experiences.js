@@ -80,10 +80,10 @@ export function evaluateExperienceCatalog(catalog) {
  * projected as explicitly non-actionable compatibility experiences instead of inheriting trust.
  */
 export function normalizeManifestExperiences(manifest, catalog) {
-    if (manifest.schema !== 'b10x-docs/v4')
+    if (manifest.schema !== 'b10x-docs/v4' && manifest.schema !== 'b10x-docs/v5')
         return normalizeLegacyManifestExperiences(manifest);
     if (!catalog)
-        throw new Error(`${manifest.repository.id} b10x-docs/v4 normalization requires a b10x-experiences/v1 catalog`);
+        throw new Error(`${manifest.repository.id} ${manifest.schema} normalization requires a b10x-experiences/v1 catalog`);
     validateManifestExperienceReferences(manifest, catalog);
     const evaluated = new Map(evaluateExperienceCatalog(catalog).map((experience) => [experience.id, experience]));
     return manifest.surfaces.map((surface) => ({

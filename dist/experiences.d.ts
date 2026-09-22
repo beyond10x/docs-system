@@ -1,4 +1,4 @@
-import type { Access, AdoptionPath, DocumentationManifest, DocumentationManifestV4, EvaluatedAdoptionPath, EvaluatedDocumentationExperience, ExperienceArtifact, ExperienceCatalog, ManifestExperienceSurface } from './types.js';
+import type { Access, AdoptionPath, DocumentationManifest, DocumentationManifestV4, DocumentationManifestV5, EvaluatedAdoptionPath, EvaluatedDocumentationExperience, ExperienceArtifact, ExperienceCatalog, ManifestExperienceSurface } from './types.js';
 export { readExperienceCatalog } from './manifest.js';
 /** Return the least permissive access value. `unspecified` is compatibility-only and safest. */
 export declare function mostRestrictiveAccess(...values: Access[]): Access;
@@ -10,4 +10,4 @@ export declare function evaluateExperienceCatalog(catalog: ExperienceCatalog): E
  * projected as explicitly non-actionable compatibility experiences instead of inheriting trust.
  */
 export declare function normalizeManifestExperiences(manifest: DocumentationManifest, catalog?: ExperienceCatalog): ManifestExperienceSurface[];
-export declare function validateManifestExperienceReferences(manifest: DocumentationManifestV4, catalog: ExperienceCatalog): void;
+export declare function validateManifestExperienceReferences(manifest: DocumentationManifestV4 | DocumentationManifestV5, catalog: ExperienceCatalog): void;

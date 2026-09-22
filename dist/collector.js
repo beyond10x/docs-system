@@ -25,8 +25,8 @@ const neverCollectDirectories = new Set([
  * repository code. It optionally copies the validated bytes and always returns their stable index.
  */
 export async function collectManifestSources(manifest, repositoryRoot, options = {}) {
-    if (manifest.schema !== 'b10x-docs/v3' && manifest.schema !== 'b10x-docs/v4') {
-        throw new Error('source collection requires b10x-docs/v3 or b10x-docs/v4');
+    if (manifest.schema !== 'b10x-docs/v3' && manifest.schema !== 'b10x-docs/v4' && manifest.schema !== 'b10x-docs/v5') {
+        throw new Error('source collection requires b10x-docs/v3, b10x-docs/v4 or b10x-docs/v5');
     }
     const repositoryReal = await fs.realpath(repositoryRoot);
     const files = [];
@@ -63,7 +63,7 @@ export async function collectManifestSources(manifest, repositoryRoot, options =
     files.sort(compareSources);
     assertUniqueOutputs(files);
     const index = buildCollectionIndex(manifest, files);
-    if (manifest.schema === 'b10x-docs/v4')
+    if (manifest.schema === 'b10x-docs/v4' || manifest.schema === 'b10x-docs/v5')
         await buildDocumentPageIndex(manifest, index, repositoryReal);
     if (options.outputRoot)
         await copyCollection(repositoryReal, options.outputRoot, files);

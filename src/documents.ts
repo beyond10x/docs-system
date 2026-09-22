@@ -8,6 +8,7 @@ import type {
   DocumentPageMetadata,
   DocumentationManifest,
   DocumentationManifestV4,
+  DocumentationManifestV5,
   EffectiveDocumentPageMetadata,
   IndexedDocumentPage,
   Journey,
@@ -49,7 +50,7 @@ export function effectiveDocumentPageMetadata(
 ): EffectiveDocumentPageMetadata {
   const surface = manifest.surfaces.find((candidate) => candidate.id === surfaceId);
   if (!surface) throw new Error(`${manifest.repository.id} has no documentation surface ${surfaceId}`);
-  if (manifest.schema !== 'b10x-docs/v4') {
+  if (manifest.schema !== 'b10x-docs/v4' && manifest.schema !== 'b10x-docs/v5') {
     const audiences = 'audiences' in surface ? [...(surface.audiences ?? [])] : [];
     return {
       audiences,
@@ -60,7 +61,7 @@ export function effectiveDocumentPageMetadata(
     };
   }
 
-  const v4Surface = surface as DocumentationManifestV4['surfaces'][number];
+  const v4Surface = surface as (DocumentationManifestV4 | DocumentationManifestV5)['surfaces'][number];
   if (declared) {
     for (const experienceId of declared.experienceIds) {
       if (!v4Surface.experienceIds.includes(experienceId)) {

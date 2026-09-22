@@ -24,7 +24,7 @@ export function discoveryOptionsFromManifest(manifest: DocumentationManifest): D
     repository: manifest.repository.id,
     displayName: manifest.repository.displayName ?? publicSurface.name,
     docsUrl: publicSurface.canonicalUrl,
-    ...(manifest.schema === 'b10x-docs/v3' || manifest.schema === 'b10x-docs/v4' ? {origin: manifest.delivery.origin} : {}),
+    ...(manifest.schema === 'b10x-docs/v3' || manifest.schema === 'b10x-docs/v4' || manifest.schema === 'b10x-docs/v5' ? {origin: manifest.delivery.origin} : {}),
   };
 }
 

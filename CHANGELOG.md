@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Add the additive `b10x-docs/v5` contract: a serialized sidebar of categories whose leaves are
+  published document paths, a landing document, menu-withheld documents (`menuWithheld`) and
+  declared built assets (`builtAssets`). Validation refuses a sidebar leaf, landing or withheld
+  path the surface does not publish.
+  v1-v4 remain accepted unchanged.
+
 ## 0.7.0 — 2026-09-10
 
 - Add the immutable `b10x-docs-bundle/v1` schema, Rust builder and validator, deterministic source

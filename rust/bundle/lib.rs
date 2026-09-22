@@ -348,9 +348,12 @@ fn validate_bundle_manifest_fields(manifest: &BundleManifest) -> Result<()> {
 fn parse_source_manifest(bytes: &[u8]) -> Result<SourceManifestHeader> {
     let manifest: SourceManifestHeader = serde_yaml::from_slice(bytes)
         .map_err(|error| BundleError::new(format!("{MANIFEST_FILE} is not valid YAML: {error}")))?;
-    if manifest.schema != "b10x-docs/v3" && manifest.schema != "b10x-docs/v4" {
+    if !matches!(
+        manifest.schema.as_str(),
+        "b10x-docs/v3" | "b10x-docs/v4" | "b10x-docs/v5"
+    ) {
         return Err(BundleError::new(format!(
-            "{MANIFEST_FILE} must use b10x-docs/v3 or b10x-docs/v4"
+            "{MANIFEST_FILE} must use b10x-docs/v3, b10x-docs/v4 or b10x-docs/v5"
         )));
     }
     validate_repository(&manifest.repository.id, &manifest.repository.url)?;
@@ -1014,6 +1017,23 @@ mod tests {
         ] {
             assert!(validate_relative_path(path, "fixture").is_err(), "{path}");
         }
+    }
+
+    #[test]
+    fn source_manifest_accepts_every_bundleable_revision() {
+        for revision in ["v3", "v4", "v5"] {
+            let manifest = format!(
+                "schema: b10x-docs/{revision}\nrepository: {{id: fixture, url: https://github.com/beyond10x/fixture}}\n"
+            );
+            assert!(
+                parse_source_manifest(manifest.as_bytes()).is_ok(),
+                "{revision}"
+            );
+        }
+        assert!(parse_source_manifest(
+            b"schema: b10x-docs/v2\nrepository: {id: fixture, url: https://github.com/beyond10x/fixture}\n"
+        )
+        .is_err());
     }
 
     #[test]

@@ -23,7 +23,7 @@ export function effectiveDocumentPageMetadata(manifest, surfaceId, declared) {
     const surface = manifest.surfaces.find((candidate) => candidate.id === surfaceId);
     if (!surface)
         throw new Error(`${manifest.repository.id} has no documentation surface ${surfaceId}`);
-    if (manifest.schema !== 'b10x-docs/v4') {
+    if (manifest.schema !== 'b10x-docs/v4' && manifest.schema !== 'b10x-docs/v5') {
         const audiences = 'audiences' in surface ? [...(surface.audiences ?? [])] : [];
         return {
             audiences,

@@ -83,7 +83,7 @@ try {
       throw new Error('usage: b10x-docs collect --manifest <file> --repository-root <dir> --index-out <file> [--document-index-out <file>] [--out <dir>]');
     }
     const manifest = await readManifest(manifestOption.value);
-    if (manifest.schema !== 'b10x-docs/v3' && manifest.schema !== 'b10x-docs/v4') throw new Error('b10x-docs collect requires a b10x-docs/v3 or b10x-docs/v4 manifest');
+    if (manifest.schema !== 'b10x-docs/v3' && manifest.schema !== 'b10x-docs/v4' && manifest.schema !== 'b10x-docs/v5') throw new Error('b10x-docs collect requires a b10x-docs/v3, b10x-docs/v4 or b10x-docs/v5 manifest');
     const index = await collectManifestSources(manifest, rootOption.value, {outputRoot: outOption.value});
     await writeJson(indexOption.value, index);
     let documentDetail = '';
