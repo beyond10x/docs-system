@@ -1,0 +1,21 @@
+name: Check declared documentation sources
+description: Validate one repository's declared public documentation with the publisher's per-source rules, without executing repository code.
+inputs:
+  repository-root:
+    description: Source repository checkout containing b10x.docs.yaml.
+    required: false
+    default: .
+runs:
+  using: composite
+  steps:
+    - name: Install pinned Docs System dependencies
+      shell: bash
+      env:
+        DOCS_SYSTEM_ACTION_ROOT: ${{ github.action_path }}/../../..
+      run: npm ci --ignore-scripts --prefix "$DOCS_SYSTEM_ACTION_ROOT"
+    - name: Check declared documentation sources
+      shell: bash
+      env:
+        DOCS_SYSTEM_ACTION_ROOT: ${{ github.action_path }}/../../..
+        DOCS_SOURCE_ROOT: ${{ inputs['repository-root'] }}
+      run: node "$DOCS_SYSTEM_ACTION_ROOT/dist/cli.js" check-source "$DOCS_SOURCE_ROOT"
