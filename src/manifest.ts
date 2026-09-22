@@ -11,14 +11,18 @@ import type {
   DocumentationManifest,
   DocumentationManifestV3,
   DocumentationManifestV4,
+  DocumentationManifestV5,
   EcosystemChange,
   EcosystemRegistry,
   ExperienceCatalog,
   Journey,
   RedirectMap,
   RegistrySurface,
+  RegistrySurfaceV5,
   ReleaseFactsDocument,
+  SidebarCategory,
   SourceLock,
+  SourceSelection,
 } from './types.js';
 
 const schemaPaths = {
@@ -26,6 +30,7 @@ const schemaPaths = {
   'b10x-docs/v2': fileURLToPath(new URL('../schema/b10x.docs.v2.schema.json', import.meta.url)),
   'b10x-docs/v3': fileURLToPath(new URL('../schema/b10x.docs.v3.schema.json', import.meta.url)),
   'b10x-docs/v4': fileURLToPath(new URL('../schema/b10x.docs.v4.schema.json', import.meta.url)),
+  'b10x-docs/v5': fileURLToPath(new URL('../schema/b10x.docs.v5.schema.json', import.meta.url)),
   'b10x-experiences/v1': fileURLToPath(new URL('../schema/b10x.experiences.schema.json', import.meta.url)),
   'b10x-doc-page/v1': fileURLToPath(new URL('../schema/b10x.doc-page.schema.json', import.meta.url)),
   'b10x-change/v1': fileURLToPath(new URL('../schema/b10x.change.schema.json', import.meta.url)),
@@ -46,7 +51,7 @@ const Ajv2020 = Ajv2020Module as unknown as new (options: {allErrors: boolean; s
 const addFormats = addFormatsModule as unknown as (ajv: AjvLike) => AjvLike;
 
 export async function readManifest(file: string | URL): Promise<DocumentationManifest> {
-  const document = await readTypedDocument(file, ['b10x-docs/v1', 'b10x-docs/v2', 'b10x-docs/v3', 'b10x-docs/v4']) as DocumentationManifest;
+  const document = await readTypedDocument(file, ['b10x-docs/v1', 'b10x-docs/v2', 'b10x-docs/v3', 'b10x-docs/v4', 'b10x-docs/v5']) as DocumentationManifest;
   validateManifestSemantics(document, String(file));
   return document;
 }
@@ -60,7 +65,7 @@ export async function readExperienceCatalog(file: string | URL): Promise<Experie
 
 export async function validateDocumentPageMetadata(document: unknown, context = 'document page metadata'): Promise<DocumentPageMetadata> {
   const validate = await validatorFor('b10x-doc-page/v1');
-  if (!validate(document)) throw new Error(formatErrors(context, 'b10x-doc-page/v1', validate.errors ?? []));
+  if (!validate(document)) throw new Error(formatErrors(context, 'b10x-doc-page/v1', validate.errors ?? [], document));
   return document as DocumentPageMetadata;
 }
 
@@ -112,7 +117,7 @@ async function readTypedDocument(file: string | URL, accepted: DocumentSchema[])
     throw new Error(`${String(file)} has unsupported schema ${schema || '(missing)'}`);
   }
   const validate = await validatorFor(schema as DocumentSchema);
-  if (!validate(document)) throw new Error(formatErrors(String(file), schema, validate.errors ?? []));
+  if (!validate(document)) throw new Error(formatErrors(String(file), schema, validate.errors ?? [], document));
   return document as B10xDocument;
 }
 
@@ -123,7 +128,9 @@ export function buildRegistry(manifests: DocumentationManifest[]): EcosystemRegi
     for (const surface of manifest.surfaces) {
       const key = `${manifest.repository.id}/${surface.id}`;
       if (all.has(key)) throw new Error(`duplicate documentation surface ${key}`);
-      const v4Surface = manifest.schema === 'b10x-docs/v4' ? surface as DocumentationManifestV4['surfaces'][number] : undefined;
+      const v4Surface = manifest.schema === 'b10x-docs/v4' ? surface as DocumentationManifestV4['surfaces'][number]
+        : manifest.schema === 'b10x-docs/v5' ? registryShapeOfV5(surface as DocumentationManifestV5['surfaces'][number])
+        : undefined;
       const registrySurface = v4Surface
         ? {
             ...v4Surface,
@@ -269,10 +276,11 @@ function validateV3Semantics(manifest: DocumentationManifestV3, file: string): v
 
 function validateManifestSemantics(manifest: DocumentationManifest, file: string): void {
   if (manifest.schema === 'b10x-docs/v3') validateV3Semantics(manifest, file);
-  if (manifest.schema === 'b10x-docs/v4') validateV4Semantics(manifest, file);
+  if (manifest.schema === 'b10x-docs/v4' || manifest.schema === 'b10x-docs/v5') validateV4Semantics(manifest, file);
+  if (manifest.schema === 'b10x-docs/v5') validateV5Paths(manifest, file);
 }
 
-function validateV4Semantics(manifest: DocumentationManifestV4, file: string): void {
+function validateV4Semantics(manifest: DocumentationManifestV4 | DocumentationManifestV5, file: string): void {
   const expectedRepositoryUrl = `https://github.com/beyond10x/${manifest.repository.id}`;
   if (manifest.repository.url !== expectedRepositoryUrl) {
     throw new Error(`${file} repository.url must be ${expectedRepositoryUrl}`);
@@ -302,6 +310,111 @@ function validateV4Semantics(manifest: DocumentationManifestV4, file: string): v
       specificationRoutes.add(specification.route);
     }
   }
+}
+
+/**
+ * Every v5 path field names one file by its one canonical spelling, at most once. Sidebar leaves, the
+ * landing document and menu-withheld documents must also be documents the surface publishes: matched
+ * by `source.documents.include`, not by its `exclude`, with the collector's glob semantics and outside
+ * the directories the collector never enters. A withheld document may not also be a sidebar leaf; it
+ * may be the landing document, which is served at the route base and needs no menu entry. The check
+ * reads the manifest only; whether the file exists is the collector's concern.
+ */
+function validateV5Paths(manifest: DocumentationManifestV5, file: string): void {
+  for (const surface of manifest.surfaces) {
+    const refuse = (role: string, value: string, reason: string): never => {
+      throw new Error(`${file} surface ${surface.id} ${role} ${visible(value)} ${reason}`);
+    };
+    const canonicalOnce = (role: string, values: string[]): void => {
+      const seen = new Set<string>();
+      for (const value of values) {
+        if (!isCanonicalPath(value)) refuse(role, value, 'is not a canonical path relative to source.root');
+        if (seen.has(value)) refuse(role, value, 'appears more than once');
+        seen.add(value);
+      }
+    };
+    const builtAssets = surface.builtAssets ?? [];
+    canonicalOnce('builtAssets', builtAssets);
+    for (const value of builtAssets) {
+      if (/[*?]/.test(value)) refuse('builtAssets', value, 'is not one file: globs are not allowed');
+      if (underNeverCollectedDirectory(value)) refuse('builtAssets', value, 'lies under a directory the collector never enters');
+    }
+    const navigation = surface.source.navigation;
+    if (!navigation) continue;
+    const published = publishedDocumentMatcher(surface.source.documents);
+    const requirePublished = (role: string, values: string[]): void => {
+      canonicalOnce(role, values);
+      for (const value of values) if (!published(value)) refuse(role, value, 'is not a published document of the surface');
+    };
+    const leaves = Array.isArray(navigation.sidebar) ? sidebarLeaves(navigation.sidebar) : [];
+    requirePublished('sidebar leaf', leaves);
+    if (navigation.landing !== undefined) requirePublished('landing', [navigation.landing]);
+    const withheld = navigation.menuWithheld ?? [];
+    requirePublished('menuWithheld', withheld);
+    const inSidebar = new Set(leaves);
+    for (const value of withheld) if (inSidebar.has(value)) refuse('menuWithheld', value, 'is also a sidebar leaf');
+  }
+}
+
+/** The directories `src/collector.ts` skips while enumerating a source root; nothing beneath them is published. */
+const neverCollectDirectories = new Set(['.cache', '.docusaurus', '.git', '.venv', 'build', 'coverage', 'dist', 'node_modules', 'target']);
+
+/** C0 and C1 controls, DEL, and the Unicode line and paragraph separators; the v5 schema refuses the same set. */
+const invisibleCharacters = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g;
+
+function isCanonicalPath(value: string): boolean {
+  if (new RegExp(invisibleCharacters.source).test(value) || value.includes('\\') || value.endsWith('/')) return false;
+  return value !== '' && path.posix.normalize(value) === value && !value.startsWith('/') && value !== '..' && !value.startsWith('../');
+}
+
+function underNeverCollectedDirectory(value: string): boolean {
+  return value.split('/').slice(0, -1).some((segment) => neverCollectDirectories.has(segment));
+}
+
+/** A refused value as a reader can see it: every invisible character written as `\uXXXX`. */
+function visible(value: string): string {
+  return value.replace(invisibleCharacters, (character) => `\\u${character.charCodeAt(0).toString(16).padStart(4, '0')}`);
+}
+
+function sidebarLeaves(items: Array<string | SidebarCategory>): string[] {
+  return items.flatMap((item) => (typeof item === 'string' ? [item] : sidebarLeaves(item.items)));
+}
+
+function publishedDocumentMatcher(documents?: SourceSelection): (documentPath: string) => boolean {
+  if (!documents) return () => false;
+  const include = documents.include.map((pattern) => globMatcher(path.posix.normalize(pattern)));
+  const exclude = (documents.exclude ?? []).map((pattern) => globMatcher(path.posix.normalize(pattern)));
+  return (documentPath) => !underNeverCollectedDirectory(documentPath)
+    && include.some((matcher) => matcher.test(documentPath))
+    && !exclude.some((matcher) => matcher.test(documentPath));
+}
+
+/** A v5 surface in the registry's v4 shape: built assets, landing, withheld documents and a sidebar tree stay out. */
+function registryShapeOfV5(surface: DocumentationManifestV5['surfaces'][number]): RegistrySurfaceV5 {
+  const {builtAssets: _builtAssets, source, ...rest} = surface;
+  const {navigation: declared, ...sourceRest} = source;
+  if (!declared) return {...rest, source: sourceRest};
+  const {sidebar, landing: _landing, menuWithheld: _menuWithheld, ...navigation} = declared;
+  return {...rest, source: {...sourceRest, navigation: Array.isArray(sidebar) ? navigation : {...navigation, sidebar}}};
+}
+
+/** The collector's glob dialect (`src/collector.ts` `globMatcher`): `*`, `?` and `**` path segments. */
+function globMatcher(pattern: string): RegExp {
+  let expression = '^';
+  for (let index = 0; index < pattern.length; index += 1) {
+    const character = pattern[index];
+    if (character === '*') {
+      if (pattern[index + 1] === '*') {
+        index += 1;
+        if (pattern[index + 1] === '/') {
+          index += 1;
+          expression += '(?:.*/)?';
+        } else expression += '.*';
+      } else expression += '[^/]*';
+    } else if (character === '?') expression += '[^/]';
+    else expression += character.replace(/[|\\{}()[\]^$+?.]/g, '\\$&');
+  }
+  return new RegExp(`${expression}$`);
 }
 
 const validators = new Map<DocumentSchema, Promise<ValidateFunction>>();
@@ -353,6 +466,19 @@ function repositoryDisplayName(registry: EcosystemRegistry, repository: string):
 function unique(values: Journey[]): Journey[] { return [...new Set(values)].sort(); }
 function normalizeRoute(value: string): string { return value.length > 1 ? value.replace(/\/+$/, '') : value; }
 function isObject(value: unknown): value is Record<string, unknown> { return typeof value === 'object' && value !== null && !Array.isArray(value); }
-function formatErrors(file: string, schema: string, errors: ErrorObject[]): string {
-  return [`${file} does not satisfy ${schema}:`, ...errors.map((error) => `  ${error.instancePath || '/'} ${error.message ?? 'is invalid'}`)].join('\n');
+/** A refused pattern names the refused value, JSON-quoted so control characters stay visible. */
+function formatErrors(file: string, schema: string, errors: ErrorObject[], document?: unknown): string {
+  return [`${file} does not satisfy ${schema}:`, ...errors.map((error) => {
+    const value = error.keyword === 'pattern' ? valueAt(document, error.instancePath) : undefined;
+    return `  ${error.instancePath || '/'} ${error.message ?? 'is invalid'}${typeof value === 'string' ? `: "${visible(value)}"` : ''}`;
+  })].join('\n');
+}
+function valueAt(document: unknown, pointer: string): unknown {
+  let current = document;
+  for (const token of pointer.split('/').slice(1).map((part) => part.replace(/~1/g, '/').replace(/~0/g, '~'))) {
+    if (Array.isArray(current)) current = current[Number(token)];
+    else if (isObject(current)) current = current[token];
+    else return undefined;
+  }
+  return current;
 }

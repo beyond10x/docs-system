@@ -27,6 +27,7 @@
     "./schema/v2": "./schema/b10x.docs.v2.schema.json",
     "./schema/v3": "./schema/b10x.docs.v3.schema.json",
     "./schema/v4": "./schema/b10x.docs.v4.schema.json",
+    "./schema/v5": "./schema/b10x.docs.v5.schema.json",
     "./schema/doc-page": "./schema/b10x.doc-page.schema.json",
     "./schema/experiences": "./schema/b10x.experiences.schema.json",
     "./schema/change": "./schema/b10x.change.schema.json",
