@@ -11,7 +11,7 @@ import {collectManifestSources} from './collector.js';
 import {parseEssDocument} from './ess-document.js';
 import {resolveDocumentPageMetadata} from './documents.js';
 import {readChange, readManifest} from './manifest.js';
-import type {CollectedSource, CollectionIndex, DocumentationManifestV3, DocumentationManifestV4} from './types.js';
+import type {CollectedSource, CollectionIndex, DocumentationManifestV3, DocumentationManifestV4, DocumentationManifestV5, SidebarCategory} from './types.js';
 
 /** One violation, located in a repository-relative file and, where one exists, a 1-based line. */
 export interface SourceCheckFailure {
@@ -28,6 +28,8 @@ export interface SourceCheckResult {
 }
 
 const MANIFEST = 'b10x.docs.yaml';
+
+type SourceManifest = DocumentationManifestV3 | DocumentationManifestV4 | DocumentationManifestV5;
 const CHANGES = 'changes';
 
 /**
@@ -56,19 +58,31 @@ export async function checkSource(repositoryRoot: string): Promise<SourceCheckRe
 
   await checkChanges(root, result);
 
-  if (manifest && manifest.schema !== 'b10x-docs/v3' && manifest.schema !== 'b10x-docs/v4') {
-    result.failures.push({file: MANIFEST, line: lineOf(manifestYaml, ['schema']), message: `check-source requires b10x-docs/v3 or b10x-docs/v4, found ${manifest.schema}`});
+  if (manifest && manifest.schema !== 'b10x-docs/v3' && manifest.schema !== 'b10x-docs/v4' && manifest.schema !== 'b10x-docs/v5') {
+    result.failures.push({file: MANIFEST, line: lineOf(manifestYaml, ['schema']), message: `check-source requires b10x-docs/v3, b10x-docs/v4 or b10x-docs/v5, found ${manifest.schema}`});
   } else if (manifest) {
     let index: CollectionIndex | undefined;
+    let pageIndexError: string | undefined;
     try {
       index = await collectManifestSources(manifest, root);
     } catch (error) {
-      result.failures.push({file: MANIFEST, message: relativeMessage(error, root)});
+      // For v4 and v5 the collector's last step reads every page's b10x metadata and throws on the
+      // first it cannot, sometimes naming no file. When collection succeeds without that step, the
+      // failure was a page's: checkPublication resolves each page itself and refuses it at the page.
+      index = manifest.schema === 'b10x-docs/v3'
+        ? undefined
+        : await collectManifestSources({...manifest, schema: 'b10x-docs/v3'} as unknown as DocumentationManifestV3, root).catch(() => undefined);
+      if (index) pageIndexError = relativeMessage(error, root);
+      else result.failures.push({file: MANIFEST, message: relativeMessage(error, root)});
     }
     if (index) {
       const markdown = index.files.filter((file) => file.kind === 'document' || file.kind === 'blog');
       result.documents = markdown.length;
       await checkPublication(root, manifest, index.files, manifestYaml, result);
+      const pages = new Set(markdown.map((file) => file.sourcePath));
+      if (pageIndexError !== undefined && !result.failures.some((failure) => pages.has(failure.file))) {
+        result.failures.push({file: MANIFEST, message: pageIndexError});
+      }
     }
   }
   return result;
@@ -215,7 +229,7 @@ const SEARCH_AUDIENCE_VOCABULARY = new Set(['adopter', 'developer', 'evaluator',
  */
 async function checkPublication(
   root: string,
-  manifest: DocumentationManifestV3 | DocumentationManifestV4,
+  manifest: SourceManifest,
   files: CollectedSource[],
   manifestYaml: YamlSource,
   result: SourceCheckResult,
@@ -232,7 +246,14 @@ async function checkPublication(
       if (!declared.surface.routeBase.startsWith('/docs/')) {
         result.failures.push({file: MANIFEST, line: lineOf(manifestYaml, ['surfaces', declared.position, 'routeBase']), message: `surface ${file.surface} routeBase must begin /docs/ to publish documents`});
       } else {
-        routes.documents.set(file.sourcePath, documentRoute(declared.surface.routeBase, file));
+        const route = documentRoute(declared.surface, file);
+        // Website writes `slug: route without /docs`, and Docusaurus ensureValidSlug refuses it unless
+        // isValidPathname holds. isValidPathname passes a lone `%` (WHATWG leaves it as is), but the
+        // published URL is then not decodable, so every `%` in a computed route is refused too.
+        if (route.includes('%') || !isValidPathname(route.replace(/^\/docs/, ''))) {
+          result.failures.push({file: file.sourcePath, message: `document route ${route} is not a valid Docusaurus pathname`});
+        }
+        routes.documents.set(file.sourcePath, route);
       }
     }
     if (file.kind === 'openapi' || file.kind === 'json-schema' || file.kind === 'data') await checkStructured(root, file, result);
@@ -247,6 +268,10 @@ async function checkPublication(
     // blogRoute
     const declaredSlug = source.frontmatter?.slug;
     const originalSlug = String(declaredSlug ?? path.basename(source.file.sourcePath, path.extname(source.file.sourcePath)).replace(/^\d{4}-\d{2}-\d{2}-/, ''));
+    const slugProblem = declaredSlug === undefined ? undefined : dotSegmentProblem(originalSlug);
+    if (slugProblem) {
+      result.failures.push({file: source.file.sourcePath, line: frontmatterLine(source, ['slug']), message: `blog slug ${originalSlug} ${slugProblem}`});
+    }
     routes.blogs.set(source.file.sourcePath, `/updates/field-notes/${source.file.repository}/${originalSlug.replace(/^\/+|\/+$/g, '')}/`);
   }
 
@@ -277,6 +302,108 @@ async function checkPublication(
 
   checkDestinations(surfaces, files, routes, manifestYaml, result);
   checkNavigationGroups(manifest, manifestYaml, result);
+  checkDeclaredNavigation(manifest, files, manifestYaml, result);
+}
+
+/**
+ * Every declared route is tested by prefix, and Website writes its pages with `path.join`, which
+ * resolves `.` and `..`; a browser resolving the published URL also decodes percent-escapes
+ * (`%2e%2e`, any case) and reads `\` as `/` first. A route carrying a dot segment in any of those
+ * spellings can pass the prefix and land elsewhere. Returns the refusal, or undefined.
+ */
+function dotSegmentProblem(route: string): string | undefined {
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(route);
+  } catch {
+    return 'is not valid percent-encoding';
+  }
+  return decoded.replace(/\\/g, '/').split('/').some((segment) => segment === '.' || segment === '..') ? 'has a . or .. segment' : undefined;
+}
+
+/**
+ * `@docusaurus/utils` 3.10.2 `isValidPathname`, which the docs plugin's `ensureValidSlug` applies to
+ * every document slug: absolute, and unchanged (up to `encodeURI`) by WHATWG URL parsing, so `%`,
+ * `#`, `?`, `\` and dot segments are refused.
+ */
+function isValidPathname(value: string): boolean {
+  if (!value.startsWith('/')) return false;
+  try {
+    const parsed = new URL(value, 'https://domain.com').pathname;
+    return parsed === value || parsed === encodeURI(value);
+  } catch {
+    return false;
+  }
+}
+
+/** A surface's declared navigation, whatever the manifest revision; only v5 declares a tree, a landing or withheld documents. */
+function declaredNavigation(surface: SourceManifest['surfaces'][number]): {sidebar?: unknown; landing?: string; menuWithheld?: string[]} | undefined {
+  return (surface.source as {navigation?: {sidebar?: unknown; landing?: string; menuWithheld?: string[]}}).navigation;
+}
+
+/** Website `sidebar-contract.mjs` `documentSourceRelative`: the collector's outputPath tail below the surface. */
+function documentSourceRelative(file: CollectedSource): string {
+  return file.outputPath.split('/').slice(3).join('/');
+}
+
+/** Every sidebar leaf with the YAML path of its node. */
+function sidebarLeafPaths(items: Array<string | SidebarCategory>, at: Array<string | number>): Array<[string, Array<string | number>]> {
+  return items.flatMap((item, index): Array<[string, Array<string | number>]> => (typeof item === 'string'
+    ? [[item, [...at, index]]]
+    : sidebarLeafPaths(item.items, [...at, index, 'items'])));
+}
+
+/**
+ * Website `sidebar-contract.mjs` `declaredNavigationRefusals`, which `prepare-site.mjs` applies to
+ * every source whatever its manifest revision: a document surface's routeBase lies at or below
+ * `/docs/<repository id>/` (Website's own `/` excepted); every declared sidebar leaf, landing and
+ * menu-withheld path names a document collected for that surface; the route-base document cannot be
+ * withheld; and a declared landing shares its route with no other document of the surface.
+ */
+function checkDeclaredNavigation(manifest: SourceManifest, files: CollectedSource[], manifestYaml: YamlSource, result: SourceCheckResult): void {
+  const repository = manifest.repository.id;
+  manifest.surfaces.forEach((surface, position) => {
+    const own = files.filter((file) => file.kind === 'document' && file.surface === surface.id);
+    const at = (...keys: Array<string | number>): number | undefined => lineOf(manifestYaml, ['surfaces', position, ...keys]);
+    const routeBaseProblem = dotSegmentProblem(surface.routeBase);
+    if (routeBaseProblem) {
+      result.failures.push({file: MANIFEST, line: at('routeBase'), message: `surface ${surface.id} routeBase ${surface.routeBase} ${routeBaseProblem}`});
+      return;
+    }
+    if (!(repository === 'website' && surface.routeBase === '/') && (surface.source.documents || own.length > 0)
+      && !String(surface.routeBase).startsWith(`/docs/${repository}/`)) {
+      result.failures.push({file: MANIFEST, line: at('routeBase'), message: `surface ${surface.id} routeBase ${surface.routeBase} is not at or below /docs/${repository}/`});
+      return;
+    }
+    const navigation = declaredNavigation(surface);
+    if (!navigation) return;
+    const collected = new Set(own.map(documentSourceRelative));
+    const withheld = navigation.menuWithheld ?? [];
+    const declared: Array<[string, string, Array<string | number>]> = [
+      ...(Array.isArray(navigation.sidebar)
+        ? sidebarLeafPaths(navigation.sidebar as Array<string | SidebarCategory>, ['source', 'navigation', 'sidebar']).map(([leaf, keys]): [string, string, Array<string | number>] => ['sidebar leaf', leaf, keys])
+        : []),
+      ...(navigation.landing === undefined ? [] : [['landing', navigation.landing, ['source', 'navigation', 'landing']] as [string, string, Array<string | number>]]),
+      ...withheld.map((leaf, index): [string, string, Array<string | number>] => ['menu-withheld document', leaf, ['source', 'navigation', 'menuWithheld', index]]),
+    ];
+    for (const [kind, leaf, keys] of declared) {
+      if (!collected.has(leaf)) result.failures.push({file: MANIFEST, line: at(...keys), message: `surface ${surface.id} ${kind} ${leaf} is not a collected document`});
+    }
+    const baseRoute = declaredDocumentRoute(surface, '');
+    withheld.forEach((leaf, index) => {
+      if (declaredDocumentRoute(surface, leaf) === baseRoute) {
+        result.failures.push({file: MANIFEST, line: at('source', 'navigation', 'menuWithheld', index), message: `surface ${surface.id} menu-withheld document ${leaf} serves the route base ${baseRoute}, which cannot be withheld`});
+      }
+    });
+    if (navigation.landing === undefined) return;
+    const landingRoute = declaredDocumentRoute(surface, navigation.landing);
+    for (const file of own) {
+      if (documentSourceRelative(file) === navigation.landing) continue;
+      if (declaredDocumentRoute(surface, documentSourceRelative(file)) === landingRoute) {
+        result.failures.push({file: MANIFEST, line: at('source', 'navigation', 'landing'), message: `surface ${surface.id} landing ${navigation.landing} and ${file.sourcePath} both serve ${landingRoute}`});
+      }
+    }
+  });
 }
 
 function checkFenceContract(raw: string, sourcePath: string, result: SourceCheckResult): FenceRecord[] {
@@ -357,7 +484,7 @@ interface PageMetadata {
  */
 async function renderDocument(
   source: MarkdownSource,
-  manifest: DocumentationManifestV3 | DocumentationManifestV4,
+  manifest: SourceManifest,
   routes: PublicationRoutes,
   result: SourceCheckResult,
 ): Promise<string | undefined> {
@@ -369,7 +496,7 @@ async function renderDocument(
   const projectName = manifest.repository.displayName ?? source.file.repository;
   const declared = typeof frontmatter.b10x === 'object' && frontmatter.b10x !== null ? frontmatter.b10x as Record<string, unknown> : {};
   const surface = manifest.surfaces.find((candidate) => candidate.id === source.file.surface);
-  const resolved = manifest.schema === 'b10x-docs/v4'
+  const resolved = manifest.schema === 'b10x-docs/v4' || manifest.schema === 'b10x-docs/v5'
     ? await resolveDocumentPageMetadata(manifest, source.file.surface, source.raw, `${source.file.repository}/${source.file.sourcePath}`)
     : undefined;
   const surfaceAudiences = (surface as {audiences?: string[]} | undefined)?.audiences;
@@ -462,7 +589,7 @@ function renderSearchAttributes(metadata: PageMetadata): string {
 /** Website `renderBlog`, including `normalizeBlogDate`. */
 async function renderBlog(
   source: MarkdownSource,
-  manifest: DocumentationManifestV3 | DocumentationManifestV4,
+  manifest: SourceManifest,
   routes: PublicationRoutes,
   result: SourceCheckResult,
 ): Promise<string | undefined> {
@@ -481,7 +608,7 @@ async function renderBlog(
   }
   const route = routes.blogs.get(source.file.sourcePath) ?? '/updates/field-notes/';
   const projectName = manifest.repository.displayName ?? source.file.repository;
-  const resolved = manifest.schema === 'b10x-docs/v4'
+  const resolved = manifest.schema === 'b10x-docs/v4' || manifest.schema === 'b10x-docs/v5'
     ? await resolveDocumentPageMetadata(manifest, source.file.surface, source.raw, `${source.file.repository}/${source.file.sourcePath}`)
     : undefined;
   const rewritten = rewriteLinks(normalizePassiveMarkdown(source.body), source.file, manifest.repository.url, routes);
@@ -677,6 +804,11 @@ async function checkStructured(root: string, file: CollectedSource, result: Sour
       result.failures.push({file: file.sourcePath, message: `specification route ${file.route ?? '(none)'} must begin /api/`});
       return;
     }
+    const routeProblem = dotSegmentProblem(file.route);
+    if (routeProblem) {
+      result.failures.push({file: file.sourcePath, message: `specification route ${file.route} ${routeProblem}`});
+      return;
+    }
     if (document === null || document === undefined) result.failures.push({file: file.sourcePath, message: 'specification cannot be summarized: the document is empty'});
     return;
   }
@@ -693,7 +825,7 @@ async function checkStructured(root: string, file: CollectedSource, result: Sour
 }
 
 /** Website `sidebar-contract.mjs` `navigationByRepository`: one repository declares one documentation group. */
-function checkNavigationGroups(manifest: DocumentationManifestV3 | DocumentationManifestV4, manifestYaml: YamlSource, result: SourceCheckResult): void {
+function checkNavigationGroups(manifest: SourceManifest, manifestYaml: YamlSource, result: SourceCheckResult): void {
   let group: string | undefined;
   manifest.surfaces.forEach((surface, position) => {
     const declared = (surface.source as {navigation?: {group?: string}}).navigation;
@@ -717,7 +849,7 @@ const kindLabels: Record<string, string> = {document: 'documents', blog: 'blog',
  * `path.join` and refuses a second source landing on an occupied path (`assertUniqueDestination`).
  */
 function checkDestinations(
-  surfaces: Map<string, {surface: {routeBase: string}; position: number}>,
+  surfaces: Map<string, {surface: SourceManifest['surfaces'][number]; position: number}>,
   files: CollectedSource[],
   routes: PublicationRoutes,
   manifestYaml: YamlSource,
@@ -731,7 +863,7 @@ function checkDestinations(
     if (file.kind === 'document') {
       const route = routes.documents.get(file.sourcePath);
       if (!route) continue;
-      destination = docDestination(route, file.sourcePath);
+      destination = docDestination(route, file.sourcePath, (declaredNavigation(declared.surface)?.menuWithheld ?? []).includes(documentSourceRelative(file)));
     } else if (file.kind === 'blog') {
       destination = path.posix.join('blog', `${file.repository}-${file.sourcePath.replace(/[^a-zA-Z0-9.-]+/g, '-')}`);
     } else if (file.kind === 'asset') {
@@ -753,22 +885,31 @@ function checkDestinations(
 }
 
 /** Website `documentRoute`. */
-function documentRoute(routeBase: string, file: CollectedSource): string {
-  const relative = file.outputPath.split('/').slice(3).join('/');
+function documentRoute(surface: SourceManifest['surfaces'][number], file: CollectedSource): string {
+  return declaredDocumentRoute(surface, documentSourceRelative(file));
+}
+
+/** Website `sidebar-contract.mjs` `declaredDocumentRoute`: a declared landing is served at the route base. */
+function declaredDocumentRoute(surface: SourceManifest['surfaces'][number], relative: string): string {
+  const base = surface.routeBase.replace(/^\/docs\//, '').replace(/^\/+|\/+$/g, '');
   const normalized = relative
     .replace(/^website\/docs\//, '')
     .replace(/^docs\//, '')
     .replace(/(^|\/)(?:README|index|intro)\.(?:md|mdx)$/i, '$1index.md');
-  const base = routeBase.replace(/^\/docs\//, '').replace(/^\/+|\/+$/g, '');
-  const leaf = normalized.replace(/\.(?:md|mdx)$/i, '').replace(/(?:^|\/)index$/i, '');
+  const leaf = relative === declaredNavigation(surface)?.landing
+    ? ''
+    : normalized.replace(/\.(?:md|mdx)$/i, '').replace(/(?:^|\/)index$/i, '');
   return `/docs/${[base, leaf].filter(Boolean).join('/')}/`.replace(/\/+/g, '/');
 }
 
-/** Website `docDestination`, relative to its generated root; `path.join` resolves `..` segments. */
-function docDestination(route: string, sourcePath: string): string {
+/**
+ * Website `docDestination` over `documentPagePath`, relative to its generated root; `path.join`
+ * resolves `..` segments. A menu-withheld document is written under `menu.withheld/`.
+ */
+function docDestination(route: string, sourcePath: string, withheld: boolean): string {
   const relative = route.replace(/^\/docs\//, '').replace(/\/$/, '');
   const extension = path.extname(sourcePath).toLowerCase() === '.mdx' ? '.mdx' : '.md';
-  return path.posix.join('docs', ...relative.split('/'), `index${extension}`);
+  return path.posix.join('docs', ...(withheld ? ['menu.withheld'] : []), ...relative.split('/'), `index${extension}`);
 }
 
 /**
@@ -779,7 +920,9 @@ function schemaFailures(error: unknown, absolute: string, relative: string, yaml
   const message = error instanceof Error ? error.message : String(error);
   const [heading, ...problems] = message.split('\n');
   if (!/ does not satisfy \S+:$/.test(heading) || problems.length === 0) {
-    return [{file: relative, message: message.split(absolute).join(relative).split(`${root}${path.sep}`).join('')}];
+    // A semantic refusal opens with the file it names, which the failure already carries.
+    const located = message.startsWith(`${absolute} `) ? message.slice(absolute.length + 1) : message;
+    return [{file: relative, message: located.split(absolute).join(relative).split(`${root}${path.sep}`).join('')}];
   }
   return problems.map((problem) => {
     const match = /^\s+(\/\S*) (.*)$/.exec(problem);
