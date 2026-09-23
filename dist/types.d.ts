@@ -273,7 +273,7 @@ export interface RegistrySurfaceV5 extends Omit<DocumentationSurfaceV5, 'source'
     };
 }
 export type DocumentationManifest = DocumentationManifestLegacy | DocumentationManifestV3 | DocumentationManifestV4 | DocumentationManifestV5;
-export type AnyDocumentationSurface = DocumentationSurface | DocumentationSurfaceV3 | DocumentationSurfaceV4 | DocumentationSurfaceV5;
+export type AnyDocumentationSurface = DocumentationSurface | DocumentationSurfaceV3 | DocumentationSurfaceV4 | DocumentationSurfaceV5 | RegistrySurfaceV5;
 export type RegistrySurface = (DocumentationSurface | DocumentationSurfaceV3 | ((DocumentationSurfaceV4 | RegistrySurfaceV5) & {
     availability: Availability;
     discoverability: Discoverability;
