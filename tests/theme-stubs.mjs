@@ -3,6 +3,7 @@ import {createElement} from 'react';
 const component = new URL(import.meta.url).searchParams.get('component');
 
 export default function ThemeStub(properties) {
+  if (component === 'admonition') return createElement('div', {className: properties.className, 'data-type': properties.type}, createElement('p', null, properties.title), properties.children);
   if (component === 'broken-links') return {collectAnchor() {}, collectLink() {}};
   if (component === 'link') {
     const {to, href, ...rest} = properties;

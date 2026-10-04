@@ -24,7 +24,15 @@ export interface TerminalSession {
     entries: TerminalEntry[];
     /** Provenance: the tool version and revision that produced the output. */
     recordedWith?: string;
+    /**
+     * Output words and their meaning, written by the recorder (for example `{"passed:": "true",
+     * "failed:": "false"}`). Every occurrence in the output takes that tone. Additive to
+     * b10x-terminal/1: a session without it renders as before.
+     */
+    tones?: Record<string, TerminalTone>;
 }
+export type TerminalTone = 'true' | 'false' | 'unknown' | 'muted';
+export declare const TERMINAL_TONES: readonly TerminalTone[];
 export declare function parseTerminalSession(value: unknown): TerminalSession;
 /**
  * Parse a verbatim transcript: `$ ` starts a command, `# ` a comment, anything else is output of

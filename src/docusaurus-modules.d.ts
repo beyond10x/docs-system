@@ -49,3 +49,15 @@ declare module '@docusaurus/useDocusaurusContext' {
 declare module '@docusaurus/useGlobalData' {
   export default function useGlobalData(): Record<string, unknown>;
 }
+
+declare module '@theme-init/Admonition' {
+  import type {ComponentType} from 'react';
+  const Admonition: ComponentType<Record<string, unknown>>;
+  export default Admonition;
+}
+
+declare module '@docusaurus/ErrorBoundary' {
+  import type {ComponentType, ReactNode} from 'react';
+  const ErrorBoundary: ComponentType<{fallback?: (params: Record<string, unknown>) => ReactNode; children?: ReactNode}>;
+  export default ErrorBoundary;
+}

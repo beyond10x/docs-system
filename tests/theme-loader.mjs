@@ -5,5 +5,6 @@ export async function resolve(specifier, context, nextResolve) {
   if (specifier === '@theme/Mermaid') return {url: `${stubs.href}?component=mermaid`, shortCircuit: true};
   if (specifier === '@docusaurus/Link') return {url: `${stubs.href}?component=link`, shortCircuit: true};
   if (specifier === '@docusaurus/useBrokenLinks') return {url: `${stubs.href}?component=broken-links`, shortCircuit: true};
+  if (specifier === '@theme-init/Admonition') return {url: `${stubs.href}?component=admonition`, shortCircuit: true};
   return nextResolve(specifier, context);
 }

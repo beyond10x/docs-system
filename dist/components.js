@@ -41,10 +41,29 @@ export function ContentCard({ title, description, eyebrow, meta, children, foote
     return _jsxs("article", { className: "b10x-content-card", style: style, children: [(eyebrow || meta) && _jsxs("header", { children: [eyebrow && _jsx("span", { className: "b10x-eyebrow", children: eyebrow }), meta && _jsx("span", { children: meta })] }), _jsx(Heading, { children: titleUrl ? _jsx("a", { href: titleUrl, children: title }) : title }), description && _jsx("div", { className: "b10x-content-card__description", children: description }), children && _jsx("div", { className: "b10x-content-card__body", children: children }), (footer || actionUrl) && _jsxs("footer", { children: [footer, actionUrl && _jsxs("a", { className: "b10x-card-action", href: actionUrl, children: [actionLabel, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] })] });
 }
 const productStatusLabels = { shipped: 'Shipped', decided: 'Decided', planned: 'Planned' };
+/** Ordinal glyphs: the order planned → decided → shipped reads without colour. */
+export const STATUS_GLYPHS = { planned: '○', decided: '◐', shipped: '●' };
 export function StatusBadge({ maturity, status, children }) {
     if (status)
-        return _jsx("span", { className: `b10x-status b10x-status--${status}`, children: children ?? productStatusLabels[status] });
+        return _jsxs("span", { className: `b10x-status b10x-status--${status}`, children: [_jsx("span", { className: "b10x-status__glyph", "aria-hidden": "true", children: STATUS_GLYPHS[status] }), children ?? productStatusLabels[status]] });
     return _jsx("span", { className: `b10x-status b10x-status--${maturity}`, children: children ?? maturity });
+}
+const truthGlyphs = { true: '✓', unknown: '?', false: '✕' };
+/** A truth value as a chip: glyph and word, never colour alone. UNKNOWN is dashed. */
+export function Truth({ value, children }) {
+    const truth = value.toLowerCase();
+    if (!(truth in truthGlyphs))
+        throw new Error(`Truth value must be true, false or unknown, received ${value}`);
+    return _jsxs("span", { className: `b10x-chip b10x-chip--truth b10x-chip--${truth}`, "data-b10x-chip": "truth", children: [_jsx("span", { className: "b10x-chip__glyph", "aria-hidden": "true", children: truthGlyphs[truth] }), _jsx("span", { className: "b10x-chip__text", children: children ?? truth.toUpperCase() })] });
+}
+/** A protocol kind as a chip, in the kind colour the graphs use. */
+export function Kind({ kind, children }) {
+    return _jsxs("span", { className: `b10x-chip b10x-chip--kind b10x-chip--${kind}`, "data-b10x-chip": "kind", children: [_jsx("span", { className: "b10x-chip__glyph", "aria-hidden": "true" }), _jsx("span", { className: "b10x-chip__text", children: children ?? kind })] });
+}
+/** Says plainly that something does not exist yet, and what will fill it. */
+export function EmptyState({ title, children, action, headingLevel = 3 }) {
+    const Heading = headingTag(headingLevel);
+    return _jsxs("section", { className: "b10x-empty-state", children: [_jsx("span", { className: "b10x-empty-state__glyph", "aria-hidden": "true", children: "\u25CB" }), _jsxs("div", { children: [_jsx(Heading, { className: "b10x-empty-state__title", children: title }), children && _jsx("div", { className: "b10x-empty-state__body", children: children }), action && _jsxs("a", { className: "b10x-empty-state__action", href: action.href, children: [action.label, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] })] });
 }
 export function BoundaryNotice({ title = 'Current boundary', children }) {
     return _jsx(Callout, { className: "b10x-boundary", title: title, tone: "warning", children: children });

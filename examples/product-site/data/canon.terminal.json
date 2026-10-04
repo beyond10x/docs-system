@@ -9,9 +9,15 @@
     },
     {
       "command": "canon conform run",
-      "output": "passed: scenario `CANON-CLAIM-001`\nconform: 1 passed, 0 failed, 0 unreadable",
+      "output": "passed: scenario `CANON-AUTHORITY-001`\npassed: scenario `CANON-OUTCOME-002`\npassed: scenario `CANON-EVIDENCE-002`\npassed: scenario `CANON-EVIDENCE-001`\npassed: scenario `CANON-EXPLAIN-001`\npassed: scenario `CANON-OBLIGATION-001`\npassed: scenario `CANON-OUTCOME-001`\npassed: scenario `CANON-EVIDENCE-003`\npassed: scenario `CANON-CLAIM-001`\nconform: 9 passed, 0 failed, 0 unreadable",
       "exitCode": 0
     }
   ],
-  "recordedWith": "canon 0.0.0 built from canon 323038d; recorded 2026-10-04"
+  "recordedWith": "canon 0.0.0 built from canon 8d1599e; recorded 2026-10-04",
+  "tones": {
+    "valid:": "true",
+    "passed:": "true",
+    "failed:": "false",
+    "error": "false"
+  }
 }

@@ -177,9 +177,50 @@ export type StatusBadgeProps =
   /** Product-page status: what exists today, what is decided, what is only planned. */
   | {status: ProductStatus; maturity?: never; children?: ReactNode};
 
+/** Ordinal glyphs: the order planned → decided → shipped reads without colour. */
+export const STATUS_GLYPHS: Record<ProductStatus, string> = {planned: '○', decided: '◐', shipped: '●'};
+
 export function StatusBadge({maturity, status, children}: StatusBadgeProps): ReactNode {
-  if (status) return <span className={`b10x-status b10x-status--${status}`}>{children ?? productStatusLabels[status]}</span>;
+  if (status) return <span className={`b10x-status b10x-status--${status}`}><span className="b10x-status__glyph" aria-hidden="true">{STATUS_GLYPHS[status]}</span>{children ?? productStatusLabels[status]}</span>;
   return <span className={`b10x-status b10x-status--${maturity}`}>{children ?? maturity}</span>;
+}
+
+export type TruthValue = 'true' | 'false' | 'unknown';
+const truthGlyphs: Record<TruthValue, string> = {true: '✓', unknown: '?', false: '✕'};
+
+/** A truth value as a chip: glyph and word, never colour alone. UNKNOWN is dashed. */
+export function Truth({value, children}: {value: TruthValue | Uppercase<TruthValue>; children?: ReactNode}): ReactNode {
+  const truth = value.toLowerCase() as TruthValue;
+  if (!(truth in truthGlyphs)) throw new Error(`Truth value must be true, false or unknown, received ${value}`);
+  return <span className={`b10x-chip b10x-chip--truth b10x-chip--${truth}`} data-b10x-chip="truth"><span className="b10x-chip__glyph" aria-hidden="true">{truthGlyphs[truth]}</span><span className="b10x-chip__text">{children ?? truth.toUpperCase()}</span></span>;
+}
+
+export type ProtocolKindName = 'action' | 'evidence' | 'claim' | 'outcome' | 'obligation';
+
+/** A protocol kind as a chip, in the kind colour the graphs use. */
+export function Kind({kind, children}: {kind: ProtocolKindName; children?: ReactNode}): ReactNode {
+  return <span className={`b10x-chip b10x-chip--kind b10x-chip--${kind}`} data-b10x-chip="kind"><span className="b10x-chip__glyph" aria-hidden="true" /><span className="b10x-chip__text">{children ?? kind}</span></span>;
+}
+
+export interface EmptyStateProps {
+  title: ReactNode;
+  children?: ReactNode;
+  /** An optional next step, such as where the first item will appear. */
+  action?: {label: ReactNode; href: string};
+  headingLevel?: 2 | 3 | 4;
+}
+
+/** Says plainly that something does not exist yet, and what will fill it. */
+export function EmptyState({title, children, action, headingLevel = 3}: EmptyStateProps): ReactNode {
+  const Heading = headingTag(headingLevel);
+  return <section className="b10x-empty-state">
+    <span className="b10x-empty-state__glyph" aria-hidden="true">○</span>
+    <div>
+      <Heading className="b10x-empty-state__title">{title}</Heading>
+      {children && <div className="b10x-empty-state__body">{children}</div>}
+      {action && <a className="b10x-empty-state__action" href={action.href}>{action.label} <span aria-hidden="true">→</span></a>}
+    </div>
+  </section>;
 }
 
 export function BoundaryNotice({title = 'Current boundary', children}: {title?: string; children: ReactNode}): ReactNode {

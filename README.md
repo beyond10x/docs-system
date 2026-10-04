@@ -315,11 +315,25 @@ import {withProductSite} from '@beyond10x/docs-system/product-site';
 export default withProductSite(config, {landing: './product.json', mark: 'C'});
 ```
 
-The wrapper adds one plugin and nothing else to the config: the shared tokens plus
-`product-components.css` and `product-theme.css`, a theme path that registers the product MDX
-components globally and the `@theme/ProductLandingPage` route component, Prism themes whose every
-token clears 4.5:1 on its code surface, and a dark default that still follows the reader's system
-setting. The landing page renders at `/`, so the docs plugin moves to `routeBasePath: 'docs'`.
+Options: `landing`, `product` (`canon`, `els`, `loom`, `commission` or `ess`: the signature hue on the
+navbar mark, kicker dot and hero emphasis), `mark`, `fonts` (default on) and `admonitionGuard`
+(default on: the build fails when a raw `:::kind Title` line reaches a page).
+
+Colour roles are reserved and validated per mode: status is an ordinal ramp with ○ ◐ ● glyphs, truth
+values carry ✓ ? ✕, protocol kinds keep the graph colours, and the product hue is identity only.
+In docs, table cells and inline code that are exactly `TRUE`, `FALSE`, `UNKNOWN`, `shipped`,
+`decided`, `planned` or a protocol kind become chips; `:::shipped[Title]` and admonitions titled
+"Shipped …", "Decided …" or "Planned …" take the status tone. Recorded terminal sessions may carry
+`tones` (`{"passed:": "true"}`); exits show in a gutter. protocol/1 fences get a kind gutter. Sites
+using `@docusaurus/theme-mermaid` get diagrams themed from the tokens and should drop their own
+`mermaid.theme`.
+
+The wrapper adds the product plugin (the shared tokens plus `product-components.css` and
+`product-theme.css`, a theme path that registers the product MDX components, status admonitions and
+the `@theme/ProductLandingPage` route component), the font directory to `staticDirectories`, the
+chips pass and status admonition keywords to the docs and pages plugins, Prism themes whose every
+token clears 4.5:1 on its code surface with the kind-gutter magic comments, and a dark default that
+still follows the reader's system setting. The landing page renders at `/`, so the docs plugin moves to `routeBasePath: 'docs'`.
 
 `product.json` is a `b10x-product-landing/1` document: the promise (one entry per line, the last one
 emphasised), the lede and actions, an optional hero terminal, and ordered sections of kind

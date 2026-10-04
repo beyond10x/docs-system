@@ -6,7 +6,7 @@ import {withProductSite} from '@beyond10x/docs-system/product-site';
 const require = createRequire(import.meta.url);
 
 // The example links docs-system from this checkout, which carries its own node_modules; keep one
-// React for the bundle. A Git-pinned consumer does not need this.
+// React and one Docusaurus theme runtime for the bundle. A Git-pinned consumer does not need this.
 function oneReact() {
   return {
     name: 'example-one-react',
@@ -15,6 +15,8 @@ function oneReact() {
         alias: {
           react: path.dirname(require.resolve('react/package.json')),
           'react-dom': path.dirname(require.resolve('react-dom/package.json')),
+          '@docusaurus/theme-common$': require.resolve('@docusaurus/theme-common'),
+          '@docusaurus/theme-mermaid/client$': require.resolve('@docusaurus/theme-mermaid/client'),
         },
       },
     }),
@@ -28,7 +30,8 @@ const config = {
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenAnchors: 'throw',
-  markdown: {hooks: {onBrokenMarkdownLinks: 'throw'}},
+  markdown: {format: 'detect', mermaid: true, hooks: {onBrokenMarkdownLinks: 'throw'}},
+  themes: ['@docusaurus/theme-mermaid'],
   plugins: [oneReact],
   presets: [['classic', {docs: {routeBasePath: 'docs', sidebarPath: './sidebars.mjs'}, blog: false}]],
   themeConfig: {
@@ -37,6 +40,7 @@ const config = {
       items: [
         {to: '/docs/', label: 'Components', position: 'left'},
         {to: '/docs/charts', label: 'Charts', position: 'left'},
+        {to: '/docs/meaning', label: 'Meaning', position: 'left'},
         {to: '/docs/code', label: 'Code', position: 'left'},
         {to: '/session', label: 'Session', position: 'left'},
         {href: 'https://github.com/beyond10x/canon', label: 'GitHub ↗', position: 'right'},
@@ -52,4 +56,4 @@ const config = {
   },
 };
 
-export default withProductSite(config, {landing: './product.json', mark: 'C'});
+export default withProductSite(config, {landing: './product.json', product: 'canon'});

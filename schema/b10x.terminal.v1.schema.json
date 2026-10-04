@@ -10,6 +10,12 @@
     "format": {"const": "b10x-terminal/1"},
     "title": {"type": "string", "minLength": 1},
     "recordedWith": {"type": "string", "minLength": 1, "description": "Tool version and revision that produced the output."},
+    "tones": {
+      "type": "object",
+      "description": "Optional and additive: output words and their meaning, written by the recorder. Every occurrence in the output takes that tone.",
+      "propertyNames": {"minLength": 1},
+      "additionalProperties": {"enum": ["true", "false", "unknown", "muted"]}
+    },
     "entries": {
       "type": "array",
       "minItems": 1,

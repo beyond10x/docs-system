@@ -1,3 +1,4 @@
+import { rawAdmonitionSourceProblems } from './admonition-guard.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fromMarkdown } from 'mdast-util-from-markdown';
@@ -361,6 +362,9 @@ function checkFenceContract(raw, sourcePath, result) {
     const inventory = inventoryFences(raw, sourcePath);
     if (inventory.error)
         result.failures.push({ file: sourcePath, ...inventory.error });
+    for (const problem of rawAdmonitionSourceProblems(raw)) {
+        result.failures.push({ file: sourcePath, line: problem.line, message: `${JSON.stringify(problem.text)} is not an admonition; write the title in brackets, as ${JSON.stringify(problem.text.replace(/^(:::[a-z]+) +(.*)$/, "$1[$2]"))}` });
+    }
     for (const fence of inventory.fences) {
         result.fences += 1;
         for (const message of markdownFenceProblems({ language: fence.lang, raw: fence.raw })) {

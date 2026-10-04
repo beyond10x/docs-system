@@ -10,15 +10,17 @@ export function Terminal({ session, transcript, children, title, caption, animat
     const resolved = useMemo(() => {
         if (session !== undefined) {
             const parsed = parseTerminalSession(session);
-            return { entries: parsed.entries, title: parsed.title, provenance: parsed.recordedWith };
+            return { entries: parsed.entries, title: parsed.title, provenance: parsed.recordedWith, tones: parsed.tones };
         }
         const text = transcript ?? (typeof children === 'string' ? children : Children.toArray(children).filter((child) => typeof child === 'string').join(''));
         if (!text.trim())
             throw new Error('Terminal requires a session, a transcript, or transcript children');
-        return { entries: parseTranscript(text), title: undefined, provenance: undefined };
+        return { entries: parseTranscript(text), title: undefined, provenance: undefined, tones: undefined };
     }, [session, transcript, children]);
     const label = title ?? resolved.title ?? 'Terminal';
     const footer = caption ?? resolved.provenance;
+    const gutter = resolved.entries.some((entry) => entry.exitCode !== undefined);
+    const summary = terminalSummary(resolved.entries, resolved.tones);
     const commands = resolved.entries.map((entry) => entry.command).join('\n');
     const figure = useRef(null);
     const progress = useTyping(resolved.entries, animate, figure);
@@ -34,14 +36,67 @@ export function Terminal({ session, transcript, children, title, caption, animat
             setCopied(false);
         }
     };
-    return _jsxs("figure", { ref: figure, className: ['b10x-terminal', tilt && 'b10x-terminal--tilt'].filter(Boolean).join(' '), "aria-label": label, children: [_jsxs("div", { className: "b10x-terminal__bar", children: [_jsxs("span", { className: "b10x-terminal__lights", "aria-hidden": "true", children: [_jsx("i", {}), _jsx("i", {}), _jsx("i", {})] }), _jsx("span", { className: "b10x-terminal__title", children: label }), _jsx("button", { type: "button", className: "b10x-terminal__copy", onClick: copy, "aria-describedby": statusId, children: copied ? 'Copied' : 'Copy commands' }), _jsx("span", { className: "b10x-sr-only", role: "status", id: statusId, children: copied ? 'Commands copied to the clipboard' : '' })] }), _jsx("pre", { className: "b10x-terminal__body", tabIndex: 0, children: _jsx("code", { children: resolved.entries.map((entry, index) => _jsx(TerminalLines, { entry: entry, prompt: prompt, shown: progress?.[index], last: index === resolved.entries.length - 1 }, index)) }) }), footer && _jsxs("figcaption", { className: "b10x-terminal__foot", children: [_jsx("span", { className: "b10x-terminal__dot", "aria-hidden": "true" }), footer] })] });
+    return _jsxs("figure", { ref: figure, className: ['b10x-terminal', tilt && 'b10x-terminal--tilt'].filter(Boolean).join(' '), "aria-label": label, children: [_jsxs("div", { className: "b10x-terminal__bar", children: [_jsxs("span", { className: "b10x-terminal__lights", "aria-hidden": "true", children: [_jsx("i", {}), _jsx("i", {}), _jsx("i", {})] }), _jsx("span", { className: "b10x-terminal__title", children: label }), _jsx("button", { type: "button", className: "b10x-terminal__copy", onClick: copy, "aria-describedby": statusId, children: copied ? 'Copied' : 'Copy commands' }), _jsx("span", { className: "b10x-sr-only", role: "status", id: statusId, children: copied ? 'Commands copied to the clipboard' : '' })] }), _jsx("pre", { className: "b10x-terminal__body", tabIndex: 0, children: _jsx("code", { children: resolved.entries.map((entry, index) => _jsx(TerminalLines, { entry: entry, prompt: prompt, shown: progress?.[index], last: index === resolved.entries.length - 1, gutter: gutter, tones: resolved.tones }, index)) }) }), (footer || summary) && _jsxs("figcaption", { className: "b10x-terminal__foot", children: [footer && _jsxs(_Fragment, { children: [_jsx("span", { className: "b10x-terminal__dot", "aria-hidden": "true" }), _jsx("span", { className: "b10x-terminal__provenance", children: footer })] }), summary && _jsx("span", { className: "b10x-terminal__summary", children: summary })] })] });
 }
-function TerminalLines({ entry, prompt, shown, last }) {
+function TerminalLines({ entry, prompt, shown, last, gutter, tones }) {
     const typed = shown ? entry.command.slice(0, shown.command) : entry.command;
     const rest = shown ? entry.command.slice(shown.command) : '';
     const outputVisible = !shown || shown.output;
     const failed = entry.exitCode !== undefined && entry.exitCode !== 0;
-    return _jsxs(_Fragment, { children: [entry.comment && _jsxs("span", { className: "b10x-terminal__comment", children: ["# ", entry.comment, '\n'] }), _jsxs("span", { className: "b10x-terminal__line", children: [_jsxs("span", { className: "b10x-terminal__prompt", "aria-hidden": "true", children: [prompt, " "] }), _jsxs("span", { className: "b10x-terminal__command", children: [typed, _jsx("span", { className: "b10x-terminal__pending", children: rest })] }), '\n'] }), entry.output !== undefined && entry.output !== '' && _jsxs("span", { className: ['b10x-terminal__output', failed && 'b10x-terminal__output--failed', !outputVisible && 'b10x-terminal__pending'].filter(Boolean).join(' '), children: [entry.output, '\n'] }), !last && '\n'] });
+    const blank = gutter ? _jsx("span", { className: "b10x-terminal__gutter", "aria-hidden": "true", children: " " }) : null;
+    const exit = entry.exitCode === undefined ? blank : _jsx("span", { className: `b10x-terminal__gutter b10x-terminal__gutter--${failed ? 'failed' : 'passed'}`, title: `exit ${entry.exitCode}`, "aria-hidden": "true", children: failed ? '✕' : '✓' });
+    const json = /^\s*[[{]/.test(entry.output ?? '');
+    return _jsxs(_Fragment, { children: [entry.comment && _jsxs("span", { className: "b10x-terminal__comment", children: [blank, "# ", entry.comment, '\n'] }), _jsxs("span", { className: "b10x-terminal__line", children: [exit, _jsxs("span", { className: "b10x-terminal__prompt", "aria-hidden": "true", children: [prompt, " "] }), _jsxs("span", { className: "b10x-terminal__command", children: [typed, _jsx("span", { className: "b10x-terminal__pending", children: rest })] }), '\n'] }), entry.output !== undefined && entry.output !== '' && _jsx("span", { className: ['b10x-terminal__output', failed && 'b10x-terminal__output--failed', !outputVisible && 'b10x-terminal__pending'].filter(Boolean).join(' '), children: entry.output.split('\n').map((line, index) => _jsxs("span", { children: [blank, toneLine(line, tones, json), '\n'] }, index)) }), !last && '\n'] });
+}
+/** Colour recorded output: the session's tone words first, then JSON tokens when the output is JSON. */
+export function toneLine(line, tones, json) {
+    const words = Object.keys(tones ?? {}).sort((left, right) => right.length - left.length);
+    const pattern = words.length ? new RegExp(words.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g') : undefined;
+    const parts = [];
+    let cursor = 0;
+    const plain = (text) => { if (text)
+        parts.push(...(json ? jsonTokens(text, parts.length) : [text])); };
+    if (pattern) {
+        for (const match of line.matchAll(pattern)) {
+            plain(line.slice(cursor, match.index));
+            parts.push(_jsx("span", { className: `b10x-terminal__tone b10x-terminal__tone--${tones[match[0]]}`, children: match[0] }, `t${parts.length}`));
+            cursor = match.index + match[0].length;
+        }
+    }
+    plain(line.slice(cursor));
+    return parts;
+}
+function jsonTokens(text, offset) {
+    const parts = [];
+    const token = /("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|-?\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b|[{}[\],:]/g;
+    let cursor = 0;
+    for (const match of text.matchAll(token)) {
+        if (match.index > cursor)
+            parts.push(text.slice(cursor, match.index));
+        const kind = match[1] !== undefined ? (match[2] !== undefined ? 'key' : 'string') : match[3] !== undefined ? 'literal' : /^[-\d]/.test(match[0]) ? 'literal' : 'punctuation';
+        if (kind === 'key') {
+            parts.push(_jsx("span", { className: "b10x-terminal__json--key", children: match[1] }, `j${offset}-${parts.length}`), _jsx("span", { className: "b10x-terminal__json--punctuation", children: match[2] }, `j${offset}-${parts.length + 1}`));
+        }
+        else
+            parts.push(_jsx("span", { className: `b10x-terminal__json--${kind}`, children: match[0] }, `j${offset}-${parts.length}`));
+        cursor = match.index + match[0].length;
+    }
+    if (cursor < text.length)
+        parts.push(text.slice(cursor));
+    return parts;
+}
+/** "3/3 exit 0 · 6 ✓ · 0 ✕": exits from the recording, tone counts from its tone words. */
+export function terminalSummary(entries, tones) {
+    const recorded = entries.filter((entry) => entry.exitCode !== undefined);
+    if (!recorded.length)
+        return undefined;
+    const clean = recorded.filter((entry) => entry.exitCode === 0).length;
+    const parts = [`${clean}/${recorded.length} exit 0`];
+    if (tones && Object.keys(tones).length) {
+        const count = (tone) => Object.entries(tones).filter(([, value]) => value === tone).reduce((sum, [word]) => sum + entries.reduce((total, entry) => total + ((entry.output ?? '').split(word).length - 1), 0), 0);
+        parts.push(`${count('true')} ✓`, `${count('false')} ✕`);
+    }
+    return parts.join(' · ');
 }
 /** Type the commands once, when the terminal first scrolls into view; the full text is shown until then. */
 function useTyping(entries, enabled, element) {
@@ -114,11 +169,12 @@ export function Flow({ steps, children, label = 'How it works' }) {
 }
 const STATUS_ORDER = ['shipped', 'decided', 'planned'];
 const STATUS_LABELS = { shipped: 'Shipped', decided: 'Decided', planned: 'Planned' };
-/** What exists today and what does not, counted from the items themselves. */
-export function StatusStrip({ items, label = 'Status' }) {
-    const counts = STATUS_ORDER.map((status) => ({ status, count: items.filter((item) => item.status === status).length })).filter((entry) => entry.count > 0);
-    const summary = counts.map(({ status, count }) => `${count} ${STATUS_LABELS[status].toLowerCase()}`).join(', ');
-    return _jsxs("section", { className: "b10x-status-strip", "aria-label": label, children: [_jsx("div", { className: "b10x-status-strip__bar", role: "img", "aria-label": `${items.length} capabilities: ${summary}`, children: counts.map(({ status, count }) => _jsx("span", { className: `b10x-status-strip__segment b10x-status-strip__segment--${status}`, style: { flexGrow: count } }, status)) }), _jsx("ul", { className: "b10x-status-strip__legend", "aria-hidden": "true", children: counts.map(({ status, count }) => _jsxs("li", { children: [_jsx("span", { className: `b10x-status-strip__key b10x-status-strip__key--${status}` }), _jsx("strong", { children: count }), " ", STATUS_LABELS[status].toLowerCase()] }, status)) }), _jsx("ul", { className: "b10x-status-strip__items", children: [...items].sort((left, right) => STATUS_ORDER.indexOf(left.status) - STATUS_ORDER.indexOf(right.status)).map((item) => _jsxs("li", { children: [_jsx(StatusBadge, { status: item.status }), _jsx("span", { className: "b10x-status-strip__label", children: item.href ? _jsx(Link, { to: item.href, children: item.label }) : item.label }), item.detail && _jsx("span", { className: "b10x-status-strip__detail", children: item.detail })] }, item.label)) })] });
+const STATUS_GROUP_LABELS = { shipped: 'Shipped · runs today', decided: 'Decided · recorded, not built', planned: 'Planned · roadmap only' };
+/** What exists today and what does not, counted from the items themselves and grouped by state. */
+export function StatusStrip({ items, label = 'Status', groupLabels = {} }) {
+    const groups = STATUS_ORDER.map((status) => ({ status, items: items.filter((item) => item.status === status) })).filter((group) => group.items.length > 0);
+    const summary = groups.map(({ status, items: members }) => `${members.length} ${STATUS_LABELS[status].toLowerCase()}`).join(', ');
+    return _jsxs("section", { className: "b10x-status-strip", "aria-label": label, children: [_jsx("div", { className: "b10x-status-strip__bar", role: "img", "aria-label": `${items.length} capabilities: ${summary}`, children: groups.map(({ status, items: members }) => _jsx("span", { className: `b10x-status-strip__segment b10x-status-strip__segment--${status}`, style: { flexGrow: members.length } }, status)) }), _jsx("ul", { className: "b10x-status-strip__legend", "aria-hidden": "true", children: groups.map(({ status, items: members }) => _jsxs("li", { children: [_jsx(StatusBadge, { status: status }), _jsx("strong", { children: members.length })] }, status)) }), groups.map(({ status, items: members }) => _jsxs("div", { className: `b10x-status-strip__group b10x-status-strip__group--${status}`, children: [_jsx("p", { className: "b10x-status-strip__group-title", children: groupLabels[status] ?? STATUS_GROUP_LABELS[status] }), _jsx("ul", { className: "b10x-status-strip__items", children: members.map((item) => _jsxs("li", { children: [_jsx(StatusBadge, { status: item.status }), _jsx("span", { className: "b10x-status-strip__label", children: item.href ? _jsx(Link, { to: item.href, children: item.label }) : item.label }), item.detail && _jsx("span", { className: "b10x-status-strip__detail", children: item.detail })] }, item.label)) })] }, status))] });
 }
 export function RelatedTools({ tools, label = 'Related tools' }) {
     return _jsx("ul", { className: "b10x-related", "aria-label": label, children: tools.map((tool) => _jsx("li", { children: _jsxs(Link, { className: "b10x-related__card", to: tool.href, children: [_jsx("span", { className: "b10x-mark", "aria-hidden": "true", children: tool.mark ?? tool.name.slice(0, 1) }), _jsxs("span", { className: "b10x-related__copy", children: [_jsx("strong", { children: tool.name }), _jsx("span", { children: tool.description })] }), tool.status && _jsx(StatusBadge, { status: tool.status }), _jsx("span", { className: "b10x-related__arrow", "aria-hidden": "true", children: "\u2192" })] }) }, tool.name)) });

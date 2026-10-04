@@ -27,13 +27,29 @@ export interface TerminalSession {
   entries: TerminalEntry[];
   /** Provenance: the tool version and revision that produced the output. */
   recordedWith?: string;
+  /**
+   * Output words and their meaning, written by the recorder (for example `{"passed:": "true",
+   * "failed:": "false"}`). Every occurrence in the output takes that tone. Additive to
+   * b10x-terminal/1: a session without it renders as before.
+   */
+  tones?: Record<string, TerminalTone>;
 }
+
+export type TerminalTone = 'true' | 'false' | 'unknown' | 'muted';
+export const TERMINAL_TONES: readonly TerminalTone[] = ['true', 'false', 'unknown', 'muted'];
 
 export function parseTerminalSession(value: unknown): TerminalSession {
   const session = record(value, 'session');
   if (session.format !== TERMINAL_FORMAT) throw new Error(`session.format must be ${TERMINAL_FORMAT}`);
   optional(session.title, 'session.title');
   optional(session.recordedWith, 'session.recordedWith');
+  if (session.tones !== undefined) {
+    const tones = record(session.tones, 'session.tones');
+    for (const [word, tone] of Object.entries(tones)) {
+      if (!word) throw new Error('session.tones keys must be non-empty');
+      if (!TERMINAL_TONES.includes(tone as TerminalTone)) throw new Error(`session.tones[${JSON.stringify(word)}] must be one of ${TERMINAL_TONES.join(', ')}`);
+    }
+  }
   if (!Array.isArray(session.entries) || session.entries.length === 0) throw new Error('session.entries must be a non-empty array');
   session.entries.forEach((entry: unknown, index: number) => {
     const item = record(entry, `session.entries[${index}]`);

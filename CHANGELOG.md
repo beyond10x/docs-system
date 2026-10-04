@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Self-host Inter (variable) and Fira Code as latin-subset woff2 with `font-display: swap` and
+  preload; `withProductSite` serves them under `<baseUrl>b10x-fonts/` with their OFL licences.
+- Fail the product-site build when a raw `:::kind Title` line reaches a page, and refuse
+  `^:::[a-z]+ +\S` outside fenced code in `check-source`.
+- Add semantic colour roles validated with the dataviz checks: an ordinal status ramp with ○ ◐ ●
+  glyphs (no longer the site accent), truth tokens (✓ ? ✕), and a product signature hue chosen with
+  `withProductSite(config, {product})`. `StatusStrip` groups items by state.
+- Turn exact TRUE/FALSE/UNKNOWN, shipped/decided/planned and protocol kinds in docs table cells and
+  inline code into chips; `:::shipped`, `:::decided`, `:::planned` and status-titled admonitions take
+  the status tone. Add `Truth`, `Kind` and `EmptyState`.
+- `b10x-terminal/1` gains optional `tones`; the terminal shows an exit gutter, coloured outcome words,
+  JSON tokens and a summary. protocol/1 code blocks get a kind gutter. Mermaid takes per-mode theme
+  variables from the tokens.
+
 - Add the product-site layer: `withProductSite(config, options)` from
   `@beyond10x/docs-system/product-site` adds a data-driven landing page (`b10x-product-landing/1`),
   product tokens light and dark mapped onto Infima, matched Prism themes, and a global MDX
