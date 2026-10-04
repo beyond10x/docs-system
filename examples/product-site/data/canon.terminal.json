@@ -1,0 +1,17 @@
+{
+  "format": "b10x-terminal/1",
+  "title": "canon / repository root",
+  "entries": [
+    {
+      "command": "canon validate --path fixtures/investigation/protocol.yaml",
+      "output": "valid: protocol `investigation` revision 1",
+      "exitCode": 0
+    },
+    {
+      "command": "canon conform run",
+      "output": "passed: scenario `CANON-CLAIM-001`\nconform: 1 passed, 0 failed, 0 unreadable",
+      "exitCode": 0
+    }
+  ],
+  "recordedWith": "canon 0.0.0 built from canon 323038d; recorded 2026-10-04"
+}

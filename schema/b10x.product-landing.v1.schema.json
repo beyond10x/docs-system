@@ -1,0 +1,442 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.product-landing.v1.json",
+  "title": "b10x product landing page",
+  "description": "The landing page of a product site. A string where a session or graph is expected is a path, relative to this file, that the product-site plugin reads at build time.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "product",
+    "sections"
+  ],
+  "properties": {
+    "format": {
+      "const": "b10x-product-landing/1"
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "promise",
+        "lede",
+        "actions"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mark": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 3
+        },
+        "eyebrow": {
+          "type": "string",
+          "minLength": 1
+        },
+        "promise": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "lede": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/action"
+          }
+        },
+        "meta": {
+          "type": "string",
+          "minLength": 1
+        },
+        "terminal": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "$ref": "b10x.terminal.v1.json"
+            }
+          ]
+        },
+        "terminalCaption": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/section"
+      }
+    }
+  },
+  "$defs": {
+    "status": {
+      "enum": [
+        "shipped",
+        "decided",
+        "planned"
+      ]
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "href"
+      ],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "href": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "primary",
+            "text"
+          ]
+        }
+      }
+    },
+    "section": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "title",
+            "items"
+          ],
+          "properties": {
+            "kind": {
+              "const": "features"
+            },
+            "eyebrow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "lede": {
+              "type": "string",
+              "minLength": 1
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "title",
+                  "description"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "href": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "$ref": "#/$defs/status"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "title",
+            "steps"
+          ],
+          "properties": {
+            "kind": {
+              "const": "flow"
+            },
+            "eyebrow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "lede": {
+              "type": "string",
+              "minLength": 1
+            },
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "title"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "title",
+            "items"
+          ],
+          "properties": {
+            "kind": {
+              "const": "status"
+            },
+            "eyebrow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "lede": {
+              "type": "string",
+              "minLength": 1
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "label",
+                  "status"
+                ],
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "$ref": "#/$defs/status"
+                  },
+                  "detail": {
+                    "type": "string"
+                  },
+                  "href": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "title",
+            "tools"
+          ],
+          "properties": {
+            "kind": {
+              "const": "related"
+            },
+            "eyebrow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "lede": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tools": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "description",
+                  "href"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "href": {
+                    "type": "string"
+                  },
+                  "mark": {
+                    "type": "string",
+                    "maxLength": 3
+                  },
+                  "status": {
+                    "$ref": "#/$defs/status"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "title",
+            "data"
+          ],
+          "properties": {
+            "kind": {
+              "const": "protocol-graph"
+            },
+            "eyebrow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "lede": {
+              "type": "string",
+              "minLength": 1
+            },
+            "data": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "b10x.protocol-graph.v1.json"
+                }
+              ]
+            },
+            "caption": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "title",
+            "data"
+          ],
+          "properties": {
+            "kind": {
+              "const": "domain-graph"
+            },
+            "eyebrow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "lede": {
+              "type": "string",
+              "minLength": 1
+            },
+            "data": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "b10x.domain-graph.v1.json"
+                }
+              ]
+            },
+            "caption": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "title",
+            "session"
+          ],
+          "properties": {
+            "kind": {
+              "const": "terminal"
+            },
+            "eyebrow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "lede": {
+              "type": "string",
+              "minLength": 1
+            },
+            "session": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "b10x.terminal.v1.json"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

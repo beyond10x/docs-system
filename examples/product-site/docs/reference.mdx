@@ -1,0 +1,26 @@
+---
+title: Reference page
+description: A wide graph and an identifier table on an ordinary documentation page with its table of contents.
+---
+
+import softwareChange from '@site/data/software-change.protocol-graph.json';
+import commission from '@site/data/commission.domain-graph.json';
+
+This page keeps the sidebar and the table of contents, the narrowest column a graph meets. A graph
+wider than the column scrolls inside its own frame; it never widens the column or clips under it.
+
+## A protocol wider than the column
+
+<ProtocolGraph data={softwareChange} />
+
+## A domain
+
+<DomainGraph data={commission} />
+
+## Identifiers in a table
+
+| Claim | Value when evidence is missing | Value when it is stale |
+| --- | --- | --- |
+| `implementation.verified` | `UNKNOWN` | `UNKNOWN` |
+| `coverage.not_degraded` | `UNKNOWN` | `UNKNOWN` |
+| `deployment.healthy` | `UNKNOWN` | `UNKNOWN` |

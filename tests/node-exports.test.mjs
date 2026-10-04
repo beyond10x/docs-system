@@ -30,6 +30,24 @@ test('documented Node-safe package subpaths load without Docusaurus theme aliase
   assert.equal(typeof modules[10].parseEssDocument, 'function');
 });
 
+test('product-site data, layout and plugin subpaths load without Docusaurus theme aliases', async () => {
+  const [graphs, layout, data, session, prism, site] = await Promise.all([
+    import('@beyond10x/docs-system/graphs'),
+    import('@beyond10x/docs-system/graph-layout'),
+    import('@beyond10x/docs-system/product-data'),
+    import('@beyond10x/docs-system/session-data'),
+    import('@beyond10x/docs-system/prism-themes'),
+    import('@beyond10x/docs-system/product-site'),
+  ]);
+  assert.equal(typeof graphs.layoutProtocolGraph, 'function');
+  assert.equal(typeof layout.layeredLayout, 'function');
+  assert.equal(typeof data.parseTerminalSession, 'function');
+  assert.equal(typeof session.sessionKpis, 'function');
+  assert.equal(prism.productPrismDarkTheme.plain.backgroundColor, '#0c1516');
+  assert.equal(typeof site.withProductSite, 'function');
+  assert.equal(typeof site.default, 'function');
+});
+
 test('published schema subpaths load as JSON in plain Node', async () => {
   const schemas = await Promise.all([
     import('@beyond10x/docs-system/schema', {with: {type: 'json'}}),
@@ -43,6 +61,11 @@ test('published schema subpaths load as JSON in plain Node', async () => {
     import('@beyond10x/docs-system/schema/sources', {with: {type: 'json'}}),
     import('@beyond10x/docs-system/schema/redirects', {with: {type: 'json'}}),
     import('@beyond10x/docs-system/schema/bundle/v1', {with: {type: 'json'}}),
+    import('@beyond10x/docs-system/schema/protocol-graph/v1', {with: {type: 'json'}}),
+    import('@beyond10x/docs-system/schema/domain-graph/v1', {with: {type: 'json'}}),
+    import('@beyond10x/docs-system/schema/terminal/v1', {with: {type: 'json'}}),
+    import('@beyond10x/docs-system/schema/product-landing/v1', {with: {type: 'json'}}),
+    import('@beyond10x/docs-system/schema/session-composition/v0', {with: {type: 'json'}}),
   ]);
   assert.deepEqual(schemas.map((schema) => schema.default.$schema), Array(schemas.length).fill('https://json-schema.org/draft/2020-12/schema'));
 });

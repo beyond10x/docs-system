@@ -1,4 +1,5 @@
 import type { ComponentPropsWithoutRef, InputHTMLAttributes, ReactNode } from 'react';
+import type { ProductStatus } from './product-data.js';
 import type { AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity, RegistrySurface } from './types.js';
 export type HeadingLevel = 1 | 2 | 3 | 4;
 export interface PageHeaderProps {
@@ -77,10 +78,18 @@ export interface ContentCardProps {
     headingLevel?: 2 | 3 | 4;
 }
 export declare function ContentCard({ title, description, eyebrow, meta, children, footer, titleUrl, actionUrl, actionLabel, accent, headingLevel }: ContentCardProps): ReactNode;
-export declare function StatusBadge({ maturity, children }: {
+export type StatusBadgeProps = {
     maturity: Maturity;
+    status?: never;
     children?: ReactNode;
-}): ReactNode;
+}
+/** Product-page status: what exists today, what is decided, what is only planned. */
+ | {
+    status: ProductStatus;
+    maturity?: never;
+    children?: ReactNode;
+};
+export declare function StatusBadge({ maturity, status, children }: StatusBadgeProps): ReactNode;
 export declare function BoundaryNotice({ title, children }: {
     title?: string;
     children: ReactNode;

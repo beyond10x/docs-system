@@ -1,0 +1,63 @@
+---
+title: Code blocks
+description: YAML and Rust with the matched Prism themes, file tabs and highlighted lines.
+---
+
+Fences keep their Docusaurus syntax. `title="…"` becomes the file tab; `{…}` ranges highlight lines.
+Colours come from the matched light and dark Prism themes, each token at 4.5:1 or better.
+
+```yaml title="fixtures/investigation/protocol.yaml" {18-25}
+format: protocol/1
+
+protocol:
+  id: investigation
+  revision: 1
+  description: Decide whether an explanation is supported by observation and survives an attempt to falsify it.
+
+artifacts:
+  explanation:
+    description: The explanation under investigation.
+
+evidence_kinds:
+  supporting_observation:
+    description: An observation consistent with the explanation.
+  falsification_attempt:
+    description: An attempt to refute the explanation; its result is survived or refuted.
+
+claims:
+  explanation.supported:
+    description: The explanation is supported by observation and has survived falsification.
+    true_when:
+      all:
+        - evidence:
+            kind: supporting_observation
+        - evidence:
+            kind: falsification_attempt
+            result: survived
+```
+
+```rust title="crates/canon/src/model/predicate.rs" {2-7}
+/// A three-valued truth value. `Unknown` is not `False`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum Truth {
+    True,
+    False,
+    Unknown,
+}
+
+impl fmt::Display for Truth {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(match self {
+            Truth::True => "true",
+            Truth::False => "false",
+            Truth::Unknown => "unknown",
+        })
+    }
+}
+```
+
+A fence without a title keeps the language label:
+
+```bash
+canon validate --path fixtures/investigation/protocol.yaml
+```

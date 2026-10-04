@@ -1,0 +1,316 @@
+/*
+ * Product-site theme layer. Loaded by the product-site plugin after tokens.css. It carries the
+ * design language of the hand-built product pages (deep teal ground, mint accent, amber/sky/rose
+ * signals, Inter at tight tracking, numbered sections) into Docusaurus, light and dark, and maps it
+ * onto Infima so documentation pages share the landing page's tokens.
+ *
+ * Every text colour clears WCAG 4.5:1 on its ground; --b10x-color-line clears 3:1 for component
+ * boundaries; --b10x-color-hairline is decorative only.
+ */
+
+html[data-theme='light'],
+:root {
+  --b10x-color-canvas: #f6f8f5;
+  --b10x-color-surface: #ffffff;
+  --b10x-color-surface-muted: #eef3f0;
+  --b10x-color-panel: #ffffff;
+  --b10x-color-heading: #0f1b1c;
+  --b10x-color-text: #1d2a2b;
+  --b10x-color-muted: #4f625d;
+  --b10x-color-line: #7f918b;
+  --b10x-color-hairline: #d6dfda;
+  --b10x-color-link: #17684a;
+  --b10x-color-focus: #8a5300;
+  --b10x-color-accent: #17684a;
+  --b10x-color-accent-strong: #0f553b;
+  --b10x-color-on-accent: #ffffff;
+  --b10x-color-amber: #8a5300;
+  --b10x-color-rose: #a1392b;
+  --b10x-color-sky: #1f5f86;
+  --b10x-color-success: #17684a;
+  --b10x-color-warning: #8a5300;
+  --b10x-color-danger: #a1392b;
+  --b10x-color-cyan: #1f5f86;
+  --b10x-color-lime: #17684a;
+  --b10x-code-chrome: #eaf0ec;
+  --b10x-code-control: #ffffff;
+  --b10x-code-control-text: #1d2a2b;
+  --b10x-code-selection: #cfe6da;
+  --b10x-code-border: #cdd8d2;
+  --b10x-inline-code: #e6eee9;
+  --b10x-notice: #f8f1e2;
+  --b10x-font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --b10x-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+html[data-theme='dark'] {
+  --b10x-color-canvas: #101a1b;
+  --b10x-color-surface: #172324;
+  --b10x-color-surface-muted: #13201f;
+  --b10x-color-panel: #172324;
+  --b10x-color-heading: #f1f6f3;
+  --b10x-color-text: #e7eeea;
+  --b10x-color-muted: #a8b8b3;
+  --b10x-color-line: #5d7470;
+  --b10x-color-hairline: #314244;
+  --b10x-color-link: #b6e5ce;
+  --b10x-color-focus: #efd09a;
+  --b10x-color-accent: #b6e5ce;
+  --b10x-color-accent-strong: #d5f3e3;
+  --b10x-color-on-accent: #10241c;
+  --b10x-color-amber: #efd09a;
+  --b10x-color-rose: #eeb1a8;
+  --b10x-color-sky: #b9d9ee;
+  --b10x-color-success: #b6e5ce;
+  --b10x-color-warning: #efd09a;
+  --b10x-color-danger: #eeb1a8;
+  --b10x-color-cyan: #b9d9ee;
+  --b10x-color-lime: #b6e5ce;
+  --b10x-code-chrome: #101b1c;
+  --b10x-code-control: #172324;
+  --b10x-code-control-text: #e7eeea;
+  --b10x-code-selection: #24453a;
+  --b10x-code-border: #2d4140;
+  --b10x-inline-code: #213132;
+  --b10x-notice: #27281f;
+}
+
+/* Infima, driven by the same tokens. */
+html[data-theme] {
+  --ifm-color-primary: var(--b10x-color-accent);
+  --ifm-color-primary-dark: var(--b10x-color-accent-strong);
+  --ifm-color-primary-darker: var(--b10x-color-accent-strong);
+  --ifm-color-primary-darkest: var(--b10x-color-accent-strong);
+  --ifm-color-primary-light: var(--b10x-color-accent);
+  --ifm-color-primary-lighter: var(--b10x-color-accent);
+  --ifm-color-primary-lightest: var(--b10x-color-accent);
+  --ifm-background-color: var(--b10x-color-canvas);
+  --ifm-background-surface-color: var(--b10x-color-canvas);
+  --ifm-font-color-base: var(--b10x-color-text);
+  --ifm-font-color-secondary: var(--b10x-color-muted);
+  --ifm-heading-color: var(--b10x-color-heading);
+  --ifm-link-color: var(--b10x-color-link);
+  --ifm-link-hover-color: var(--b10x-color-heading);
+  --ifm-link-hover-decoration: underline;
+  --ifm-font-family-base: var(--b10x-font-sans);
+  --ifm-font-family-monospace: var(--b10x-font-mono);
+  --ifm-font-size-base: 16px;
+  --ifm-line-height-base: 1.65;
+  --ifm-heading-font-weight: 620;
+  --ifm-h1-font-size: clamp(2.3rem, 4vw, 3.1rem);
+  --ifm-h2-font-size: clamp(1.6rem, 2.4vw, 2rem);
+  --ifm-h3-font-size: 1.2rem;
+  --ifm-toc-border-color: var(--b10x-color-hairline);
+  --ifm-hr-background-color: var(--b10x-color-hairline);
+  --ifm-color-emphasis-200: var(--b10x-color-hairline);
+  --ifm-color-emphasis-300: var(--b10x-color-hairline);
+  --ifm-table-border-color: var(--b10x-color-hairline);
+  --ifm-table-stripe-background: transparent;
+  --ifm-table-head-background: transparent;
+  --ifm-code-font-size: 88%;
+  --ifm-code-background: var(--b10x-inline-code);
+  --ifm-code-border-radius: 3px;
+  --ifm-pre-background: var(--prism-background-color);
+  --ifm-pre-padding: 1.35rem;
+  --ifm-navbar-background-color: color-mix(in srgb, var(--b10x-color-canvas) 88%, transparent);
+  --ifm-navbar-height: 4.6rem;
+  --ifm-navbar-shadow: none;
+  --ifm-navbar-link-color: var(--b10x-color-muted);
+  --ifm-navbar-link-hover-color: var(--b10x-color-heading);
+  --ifm-navbar-link-active-color: var(--b10x-color-heading);
+  --ifm-menu-color: var(--b10x-color-muted);
+  --ifm-menu-color-active: var(--b10x-color-heading);
+  --ifm-menu-color-background-active: color-mix(in srgb, var(--b10x-color-accent) 12%, transparent);
+  --ifm-menu-color-background-hover: color-mix(in srgb, var(--b10x-color-heading) 5%, transparent);
+  --ifm-footer-background-color: var(--b10x-color-canvas);
+  --ifm-footer-color: var(--b10x-color-muted);
+  --ifm-footer-link-color: var(--b10x-color-muted);
+  --ifm-footer-link-hover-color: var(--b10x-color-heading);
+  --ifm-footer-title-color: var(--b10x-color-heading);
+  --ifm-container-width-xl: 1240px;
+  --docusaurus-highlighted-code-line-bg: color-mix(in srgb, var(--b10x-color-accent) 13%, transparent);
+  scroll-padding-top: 6rem;
+}
+
+body { background: var(--b10x-color-canvas); font-feature-settings: 'cv11', 'ss01'; -webkit-font-smoothing: antialiased; }
+a { text-underline-offset: 4px; }
+:focus-visible { outline-color: var(--b10x-color-focus); }
+
+/* ------------------------------------------------------------------------------------------ */
+/* Navbar: the hand-built topbar — wordmark with a framed mark, quiet links, one hairline.     */
+
+/* A solid ground, not backdrop-filter: a filter makes the navbar the containing block of the fixed
+   mobile sidebar, which then collapses into the bar. */
+.navbar {
+  padding-inline: 3rem;
+  background: var(--b10x-color-canvas);
+}
+.navbar__inner { max-width: calc(1240px - 6rem); margin-inline: auto; border-bottom: 1px solid var(--b10x-color-hairline); }
+/* Brand left, links right, as on the hand-built topbar. */
+.navbar__brand + .navbar__item { margin-left: auto; }
+.navbar__items--right { margin-left: 0.4rem; }
+.navbar__brand { gap: 0.75rem; margin-right: 2.25rem; color: var(--b10x-color-heading); }
+.navbar__brand:hover { color: var(--b10x-color-heading); text-decoration: none; }
+.navbar__brand::before {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border: 1px solid var(--b10x-color-accent);
+  border-radius: 0.5rem;
+  color: var(--b10x-color-accent);
+  content: var(--b10x-product-mark, none);
+  font: 600 1rem/1 var(--b10x-font-sans);
+}
+.navbar__logo { display: none; }
+.navbar__title { font-size: 1.3rem; font-weight: 750; letter-spacing: -0.03em; }
+.navbar__title::after { margin-left: 0.7rem; color: var(--b10x-color-muted); content: '/ beyond10x'; font-size: 0.76rem; font-weight: 400; letter-spacing: 0; }
+.navbar__link { font-size: 0.84rem; font-weight: 450; }
+.navbar__link--active { color: var(--b10x-color-heading); box-shadow: inset 0 -1px 0 var(--b10x-color-accent); }
+.navbar__item { padding-inline: 0.75rem; }
+.navbar__items--right > :last-child { padding-right: 0; }
+.navbar .clean-btn { color: var(--b10x-color-muted); }
+
+/* ------------------------------------------------------------------------------------------ */
+/* Landing page container.                                                                     */
+
+.b10x-product-page { background: var(--b10x-color-canvas); }
+.b10x-product { max-width: 1240px; margin-inline: auto; padding-inline: 3rem; }
+.b10x-product > .b10x-product-section:last-child { padding-bottom: 5.5rem; }
+
+/* ------------------------------------------------------------------------------------------ */
+/* Documentation pages inherit the product's type and rhythm.                                 */
+
+.main-wrapper { background: var(--b10x-color-canvas); }
+.theme-doc-markdown { font-size: 1rem; }
+.markdown h1,
+.markdown > header > h1 { margin-bottom: 1.4rem; font-weight: 620; line-height: 1.1; letter-spacing: -0.045em; }
+.markdown h2 { margin-top: 3rem; padding-top: 2.4rem; border-top: 1px solid var(--b10x-color-hairline); font-weight: 580; line-height: 1.2; letter-spacing: -0.035em; }
+.markdown h3 { margin-top: 2rem; font-weight: 620; letter-spacing: -0.02em; }
+.markdown > p,
+.markdown li { color: var(--b10x-color-text); }
+.markdown > p:first-of-type { color: var(--b10x-color-muted); font-size: 1.08rem; line-height: 1.75; }
+.markdown blockquote { border-left: 2px solid var(--b10x-color-accent); background: transparent; color: var(--b10x-color-muted); }
+
+.markdown table { display: table; inline-size: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.markdown table thead tr { border: 0; }
+.markdown table th { padding: 0.9rem 0.95rem; border: 0; border-bottom: 1px solid var(--b10x-color-line); color: var(--b10x-color-muted); font-size: 0.68rem; font-weight: 650; letter-spacing: 0.12em; text-align: left; text-transform: uppercase; }
+.markdown table td { padding: 1rem 0.95rem; border: 0; border-bottom: 1px solid var(--b10x-color-hairline); color: var(--b10x-color-muted); vertical-align: top; }
+.markdown table td:first-child { color: var(--b10x-color-text); }
+/* Identifiers in tables never break inside a word; a narrow table scrolls instead. */
+:is(.markdown, .b10x-graph__table, .b10x-chart__table) :is(td, th) code { overflow-wrap: normal; word-break: normal; white-space: nowrap; }
+.markdown table tr { background: transparent; border: 0; }
+
+.theme-admonition {
+  border: 0;
+  border-left: 3px solid var(--b10x-admonition, var(--b10x-color-amber));
+  border-radius: 0 6px 6px 0;
+  background: color-mix(in srgb, var(--b10x-admonition, var(--b10x-color-amber)) 8%, var(--b10x-color-canvas));
+  box-shadow: none;
+  color: var(--b10x-color-text);
+}
+.theme-admonition [class*='admonitionHeading'] { color: var(--b10x-admonition, var(--b10x-color-amber)); font-size: 0.78rem; letter-spacing: 0.08em; }
+.theme-admonition [class*='admonitionIcon'] svg { fill: currentColor; }
+.alert--info { --b10x-admonition: var(--b10x-color-sky); }
+.alert--secondary { --b10x-admonition: var(--b10x-color-muted); }
+.alert--success { --b10x-admonition: var(--b10x-color-accent); }
+.alert--warning { --b10x-admonition: var(--b10x-color-amber); }
+.alert--danger { --b10x-admonition: var(--b10x-color-rose); }
+
+:not(pre) > code { border: 0; background: var(--b10x-inline-code); color: var(--b10x-color-heading); }
+
+/* Code blocks: the reference's captioned figure — file name left, language right, hairline frame. */
+.theme-code-block,
+pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-block-start-width: 1px; border-radius: 7px !important; box-shadow: none; }
+.theme-code-block[class*='language-']::before { padding: 0.6rem 1.25rem; border-block-end: 1px solid var(--b10x-code-border); background: var(--b10x-code-chrome); font: 600 0.62rem/1.25 var(--b10x-font-sans); letter-spacing: 0.12em; }
+.theme-code-block > [class*='codeBlockTitle'] {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1.25rem;
+  border-block-end: 1px solid var(--b10x-code-border);
+  background: var(--b10x-code-chrome);
+  color: var(--b10x-color-text);
+  font: 500 0.76rem/1.25 var(--b10x-font-mono);
+}
+.theme-code-block > [class*='codeBlockTitle']::after { color: var(--b10x-color-muted); content: var(--b10x-code-label); font: 600 0.62rem/1.8 var(--b10x-font-sans); letter-spacing: 0.12em; text-transform: uppercase; }
+.theme-code-block pre[class*='language-'] { padding-block: 1.1rem; font-size: 0.82rem; line-height: 1.8; }
+/* Copy and wrap controls appear on intent, as on the hand-built pages, which have none. */
+.theme-code-block button.clean-btn { border-color: var(--b10x-code-border); opacity: 0; }
+.theme-code-block:is(:hover, :focus-within) button.clean-btn { opacity: 0.85; }
+.theme-code-block button.clean-btn:is(:hover, :focus-visible) { opacity: 1; }
+@media (hover: none) { .theme-code-block button.clean-btn { opacity: 0.85; } }
+.theme-code-block-highlighted-line { box-shadow: inset 2px 0 0 var(--b10x-color-accent); }
+[class*='codeLineNumber'] { color: color-mix(in srgb, var(--b10x-color-muted) 70%, transparent) !important; }
+
+/* Sidebar and table of contents: quiet until active. */
+.theme-doc-sidebar-container { border-right-color: var(--b10x-color-hairline) !important; }
+.menu { padding: 1.25rem 0.75rem; font-size: 0.88rem; }
+.menu__link { border-radius: 5px; }
+.menu__link--active:not(.menu__link--sublist) { color: var(--b10x-color-heading); font-weight: 560; box-shadow: inset 2px 0 0 var(--b10x-color-accent); }
+.table-of-contents { font-size: 0.8rem; }
+.table-of-contents__link { color: var(--b10x-color-muted); }
+.table-of-contents__link--active { color: var(--b10x-color-heading); }
+.pagination-nav__link { border-color: var(--b10x-color-hairline); border-radius: 7px; }
+.pagination-nav__link:hover { border-color: var(--b10x-color-accent); }
+.pagination-nav__sublabel { color: var(--b10x-color-muted); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.breadcrumbs__item--active .breadcrumbs__link { background: transparent; color: var(--b10x-color-heading); }
+
+/* ------------------------------------------------------------------------------------------ */
+/* Footer: one row, as on the hand-built pages.                                                */
+
+.footer { padding-block: 2.6rem; border-top: 1px solid var(--b10x-color-hairline); }
+.footer .container { max-width: 1240px; padding-inline: 3rem; }
+.footer__links { margin-bottom: 1.6rem; }
+.footer__title { color: var(--b10x-color-heading); font-size: 0.72rem; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase; }
+.footer__link-item { font-size: 0.82rem; }
+.footer__copyright { color: var(--b10x-color-muted); font-size: 0.72rem; text-align: left; }
+.footer--dark { --ifm-footer-background-color: var(--b10x-color-canvas); --ifm-footer-color: var(--b10x-color-muted); --ifm-footer-link-color: var(--b10x-color-muted); --ifm-footer-title-color: var(--b10x-color-heading); }
+
+@media (max-width: 996px) {
+  .markdown > table { display: block; max-inline-size: 100%; overflow-x: auto; }
+  .navbar { padding-inline: 1.5rem; }
+  .navbar__inner { max-width: none; }
+  .b10x-product { padding-inline: 1.5rem; }
+  .footer .container { padding-inline: 1.5rem; }
+  /* Brand left, one quiet menu button right — the hand-built topbar at phone width. */
+  .navbar__items:not(.navbar__items--right) { flex: 1; }
+  .navbar__brand { margin-right: auto; }
+  .navbar__toggle {
+    display: inline-grid;
+    order: 3;
+    place-items: center;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    margin: 0 0 0 0.75rem;
+    border: 1px solid var(--b10x-color-hairline);
+    border-radius: 0.5rem;
+    color: var(--b10x-color-heading);
+  }
+  .navbar__toggle svg { inline-size: 1.15rem; block-size: 1.15rem; }
+  .navbar__toggle:hover { border-color: var(--b10x-color-accent); }
+
+  /* The open menu: a full-height sheet on the page ground, same wordmark, same hairlines. */
+  .navbar-sidebar { inline-size: min(22rem, 86vw); background: var(--b10x-color-canvas); box-shadow: 0 0 0 1px var(--b10x-color-hairline), 24px 0 60px rgb(0 0 0 / 25%); }
+  .navbar-sidebar__backdrop { background: color-mix(in srgb, var(--b10x-color-canvas) 55%, rgb(0 0 0 / 55%)); }
+  .navbar-sidebar__brand { block-size: var(--ifm-navbar-height); padding-inline: 1.25rem; border-bottom: 1px solid var(--b10x-color-hairline); box-shadow: none; }
+  .navbar-sidebar__brand .navbar__brand { margin-right: auto; }
+  .navbar-sidebar__close { display: inline-grid; place-items: center; inline-size: 2.5rem; block-size: 2.5rem; margin-left: 0.5rem; border: 1px solid var(--b10x-color-hairline); border-radius: 0.5rem; color: var(--b10x-color-heading); }
+  .navbar-sidebar__close svg { inline-size: 0.85rem; block-size: 0.85rem; }
+  .navbar-sidebar__items { block-size: calc(100% - var(--ifm-navbar-height)); }
+  .navbar-sidebar .menu { padding: 1.25rem 1rem 2rem; font-size: 1rem; }
+  .navbar-sidebar .menu__list-item { margin-bottom: 0.15rem; }
+  .navbar-sidebar .menu__link { padding: 0.7rem 0.85rem; color: var(--b10x-color-text); font-weight: 500; }
+  .navbar-sidebar .menu__link--active:not(.menu__link--sublist) { color: var(--b10x-color-heading); background: color-mix(in srgb, var(--b10x-color-accent) 10%, transparent); }
+  .navbar-sidebar__back { margin: 0 0 0.75rem; padding: 0.6rem 0.85rem; border-radius: 5px; background: transparent; color: var(--b10x-color-muted); font-size: 0.78rem; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase; }
+}
+
+@media (max-width: 560px) {
+  .navbar__title::after { display: none; }
+}
+
+/* Showcase pages: a landing-width page of charts. */
+.b10x-showcase { padding-block: 4rem 5rem; }
+.b10x-showcase h1 { max-width: 48rem; margin: 0 0 1rem; font-size: clamp(2.1rem, 3.6vw, 3rem); font-weight: 620; line-height: 1.1; letter-spacing: -0.045em; }
+.b10x-showcase__lede { max-width: 46rem; margin: 0 0 2rem; color: var(--b10x-color-muted); font-size: 1.04rem; line-height: 1.7; }

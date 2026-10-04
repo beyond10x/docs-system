@@ -9,3 +9,43 @@ declare module '@theme/Mermaid' {
   const Mermaid: ComponentType<{value: string}>;
   export default Mermaid;
 }
+
+declare module '@docusaurus/Link' {
+  import type {AnchorHTMLAttributes, ComponentType} from 'react';
+  const Link: ComponentType<AnchorHTMLAttributes<HTMLAnchorElement> & {to?: string; href?: string}>;
+  export default Link;
+}
+
+declare module '@theme/Layout' {
+  import type {ComponentType, ReactNode} from 'react';
+  const Layout: ComponentType<{title?: string; description?: string; wrapperClassName?: string; children?: ReactNode}>;
+  export default Layout;
+}
+
+declare module '@theme-init/MDXComponents' {
+  import type {ComponentType} from 'react';
+  const MDXComponents: Record<string, ComponentType<never> | string>;
+  export default MDXComponents;
+}
+
+declare module '@docusaurus/useBrokenLinks' {
+  export default function useBrokenLinks(): {collectAnchor(anchor: string | undefined): void; collectLink(link: string | undefined): void};
+}
+
+declare module '@theme-init/NavbarItem' {
+  import type {ComponentType} from 'react';
+  const NavbarItem: ComponentType<Record<string, unknown>>;
+  export default NavbarItem;
+}
+
+declare module '@docusaurus/router' {
+  export function useLocation(): {pathname: string; search: string; hash: string};
+}
+
+declare module '@docusaurus/useDocusaurusContext' {
+  export default function useDocusaurusContext(): {siteConfig: {baseUrl: string; themeConfig: unknown}};
+}
+
+declare module '@docusaurus/useGlobalData' {
+  export default function useGlobalData(): Record<string, unknown>;
+}

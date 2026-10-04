@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.protocol-graph.v1.json",
+  "title": "b10x protocol graph",
+  "description": "A Canon protocol as nodes and edges, emitted from canon-ir/1 for the ProtocolGraph renderer. Nodes are ordered by kind (action, evidence, claim, outcome, obligation), then by name.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "protocol", "nodes", "edges"],
+  "properties": {
+    "format": {"const": "b10x-protocol-graph/1"},
+    "protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "revision"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "revision": {"type": "integer", "minimum": 1},
+        "description": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1, "description": "Where the protocol came from, shown under the graph."}
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "name"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "description": "Unique; by convention <kind>:<name>."},
+          "kind": {"enum": ["action", "evidence", "claim", "outcome", "obligation"]},
+          "name": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "predicate": {"$ref": "#/$defs/predicate", "description": "Claim true_when, outcome requires, or action precondition; omit an empty all."},
+          "effect": {"type": "string", "minLength": 1},
+          "capabilities": {"type": "array", "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to", "kind"],
+        "properties": {
+          "from": {"type": "string", "minLength": 1},
+          "to": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["produces", "establishes", "supports", "requires", "gates"], "description": "produces action→evidence; establishes evidence→claim; supports claim→claim; requires claim→outcome; gates claim→action."},
+          "qualifier": {"type": "string", "minLength": 1, "description": "Evidence result, or a claim value other than true."}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "predicate": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "required": ["all"], "properties": {"all": {"type": "array", "items": {"$ref": "#/$defs/predicate"}}}},
+        {"type": "object", "additionalProperties": false, "required": ["any"], "properties": {"any": {"type": "array", "items": {"$ref": "#/$defs/predicate"}}}},
+        {"type": "object", "additionalProperties": false, "required": ["not"], "properties": {"not": {"$ref": "#/$defs/predicate"}}},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["claim"],
+          "properties": {"claim": {"type": "object", "additionalProperties": false, "required": ["id"], "properties": {"id": {"type": "string", "minLength": 1}, "is": {"enum": ["true", "false", "unknown"]}}}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["evidence"],
+          "properties": {"evidence": {"type": "object", "additionalProperties": false, "required": ["kind"], "properties": {"kind": {"type": "string", "minLength": 1}, "result": {"type": ["string", "null"], "minLength": 1}}}}
+        }
+      ]
+    }
+  }
+}
