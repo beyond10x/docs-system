@@ -177,11 +177,17 @@ export type StatusBadgeProps =
   /** Product-page status: what exists today, what is decided, what is only planned. */
   | {status: ProductStatus; maturity?: never; children?: ReactNode};
 
-/** Ordinal glyphs: the order planned → decided → shipped reads without colour. */
+/** Ordinal glyphs: the order planned → decided → shipped reads without colour. Plain-text form only;
+ * components draw the glyph with `StatusGlyph`, because no self-hosted font carries all three. */
 export const STATUS_GLYPHS: Record<ProductStatus, string> = {planned: '○', decided: '◐', shipped: '●'};
 
+/** A status glyph drawn as a CSS mask in the current colour (empty, half, full circle). Decorative. */
+export function StatusGlyph({status, className}: {status: ProductStatus; className?: string}): ReactNode {
+  return <span className={`${className ? `${className} ` : ''}b10x-status-glyph b10x-status-glyph--${status}`} aria-hidden="true" />;
+}
+
 export function StatusBadge({maturity, status, children}: StatusBadgeProps): ReactNode {
-  if (status) return <span className={`b10x-status b10x-status--${status}`}><span className="b10x-status__glyph" aria-hidden="true">{STATUS_GLYPHS[status]}</span>{children ?? productStatusLabels[status]}</span>;
+  if (status) return <span className={`b10x-status b10x-status--${status}`}><StatusGlyph status={status} className="b10x-status__glyph" />{children ?? productStatusLabels[status]}</span>;
   return <span className={`b10x-status b10x-status--${maturity}`}>{children ?? maturity}</span>;
 }
 

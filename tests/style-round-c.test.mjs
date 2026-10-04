@@ -138,7 +138,7 @@ test('P8: hero art kinds render from data; the KPI row is counted, never typed',
   const hero = render(createElement(LandingHero, {data: landing}));
   assert.match(hero, /b10x-hero-art--terminal[\s\S]*b10x-terminal--tilt/);
   assert.match(hero, /<dl class="b10x-kpis" aria-label="Key figures"/);
-  assert.match(hero, /b10x-kpi--decided"><dt class="b10x-kpi__label"><span class="b10x-kpi__index" aria-hidden="true">04<\/span><span class="b10x-kpi__glyph" aria-hidden="true">◐<\/span>decided, not built<\/dt><dd class="b10x-kpi__value">2<\/dd>/);
+  assert.match(hero, /b10x-kpi--decided"><dt class="b10x-kpi__label"><span class="b10x-kpi__index" aria-hidden="true">04<\/span><span class="b10x-kpi__glyph b10x-status-glyph b10x-status-glyph--decided" aria-hidden="true"><\/span>decided, not built<\/dt><dd class="b10x-kpi__value">2<\/dd>/);
 
   const card = render(createElement(CaseCard, {data: caseCard, caption: 'note'}));
   assert.match(card, /b10x-case__frame is-current/);
@@ -175,11 +175,13 @@ test('P11: the page header turns on with status, lede or source and counts the p
     {type: 'category', label: 'Reference', href: '/docs/reference', items: [{type: 'link', href: '/docs/reference/x'}]},
   ];
   assert.equal(docKicker(sidebarPosition(sidebar, '/docs/b/')), 'Concepts · 2 of 3');
-  assert.equal(docKicker(sidebarPosition(sidebar, '/docs/c')), 'Deep · 1 of 1');
+  assert.equal(docKicker(sidebarPosition(sidebar, '/docs/c')), 'Deep', 'a one-page category drops "1 of 1"');
   assert.equal(docKicker(sidebarPosition(sidebar, '/docs')), '1 of 3');
   assert.equal(docKicker(sidebarPosition(sidebar, '/docs/reference')), 'Reference · 1 of 2');
   assert.equal(docKicker(sidebarPosition(sidebar, '/docs/reference/x')), 'Reference · 2 of 2');
   assert.equal(docKicker(sidebarPosition(sidebar, '/elsewhere'), 'Guides'), 'Guides');
+  assert.equal(docKicker(sidebarPosition(sidebar, '/docs/b'), 'Project status'), 'Project status', 'a front-matter kicker is the whole kicker');
+  assert.equal(docKicker({index: 1, total: 1}), undefined);
   assert.equal(docKicker(undefined), undefined);
 });
 
@@ -205,7 +207,7 @@ test('P13: every animation sits inside prefers-reduced-motion: no-preference', a
   }
 });
 
-test('P14: trailing-slash routes get a redirect when trailingSlash is false, never over a real page', async () => {
+test('P14: trailing-slash routes get a loop-free copy when trailingSlash is false, never over a real page', async () => {
   const out = await fs.mkdtemp(path.join(os.tmpdir(), 'b10x-slash-'));
   try {
     await fs.mkdir(path.join(out, 'docs', 'reference'), {recursive: true});
@@ -216,10 +218,19 @@ test('P14: trailing-slash routes get a redirect when trailingSlash is false, nev
     const written = await writeTrailingSlashRedirects(out, '/canon/', 'https://beyond10x.github.io');
     assert.deepEqual(written.sort(), ['docs/charts/index.html', 'docs/index.html', 'docs/reference/ess/index.html', 'docs/reference/index.html']);
     const stub = await fs.readFile(path.join(out, 'docs', 'charts', 'index.html'), 'utf8');
-    assert.match(stub, /<meta http-equiv="refresh" content="0;url=\/canon\/docs\/charts">/);
+    assert.doesNotMatch(stub, /http-equiv="refresh"/, 'no meta refresh: a server that prefers the directory must not loop');
     assert.match(stub, /<link rel="canonical" href="https:\/\/beyond10x\.github\.io\/canon\/docs\/charts">/);
-    assert.match(stub, /noindex/);
+    assert.match(stub, /<script>if\(location\.pathname\.endsWith\("\/"\)\)location\.replace\("\/canon\/docs\/charts"\+location\.search\+location\.hash\)<\/script>/);
+    assert.ok(stub.endsWith('<p>page</p>'), 'the page itself is served at x/index.html');
     assert.equal(await fs.readFile(path.join(out, 'docs', 'kept', 'index.html'), 'utf8'), '<p>real</p>');
+
+    // A full page: the copy keeps the page, swaps its canonical, and is refreshed on a second run.
+    await fs.writeFile(path.join(out, 'docs', 'charts.html'), '<!doctype html><html><head><meta charset="utf-8"><link data-rh="true" rel="canonical" href="https://beyond10x.github.io/canon/docs/charts/"></head><body>v2</body></html>');
+    await writeTrailingSlashRedirects(out, '/canon/', 'https://beyond10x.github.io');
+    const copy = await fs.readFile(path.join(out, 'docs', 'charts', 'index.html'), 'utf8');
+    assert.ok(copy.startsWith('<!doctype html><html><head><!-- b10x-trailing-slash-copy --><script>'), 'doctype stays first; the script runs before the page');
+    assert.equal(copy.match(/rel="canonical"/g).length, 1);
+    assert.match(copy, /<body>v2<\/body>/);
 
     const plain = await fs.mkdtemp(path.join(os.tmpdir(), 'b10x-slash-'));
     await fs.mkdir(path.join(plain, 'docs'));
@@ -234,18 +245,25 @@ test('P14: trailing-slash routes get a redirect when trailingSlash is false, nev
   }
 });
 
-test('P15: the fit toggle is client-only, hero graphs scale to fit, and the hero terminal wraps at phone width', async () => {
+test('P15: the fit toggle is client-only, hero graphs scale to fit, and the hero terminal wraps at every width', async () => {
   const protocol = await readJson('data/software-change.protocol-graph.json');
   const full = render(createElement(ProtocolGraph, {data: protocol}));
   assert.match(full, /b10x-graph__tools/);
   assert.doesNotMatch(full, /b10x-graph__fit/);
   assert.match(full, /min-width:\d+px/);
   const hero = render(createElement(ProtocolGraph, {data: protocol, variant: 'hero'}));
-  assert.doesNotMatch(hero, /min-width/);
+  // The hero scales to fit but never below 0.8, so labels stay legible; a wider graph scrolls.
+  const [, max, min] = hero.match(/b10x-graph__canvas" style="max-width:(\d+)px;min-width:(\d+)px"/).map(Number);
+  assert.equal(min, Math.ceil(max * 0.8));
   assert.doesNotMatch(hero, /Protocol as text/);
   assert.match(render(createElement(DomainGraph, {data: await readJson('data/commission.domain-graph.json')})), /Domain as text/);
   const components = await css('product-components.css');
-  const phone = components.slice(components.lastIndexOf('@media (max-width: 720px)'));
-  assert.match(phone, /\.b10x-hero-art--terminal pre\.b10x-terminal__body \{[^}]*white-space: pre-wrap/);
+  assert.match(components, /\.b10x-graph--hero \.b10x-graph__viewport \{[^}]*overflow-x: auto/);
+  assert.match(components, /\.b10x-graph--hero :is\(\.b10x-graph__node-kicker, \.b10x-graph__column-label, \.b10x-graph__entity-name\) \{ letter-spacing: 0; \}/);
+  assert.match(components, /\n\.b10x-graph--hero \{ text-rendering: geometricPrecision; \}/);
+  // The hero terminal wraps with a hanging indent at every width, not only inside the phone query.
+  const allWidths = components.slice(0, components.lastIndexOf('@media (max-width: 720px)'));
+  assert.match(allWidths, /\n\.b10x-hero-art--terminal pre\.b10x-terminal__body \{[^}]*white-space: pre-wrap/);
+  assert.match(allWidths, /\n\.b10x-hero-art--terminal \.b10x-terminal__output > span \{[^}]*text-indent: calc\(-1 \* var\(--b10x-hang\)\)/);
   assert.match(components, /\.b10x-terminal__gutter \{[^}]*text-indent: 0/);
 });

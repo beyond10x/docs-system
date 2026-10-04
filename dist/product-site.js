@@ -16,7 +16,6 @@ import { PRISM_ADDITIONAL_LANGUAGES } from './code.js';
 import { isFamilyRelatedTool, parseFamilyRelatedTool } from './family.js';
 import { parseDomainGraph, parseProtocolGraph } from './product-graphs.js';
 import { ART_KINDS, landingKpis, PRODUCT_LANDING_FORMAT, parseCaseDocument, parseCodePairDocument, parseStatusDocument, parseStatusItems, parseTerminalSession } from './product-data.js';
-import { renderRedirectHtml } from './redirects.js';
 import { productPrismDarkTheme, productPrismTheme } from './prism-themes.js';
 import { rawAdmonitionHtmlProblems } from './admonition-guard.js';
 import { isProductId, PRODUCT_SIGNATURES, productSignatureCss } from './product-palette.js';
@@ -188,9 +187,13 @@ export async function docsSystemBuild(siteDir) {
     const manifest = JSON.parse(await fs.readFile(path.join(packageRoot, 'package.json'), 'utf8'));
     return { revision: manifest.version, kind: 'version' };
 }
+const SLASH_COPY_MARK = '<!-- b10x-trailing-slash-copy -->';
 /**
  * With `trailingSlash: false` Docusaurus writes `docs/x.html`, and static hosts answer `docs/x/` with
- * a 404. Write a redirect at `docs/x/index.html` for every page that has none, keeping query and hash.
+ * a 404. Write `docs/x/index.html` for every page that has none, as a copy of the page with a
+ * canonical link to `docs/x` and a script that moves to `docs/x` only when the path ends in `/`
+ * (keeping query and hash). A server that answers `docs/x` with `docs/x/index.html` therefore shows
+ * the page instead of redirecting to itself; there is no meta refresh. Earlier copies are refreshed.
  */
 export async function writeTrailingSlashRedirects(outDir, baseUrl, origin) {
     const written = [];
@@ -201,13 +204,23 @@ export async function writeTrailingSlashRedirects(outDir, baseUrl, origin) {
             continue;
         const route = relative.slice(0, -'.html'.length);
         const target = path.join(outDir, ...route.split('/'), 'index.html');
-        if (await exists(target))
+        if (await exists(target) && !(await fs.readFile(target, 'utf8')).includes(SLASH_COPY_MARK))
             continue;
         await fs.mkdir(path.dirname(target), { recursive: true });
-        await fs.writeFile(target, renderRedirectHtml(origin, { type: 'html', from: `${base}${route}/`, to: `${base}${route}` }), 'utf8');
+        await fs.writeFile(target, trailingSlashCopy(await fs.readFile(file, 'utf8'), `${base}${route}`, origin), 'utf8');
         written.push(`${route}/index.html`);
     }
     return written;
+}
+function trailingSlashCopy(page, to, origin) {
+    const attribute = (value) => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const canonical = `<link rel="canonical" href="${attribute(new URL(to, `${origin.replace(/\/$/, '')}/`).href)}">`;
+    const script = `<script>if(location.pathname.endsWith("/"))location.replace(${JSON.stringify(to).replace(/</g, '\\u003c')}+location.search+location.hash)</script>`;
+    const withoutCanonical = page.replace(/<link\b[^>]*\brel=["']?canonical\b[^>]*>/gi, '');
+    const head = /<head\b[^>]*>/i.exec(withoutCanonical);
+    return head
+        ? `${withoutCanonical.slice(0, head.index + head[0].length)}${SLASH_COPY_MARK}${script}${canonical}${withoutCanonical.slice(head.index + head[0].length)}`
+        : `${SLASH_COPY_MARK}${script}${canonical}${withoutCanonical}`;
 }
 async function exists(file) {
     try {

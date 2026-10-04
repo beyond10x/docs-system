@@ -6,7 +6,9 @@
  * section a kind gutter (see `PROTOCOL_KIND_MAGIC_COMMENTS`). Node-safe; no dependencies.
  */
 const TRUTH = { TRUE: '✓', UNKNOWN: '?', FALSE: '✕' };
-const STATUS = { shipped: '●', decided: '◐', planned: '○' };
+// Status glyphs are drawn as CSS masks (`.b10x-status-glyph`), not font text: no self-hosted font
+// carries all of ○ ◐ ●, and a system fallback paints ◐ as a clipped sliver.
+const STATUSES = new Set(['shipped', 'decided', 'planned']);
 const KINDS = new Set(['action', 'evidence', 'claim', 'outcome', 'obligation']);
 /** The meaning of an exact reserved word, or undefined. */
 export function chipMeaning(text) {
@@ -14,8 +16,8 @@ export function chipMeaning(text) {
     if (word in TRUTH)
         return { kind: 'truth', value: word.toLowerCase(), glyph: TRUTH[word] };
     const status = word.toLowerCase();
-    if (status in STATUS && /^[a-zA-Z][a-z]*$|^[A-Z]+$/.test(word))
-        return { kind: 'status', value: status, glyph: STATUS[status] };
+    if (STATUSES.has(status) && /^[a-zA-Z][a-z]*$|^[A-Z]+$/.test(word))
+        return { kind: 'status', value: status, glyph: '' };
     if (KINDS.has(word))
         return { kind: 'kind', value: word, glyph: '' };
     return undefined;
@@ -26,7 +28,7 @@ export function chipElement(text, meaning) {
         tagName: 'span',
         properties: { className: ['b10x-chip', `b10x-chip--${meaning.kind}`, `b10x-chip--${meaning.value}`], dataB10xChip: meaning.kind },
         children: [
-            { type: 'element', tagName: 'span', properties: { className: ['b10x-chip__glyph'], ariaHidden: 'true' }, children: meaning.glyph ? [{ type: 'text', value: meaning.glyph }] : [] },
+            { type: 'element', tagName: 'span', properties: { className: meaning.kind === 'status' ? ['b10x-chip__glyph', 'b10x-status-glyph', `b10x-status-glyph--${meaning.value}`] : ['b10x-chip__glyph'], ariaHidden: 'true' }, children: meaning.glyph ? [{ type: 'text', value: meaning.glyph }] : [] },
             { type: 'element', tagName: 'span', properties: { className: ['b10x-chip__text'] }, children: [{ type: 'text', value: text.trim() }] },
         ],
     };

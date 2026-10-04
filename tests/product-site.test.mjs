@@ -179,7 +179,7 @@ test('product components render status honestly and keep the maturity badge unch
   assert.ok(markup.indexOf('>y<') < markup.indexOf('>x<'), 'shipped items list first');
   assert.match(markup, /href="https:\/\/beyond10x\.github\.io\/els\/"/);
   assert.equal(renderToStaticMarkup(createElement(StatusBadge, {maturity: 'stable'})), '<span class="b10x-status b10x-status--stable">stable</span>');
-  assert.equal(renderToStaticMarkup(createElement(StatusBadge, {status: 'decided'})), '<span class="b10x-status b10x-status--decided"><span class="b10x-status__glyph" aria-hidden="true">◐</span>Decided</span>');
+  assert.equal(renderToStaticMarkup(createElement(StatusBadge, {status: 'decided'})), '<span class="b10x-status b10x-status--decided"><span class="b10x-status__glyph b10x-status-glyph b10x-status-glyph--decided" aria-hidden="true"></span>Decided</span>');
 });
 
 test('the landing reader inlines referenced files and the page renders every section', async () => {

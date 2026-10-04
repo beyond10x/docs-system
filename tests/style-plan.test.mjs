@@ -15,7 +15,7 @@ import {parseTerminalSession} from '../dist/product-data.js';
 import productSitePlugin, {fontHeadTags, PRODUCT_FONT_DIRECTORY, productMermaidTheme, withProductSite} from '../dist/product-site.js';
 
 register('./theme-loader.mjs', import.meta.url);
-const {Terminal, terminalSummary, StatusStrip} = await import('../dist/product.js');
+const {KpiRow, Terminal, terminalSummary, StatusStrip} = await import('../dist/product.js');
 const {EmptyState, Kind, StatusBadge, Truth} = await import('../dist/components.js');
 const {admonitionStatus, default: Admonition} = await import('../dist/theme/Admonition/index.js');
 
@@ -80,10 +80,21 @@ test('P3: the roles use exactly the validated values and the product option sets
 });
 
 test('P3: status components carry glyph and word and group by state', async () => {
-  for (const [status, glyph] of [['planned', '○'], ['decided', '◐'], ['shipped', '●']]) {
-    assert.match(renderToStaticMarkup(createElement(StatusBadge, {status})), new RegExp(`aria-hidden="true">${glyph}</span>${status[0].toUpperCase()}${status.slice(1)}`));
-  }
   const css = await fs.readFile(path.join(root, 'styles/product-components.css'), 'utf8');
+  for (const status of ['planned', 'decided', 'shipped']) {
+    // The glyph is a mask, not font text: an empty decorative span with the status modifier.
+    assert.match(renderToStaticMarkup(createElement(StatusBadge, {status})), new RegExp(`<span class="b10x-status__glyph b10x-status-glyph b10x-status-glyph--${status}" aria-hidden="true"></span>${status[0].toUpperCase()}${status.slice(1)}</span>$`));
+    assert.match(css, new RegExp(`\\.b10x-status-glyph--${status} \\{ --b10x-status-glyph: var\\(--b10x-status-glyph-${status}\\); \\}`));
+    assert.match(css, new RegExp(`--b10x-status-glyph-${status}: url\\("data:image/svg\\+xml,`));
+  }
+  assert.match(css, /\.b10x-status-glyph \{[^}]*background: currentColor;[^}]*\bmask: var\(--b10x-status-glyph\) center \/ contain no-repeat;/);
+  for (const selector of ['.b10x-status__glyph', '.b10x-kpi__glyph', '.b10x-chip__glyph']) {
+    const rule = css.match(new RegExp(`^${selector.replace('.', '\\.')} \\{([^}]*)\\}`, 'm'))?.[1] ?? '';
+    assert.doesNotMatch(rule, /font-size/, `${selector} sizes no font glyph`);
+  }
+  const kpis = renderToStaticMarkup(createElement(KpiRow, {items: ['planned', 'decided', 'shipped'].map((tone, index) => ({count: tone, tone, label: tone, value: index}))}));
+  assert.equal([...kpis.matchAll(/<span class="b10x-kpi__glyph b10x-status-glyph b10x-status-glyph--(\w+)" aria-hidden="true"><\/span>/g)].map((match) => match[1]).join(), 'planned,decided,shipped');
+  assert.doesNotMatch(kpis, /[○◐●]/, 'KPI glyphs are not font text');
   for (const value of ['#6db794', '#269269', '#006948', '#277354', '#3ba97d', '#8bdfb8', '#139e6f', '#c98500', '#ac312a', '#34aa7c', '#bb881a', '#b24039']) assert.ok(css.includes(value), value);
   assert.doesNotMatch(css, /--b10x-status-shipped: var\(--b10x-color-accent/, 'status is decoupled from the accent');
   const strip = renderToStaticMarkup(createElement(StatusStrip, {items: [{label: 'b', status: 'planned'}, {label: 'a', status: 'shipped'}, {label: 'c', status: 'shipped'}]}));
@@ -92,7 +103,7 @@ test('P3: status components carry glyph and word and group by state', async () =
 
 test('P4: reserved words become chips; everything else is left alone', () => {
   assert.deepEqual(chipMeaning('UNKNOWN'), {kind: 'truth', value: 'unknown', glyph: '?'});
-  assert.deepEqual(chipMeaning('Shipped'), {kind: 'status', value: 'shipped', glyph: '●'});
+  assert.deepEqual(chipMeaning('Shipped'), {kind: 'status', value: 'shipped', glyph: ''});
   assert.deepEqual(chipMeaning('claim'), {kind: 'kind', value: 'claim', glyph: ''});
   for (const word of ['true', 'Unknown', 'claims', 'sHipped', 'TRUE!']) assert.equal(chipMeaning(word), undefined, word);
   const text = (value) => ({type: 'text', value});
@@ -107,6 +118,8 @@ test('P4: reserved words become chips; everything else is left alone', () => {
   assert.equal(cells[0].children[0].type, 'text');
   assert.deepEqual(cells[1].children[0].properties.className, ['b10x-chip', 'b10x-chip--truth', 'b10x-chip--unknown']);
   assert.deepEqual(cells[2].children[0].properties.className, ['b10x-chip', 'b10x-chip--status', 'b10x-chip--planned']);
+  assert.deepEqual(cells[2].children[0].children[0].properties, {className: ['b10x-chip__glyph', 'b10x-status-glyph', 'b10x-status-glyph--planned'], ariaHidden: 'true'});
+  assert.deepEqual(cells[2].children[0].children[0].children, [], 'the status chip glyph is a mask, not font text');
   const paragraph = tree.children[1].children;
   assert.equal(paragraph[1].tagName, 'span');
   assert.equal(paragraph[3].tagName, 'code', 'lower-case true stays code');

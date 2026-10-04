@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import useBrokenLinks from '@docusaurus/useBrokenLinks';
 import CodeBlock from '@theme/CodeBlock';
 import { DomainGraph, ProtocolGraph } from './charts.js';
-import { StatusBadge, Truth } from './components.js';
+import { StatusBadge, StatusGlyph, Truth } from './components.js';
 import { buildHref, buildLabel, FAMILY, familyMembers, isFamilyRelatedTool, relationPhrase } from './family.js';
 import { landingKpis, parseCaseDocument, parseCodePairDocument, parseStatusDocument, parseTerminalSession, parseTranscript } from './product-data.js';
 export { StatusBadge };
@@ -274,10 +274,9 @@ export function ProductHero({ eyebrow, promise, lede, actions = [], meta, aside,
     const emphasis = promise[promise.length - 1];
     return _jsxs("section", { className: ['b10x-hero', aside ? '' : 'b10x-hero--solo'].filter(Boolean).join(' '), "aria-labelledby": titleId, children: [_jsxs("div", { className: "b10x-hero__copy", children: [eyebrow && _jsxs("p", { className: "b10x-kicker", children: [_jsx("span", { className: "b10x-kicker__dot", "aria-hidden": "true" }), eyebrow] }), _jsxs("h1", { id: titleId, children: [lines.map((line) => _jsxs("span", { children: [line, _jsx("br", {})] }, line)), _jsx("em", { children: emphasis })] }), _jsx("p", { className: "b10x-hero__lede", children: lede }), actions.length > 0 && _jsx("div", { className: "b10x-hero__actions", children: actions.map((action) => _jsxs(Link, { to: action.href, className: action.kind === 'primary' ? 'b10x-button' : 'b10x-text-link', children: [action.label, " ", _jsx("span", { "aria-hidden": "true", children: action.kind === 'primary' ? '→' : action.href.startsWith('#') ? '↓' : '→' })] }, action.href)) }), meta && _jsx("p", { className: "b10x-hero__meta", children: meta })] }), aside && _jsx("div", { className: "b10x-hero__aside", children: aside }), kpis && kpis.length > 0 && _jsx(KpiRow, { items: kpis })] });
 }
-const STATUS_GLYPH = { shipped: '●', decided: '◐', planned: '○' };
 /** Numbered KPI tiles. Values are counted from data (see `landingKpis`), never typed. */
 export function KpiRow({ items, label = 'Key figures' }) {
-    return _jsx("dl", { className: "b10x-kpis", "aria-label": label, style: { '--b10x-kpi-count': items.length }, children: items.map((item, index) => _jsxs("div", { className: `b10x-kpi b10x-kpi--${item.tone}`, children: [_jsxs("dt", { className: "b10x-kpi__label", children: [_jsx("span", { className: "b10x-kpi__index", "aria-hidden": "true", children: String(index + 1).padStart(2, '0') }), item.tone !== 'product' && _jsx("span", { className: "b10x-kpi__glyph", "aria-hidden": "true", children: STATUS_GLYPH[item.tone] }), item.label] }), _jsx("dd", { className: "b10x-kpi__value", children: item.value })] }, `${item.count}-${index}`)) });
+    return _jsx("dl", { className: "b10x-kpis", "aria-label": label, style: { '--b10x-kpi-count': items.length }, children: items.map((item, index) => _jsxs("div", { className: `b10x-kpi b10x-kpi--${item.tone}`, children: [_jsxs("dt", { className: "b10x-kpi__label", children: [_jsx("span", { className: "b10x-kpi__index", "aria-hidden": "true", children: String(index + 1).padStart(2, '0') }), item.tone !== 'product' && _jsx(StatusGlyph, { status: item.tone, className: "b10x-kpi__glyph" }), item.label] }), _jsx("dd", { className: "b10x-kpi__value", children: item.value })] }, `${item.count}-${index}`)) });
 }
 /** The hero aside drawn from the product's own data. */
 export function HeroArt({ art }) {

@@ -89,8 +89,14 @@ export type StatusBadgeProps = {
     maturity?: never;
     children?: ReactNode;
 };
-/** Ordinal glyphs: the order planned → decided → shipped reads without colour. */
+/** Ordinal glyphs: the order planned → decided → shipped reads without colour. Plain-text form only;
+ * components draw the glyph with `StatusGlyph`, because no self-hosted font carries all three. */
 export declare const STATUS_GLYPHS: Record<ProductStatus, string>;
+/** A status glyph drawn as a CSS mask in the current colour (empty, half, full circle). Decorative. */
+export declare function StatusGlyph({ status, className }: {
+    status: ProductStatus;
+    className?: string;
+}): ReactNode;
 export declare function StatusBadge({ maturity, status, children }: StatusBadgeProps): ReactNode;
 export type TruthValue = 'true' | 'false' | 'unknown';
 /** A truth value as a chip: glyph and word, never colour alone. UNKNOWN is dashed. */

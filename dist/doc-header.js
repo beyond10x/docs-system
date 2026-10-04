@@ -45,9 +45,13 @@ export function sidebarPosition(items, permalink) {
     };
     return visit(items, undefined);
 }
-/** "Concepts · 2 of 4", or "2 of 6" at the top level. */
+/**
+ * "Concepts · 2 of 4", or "2 of 6" at the top level. A front-matter `kicker` is the whole kicker,
+ * and a category with one page drops the "1 of 1".
+ */
 export function docKicker(position, override) {
-    const label = override ?? position?.category;
-    const count = position ? `${position.index} of ${position.total}` : undefined;
-    return [label, count].filter(Boolean).join(' · ') || undefined;
+    if (override)
+        return override;
+    const count = position && position.total > 1 ? `${position.index} of ${position.total}` : undefined;
+    return [position?.category, count].filter(Boolean).join(' · ') || undefined;
 }
