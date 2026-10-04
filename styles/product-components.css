@@ -363,7 +363,7 @@
   color: var(--b10x-color-text);
   font-size: 0.78rem;
 }
-.b10x-graph__legend li { display: flex; align-items: center; gap: 0.5rem; margin: 0; white-space: nowrap; }
+.b10x-graph__legend li { display: flex; align-items: center; gap: 0.5rem; min-width: 0; margin: 0; }
 .b10x-graph__count { margin-left: auto; padding-left: 0.75rem; color: var(--b10x-color-muted); font: 0.72rem/1 var(--b10x-font-mono); font-variant-numeric: tabular-nums; }
 .b10x-graph__swatch { flex: none; inline-size: 10px; block-size: 10px; margin-inline: 6px; border-radius: 3px; background: var(--b10x-swatch); }
 .b10x-graph__swatch--action { --b10x-swatch: var(--b10x-kind-action); }
@@ -377,7 +377,9 @@
 .b10x-graph__state-key { inline-size: 22px; color: var(--b10x-color-muted); font-size: 0.6rem; text-align: center; }
 svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-inline: 4px; overflow: visible; }
 
-.b10x-graph__viewport { overflow-x: auto; overflow-y: visible; margin-inline: -0.5rem; padding: 0.5rem; scrollbar-width: thin; }
+/* contain: inline-size keeps a wide canvas from widening the docs column (which then clips under the
+   page); the canvas scrolls inside its own frame instead. */
+.b10x-graph__viewport { overflow-x: auto; overflow-y: visible; contain: inline-size; margin-inline: -0.5rem; padding: 0.5rem; scrollbar-color: var(--b10x-color-line) transparent; }
 .b10x-graph__canvas { position: relative; margin-inline: auto; }
 .b10x-graph__svg { display: block; inline-size: 100%; block-size: auto; overflow: visible; font-family: var(--b10x-font-sans); }
 
@@ -522,7 +524,9 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
   .b10x-flow__step:not(:last-child)::after { top: auto; right: auto; bottom: -1.3rem; left: 0.2rem; content: '↓'; transform: none; }
   .b10x-graph { padding: 1.1rem; }
   .b10x-graph__header { grid-template-columns: minmax(0, 1fr); }
-  .b10x-graph__legend { grid-template-columns: repeat(2, minmax(0, max-content)); column-gap: 1.5rem; }
+  /* The legend wraps as a flow of items; it never clips. */
+  .b10x-graph__legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; }
+  .b10x-graph__count { margin-left: 0.15rem; padding-left: 0; }
 }
 
 /* ------------------------------------------------------------------------------------------ */
@@ -556,7 +560,7 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
 .b10x-stat-tile__value { margin: 0.35rem 0 0; color: var(--b10x-color-heading); font: 600 1.9rem/1.15 var(--b10x-font-sans); letter-spacing: -0.03em; }
 .b10x-stat-tile__detail { margin: 0.2rem 0 0; color: var(--b10x-color-muted); font-size: 0.76rem; line-height: 1.45; }
 
-.b10x-chart { margin: 1.5rem 0; padding: 1.4rem 1.6rem 1.1rem; border: 1px solid var(--b10x-color-hairline, var(--b10x-color-line)); border-radius: 9px; background: var(--b10x-graph-node); }
+.b10x-chart { min-width: 0; max-width: 100%; margin: 1.5rem 0; padding: 1.4rem 1.6rem 1.1rem; border: 1px solid var(--b10x-color-hairline, var(--b10x-color-line)); border-radius: 9px; background: var(--b10x-graph-node); }
 .b10x-chart__header { margin-bottom: 0.8rem; }
 .b10x-chart__title { display: block; color: var(--b10x-color-heading); font-size: 1.05rem; font-weight: 620; letter-spacing: -0.015em; }
 .b10x-chart__description { max-width: 52rem; margin: 0.25rem 0 0; color: var(--b10x-color-muted); font-size: 0.86rem; line-height: 1.55; }
@@ -566,7 +570,7 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
 .b10x-chart__swatch--hollow { border: 2px solid var(--b10x-color-muted); background: transparent; }
 .b10x-chart__swatch--dashed { border: 2px dashed var(--b10x-color-muted); background: transparent; }
 .b10x-chart__glyph { color: var(--b10x-color-muted); font-size: 0.75rem; }
-.b10x-chart__viewport { overflow-x: auto; margin-inline: -0.4rem; padding: 0.4rem; scrollbar-width: thin; }
+.b10x-chart__viewport { overflow-x: auto; contain: inline-size; margin-inline: -0.4rem; padding: 0.4rem; scrollbar-color: var(--b10x-color-line) transparent; }
 .b10x-chart__canvas { position: relative; margin-inline: auto; }
 .b10x-chart__svg { display: block; inline-size: 100%; block-size: auto; overflow: visible; font-family: var(--b10x-font-sans); }
 .b10x-chart__grid { stroke: color-mix(in srgb, var(--b10x-color-hairline, var(--b10x-color-line)) 80%, transparent); stroke-width: 1; }
@@ -609,3 +613,5 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
 .b10x-chart__table { margin-top: 0.6rem; }
 .b10x-chart__table summary { color: var(--b10x-color-text); cursor: pointer; font-size: 0.82rem; font-weight: 550; }
 .b10x-chart__table table { display: table; inline-size: 100%; margin-top: 0.7rem; font-size: 0.78rem; font-variant-numeric: tabular-nums; }
+
+:is(.b10x-graph__table, .b10x-chart__table) .b10x-table-wrap { contain: inline-size; }

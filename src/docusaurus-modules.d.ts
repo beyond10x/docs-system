@@ -31,3 +31,21 @@ declare module '@theme-init/MDXComponents' {
 declare module '@docusaurus/useBrokenLinks' {
   export default function useBrokenLinks(): {collectAnchor(anchor: string | undefined): void; collectLink(link: string | undefined): void};
 }
+
+declare module '@theme-init/NavbarItem' {
+  import type {ComponentType} from 'react';
+  const NavbarItem: ComponentType<Record<string, unknown>>;
+  export default NavbarItem;
+}
+
+declare module '@docusaurus/router' {
+  export function useLocation(): {pathname: string; search: string; hash: string};
+}
+
+declare module '@docusaurus/useDocusaurusContext' {
+  export default function useDocusaurusContext(): {siteConfig: {baseUrl: string; themeConfig: unknown}};
+}
+
+declare module '@docusaurus/useGlobalData' {
+  export default function useGlobalData(): Record<string, unknown>;
+}

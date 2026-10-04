@@ -198,6 +198,8 @@ a { text-underline-offset: 4px; }
 .markdown table th { padding: 0.9rem 0.95rem; border: 0; border-bottom: 1px solid var(--b10x-color-line); color: var(--b10x-color-muted); font-size: 0.68rem; font-weight: 650; letter-spacing: 0.12em; text-align: left; text-transform: uppercase; }
 .markdown table td { padding: 1rem 0.95rem; border: 0; border-bottom: 1px solid var(--b10x-color-hairline); color: var(--b10x-color-muted); vertical-align: top; }
 .markdown table td:first-child { color: var(--b10x-color-text); }
+/* Identifiers in tables never break inside a word; a narrow table scrolls instead. */
+:is(.markdown, .b10x-graph__table, .b10x-chart__table) :is(td, th) code { overflow-wrap: normal; word-break: normal; white-space: nowrap; }
 .markdown table tr { background: transparent; border: 0; }
 
 .theme-admonition {
@@ -267,6 +269,7 @@ pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-bloc
 .footer--dark { --ifm-footer-background-color: var(--b10x-color-canvas); --ifm-footer-color: var(--b10x-color-muted); --ifm-footer-link-color: var(--b10x-color-muted); --ifm-footer-title-color: var(--b10x-color-heading); }
 
 @media (max-width: 996px) {
+  .markdown > table { display: block; max-inline-size: 100%; overflow-x: auto; }
   .navbar { padding-inline: 1.5rem; }
   .navbar__inner { max-width: none; }
   .b10x-product { padding-inline: 1.5rem; }

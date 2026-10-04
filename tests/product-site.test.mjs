@@ -13,6 +13,7 @@ import {layoutDomainGraph, layoutProtocolGraph, parseDomainGraph, parseProtocolG
 import {parseTerminalSession, parseTranscript} from '../dist/product-data.js';
 import {decisionSteps, formatDuration, parseSessionComposition, sessionKpis} from '../dist/session-data.js';
 import {productPrismDarkTheme, productPrismTheme} from '../dist/prism-themes.js';
+import {activeNavbarItem, docItemLink, navbarItemScore} from '../dist/navbar-active.js';
 import productSitePlugin, {readLanding, withProductSite} from '../dist/product-site.js';
 
 register('./theme-loader.mjs', import.meta.url);
@@ -223,6 +224,42 @@ test('session charts draw the reference figures from the role-named fixture', as
   assert.match(graph, />×13</);
   assert.match(graph, /human:operator/);
   assert.match(renderToStaticMarkup(createElement(SessionKpis, {data: session})), /<dd class="b10x-stat-tile__value">36m 35s<\/dd>/);
+});
+
+test('exactly one navbar item is active: the most specific route match', () => {
+  const docs = {default: {path: '/loom/docs', versions: [{isLast: true, sidebars: {docs: {link: {path: '/loom/docs/', label: 'Overview'}}}, docs: [
+    {id: 'index', path: '/loom/docs/', sidebar: 'docs'},
+    {id: 'reference/ess', path: '/loom/docs/reference/ess', sidebar: 'docs'},
+    {id: 'status', path: '/loom/docs/status', sidebar: 'docs'},
+  ]}]}};
+  // The adoption that showed two active items: a docs link and a deeper reference link.
+  const links = [{to: '/docs/', label: 'Documentation'}, {to: '/docs/reference/ess', label: 'Specification'}, {to: '/docs/status', label: 'Status'}, {href: 'https://github.com/beyond10x/loom', label: 'GitHub'}];
+  assert.equal(navbarItemScore(links[0], '/loom/docs/reference/ess', '/loom/', docs) > -1, true, 'Docusaurus would mark both');
+  assert.equal(activeNavbarItem(links, '/loom/docs/reference/ess', '/loom/', docs), 1);
+  assert.equal(activeNavbarItem(links, '/loom/docs/reference/ess/', '/loom/', docs), 1);
+  assert.equal(activeNavbarItem(links, '/loom/docs/', '/loom/', docs), 0);
+  assert.equal(activeNavbarItem(links, '/loom/docs/status', '/loom/', docs), 2);
+  assert.equal(activeNavbarItem(links, '/loom/', '/loom/', docs), -1);
+  assert.equal(activeNavbarItem(links, '/loom/docsearch', '/loom/', docs), -1, 'a prefix must end at a path segment');
+  // The original configuration: a docSidebar item beside a link into the same sidebar.
+  const sidebar = [{type: 'docSidebar', sidebarId: 'docs', label: 'Documentation'}, {to: '/docs/reference/ess', label: 'Specification'}];
+  assert.equal(activeNavbarItem(sidebar, '/loom/docs/reference/ess', '/loom/', docs), 1);
+  assert.equal(activeNavbarItem(sidebar, '/loom/docs/status', '/loom/', docs), 0);
+  assert.deepEqual(docItemLink(sidebar[0], docs, '/loom/docs/status'), {path: '/loom/docs/', label: 'Overview'});
+  assert.equal(activeNavbarItem([{to: '/x', activeBaseRegex: '^/loom/(docs|guides)/'}, {to: '/docs/'}], '/loom/docs/a', '/loom/', docs), 0, 'ties go to the earlier item');
+});
+
+test('graphs, legends and table identifiers never clip or break', async () => {
+  const css = await fs.readFile(path.join(root, 'styles/product-components.css'), 'utf8');
+  const theme = await fs.readFile(path.join(root, 'styles/product-theme.css'), 'utf8');
+  const rule = (source, selector) => source.match(new RegExp(`(^|\\n)${selector.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\function assertNoOverlap(nodes) {')} \\{([^}]*)\\}`))?.[2] ?? '';
+  for (const viewport of ['.b10x-graph__viewport', '.b10x-chart__viewport']) {
+    assert.match(rule(css, viewport), /overflow-x: auto/, viewport);
+    assert.match(rule(css, viewport), /contain: inline-size/, `${viewport} must not widen the docs column`);
+  }
+  assert.doesNotMatch(css, /\.b10x-graph__legend[^{]*\{[^}]*white-space: nowrap/, 'legend items wrap');
+  assert.match(theme, /:is\(td, th\) code \{ overflow-wrap: normal; word-break: normal; white-space: nowrap; \}/);
+  assert.match(theme, /\.markdown > table \{ display: block; max-inline-size: 100%; overflow-x: auto; \}/);
 });
 
 function assertNoOverlap(nodes) {

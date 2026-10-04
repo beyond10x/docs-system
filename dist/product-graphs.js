@@ -285,7 +285,7 @@ export function layoutDomainGraph(document) {
     const layers = domainLayers(document);
     const inputs = document.entities.map((entity) => ({ id: entity.id, layer: layers.get(entity.id), width: DOMAIN_NODE_WIDTH, height: DOMAIN_NODE_HEIGHT }));
     const edges = document.relations.map((relation) => ({ from: relation.from, to: relation.to }));
-    const layout = layeredLayout(inputs, edges, { layerGap: 150, nodeGap: 22, portSpread: 0.8 });
+    const layout = layeredLayout(inputs, edges, { layerGap: 112, nodeGap: 22, portSpread: 0.8 });
     const byId = new Map(document.entities.map((entity) => [entity.id, entity]));
     return {
         width: layout.width,

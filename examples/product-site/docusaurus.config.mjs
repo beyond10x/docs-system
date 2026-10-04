@@ -35,7 +35,7 @@ const config = {
     navbar: {
       title: 'Canon',
       items: [
-        {to: '/docs/', label: 'Components', position: 'left', activeBaseRegex: '^/docs/$'},
+        {to: '/docs/', label: 'Components', position: 'left'},
         {to: '/docs/charts', label: 'Charts', position: 'left'},
         {to: '/docs/code', label: 'Code', position: 'left'},
         {to: '/session', label: 'Session', position: 'left'},
