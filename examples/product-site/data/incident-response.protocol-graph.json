@@ -1,0 +1,240 @@
+{
+  "format": "b10x-protocol-graph/1",
+  "protocol": {
+    "id": "incident.response",
+    "revision": 1,
+    "description": "Restore a degraded service, and separately establish why it degraded. Restoration never waits on the cause.",
+    "source": "design draft incident.response/1, checked with canon validate"
+  },
+  "nodes": [
+    {
+      "id": "action:emergency.leave",
+      "kind": "action",
+      "name": "emergency.leave",
+      "description": "Leave emergency mode. Rests on restoration, never on the cause.",
+      "effect": "state",
+      "predicate": {
+        "all": [
+          {
+            "claim": {
+              "id": "impact.bounded"
+            }
+          },
+          {
+            "claim": {
+              "id": "service.healthy"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "action:logs.search",
+      "kind": "action",
+      "name": "logs.search",
+      "description": "Search the service's logs for the incident window.",
+      "effect": "read"
+    },
+    {
+      "id": "action:metrics.inspect",
+      "kind": "action",
+      "name": "metrics.inspect",
+      "description": "Read the service's health metrics.",
+      "effect": "read"
+    },
+    {
+      "id": "action:release.inspect",
+      "kind": "action",
+      "name": "release.inspect",
+      "description": "List recent releases of the service and what changed in each.",
+      "effect": "read"
+    },
+    {
+      "id": "action:release.rollback",
+      "kind": "action",
+      "name": "release.rollback",
+      "description": "Roll the service back to a named earlier release.",
+      "effect": "write",
+      "capabilities": [
+        "release.write"
+      ]
+    },
+    {
+      "id": "action:traffic.shift",
+      "kind": "action",
+      "name": "traffic.shift",
+      "description": "Move traffic away from the degraded instances.",
+      "effect": "write",
+      "capabilities": [
+        "traffic.write"
+      ]
+    },
+    {
+      "id": "evidence:cause_analysis",
+      "kind": "evidence",
+      "name": "cause_analysis",
+      "description": "A stated cause with the observations that support it; supported or refuted."
+    },
+    {
+      "id": "evidence:impact_assessment",
+      "kind": "evidence",
+      "name": "impact_assessment",
+      "description": "Who and what is affected, and whether that set is still growing; bounded or growing."
+    },
+    {
+      "id": "evidence:operational_observation",
+      "kind": "evidence",
+      "name": "operational_observation",
+      "description": "One health reading of the service (error rate, latency, saturation); healthy or degraded."
+    },
+    {
+      "id": "claim:cause.identified",
+      "kind": "claim",
+      "name": "cause.identified",
+      "description": "A cause is established and survived an attempt to refute it.",
+      "predicate": {
+        "evidence": {
+          "kind": "cause_analysis",
+          "result": "supported"
+        }
+      }
+    },
+    {
+      "id": "claim:impact.bounded",
+      "kind": "claim",
+      "name": "impact.bounded",
+      "description": "The affected set is known and no longer growing.",
+      "predicate": {
+        "evidence": {
+          "kind": "impact_assessment",
+          "result": "bounded"
+        }
+      }
+    },
+    {
+      "id": "claim:service.healthy",
+      "kind": "claim",
+      "name": "service.healthy",
+      "description": "The service meets its health objective.",
+      "predicate": {
+        "evidence": {
+          "kind": "operational_observation",
+          "result": "healthy"
+        }
+      }
+    },
+    {
+      "id": "outcome:mitigated",
+      "kind": "outcome",
+      "name": "mitigated",
+      "description": "Service restored; the case closes with the cause still unknown.",
+      "predicate": {
+        "all": [
+          {
+            "claim": {
+              "id": "cause.identified",
+              "is": "unknown"
+            }
+          },
+          {
+            "claim": {
+              "id": "service.healthy"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "outcome:resolved",
+      "kind": "outcome",
+      "name": "resolved",
+      "description": "Service restored and the cause established.",
+      "predicate": {
+        "all": [
+          {
+            "claim": {
+              "id": "cause.identified"
+            }
+          },
+          {
+            "claim": {
+              "id": "service.healthy"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "obligation:restore_service",
+      "kind": "obligation",
+      "name": "restore_service",
+      "description": "Urgent. Discharged when the service is healthy again."
+    }
+  ],
+  "edges": [
+    {
+      "from": "claim:impact.bounded",
+      "to": "action:emergency.leave",
+      "kind": "gates"
+    },
+    {
+      "from": "claim:service.healthy",
+      "to": "action:emergency.leave",
+      "kind": "gates"
+    },
+    {
+      "from": "action:logs.search",
+      "to": "evidence:cause_analysis",
+      "kind": "produces"
+    },
+    {
+      "from": "action:metrics.inspect",
+      "to": "evidence:impact_assessment",
+      "kind": "produces"
+    },
+    {
+      "from": "action:metrics.inspect",
+      "to": "evidence:operational_observation",
+      "kind": "produces"
+    },
+    {
+      "from": "evidence:cause_analysis",
+      "to": "claim:cause.identified",
+      "kind": "establishes",
+      "qualifier": "supported"
+    },
+    {
+      "from": "evidence:impact_assessment",
+      "to": "claim:impact.bounded",
+      "kind": "establishes",
+      "qualifier": "bounded"
+    },
+    {
+      "from": "evidence:operational_observation",
+      "to": "claim:service.healthy",
+      "kind": "establishes",
+      "qualifier": "healthy"
+    },
+    {
+      "from": "claim:cause.identified",
+      "to": "outcome:mitigated",
+      "kind": "requires",
+      "qualifier": "unknown"
+    },
+    {
+      "from": "claim:service.healthy",
+      "to": "outcome:mitigated",
+      "kind": "requires"
+    },
+    {
+      "from": "claim:cause.identified",
+      "to": "outcome:resolved",
+      "kind": "requires"
+    },
+    {
+      "from": "claim:service.healthy",
+      "to": "outcome:resolved",
+      "kind": "requires"
+    }
+  ]
+}

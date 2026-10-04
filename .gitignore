@@ -4,3 +4,5 @@ target/
 *.tgz
 .cache/
 tests/viewer-site/.docusaurus/
+examples/product-site/.docusaurus/
+examples/product-site/build/

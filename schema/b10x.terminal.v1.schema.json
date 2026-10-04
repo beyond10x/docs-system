@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.terminal.v1.json",
+  "title": "b10x recorded terminal session",
+  "description": "Commands and the output they actually printed, recorded by running them. Never written by hand.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "entries"],
+  "properties": {
+    "format": {"const": "b10x-terminal/1"},
+    "title": {"type": "string", "minLength": 1},
+    "recordedWith": {"type": "string", "minLength": 1, "description": "Tool version and revision that produced the output."},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["command"],
+        "properties": {
+          "command": {"type": "string", "minLength": 1},
+          "output": {"type": "string"},
+          "exitCode": {"type": "integer"},
+          "comment": {"type": "string"}
+        }
+      }
+    }
+  }
+}

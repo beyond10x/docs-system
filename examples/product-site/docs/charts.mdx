@@ -1,0 +1,29 @@
+---
+title: Charts
+description: Protocol and domain graphs rendered from generated JSON.
+hide_table_of_contents: true
+---
+
+import softwareChange from '@site/data/software-change.protocol-graph.json';
+import incidentResponse from '@site/data/incident-response.protocol-graph.json';
+import bugfix from '@site/data/software-change-bugfix.protocol-graph.json';
+import investigation from '@site/data/investigation.protocol-graph.json';
+import commission from '@site/data/commission.domain-graph.json';
+
+Both graphs render from JSON a repository's Rust generator emits: `b10x-protocol-graph/1` from a
+compiled Canon protocol, `b10x-domain-graph/1` from a compiled ESS model. The layout is computed at
+build time, so the page ships finished SVG.
+
+## Protocol graph
+
+<ProtocolGraph data={softwareChange} />
+
+<ProtocolGraph data={incidentResponse} />
+
+<ProtocolGraph data={bugfix} />
+
+<ProtocolGraph data={investigation} />
+
+## Domain graph
+
+<DomainGraph data={commission} />

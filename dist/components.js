@@ -40,7 +40,10 @@ export function ContentCard({ title, description, eyebrow, meta, children, foote
     const style = accent ? { '--b10x-project-accent': accent } : undefined;
     return _jsxs("article", { className: "b10x-content-card", style: style, children: [(eyebrow || meta) && _jsxs("header", { children: [eyebrow && _jsx("span", { className: "b10x-eyebrow", children: eyebrow }), meta && _jsx("span", { children: meta })] }), _jsx(Heading, { children: titleUrl ? _jsx("a", { href: titleUrl, children: title }) : title }), description && _jsx("div", { className: "b10x-content-card__description", children: description }), children && _jsx("div", { className: "b10x-content-card__body", children: children }), (footer || actionUrl) && _jsxs("footer", { children: [footer, actionUrl && _jsxs("a", { className: "b10x-card-action", href: actionUrl, children: [actionLabel, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] })] });
 }
-export function StatusBadge({ maturity, children }) {
+const productStatusLabels = { shipped: 'Shipped', decided: 'Decided', planned: 'Planned' };
+export function StatusBadge({ maturity, status, children }) {
+    if (status)
+        return _jsx("span", { className: `b10x-status b10x-status--${status}`, children: children ?? productStatusLabels[status] });
     return _jsx("span", { className: `b10x-status b10x-status--${maturity}`, children: children ?? maturity });
 }
 export function BoundaryNotice({ title = 'Current boundary', children }) {

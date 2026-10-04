@@ -1,0 +1,8 @@
+{
+  "name": "b10x-product-site-example",
+  "private": true,
+  "scripts": {
+    "build": "docusaurus build",
+    "serve": "docusaurus serve"
+  }
+}

@@ -4,6 +4,7 @@ import CodeBlock from '@theme/CodeBlock';
 import Mermaid from '@theme/Mermaid';
 import {describeMarkdownFenceLanguage} from './code.js';
 import {deriveEcosystemNavigation, surfaceNavigation} from './navigation.js';
+import type {ProductStatus} from './product-data.js';
 import type {AdoptionAction, AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity, RegistrySurface} from './types.js';
 
 export type HeadingLevel = 1 | 2 | 3 | 4;
@@ -169,7 +170,15 @@ export function ContentCard({title, description, eyebrow, meta, children, footer
   </article>;
 }
 
-export function StatusBadge({maturity, children}: {maturity: Maturity; children?: ReactNode}): ReactNode {
+const productStatusLabels: Record<ProductStatus, string> = {shipped: 'Shipped', decided: 'Decided', planned: 'Planned'};
+
+export type StatusBadgeProps =
+  | {maturity: Maturity; status?: never; children?: ReactNode}
+  /** Product-page status: what exists today, what is decided, what is only planned. */
+  | {status: ProductStatus; maturity?: never; children?: ReactNode};
+
+export function StatusBadge({maturity, status, children}: StatusBadgeProps): ReactNode {
+  if (status) return <span className={`b10x-status b10x-status--${status}`}>{children ?? productStatusLabels[status]}</span>;
   return <span className={`b10x-status b10x-status--${maturity}`}>{children ?? maturity}</span>;
 }
 

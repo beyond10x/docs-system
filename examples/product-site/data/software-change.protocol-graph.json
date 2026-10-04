@@ -1,0 +1,305 @@
+{
+  "format": "b10x-protocol-graph/1",
+  "protocol": {
+    "id": "software.change",
+    "revision": 1,
+    "description": "Ship a change to a system: implement it, prove it on the current revision, release it, deploy it, and confirm it achieved what it was meant to.",
+    "source": "design draft software.change/1, checked with canon validate"
+  },
+  "nodes": [
+    {
+      "id": "action:repository.edit",
+      "kind": "action",
+      "name": "repository.edit",
+      "description": "Change the implementation on a branch.",
+      "effect": "write",
+      "capabilities": [
+        "repository.write"
+      ]
+    },
+    {
+      "id": "action:repository.inspect",
+      "kind": "action",
+      "name": "repository.inspect",
+      "description": "Read the repository.",
+      "effect": "read"
+    },
+    {
+      "id": "action:repository.merge",
+      "kind": "action",
+      "name": "repository.merge",
+      "description": "Merge the verified implementation. Needs authority; an agent's run usually stops here.",
+      "effect": "write",
+      "capabilities": [
+        "repository.merge"
+      ],
+      "predicate": {
+        "claim": {
+          "id": "implementation.verified"
+        }
+      }
+    },
+    {
+      "id": "action:tests.run",
+      "kind": "action",
+      "name": "tests.run",
+      "description": "Run the test suite with coverage against the implementation.",
+      "effect": "execute"
+    },
+    {
+      "id": "evidence:build_provenance",
+      "kind": "evidence",
+      "name": "build_provenance",
+      "description": "How the release was built and from what; reproducible or not_reproducible."
+    },
+    {
+      "id": "evidence:code_review",
+      "kind": "evidence",
+      "name": "code_review",
+      "description": "A review of the implementation by someone other than its author; approved or changes_requested."
+    },
+    {
+      "id": "evidence:coverage_report",
+      "kind": "evidence",
+      "name": "coverage_report",
+      "description": "Test coverage of the implementation compared with its base; not_degraded or degraded."
+    },
+    {
+      "id": "evidence:objective_observation",
+      "kind": "evidence",
+      "name": "objective_observation",
+      "description": "An observation of whether the intent was achieved; realized or not_realized."
+    },
+    {
+      "id": "evidence:operational_observation",
+      "kind": "evidence",
+      "name": "operational_observation",
+      "description": "A health reading of the deployment; healthy or degraded."
+    },
+    {
+      "id": "evidence:test_result",
+      "kind": "evidence",
+      "name": "test_result",
+      "description": "The outcome of the test suite run against the implementation; passed or failed."
+    },
+    {
+      "id": "claim:coverage.not_degraded",
+      "kind": "claim",
+      "name": "coverage.not_degraded",
+      "description": "Test coverage did not fall compared with the base.",
+      "predicate": {
+        "evidence": {
+          "kind": "coverage_report",
+          "result": "not_degraded"
+        }
+      }
+    },
+    {
+      "id": "claim:deployment.healthy",
+      "kind": "claim",
+      "name": "deployment.healthy",
+      "description": "The deployment is healthy.",
+      "predicate": {
+        "evidence": {
+          "kind": "operational_observation",
+          "result": "healthy"
+        }
+      }
+    },
+    {
+      "id": "claim:implementation.reviewed",
+      "kind": "claim",
+      "name": "implementation.reviewed",
+      "description": "Someone other than the author approved the implementation.",
+      "predicate": {
+        "evidence": {
+          "kind": "code_review",
+          "result": "approved"
+        }
+      }
+    },
+    {
+      "id": "claim:implementation.verified",
+      "kind": "claim",
+      "name": "implementation.verified",
+      "description": "Tested, reviewed and not reducing coverage. This is the merge gate.",
+      "predicate": {
+        "all": [
+          {
+            "claim": {
+              "id": "coverage.not_degraded"
+            }
+          },
+          {
+            "claim": {
+              "id": "implementation.reviewed"
+            }
+          },
+          {
+            "claim": {
+              "id": "tests.pass"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "claim:objective.realized",
+      "kind": "claim",
+      "name": "objective.realized",
+      "description": "The change achieved its intent.",
+      "predicate": {
+        "evidence": {
+          "kind": "objective_observation",
+          "result": "realized"
+        }
+      }
+    },
+    {
+      "id": "claim:release.proven",
+      "kind": "claim",
+      "name": "release.proven",
+      "description": "The release is built reproducibly from a verified implementation.",
+      "predicate": {
+        "all": [
+          {
+            "claim": {
+              "id": "implementation.verified"
+            }
+          },
+          {
+            "evidence": {
+              "kind": "build_provenance",
+              "result": "reproducible"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "claim:tests.pass",
+      "kind": "claim",
+      "name": "tests.pass",
+      "description": "The test suite passes on the implementation.",
+      "predicate": {
+        "evidence": {
+          "kind": "test_result",
+          "result": "passed"
+        }
+      }
+    },
+    {
+      "id": "outcome:accepted",
+      "kind": "outcome",
+      "name": "accepted",
+      "description": "Released, deployed, healthy and achieving its intent.",
+      "predicate": {
+        "all": [
+          {
+            "claim": {
+              "id": "deployment.healthy"
+            }
+          },
+          {
+            "claim": {
+              "id": "objective.realized"
+            }
+          },
+          {
+            "claim": {
+              "id": "release.proven"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "claim:implementation.verified",
+      "to": "action:repository.merge",
+      "kind": "gates"
+    },
+    {
+      "from": "action:tests.run",
+      "to": "evidence:coverage_report",
+      "kind": "produces"
+    },
+    {
+      "from": "action:tests.run",
+      "to": "evidence:test_result",
+      "kind": "produces"
+    },
+    {
+      "from": "evidence:coverage_report",
+      "to": "claim:coverage.not_degraded",
+      "kind": "establishes",
+      "qualifier": "not_degraded"
+    },
+    {
+      "from": "evidence:operational_observation",
+      "to": "claim:deployment.healthy",
+      "kind": "establishes",
+      "qualifier": "healthy"
+    },
+    {
+      "from": "evidence:code_review",
+      "to": "claim:implementation.reviewed",
+      "kind": "establishes",
+      "qualifier": "approved"
+    },
+    {
+      "from": "claim:coverage.not_degraded",
+      "to": "claim:implementation.verified",
+      "kind": "supports"
+    },
+    {
+      "from": "claim:implementation.reviewed",
+      "to": "claim:implementation.verified",
+      "kind": "supports"
+    },
+    {
+      "from": "claim:tests.pass",
+      "to": "claim:implementation.verified",
+      "kind": "supports"
+    },
+    {
+      "from": "evidence:objective_observation",
+      "to": "claim:objective.realized",
+      "kind": "establishes",
+      "qualifier": "realized"
+    },
+    {
+      "from": "claim:implementation.verified",
+      "to": "claim:release.proven",
+      "kind": "supports"
+    },
+    {
+      "from": "evidence:build_provenance",
+      "to": "claim:release.proven",
+      "kind": "establishes",
+      "qualifier": "reproducible"
+    },
+    {
+      "from": "evidence:test_result",
+      "to": "claim:tests.pass",
+      "kind": "establishes",
+      "qualifier": "passed"
+    },
+    {
+      "from": "claim:deployment.healthy",
+      "to": "outcome:accepted",
+      "kind": "requires"
+    },
+    {
+      "from": "claim:objective.realized",
+      "to": "outcome:accepted",
+      "kind": "requires"
+    },
+    {
+      "from": "claim:release.proven",
+      "to": "outcome:accepted",
+      "kind": "requires"
+    }
+  ]
+}

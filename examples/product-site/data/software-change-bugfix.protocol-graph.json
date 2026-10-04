@@ -1,0 +1,204 @@
+{
+  "format": "b10x-protocol-graph/1",
+  "protocol": {
+    "id": "software.change.bugfix",
+    "revision": 1,
+    "description": "software.change/1 with red-first ordering for a bugfix: a new test must fail before the implementation may change, then the suite must pass. Preview of the future `bugfix` profile; Canon has no profiles yet, so this is written as its own protocol.",
+    "source": "design draft software.change.bugfix/1, checked with canon validate"
+  },
+  "nodes": [
+    {
+      "id": "action:implementation.edit",
+      "kind": "action",
+      "name": "implementation.edit",
+      "description": "Change the implementation. Blocked until a failing test exists.",
+      "effect": "write",
+      "capabilities": [
+        "implementation.write"
+      ],
+      "predicate": {
+        "claim": {
+          "id": "regression.reproduced"
+        }
+      }
+    },
+    {
+      "id": "action:repository.inspect",
+      "kind": "action",
+      "name": "repository.inspect",
+      "description": "Read the repository.",
+      "effect": "read"
+    },
+    {
+      "id": "action:repository.merge",
+      "kind": "action",
+      "name": "repository.merge",
+      "description": "Merge the verified fix. Needs authority.",
+      "effect": "write",
+      "capabilities": [
+        "repository.merge"
+      ],
+      "predicate": {
+        "claim": {
+          "id": "implementation.verified"
+        }
+      }
+    },
+    {
+      "id": "action:tests.run",
+      "kind": "action",
+      "name": "tests.run",
+      "description": "Run the suite.",
+      "effect": "execute"
+    },
+    {
+      "id": "action:tests.write",
+      "kind": "action",
+      "name": "tests.write",
+      "description": "Add or change tests only. Always allowed.",
+      "effect": "write",
+      "capabilities": [
+        "tests.write"
+      ]
+    },
+    {
+      "id": "evidence:code_review",
+      "kind": "evidence",
+      "name": "code_review",
+      "description": "A review by someone other than the author; approved or changes_requested."
+    },
+    {
+      "id": "evidence:test_result",
+      "kind": "evidence",
+      "name": "test_result",
+      "description": "The outcome of the test suite run against the implementation; failed or passed."
+    },
+    {
+      "id": "claim:implementation.reviewed",
+      "kind": "claim",
+      "name": "implementation.reviewed",
+      "description": "Someone other than the author approved the fix.",
+      "predicate": {
+        "evidence": {
+          "kind": "code_review",
+          "result": "approved"
+        }
+      }
+    },
+    {
+      "id": "claim:implementation.verified",
+      "kind": "claim",
+      "name": "implementation.verified",
+      "description": "Red first, then green, then reviewed.",
+      "predicate": {
+        "all": [
+          {
+            "claim": {
+              "id": "implementation.reviewed"
+            }
+          },
+          {
+            "claim": {
+              "id": "regression.reproduced"
+            }
+          },
+          {
+            "claim": {
+              "id": "tests.pass"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "claim:regression.reproduced",
+      "kind": "claim",
+      "name": "regression.reproduced",
+      "description": "A new test reproduces the bug, so the suite is red before any fix.",
+      "predicate": {
+        "evidence": {
+          "kind": "test_result",
+          "result": "failed"
+        }
+      }
+    },
+    {
+      "id": "claim:tests.pass",
+      "kind": "claim",
+      "name": "tests.pass",
+      "description": "The suite is green after the fix.",
+      "predicate": {
+        "evidence": {
+          "kind": "test_result",
+          "result": "passed"
+        }
+      }
+    },
+    {
+      "id": "outcome:fixed",
+      "kind": "outcome",
+      "name": "fixed",
+      "description": "Reproduced, fixed, green and reviewed.",
+      "predicate": {
+        "claim": {
+          "id": "implementation.verified"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "claim:regression.reproduced",
+      "to": "action:implementation.edit",
+      "kind": "gates"
+    },
+    {
+      "from": "claim:implementation.verified",
+      "to": "action:repository.merge",
+      "kind": "gates"
+    },
+    {
+      "from": "action:tests.run",
+      "to": "evidence:test_result",
+      "kind": "produces"
+    },
+    {
+      "from": "evidence:code_review",
+      "to": "claim:implementation.reviewed",
+      "kind": "establishes",
+      "qualifier": "approved"
+    },
+    {
+      "from": "claim:implementation.reviewed",
+      "to": "claim:implementation.verified",
+      "kind": "supports"
+    },
+    {
+      "from": "claim:regression.reproduced",
+      "to": "claim:implementation.verified",
+      "kind": "supports"
+    },
+    {
+      "from": "claim:tests.pass",
+      "to": "claim:implementation.verified",
+      "kind": "supports"
+    },
+    {
+      "from": "evidence:test_result",
+      "to": "claim:regression.reproduced",
+      "kind": "establishes",
+      "qualifier": "failed"
+    },
+    {
+      "from": "evidence:test_result",
+      "to": "claim:tests.pass",
+      "kind": "establishes",
+      "qualifier": "passed"
+    },
+    {
+      "from": "claim:implementation.verified",
+      "to": "outcome:fixed",
+      "kind": "requires"
+    }
+  ]
+}

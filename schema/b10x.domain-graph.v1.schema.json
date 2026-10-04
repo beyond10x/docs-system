@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.domain-graph.v1.json",
+  "title": "b10x domain graph",
+  "description": "One ESS domain's entities, relations and lifecycles, emitted from the compiled ESS model for the DomainGraph renderer. Entities are ordered by fully qualified name.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "domain", "entities", "relations"],
+  "properties": {
+    "format": {"const": "b10x-domain-graph/1"},
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "display": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "system": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1}
+      }
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "identity", "fields"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "name": {"type": "string", "minLength": 1},
+          "summary": {"type": "string", "minLength": 1},
+          "identity": {"$ref": "#/$defs/field"},
+          "fields": {"type": "array", "items": {"$ref": "#/$defs/field"}},
+          "createdBy": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "lifecycle": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["initial", "states"],
+            "properties": {
+              "initial": {"type": "string", "minLength": 1},
+              "states": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+              "terminal": {"type": "array", "items": {"type": "string", "minLength": 1}},
+              "transitions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["name", "from", "to"],
+                  "properties": {
+                    "name": {"type": "string", "minLength": 1},
+                    "from": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                    "to": {"type": "string", "minLength": 1},
+                    "commands": {"type": "array", "items": {"type": "string", "minLength": 1}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to", "name", "kind", "cardinality"],
+        "properties": {
+          "from": {"type": "string", "minLength": 1},
+          "to": {"type": "string", "minLength": 1},
+          "name": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["owns", "references"]},
+          "cardinality": {"enum": ["one", "many"]},
+          "via": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type"],
+      "properties": {"name": {"type": "string", "minLength": 1}, "type": {"type": "string", "minLength": 1}}
+    }
+  }
+}

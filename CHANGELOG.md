@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Add the product-site layer: `withProductSite(config, options)` from
+  `@beyond10x/docs-system/product-site` adds a data-driven landing page (`b10x-product-landing/1`),
+  product tokens light and dark mapped onto Infima, matched Prism themes, and a global MDX
+  vocabulary: `Terminal`, `FeatureGrid`/`Feature`, `Flow`/`FlowStep`, `StatusStrip`,
+  `RelatedTools`, `ProtocolGraph`, `DomainGraph`, `SessionTimeline`, `StepBars`,
+  `CompositionGraph`, `StatTiles` and `SessionKpis`. Sites that do not opt in are unchanged.
+- Add spec-driven graphs on a dependency-free, synchronous layered layout
+  (`@beyond10x/docs-system/graph-layout`) so pages prerender finished SVG, and JSON Schemas for
+  `b10x-protocol-graph/1`, `b10x-domain-graph/1`, `b10x-terminal/1`, `b10x-product-landing/1` and the
+  provisional `session-composition-instance/0-dummy`.
+- `StatusBadge` also accepts `status` (`shipped`, `decided`, `planned`); `maturity` renders as before.
+
 - Add the additive `b10x-docs/v5` contract: a serialized sidebar of categories whose leaves are
   published document paths, a landing document, menu-withheld documents (`menuWithheld`) and
   declared built assets (`builtAssets`). Validation refuses a sidebar leaf, landing or withheld
