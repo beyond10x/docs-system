@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.case.v1.json",
+  "title": "b10x case card",
+  "description": "One case evaluated more than once, frame by frame, generated from real evaluator output. Claims carry truth values; outcomes and actions carry state words.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "case", "frames"],
+  "properties": {
+    "format": {"const": "b10x-case/1"},
+    "case": {"type": "string", "minLength": 1},
+    "protocol": {"type": "string", "minLength": 1},
+    "recordedWith": {"type": "string", "minLength": 1, "description": "Tool version and revision that produced the evaluations."},
+    "frames": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label"],
+        "properties": {
+          "label": {"type": "string", "minLength": 1},
+          "current": {"type": "boolean", "description": "At most one frame: the case as it stands now."},
+          "claims": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "value"],
+              "properties": {"name": {"type": "string", "minLength": 1}, "value": {"enum": ["true", "false", "unknown"]}}
+            }
+          },
+          "outcomes": {"$ref": "#/$defs/states"},
+          "actions": {"$ref": "#/$defs/states"},
+          "notes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "states": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "state"],
+        "properties": {"name": {"type": "string", "minLength": 1}, "state": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

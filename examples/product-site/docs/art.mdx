@@ -1,0 +1,44 @@
+---
+title: Hero art
+description: The art kinds a landing hero can draw from a product's own data, and the case card and code pair on a documentation page.
+source: Recorded from canon evaluate and ess generate on 2026-10-04
+source_url: https://github.com/beyond10x/docs-system
+---
+
+import staleRevision from '@site/data/stale-revision.case.json';
+import money from '@site/data/money.code-pair.json';
+import investigation from '@site/data/investigation.protocol-graph.json';
+
+# Hero art from spec data
+
+`product.art` in `product.json` picks one of five kinds. Each reads a generated file; none is
+drawn by hand. The [heroes page](/heroes) shows each kind at landing width with its KPI row.
+
+| Kind | Reads | Typical product |
+| --- | --- | --- |
+| `terminal` | `b10x-terminal/1` | a command-line tool with a recorded session |
+| `protocol-graph` | `b10x-protocol-graph/1` | a protocol language |
+| `domain-graph` | `b10x-domain-graph/1` | an ESS-specified product |
+| `case` | `b10x-case/1` | a case evaluated more than once |
+| `code-pair` | `b10x-code-pair/1` | a generator: source in, contract out |
+
+## Case card
+
+Two `canon evaluate` runs over the same evidence. Only the case moved, from r1 to r2. Claims are
+truth chips; outcome states are neutral words, because they are not truth values.
+
+<CaseCard data={staleRevision} caption="Evidence observed on r1 says nothing about r2. The claim falls back to UNKNOWN, not FALSE, and the outcome waits for new evidence." />
+
+## Code pair
+
+A specification excerpt and the OpenAPI excerpt generated from it. Side by side in a wide column,
+stacked in a narrow one.
+
+<CodePair data={money} />
+
+## The compact graph
+
+The `hero` variant scales to its column and drops the header, tooltip and text table; the full
+figure keeps them.
+
+<HeroArt art={{kind: 'protocol-graph', data: investigation, caption: 'investigation/1, compact.'}} />

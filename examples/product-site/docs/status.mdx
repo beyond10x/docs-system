@@ -1,0 +1,20 @@
+---
+title: Where this stands
+description: The status page and the landing page's status strip, from one b10x-status/1 file.
+status: shipped
+lede: Every capability with its status and detail. The landing page's status strip reads the same file, so the two cannot disagree.
+source: data/status.json, a b10x-status/1 document
+---
+
+import status from '@site/data/status.json';
+
+The table groups items by their `area`. Shipped means a command or library call that runs today,
+decided means recorded in an architecture decision and not built, planned means on the roadmap only.
+
+<StatusTable data={status} />
+
+## Only what is not built yet
+
+`only` filters by status; the bar and the counts follow the filter.
+
+<StatusTable data={status} only={['decided', 'planned']} label="Decided and planned" />

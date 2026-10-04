@@ -1,4 +1,4 @@
-import {useId, useMemo, useState} from 'react';
+import {useEffect, useId, useMemo, useRef, useState} from 'react';
 import type {CSSProperties, KeyboardEvent, ReactNode} from 'react';
 import {
   DOMAIN_NODE_HEIGHT,
@@ -26,17 +26,57 @@ import type {
 /** Text never shrinks below this share of its design size; wider graphs scroll instead. */
 const MINIMUM_SCALE = 0.78;
 
+/**
+ * `default` is the documentation figure. `hero` is the compact landing-page art: scaled to fit its
+ * column, no header, tooltip or text table (the full figure and its table live further down the
+ * page), and edges that draw once when motion is allowed.
+ */
+export type GraphVariant = 'default' | 'hero';
+
 export interface ProtocolGraphProps {
   /** A `b10x-protocol-graph/1` document, usually imported from the repository's generated JSON. */
   data: unknown;
   title?: string;
   description?: ReactNode;
   caption?: ReactNode;
+  variant?: GraphVariant;
 }
 
 const KIND_ORDER: readonly ProtocolNodeKind[] = ['action', 'evidence', 'claim', 'outcome', 'obligation'];
 
-export function ProtocolGraph({data, title, description, caption}: ProtocolGraphProps): ReactNode {
+/**
+ * A graph wider than its frame scrolls at no less than MINIMUM_SCALE. When it does, a toggle offers
+ * "Fit to width"; the measurement runs only in the browser, so the server render has no toggle.
+ */
+function useFit(width: number): {fit: boolean; overflowing: boolean; toggle(): void; viewport: {current: HTMLDivElement | null}; style: CSSProperties} {
+  const [fit, setFit] = useState(false);
+  const [overflowing, setOverflowing] = useState(false);
+  const viewport = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element || typeof window === 'undefined') return;
+    const measure = (): void => setOverflowing(width * MINIMUM_SCALE > element.clientWidth + 1);
+    measure();
+    if (!('ResizeObserver' in window)) return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [width]);
+  return {
+    fit,
+    overflowing,
+    toggle: () => setFit((value) => !value),
+    viewport,
+    style: {minWidth: fit ? '0px' : `${Math.round(width * MINIMUM_SCALE)}px`, maxWidth: `${Math.ceil(width)}px`} as CSSProperties,
+  };
+}
+
+function FitToggle({fit, overflowing, toggle}: {fit: boolean; overflowing: boolean; toggle(): void}): ReactNode {
+  if (!overflowing && !fit) return null;
+  return <button type="button" className="b10x-graph__fit" aria-pressed={fit} onClick={toggle}>{fit ? 'Actual size' : 'Fit to width'}</button>;
+}
+
+export function ProtocolGraph({data, title, description, caption, variant = 'default'}: ProtocolGraphProps): ReactNode {
   const prepared = useMemo(() => {
     try {
       const document = parseProtocolGraph(data);
@@ -46,11 +86,13 @@ export function ProtocolGraph({data, title, description, caption}: ProtocolGraph
     }
   }, [data]);
   if ('error' in prepared) return <GraphError kind="protocol graph" message={prepared.error!} />;
-  return <ProtocolGraphView document={prepared.document} layout={prepared.layout} title={title} description={description} caption={caption} />;
+  return <ProtocolGraphView document={prepared.document} layout={prepared.layout} title={title} description={description} caption={caption} variant={variant} />;
 }
 
-function ProtocolGraphView({document, layout, title, description, caption}: {document: ProtocolGraphDocument; layout: ProtocolGraphLayout; title?: string; description?: ReactNode; caption?: ReactNode}): ReactNode {
+function ProtocolGraphView({document, layout, title, description, caption, variant}: {document: ProtocolGraphDocument; layout: ProtocolGraphLayout; title?: string; description?: ReactNode; caption?: ReactNode; variant: GraphVariant}): ReactNode {
   const base = `b10x-pg-${useId().replaceAll(':', '')}`;
+  const hero = variant === 'hero';
+  const sizing = useFit(layout.width);
   const [hovered, setHovered] = useState<string | null>(null);
   const [pinned, setPinned] = useState<string | null>(null);
   const current = hovered ?? pinned;
@@ -63,22 +105,26 @@ function ProtocolGraphView({document, layout, title, description, caption}: {doc
   const hasSupports = document.edges.some((edge) => edge.kind === 'supports');
   const onKeyDown = (event: KeyboardEvent): void => { if (event.key === 'Escape') { setPinned(null); setHovered(null); } };
 
-  return <figure className="b10x-graph b10x-protocol-graph" aria-labelledby={`${base}-title`} onKeyDown={onKeyDown}>
-    <header className="b10x-graph__header">
-      <div className="b10x-graph__heading">
-        <p className="b10x-graph__kicker">Protocol · revision {document.protocol.revision}</p>
-        <strong id={`${base}-title`} className="b10x-graph__title">{heading}</strong>
-        {(description ?? document.protocol.description) && <p className="b10x-graph__description" id={`${base}-description`}>{description ?? document.protocol.description}</p>}
-      </div>
-      <ul className="b10x-graph__legend" aria-label="Legend">
-        {counts.map(({kind, count}) => <li key={kind}><span className={`b10x-graph__swatch b10x-graph__swatch--${kind}`} aria-hidden="true" />{PROTOCOL_KIND_LABELS[kind].plural}<span className="b10x-graph__count">{count}</span></li>)}
-        {hasSupports && <li><svg className="b10x-graph__key" viewBox="0 0 22 12" aria-hidden="true"><path d="M2,2 C14,2 14,10 2,10" /></svg>Claim supports claim</li>}
-        {hasGates && <li><Glyph kind="lock" legend />Precondition, traced on hover</li>}
-        {document.nodes.some((node) => node.capabilities?.length) && <li><Glyph kind="key" legend />Needs authority</li>}
-      </ul>
-    </header>
-    <div className="b10x-graph__viewport">
-      <div className="b10x-graph__canvas" style={{minWidth: `${Math.round(layout.width * MINIMUM_SCALE)}px`, maxWidth: `${Math.ceil(layout.width)}px`} as CSSProperties}>
+  const legend = <ul className="b10x-graph__legend" aria-label="Legend">
+    {counts.map(({kind, count}) => <li key={kind}><span className={`b10x-graph__swatch b10x-graph__swatch--${kind}`} aria-hidden="true" />{PROTOCOL_KIND_LABELS[kind].plural}<span className="b10x-graph__count">{count}</span></li>)}
+    {!hero && hasSupports && <li><svg className="b10x-graph__key" viewBox="0 0 22 12" aria-hidden="true"><path d="M2,2 C14,2 14,10 2,10" /></svg>Claim supports claim</li>}
+    {!hero && hasGates && <li><Glyph kind="lock" legend />Precondition, traced on hover</li>}
+    {!hero && document.nodes.some((node) => node.capabilities?.length) && <li><Glyph kind="key" legend />Needs authority</li>}
+  </ul>;
+
+  return <figure className={classes('b10x-graph', 'b10x-protocol-graph', hero && 'b10x-graph--hero')} aria-labelledby={`${base}-title`} onKeyDown={onKeyDown}>
+    {hero
+      ? <p className="b10x-graph__kicker b10x-graph__hero-title"><span id={`${base}-title`}>{heading}</span> · protocol graph</p>
+      : <header className="b10x-graph__header">
+        <div className="b10x-graph__heading">
+          <p className="b10x-graph__kicker">Protocol · revision {document.protocol.revision}</p>
+          <strong id={`${base}-title`} className="b10x-graph__title">{heading}</strong>
+          {(description ?? document.protocol.description) && <p className="b10x-graph__description" id={`${base}-description`}>{description ?? document.protocol.description}</p>}
+        </div>
+        {legend}
+      </header>}
+    <div className="b10x-graph__viewport" ref={sizing.viewport}>
+      <div className="b10x-graph__canvas" style={hero ? {maxWidth: `${Math.ceil(layout.width)}px`} : sizing.style}>
         <svg viewBox={`-2 -2 ${f(layout.width + 4)} ${f(layout.height + 4)}`} className="b10x-graph__svg" role="group" aria-labelledby={`${base}-title`} aria-describedby={`${base}-hint`}>
           <defs>
             <marker id={`${base}-arrow`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" className="b10x-graph__arrow" /></marker>
@@ -96,7 +142,7 @@ function ProtocolGraphView({document, layout, title, description, caption}: {doc
               if (edge.kind === 'gates' && !touchesCurrent) return null;
               const lit = lineage ? lineage.has(edge.from) && lineage.has(edge.to) && (edge.kind !== 'gates' || touchesCurrent) : false;
               const dim = lineage !== null && !lit;
-              return <path key={index} d={path} className={classes('b10x-graph__edge', `b10x-graph__edge--${edge.kind}`, lit && 'is-lit', dim && 'is-dimmed')} markerEnd={`url(#${base}-${lit ? 'arrow-lit' : 'arrow'})`} />;
+              return <path key={index} d={path} pathLength={hero && edge.kind !== 'gates' ? 1 : undefined} className={classes('b10x-graph__edge', `b10x-graph__edge--${edge.kind}`, lit && 'is-lit', dim && 'is-dimmed')} markerEnd={`url(#${base}-${lit ? 'arrow-lit' : 'arrow'})`} />;
             })}
           </g>
           {lineage && <g className="b10x-graph__qualifiers" aria-hidden="true">
@@ -135,13 +181,15 @@ function ProtocolGraphView({document, layout, title, description, caption}: {doc
             })}
           </g>
         </svg>
-        {placed && <ProtocolTooltip id={`${base}-tooltip`} placed={placed} layout={layout} document={document} byId={byId} />}
+        {placed && !hero && <ProtocolTooltip id={`${base}-tooltip`} placed={placed} layout={layout} document={document} byId={byId} />}
       </div>
     </div>
-    <p className="b10x-graph__hint" id={`${base}-hint`} data-pagefind-ignore>Hover or focus a node to trace what it rests on and what rests on it. Press Enter to pin it, Escape to clear.</p>
+    {hero
+      ? <>{legend}<p className="b10x-sr-only" id={`${base}-hint`}>Hover or focus a node to trace what it rests on.</p></>
+      : <div className="b10x-graph__tools"><p className="b10x-graph__hint" id={`${base}-hint`} data-pagefind-ignore>Hover or focus a node to trace what it rests on and what rests on it. Press Enter to pin it, Escape to clear.</p><FitToggle {...sizing} /></div>}
     {caption && <figcaption className="b10x-graph__caption">{caption}</figcaption>}
-    <ProtocolTable document={document} />
-    {document.protocol.source && <p className="b10x-graph__source">Source: {document.protocol.source}</p>}
+    {!hero && <ProtocolTable document={document} />}
+    {!hero && document.protocol.source && <p className="b10x-graph__source">Source: {document.protocol.source}</p>}
   </figure>;
 }
 
@@ -231,9 +279,10 @@ export interface DomainGraphProps {
   title?: string;
   description?: ReactNode;
   caption?: ReactNode;
+  variant?: GraphVariant;
 }
 
-export function DomainGraph({data, title, description, caption}: DomainGraphProps): ReactNode {
+export function DomainGraph({data, title, description, caption, variant = 'default'}: DomainGraphProps): ReactNode {
   const prepared = useMemo(() => {
     try {
       const document = parseDomainGraph(data);
@@ -243,11 +292,13 @@ export function DomainGraph({data, title, description, caption}: DomainGraphProp
     }
   }, [data]);
   if ('error' in prepared) return <GraphError kind="domain graph" message={prepared.error!} />;
-  return <DomainGraphView document={prepared.document} layout={prepared.layout} title={title} description={description} caption={caption} />;
+  return <DomainGraphView document={prepared.document} layout={prepared.layout} title={title} description={description} caption={caption} variant={variant} />;
 }
 
-function DomainGraphView({document, layout, title, description, caption}: {document: DomainGraphDocument; layout: DomainGraphLayout; title?: string; description?: ReactNode; caption?: ReactNode}): ReactNode {
+function DomainGraphView({document, layout, title, description, caption, variant}: {document: DomainGraphDocument; layout: DomainGraphLayout; title?: string; description?: ReactNode; caption?: ReactNode; variant: GraphVariant}): ReactNode {
   const base = `b10x-dg-${useId().replaceAll(':', '')}`;
+  const hero = variant === 'hero';
+  const sizing = useFit(layout.width);
   const [hovered, setHovered] = useState<string | null>(null);
   const [pinned, setPinned] = useState<string | null>(null);
   const current = hovered ?? pinned;
@@ -263,24 +314,28 @@ function DomainGraphView({document, layout, title, description, caption}: {docum
   const onKeyDown = (event: KeyboardEvent): void => { if (event.key === 'Escape') { setPinned(null); setHovered(null); } };
   const heading = title ?? document.domain.display ?? document.domain.id;
 
-  return <figure className="b10x-graph b10x-domain-graph" aria-labelledby={`${base}-title`} onKeyDown={onKeyDown}>
-    <header className="b10x-graph__header">
-      <div className="b10x-graph__heading">
-        <p className="b10x-graph__kicker">ESS domain · <code>{document.domain.id}</code></p>
-        <strong id={`${base}-title`} className="b10x-graph__title">{heading}</strong>
-        {(description ?? document.domain.summary) && <p className="b10x-graph__description">{description ?? document.domain.summary}</p>}
-      </div>
-      <ul className="b10x-graph__legend" aria-label="Legend">
-        <li><span className="b10x-graph__swatch b10x-graph__swatch--entity" aria-hidden="true" />Entities<span className="b10x-graph__count">{document.entities.length}</span></li>
-        {kinds.has('owns') && <li><svg className="b10x-graph__key" viewBox="0 0 26 12" aria-hidden="true"><path d="M1,6 L5,3 L9,6 L5,9 z" className="b10x-graph__key-fill" /><path d="M9,6 H25" /></svg>Owns</li>}
-        {kinds.has('references') && <li><svg className="b10x-graph__key" viewBox="0 0 26 12" aria-hidden="true"><circle cx={4} cy={6} r={2.6} /><path d="M7,6 H25" /></svg>References</li>}
-        <li><svg className="b10x-graph__key" viewBox="0 0 26 12" aria-hidden="true"><path d="M1,6 H25 M19,1 V11" /></svg>One</li>
-        <li><svg className="b10x-graph__key" viewBox="0 0 26 12" aria-hidden="true"><path d="M1,6 H25 M17,6 L25,1 M17,6 L25,11" /></svg>Many</li>
-        <li><span className="b10x-graph__state-key" aria-hidden="true">●</span>Initial state</li>
-      </ul>
-    </header>
-    <div className="b10x-graph__viewport">
-      <div className="b10x-graph__canvas" style={{minWidth: `${Math.round(layout.width * MINIMUM_SCALE)}px`, maxWidth: `${Math.ceil(layout.width)}px`}}>
+  const legend = <ul className="b10x-graph__legend" aria-label="Legend">
+    <li><span className="b10x-graph__swatch b10x-graph__swatch--entity" aria-hidden="true" />Entities<span className="b10x-graph__count">{document.entities.length}</span></li>
+    {kinds.has('owns') && <li><svg className="b10x-graph__key" viewBox="0 0 26 12" aria-hidden="true"><path d="M1,6 L5,3 L9,6 L5,9 z" className="b10x-graph__key-fill" /><path d="M9,6 H25" /></svg>Owns</li>}
+    {kinds.has('references') && <li><svg className="b10x-graph__key" viewBox="0 0 26 12" aria-hidden="true"><circle cx={4} cy={6} r={2.6} /><path d="M7,6 H25" /></svg>References</li>}
+    {!hero && <li><svg className="b10x-graph__key" viewBox="0 0 26 12" aria-hidden="true"><path d="M1,6 H25 M19,1 V11" /></svg>One</li>}
+    {!hero && <li><svg className="b10x-graph__key" viewBox="0 0 26 12" aria-hidden="true"><path d="M1,6 H25 M17,6 L25,1 M17,6 L25,11" /></svg>Many</li>}
+    {!hero && <li><span className="b10x-graph__state-key" aria-hidden="true">●</span>Initial state</li>}
+  </ul>;
+
+  return <figure className={classes('b10x-graph', 'b10x-domain-graph', hero && 'b10x-graph--hero')} aria-labelledby={`${base}-title`} onKeyDown={onKeyDown}>
+    {hero
+      ? <p className="b10x-graph__kicker b10x-graph__hero-title"><code id={`${base}-title`}>{document.domain.id}</code> · ESS domain</p>
+      : <header className="b10x-graph__header">
+        <div className="b10x-graph__heading">
+          <p className="b10x-graph__kicker">ESS domain · <code>{document.domain.id}</code></p>
+          <strong id={`${base}-title`} className="b10x-graph__title">{heading}</strong>
+          {(description ?? document.domain.summary) && <p className="b10x-graph__description">{description ?? document.domain.summary}</p>}
+        </div>
+        {legend}
+      </header>}
+    <div className="b10x-graph__viewport" ref={sizing.viewport}>
+      <div className="b10x-graph__canvas" style={hero ? {maxWidth: `${Math.ceil(layout.width)}px`} : sizing.style}>
         <svg viewBox={`-4 -4 ${f(layout.width + 8)} ${f(layout.height + 8)}`} className="b10x-graph__svg" role="group" aria-labelledby={`${base}-title`} aria-describedby={`${base}-hint`}>
           <defs>
             <marker id={`${base}-owns`} viewBox="0 0 12 10" refX="1" refY="5" markerWidth="12" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M1,5 L6,1.5 L11,5 L6,8.5 z" className="b10x-graph__marker-fill" /></marker>
@@ -291,7 +346,7 @@ function DomainGraphView({document, layout, title, description, caption}: {docum
           <g className="b10x-graph__edges" aria-hidden="true">
             {layout.edges.map(({relation, index, path}) => {
               const lit = neighbours !== null && (relation.from === current || relation.to === current);
-              return <path key={index} d={path} className={classes('b10x-graph__edge', `b10x-graph__edge--${relation.kind}`, lit && 'is-lit', neighbours !== null && !lit && 'is-dimmed')} markerStart={`url(#${base}-${relation.kind})`} markerEnd={`url(#${base}-${relation.cardinality})`} />;
+              return <path key={index} d={path} pathLength={hero ? 1 : undefined} className={classes('b10x-graph__edge', `b10x-graph__edge--${relation.kind}`, lit && 'is-lit', neighbours !== null && !lit && 'is-dimmed')} markerStart={`url(#${base}-${relation.kind})`} markerEnd={`url(#${base}-${relation.cardinality})`} />;
             })}
           </g>
           <g className="b10x-graph__relation-labels" aria-hidden="true">
@@ -330,17 +385,19 @@ function DomainGraphView({document, layout, title, description, caption}: {docum
             })}
           </g>
         </svg>
-        {placed && <DomainTooltip id={`${base}-tooltip`} placed={placed} layout={layout} document={document} />}
+        {placed && !hero && <DomainTooltip id={`${base}-tooltip`} placed={placed} layout={layout} document={document} />}
       </div>
     </div>
-    <p className="b10x-graph__hint" id={`${base}-hint`} data-pagefind-ignore>Hover or focus an entity to see its fields, lifecycle and relations. Press Enter to pin it, Escape to clear.</p>
-    {lifecycles.length > 0 && <section className="b10x-lifecycles" aria-label="Lifecycles">
+    {hero
+      ? <>{legend}<p className="b10x-sr-only" id={`${base}-hint`}>Hover or focus an entity to see what it relates to.</p></>
+      : <div className="b10x-graph__tools"><p className="b10x-graph__hint" id={`${base}-hint`} data-pagefind-ignore>Hover or focus an entity to see its fields, lifecycle and relations. Press Enter to pin it, Escape to clear.</p><FitToggle {...sizing} /></div>}
+    {!hero && lifecycles.length > 0 && <section className="b10x-lifecycles" aria-label="Lifecycles">
       <p className="b10x-graph__kicker">Lifecycles with transitions</p>
       <div>{lifecycles.map((entity) => <Lifecycle key={entity.id} entity={entity} />)}</div>
     </section>}
     {caption && <figcaption className="b10x-graph__caption">{caption}</figcaption>}
-    <DomainTable document={document} />
-    {document.domain.source && <p className="b10x-graph__source">Source: {document.domain.source}</p>}
+    {!hero && <DomainTable document={document} />}
+    {!hero && document.domain.source && <p className="b10x-graph__source">Source: {document.domain.source}</p>}
   </figure>;
 }
 

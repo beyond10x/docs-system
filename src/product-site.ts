@@ -7,14 +7,18 @@
  * export default withProductSite(config, {landing: './product.json', product: 'canon'});
  * ```
  */
+import {execFileSync} from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import YAML from 'yaml';
 import {PRISM_ADDITIONAL_LANGUAGES} from './code.js';
+import {isFamilyRelatedTool, parseFamilyRelatedTool} from './family.js';
+import type {DocsSystemBuild, ProductSiteGlobalData} from './family.js';
 import {parseDomainGraph, parseProtocolGraph} from './product-graphs.js';
-import {PRODUCT_LANDING_FORMAT, parseTerminalSession} from './product-data.js';
+import {ART_KINDS, landingKpis, PRODUCT_LANDING_FORMAT, parseCaseDocument, parseCodePairDocument, parseStatusDocument, parseStatusItems, parseTerminalSession} from './product-data.js';
 import type {ProductLandingData} from './product-data.js';
+import {renderRedirectHtml} from './redirects.js';
 import {productPrismDarkTheme, productPrismTheme} from './prism-themes.js';
 import {rawAdmonitionHtmlProblems} from './admonition-guard.js';
 import {isProductId, PRODUCT_SIGNATURES, productSignatureCss} from './product-palette.js';
@@ -37,6 +41,11 @@ export interface ProductSiteOptions {
   fonts?: boolean;
   /** Fail the build when a raw `:::kind Title` line reaches a page. Default true. */
   admonitionGuard?: boolean;
+  /**
+   * With `trailingSlash: false`, write a redirect at `x/index.html` for every `x.html`, so `/docs/x/`
+   * reaches the page instead of a 404. Default true.
+   */
+  trailingSlashRedirects?: boolean;
 }
 
 /** Self-hosted font files, served from `styles/static` under `<baseUrl>b10x-fonts/`. */
@@ -58,10 +67,11 @@ export function fontHeadTags(baseUrl: string): HeadTag[] {
 
 interface HeadTag {tagName: string; innerHTML?: string; attributes?: Record<string, string>}
 
-interface SiteContext {siteDir: string; baseUrl: string; siteConfig?: {title?: string}}
+interface SiteContext {siteDir: string; baseUrl: string; siteConfig?: {title?: string; url?: string; trailingSlash?: boolean}}
 interface PluginActions {
   createData(name: string, content: string): Promise<string>;
   addRoute(route: {path: string; component: string; exact?: boolean; modules?: Record<string, string>}): void;
+  setGlobalData?(data: unknown): void;
 }
 
 export interface ProductSitePlugin {
@@ -94,6 +104,8 @@ export default function productSitePlugin(context: SiteContext, options: Product
       return landing;
     },
     async contentLoaded({content, actions}) {
+      const global: ProductSiteGlobalData = {...(options.product ? {product: options.product} : {}), build: await docsSystemBuild(context.siteDir)};
+      actions.setGlobalData?.(global);
       if (!content) return;
       const data = await actions.createData('b10x-product-landing.json', JSON.stringify(content));
       actions.addRoute({path: joinRoute(context.baseUrl, options.landingPath ?? '/'), component: '@theme/ProductLandingPage', exact: true, modules: {landing: data}});
@@ -104,12 +116,16 @@ export default function productSitePlugin(context: SiteContext, options: Product
       ...(options.product ? [{tagName: 'style', innerHTML: productSignatureCss(options.product)}] : []),
     ]}),
     async postBuild({outDir}) {
-      if (options.admonitionGuard === false) return;
-      const found: string[] = [];
-      for (const file of await htmlFiles(outDir)) {
-        for (const problem of rawAdmonitionHtmlProblems(await fs.readFile(file, 'utf8'))) found.push(`  ${path.relative(outDir, file)}:${problem.line}: ${problem.text}`);
+      if (options.admonitionGuard !== false) {
+        const found: string[] = [];
+        for (const file of await htmlFiles(outDir)) {
+          for (const problem of rawAdmonitionHtmlProblems(await fs.readFile(file, 'utf8'))) found.push(`  ${path.relative(outDir, file)}:${problem.line}: ${problem.text}`);
+        }
+        if (found.length) throw new Error(`raw admonition markers reached the built pages; write titles in brackets (:::caution[Planned]):\n${found.join('\n')}`);
       }
-      if (found.length) throw new Error(`raw admonition markers reached the built pages; write titles in brackets (:::caution[Planned]):\n${found.join('\n')}`);
+      if (options.trailingSlashRedirects !== false && context.siteConfig?.trailingSlash === false) {
+        await writeTrailingSlashRedirects(outDir, context.baseUrl, context.siteConfig.url ?? 'http://localhost');
+      }
     },
   };
 }
@@ -127,12 +143,101 @@ export async function readLanding(file: string, watched?: Set<string>): Promise<
     return parse(await fs.readFile(target, 'utf8'), target);
   };
   if (landing.product.terminal !== undefined) landing.product.terminal = parseTerminalSession(await load(landing.product.terminal));
-  for (const section of landing.sections ?? []) {
+  const art = landing.product.art;
+  if (art !== undefined) {
+    if (!art || typeof art !== 'object' || !ART_KINDS.includes(art.kind)) throw new Error(`${file}: product.art.kind must be one of ${ART_KINDS.join(', ')}`);
+    if (art.kind === 'terminal') art.session = parseTerminalSession(await load(art.session));
+    else if (art.kind === 'protocol-graph') art.data = parseProtocolGraph(await load(art.data));
+    else if (art.kind === 'domain-graph') art.data = parseDomainGraph(await load(art.data));
+    else if (art.kind === 'case') art.data = parseCaseDocument(await load(art.data));
+    else art.data = parseCodePairDocument(await load(art.data));
+  }
+  for (const [index, section] of (landing.sections ?? []).entries()) {
     if (section.kind === 'terminal') section.session = parseTerminalSession(await load(section.session));
     if (section.kind === 'protocol-graph') section.data = parseProtocolGraph(await load(section.data));
     if (section.kind === 'domain-graph') section.data = parseDomainGraph(await load(section.data));
+    if (section.kind === 'status') {
+      if (typeof section.items === 'string') {
+        const status = parseStatusDocument(await load(section.items));
+        section.items = status.items;
+        if (status.asOf) section.asOf = status.asOf;
+        if (status.source) section.source = status.source;
+      } else parseStatusItems(section.items, `${file}: sections[${index}].items`);
+    }
+    if (section.kind === 'related') {
+      section.tools.forEach((tool, toolIndex) => {
+        if (isFamilyRelatedTool(tool)) parseFamilyRelatedTool(tool as unknown as Record<string, unknown>, `${file}: sections[${index}].tools[${toolIndex}]`);
+      });
+    }
+  }
+  try {
+    landingKpis(landing);
+  } catch (error) {
+    throw new Error(`${file}: ${error instanceof Error ? error.message : String(error)}`);
   }
   return landing;
+}
+
+/**
+ * The docs-system revision this site is built with: `B10X_DOCS_SYSTEM_REVISION`, else the commit
+ * the site's lockfile pins, else this package's own Git checkout, else its version.
+ */
+export async function docsSystemBuild(siteDir: string): Promise<DocsSystemBuild> {
+  const env = process.env.B10X_DOCS_SYSTEM_REVISION;
+  if (env && /^[0-9a-f]{7,40}$/.test(env)) return {revision: env, kind: 'commit'};
+  for (let directory = path.resolve(siteDir); ; directory = path.dirname(directory)) {
+    try {
+      const lock = JSON.parse(await fs.readFile(path.join(directory, 'package-lock.json'), 'utf8')) as {packages?: Record<string, {resolved?: string}>};
+      const resolved = lock.packages?.['node_modules/@beyond10x/docs-system']?.resolved;
+      const commit = resolved && /#([0-9a-f]{40})$/.exec(resolved)?.[1];
+      if (commit) return {revision: commit, kind: 'commit'};
+    } catch {
+      // No lockfile here, or not one that pins docs-system.
+    }
+    if (path.dirname(directory) === directory) break;
+  }
+  const packageRoot = fileURLToPath(new URL('..', import.meta.url));
+  try {
+    const git = (args: string[]): string => execFileSync('git', ['-C', packageRoot, ...args], {encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore']}).trim();
+    // Only this package's own checkout counts; an installed copy sits inside the site's repository.
+    if (await fs.realpath(git(['rev-parse', '--show-toplevel'])) === await fs.realpath(packageRoot)) {
+      const revision = git(['rev-parse', 'HEAD']);
+      if (/^[0-9a-f]{40}$/.test(revision)) return {revision, kind: 'commit', ...(git(['status', '--porcelain', '--untracked-files=no']) ? {dirty: true} : {})};
+    }
+  } catch {
+    // No Git, or not a checkout.
+  }
+  const manifest = JSON.parse(await fs.readFile(path.join(packageRoot, 'package.json'), 'utf8')) as {version: string};
+  return {revision: manifest.version, kind: 'version'};
+}
+
+/**
+ * With `trailingSlash: false` Docusaurus writes `docs/x.html`, and static hosts answer `docs/x/` with
+ * a 404. Write a redirect at `docs/x/index.html` for every page that has none, keeping query and hash.
+ */
+export async function writeTrailingSlashRedirects(outDir: string, baseUrl: string, origin: string): Promise<string[]> {
+  const written: string[] = [];
+  const base = `/${baseUrl.replace(/^\/+|\/+$/g, '')}/`.replace(/^\/\/$/, '/');
+  for (const file of await htmlFiles(outDir)) {
+    const relative = path.relative(outDir, file).split(path.sep).join('/');
+    if (relative === 'index.html' || relative === '404.html' || relative.endsWith('/index.html')) continue;
+    const route = relative.slice(0, -'.html'.length);
+    const target = path.join(outDir, ...route.split('/'), 'index.html');
+    if (await exists(target)) continue;
+    await fs.mkdir(path.dirname(target), {recursive: true});
+    await fs.writeFile(target, renderRedirectHtml(origin, {type: 'html', from: `${base}${route}/`, to: `${base}${route}`}), 'utf8');
+    written.push(`${route}/index.html`);
+  }
+  return written;
+}
+
+async function exists(file: string): Promise<boolean> {
+  try {
+    await fs.access(file);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function htmlFiles(directory: string): Promise<string[]> {
