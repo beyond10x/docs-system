@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import useBrokenLinks from '@docusaurus/useBrokenLinks';
 import CodeBlock from '@theme/CodeBlock';
 import {DomainGraph, ProtocolGraph} from './charts.js';
-import {StatusBadge, Truth} from './components.js';
+import {StatusBadge, StatusGlyph, Truth} from './components.js';
 import type {ProtocolKindName} from './components.js';
 import {buildHref, buildLabel, FAMILY, familyMembers, isFamilyRelatedTool, relationPhrase} from './family.js';
 import type {DocsSystemBuild} from './family.js';
@@ -502,13 +502,11 @@ export function ProductHero({eyebrow, promise, lede, actions = [], meta, aside, 
   </section>;
 }
 
-const STATUS_GLYPH: Record<ProductStatus, string> = {shipped: '●', decided: '◐', planned: '○'};
-
 /** Numbered KPI tiles. Values are counted from data (see `landingKpis`), never typed. */
 export function KpiRow({items, label = 'Key figures'}: {items: readonly ResolvedKpi[]; label?: string}): ReactNode {
   return <dl className="b10x-kpis" aria-label={label} style={{'--b10x-kpi-count': items.length} as CSSProperties}>
     {items.map((item, index) => <div key={`${item.count}-${index}`} className={`b10x-kpi b10x-kpi--${item.tone}`}>
-      <dt className="b10x-kpi__label"><span className="b10x-kpi__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>{item.tone !== 'product' && <span className="b10x-kpi__glyph" aria-hidden="true">{STATUS_GLYPH[item.tone]}</span>}{item.label}</dt>
+      <dt className="b10x-kpi__label"><span className="b10x-kpi__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>{item.tone !== 'product' && <StatusGlyph status={item.tone} className="b10x-kpi__glyph" />}{item.label}</dt>
       <dd className="b10x-kpi__value">{item.value}</dd>
     </div>)}
   </dl>;

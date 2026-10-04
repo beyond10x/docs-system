@@ -13,7 +13,7 @@ export interface DocHeaderFrontMatter {
   source?: string;
   /** Link for the source line. */
   source_url?: string;
-  /** Replaces the sidebar category in the kicker. */
+  /** Replaces the whole kicker (category and "n of m"). */
   kicker?: string;
 }
 
@@ -76,9 +76,12 @@ export function sidebarPosition(items: readonly SidebarItemLike[] | undefined, p
   return visit(items, undefined);
 }
 
-/** "Concepts · 2 of 4", or "2 of 6" at the top level. */
+/**
+ * "Concepts · 2 of 4", or "2 of 6" at the top level. A front-matter `kicker` is the whole kicker,
+ * and a category with one page drops the "1 of 1".
+ */
 export function docKicker(position: SidebarPosition | undefined, override?: string): string | undefined {
-  const label = override ?? position?.category;
-  const count = position ? `${position.index} of ${position.total}` : undefined;
-  return [label, count].filter(Boolean).join(' · ') || undefined;
+  if (override) return override;
+  const count = position && position.total > 1 ? `${position.index} of ${position.total}` : undefined;
+  return [position?.category, count].filter(Boolean).join(' · ') || undefined;
 }

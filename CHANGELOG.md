@@ -57,6 +57,19 @@
   path the surface does not publish.
   v1-v4 remain accepted unchanged.
 
+- Status glyphs (○ ◐ ●) in `StatusBadge`, KPI tiles and status chips are drawn as CSS masks
+  (`StatusGlyph`, `.b10x-status-glyph`) instead of font text: the Inter subset carries ○ and ● but
+  not ◐, which fell back to a system font and rendered as a clipped sliver. `chipMeaning` returns an
+  empty glyph for status words.
+- With `trailingSlash: false`, `x/index.html` is now a copy of `x.html` with a canonical link to `x`
+  and a script that moves to `x` only when the path ends in `/`. The former meta-refresh stub looped
+  forever under `docusaurus serve` and any server that resolves `/x` to `x/index.html` first.
+- Hero protocol and domain graphs never scale below 0.8 (a wider graph is cropped and scrolls), drop
+  label tracking and keep their own glyph spacing, so labels no longer shrink to about 6 px.
+- The hero terminal wraps long commands with a hanging indent at every width, not only on phones.
+- The page-header kicker drops "1 of 1" for a one-page category, and a front-matter `kicker`
+  replaces the whole kicker.
+
 ## 0.7.0 — 2026-09-10
 
 - Add the immutable `b10x-docs-bundle/v1` schema, Rust builder and validator, deterministic source

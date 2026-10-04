@@ -41,11 +41,16 @@ export function ContentCard({ title, description, eyebrow, meta, children, foote
     return _jsxs("article", { className: "b10x-content-card", style: style, children: [(eyebrow || meta) && _jsxs("header", { children: [eyebrow && _jsx("span", { className: "b10x-eyebrow", children: eyebrow }), meta && _jsx("span", { children: meta })] }), _jsx(Heading, { children: titleUrl ? _jsx("a", { href: titleUrl, children: title }) : title }), description && _jsx("div", { className: "b10x-content-card__description", children: description }), children && _jsx("div", { className: "b10x-content-card__body", children: children }), (footer || actionUrl) && _jsxs("footer", { children: [footer, actionUrl && _jsxs("a", { className: "b10x-card-action", href: actionUrl, children: [actionLabel, " ", _jsx("span", { "aria-hidden": "true", children: "\u2192" })] })] })] });
 }
 const productStatusLabels = { shipped: 'Shipped', decided: 'Decided', planned: 'Planned' };
-/** Ordinal glyphs: the order planned → decided → shipped reads without colour. */
+/** Ordinal glyphs: the order planned → decided → shipped reads without colour. Plain-text form only;
+ * components draw the glyph with `StatusGlyph`, because no self-hosted font carries all three. */
 export const STATUS_GLYPHS = { planned: '○', decided: '◐', shipped: '●' };
+/** A status glyph drawn as a CSS mask in the current colour (empty, half, full circle). Decorative. */
+export function StatusGlyph({ status, className }) {
+    return _jsx("span", { className: `${className ? `${className} ` : ''}b10x-status-glyph b10x-status-glyph--${status}`, "aria-hidden": "true" });
+}
 export function StatusBadge({ maturity, status, children }) {
     if (status)
-        return _jsxs("span", { className: `b10x-status b10x-status--${status}`, children: [_jsx("span", { className: "b10x-status__glyph", "aria-hidden": "true", children: STATUS_GLYPHS[status] }), children ?? productStatusLabels[status]] });
+        return _jsxs("span", { className: `b10x-status b10x-status--${status}`, children: [_jsx(StatusGlyph, { status: status, className: "b10x-status__glyph" }), children ?? productStatusLabels[status]] });
     return _jsx("span", { className: `b10x-status b10x-status--${maturity}`, children: children ?? maturity });
 }
 const truthGlyphs = { true: '✓', unknown: '?', false: '✕' };

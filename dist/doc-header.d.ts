@@ -12,7 +12,7 @@ export interface DocHeaderFrontMatter {
     source?: string;
     /** Link for the source line. */
     source_url?: string;
-    /** Replaces the sidebar category in the kicker. */
+    /** Replaces the whole kicker (category and "n of m"). */
     kicker?: string;
 }
 /** The header fields of a page's front matter, or `undefined` when the page keeps today's layout. */
@@ -32,5 +32,8 @@ export interface SidebarPosition {
 }
 /** Where `permalink` sits among its siblings. Categories count as one sibling each; HTML items do not count. */
 export declare function sidebarPosition(items: readonly SidebarItemLike[] | undefined, permalink: string): SidebarPosition | undefined;
-/** "Concepts · 2 of 4", or "2 of 6" at the top level. */
+/**
+ * "Concepts · 2 of 4", or "2 of 6" at the top level. A front-matter `kicker` is the whole kicker,
+ * and a category with one page drops the "1 of 1".
+ */
 export declare function docKicker(position: SidebarPosition | undefined, override?: string): string | undefined;

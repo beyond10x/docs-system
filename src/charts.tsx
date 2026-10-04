@@ -28,10 +28,19 @@ const MINIMUM_SCALE = 0.78;
 
 /**
  * `default` is the documentation figure. `hero` is the compact landing-page art: scaled to fit its
- * column, no header, tooltip or text table (the full figure and its table live further down the
- * page), and edges that draw once when motion is allowed.
+ * column but never below `HERO_MIN_SCALE` (a wider graph is cropped at the column edge and scrolls),
+ * no header, tooltip or text table (the full figure and its table live further down the page), and
+ * edges that draw once when motion is allowed.
  */
 export type GraphVariant = 'default' | 'hero';
+
+/** The smallest hero scale: 13 px node names stay at least 10 px on screen. */
+export const HERO_MIN_SCALE = 0.8;
+
+function heroCanvasStyle(width: number): CSSProperties {
+  const px = Math.ceil(width);
+  return {maxWidth: `${px}px`, minWidth: `${Math.ceil(px * HERO_MIN_SCALE)}px`};
+}
 
 export interface ProtocolGraphProps {
   /** A `b10x-protocol-graph/1` document, usually imported from the repository's generated JSON. */
@@ -124,7 +133,7 @@ function ProtocolGraphView({document, layout, title, description, caption, varia
         {legend}
       </header>}
     <div className="b10x-graph__viewport" ref={sizing.viewport}>
-      <div className="b10x-graph__canvas" style={hero ? {maxWidth: `${Math.ceil(layout.width)}px`} : sizing.style}>
+      <div className="b10x-graph__canvas" style={hero ? heroCanvasStyle(layout.width) : sizing.style}>
         <svg viewBox={`-2 -2 ${f(layout.width + 4)} ${f(layout.height + 4)}`} className="b10x-graph__svg" role="group" aria-labelledby={`${base}-title`} aria-describedby={`${base}-hint`}>
           <defs>
             <marker id={`${base}-arrow`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" className="b10x-graph__arrow" /></marker>
@@ -335,7 +344,7 @@ function DomainGraphView({document, layout, title, description, caption, variant
         {legend}
       </header>}
     <div className="b10x-graph__viewport" ref={sizing.viewport}>
-      <div className="b10x-graph__canvas" style={hero ? {maxWidth: `${Math.ceil(layout.width)}px`} : sizing.style}>
+      <div className="b10x-graph__canvas" style={hero ? heroCanvasStyle(layout.width) : sizing.style}>
         <svg viewBox={`-4 -4 ${f(layout.width + 8)} ${f(layout.height + 8)}`} className="b10x-graph__svg" role="group" aria-labelledby={`${base}-title`} aria-describedby={`${base}-hint`}>
           <defs>
             <marker id={`${base}-owns`} viewBox="0 0 12 10" refX="1" refY="5" markerWidth="12" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M1,5 L6,1.5 L11,5 L6,8.5 z" className="b10x-graph__marker-fill" /></marker>

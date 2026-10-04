@@ -78,7 +78,10 @@ export declare function readLanding(file: string, watched?: Set<string>): Promis
 export declare function docsSystemBuild(siteDir: string): Promise<DocsSystemBuild>;
 /**
  * With `trailingSlash: false` Docusaurus writes `docs/x.html`, and static hosts answer `docs/x/` with
- * a 404. Write a redirect at `docs/x/index.html` for every page that has none, keeping query and hash.
+ * a 404. Write `docs/x/index.html` for every page that has none, as a copy of the page with a
+ * canonical link to `docs/x` and a script that moves to `docs/x` only when the path ends in `/`
+ * (keeping query and hash). A server that answers `docs/x` with `docs/x/index.html` therefore shows
+ * the page instead of redirecting to itself; there is no meta refresh. Earlier copies are refreshed.
  */
 export declare function writeTrailingSlashRedirects(outDir: string, baseUrl: string, origin: string): Promise<string[]>;
 /** Mermaid themed from the tokens, per colour mode. Added only beside `@docusaurus/theme-mermaid`. */

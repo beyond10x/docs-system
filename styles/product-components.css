@@ -104,7 +104,28 @@
 }
 .b10x-status--decided { --b10x-status-tone: var(--b10x-status-decided); }
 .b10x-status--planned { --b10x-status-tone: var(--b10x-status-planned); }
-.b10x-status__glyph { color: var(--b10x-status-tone); font-size: 0.8rem; letter-spacing: 0; line-height: 1; }
+.b10x-status__glyph { color: var(--b10x-status-tone); }
+
+/* Status glyphs (planned ○, decided ◐, shipped ●) drawn as 12 px masks in the current colour. No  */
+/* self-hosted font carries all three, and a system fallback paints ◐ as a clipped sliver.        */
+:root {
+  --b10x-status-glyph-planned: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Ccircle cx='6' cy='6' r='4.75' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E");
+  --b10x-status-glyph-decided: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Ccircle cx='6' cy='6' r='4.75' fill='none' stroke='black' stroke-width='1.5'/%3E%3Cpath d='M6 1.25a4.75 4.75 0 0 0 0 9.5z'/%3E%3C/svg%3E");
+  --b10x-status-glyph-shipped: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Ccircle cx='6' cy='6' r='5.5'/%3E%3C/svg%3E");
+}
+.b10x-status-glyph {
+  display: inline-block;
+  flex: none;
+  inline-size: 12px;
+  block-size: 12px;
+  background: currentColor;
+  -webkit-mask: var(--b10x-status-glyph) center / contain no-repeat;
+  mask: var(--b10x-status-glyph) center / contain no-repeat;
+}
+.b10x-status-glyph--planned { --b10x-status-glyph: var(--b10x-status-glyph-planned); }
+.b10x-status-glyph--decided { --b10x-status-glyph: var(--b10x-status-glyph-decided); }
+.b10x-status-glyph--shipped { --b10x-status-glyph: var(--b10x-status-glyph-shipped); }
+.b10x-chip--status .b10x-status-glyph { inline-size: 11px; block-size: 11px; }
 
 /* Meaning chips: truth values, status words and protocol kinds in docs (rehype-semantic-chips). */
 .b10x-chip {
@@ -819,11 +840,16 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
 .b10x-graph--hero .b10x-graph__hero-title { margin-bottom: 0.7rem; }
 .b10x-graph--hero .b10x-graph__hero-title code { padding: 0; border: 0; background: none; color: var(--b10x-color-heading); font-size: 1em; letter-spacing: 0.02em; text-transform: none; }
 .b10x-graph--hero .b10x-graph__hero-title span { color: var(--b10x-color-heading); font-family: var(--b10x-font-mono); letter-spacing: 0.02em; text-transform: none; }
-.b10x-graph--hero .b10x-graph__viewport { overflow: visible; margin: 0; padding: 0; }
+.b10x-graph--hero .b10x-graph__viewport { overflow-x: auto; overflow-y: hidden; margin: 0; padding: 0 0 0.35rem; scrollbar-width: thin; }
+.b10x-graph--hero .b10x-graph__canvas { margin-inline: 0; }
+/* Scaled hero text keeps its own spacing (no whole-pixel glyph snapping), and labels drop tracking. */
+.b10x-graph--hero { text-rendering: geometricPrecision; }
+.b10x-graph--hero :is(.b10x-graph__node-kicker, .b10x-graph__column-label, .b10x-graph__entity-name) { letter-spacing: 0; }
+.b10x-graph--hero .b10x-graph__column-label { font-size: 12px; }
 .b10x-graph--hero .b10x-graph__legend { display: flex; flex-wrap: wrap; gap: 0.3rem 1.1rem; margin-top: 0.8rem; padding: 0; font-size: 0.72rem; }
 .b10x-graph--hero .b10x-graph__count { margin-left: 0.2rem; padding-left: 0; }
 .b10x-graph--hero .b10x-graph__caption { font-size: 0.74rem; }
-.b10x-hero-art .b10x-graph--hero .b10x-graph__node-kicker { font-size: 10.5px; }
+.b10x-hero-art .b10x-graph--hero .b10x-graph__node-kicker { font-size: 11.5px; }
 
 .b10x-hero > .b10x-kpis { grid-column: 1 / -1; }
 .b10x-kpis {
@@ -849,7 +875,7 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
 .b10x-kpi--planned { --b10x-kpi-tone: var(--b10x-status-planned); }
 .b10x-kpi__label { color: var(--b10x-color-muted); font-size: 0.82rem; font-weight: 450; line-height: 1.45; }
 .b10x-kpi__index { position: absolute; top: 0.7rem; left: 0; color: var(--b10x-color-muted); font: 0.72rem/1 var(--b10x-font-mono); }
-.b10x-kpi__glyph { margin-right: 0.4rem; color: var(--b10x-kpi-tone); font-size: 0.95rem; line-height: 1; }
+.b10x-kpi__glyph { margin-right: 0.4rem; color: var(--b10x-kpi-tone); vertical-align: -0.08em; }
 .b10x-kpi__value { margin: 0; color: var(--b10x-color-heading); font: 600 2.3rem/1 var(--b10x-font-sans); font-variant-numeric: tabular-nums; letter-spacing: -0.04em; }
 
 /* Case card: a case evaluated more than once. Truth values are chips; states are neutral.     */
@@ -946,18 +972,20 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
 }
 
 /* ------------------------------------------------------------------------------------------ */
-/* Phone width: the hero terminal wraps long commands with a hanging indent instead of         */
-/* scrolling sideways.                                                                          */
+/* The hero terminal wraps long commands with a hanging indent at every width instead of       */
+/* scrolling sideways or clipping the end of a path.                                            */
+
+.b10x-hero-art--terminal pre.b10x-terminal__body { white-space: pre-wrap; overflow-wrap: anywhere; }
+.b10x-hero-art--terminal .b10x-terminal__line,
+.b10x-hero-art--terminal .b10x-terminal__comment,
+.b10x-hero-art--terminal .b10x-terminal__output > span { --b10x-hang: 2ch; display: block; padding-left: var(--b10x-hang); text-indent: calc(-1 * var(--b10x-hang)); }
+.b10x-hero-art--terminal .b10x-terminal--gutter .b10x-terminal__line,
+.b10x-hero-art--terminal .b10x-terminal--gutter .b10x-terminal__comment { --b10x-hang: 3.6ch; }
+.b10x-hero-art--terminal .b10x-terminal__output > span { --b10x-hang: 0ch; }
+.b10x-hero-art--terminal .b10x-terminal--gutter .b10x-terminal__output > span { --b10x-hang: 1.6ch; }
 
 @media (max-width: 720px) {
-  .b10x-hero-art--terminal pre.b10x-terminal__body { padding-inline: 1.1rem; white-space: pre-wrap; overflow-wrap: anywhere; }
-  .b10x-hero-art--terminal .b10x-terminal__line,
-  .b10x-hero-art--terminal .b10x-terminal__comment,
-  .b10x-hero-art--terminal .b10x-terminal__output > span { --b10x-hang: 2ch; display: block; padding-left: var(--b10x-hang); text-indent: calc(-1 * var(--b10x-hang)); }
-  .b10x-hero-art--terminal .b10x-terminal--gutter .b10x-terminal__line,
-  .b10x-hero-art--terminal .b10x-terminal--gutter .b10x-terminal__comment { --b10x-hang: 3.6ch; }
-  .b10x-hero-art--terminal .b10x-terminal__output > span { --b10x-hang: 0ch; }
-  .b10x-hero-art--terminal .b10x-terminal--gutter .b10x-terminal__output > span { --b10x-hang: 1.6ch; }
+  .b10x-hero-art--terminal pre.b10x-terminal__body { padding-inline: 1.1rem; }
   .b10x-kpi__value { font-size: 1.9rem; }
   /* Status table rows stack: capability and badge, then the detail under them. */
   .b10x-status-table table thead { display: none; }
