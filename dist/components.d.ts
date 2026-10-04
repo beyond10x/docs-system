@@ -89,7 +89,33 @@ export type StatusBadgeProps = {
     maturity?: never;
     children?: ReactNode;
 };
+/** Ordinal glyphs: the order planned → decided → shipped reads without colour. */
+export declare const STATUS_GLYPHS: Record<ProductStatus, string>;
 export declare function StatusBadge({ maturity, status, children }: StatusBadgeProps): ReactNode;
+export type TruthValue = 'true' | 'false' | 'unknown';
+/** A truth value as a chip: glyph and word, never colour alone. UNKNOWN is dashed. */
+export declare function Truth({ value, children }: {
+    value: TruthValue | Uppercase<TruthValue>;
+    children?: ReactNode;
+}): ReactNode;
+export type ProtocolKindName = 'action' | 'evidence' | 'claim' | 'outcome' | 'obligation';
+/** A protocol kind as a chip, in the kind colour the graphs use. */
+export declare function Kind({ kind, children }: {
+    kind: ProtocolKindName;
+    children?: ReactNode;
+}): ReactNode;
+export interface EmptyStateProps {
+    title: ReactNode;
+    children?: ReactNode;
+    /** An optional next step, such as where the first item will appear. */
+    action?: {
+        label: ReactNode;
+        href: string;
+    };
+    headingLevel?: 2 | 3 | 4;
+}
+/** Says plainly that something does not exist yet, and what will fill it. */
+export declare function EmptyState({ title, children, action, headingLevel }: EmptyStateProps): ReactNode;
 export declare function BoundaryNotice({ title, children }: {
     title?: string;
     children: ReactNode;

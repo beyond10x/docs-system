@@ -1,11 +1,21 @@
 export const TERMINAL_FORMAT = 'b10x-terminal/1';
 export const PRODUCT_LANDING_FORMAT = 'b10x-product-landing/1';
+export const TERMINAL_TONES = ['true', 'false', 'unknown', 'muted'];
 export function parseTerminalSession(value) {
     const session = record(value, 'session');
     if (session.format !== TERMINAL_FORMAT)
         throw new Error(`session.format must be ${TERMINAL_FORMAT}`);
     optional(session.title, 'session.title');
     optional(session.recordedWith, 'session.recordedWith');
+    if (session.tones !== undefined) {
+        const tones = record(session.tones, 'session.tones');
+        for (const [word, tone] of Object.entries(tones)) {
+            if (!word)
+                throw new Error('session.tones keys must be non-empty');
+            if (!TERMINAL_TONES.includes(tone))
+                throw new Error(`session.tones[${JSON.stringify(word)}] must be one of ${TERMINAL_TONES.join(', ')}`);
+        }
+    }
     if (!Array.isArray(session.entries) || session.entries.length === 0)
         throw new Error('session.entries must be a non-empty array');
     session.entries.forEach((entry, index) => {

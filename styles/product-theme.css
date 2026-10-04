@@ -40,7 +40,7 @@ html[data-theme='light'],
   --b10x-inline-code: #e6eee9;
   --b10x-notice: #f8f1e2;
   --b10x-font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --b10x-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --b10x-font-mono: "Fira Code", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 html[data-theme='dark'] {
@@ -132,7 +132,8 @@ html[data-theme] {
   scroll-padding-top: 6rem;
 }
 
-body { background: var(--b10x-color-canvas); font-feature-settings: 'cv11', 'ss01'; -webkit-font-smoothing: antialiased; }
+body { background: var(--b10x-color-canvas); font-feature-settings: 'cv11', 'ss01'; font-optical-sizing: auto; -webkit-font-smoothing: antialiased; }
+:where(code, kbd, samp, pre) { font-variant-ligatures: none; }
 a { text-underline-offset: 4px; }
 :focus-visible { outline-color: var(--b10x-color-focus); }
 
@@ -157,11 +158,13 @@ a { text-underline-offset: 4px; }
   place-items: center;
   inline-size: 2rem;
   block-size: 2rem;
-  border: 1px solid var(--b10x-color-accent);
+  border: 1px solid var(--b10x-product-hue, var(--b10x-color-accent));
   border-radius: 0.5rem;
-  color: var(--b10x-color-accent);
+  background: color-mix(in srgb, var(--b10x-product-hue, var(--b10x-color-accent)) 14%, transparent);
+  color: var(--b10x-product-ink, var(--b10x-color-accent));
   content: var(--b10x-product-mark, none);
-  font: 600 1rem/1 var(--b10x-font-sans);
+  font: 650 0.95rem/1 var(--b10x-font-sans);
+  letter-spacing: -0.02em;
 }
 .navbar__logo { display: none; }
 .navbar__title { font-size: 1.3rem; font-weight: 750; letter-spacing: -0.03em; }
@@ -248,7 +251,7 @@ pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-bloc
 .theme-doc-sidebar-container { border-right-color: var(--b10x-color-hairline) !important; }
 .menu { padding: 1.25rem 0.75rem; font-size: 0.88rem; }
 .menu__link { border-radius: 5px; }
-.menu__link--active:not(.menu__link--sublist) { color: var(--b10x-color-heading); font-weight: 560; box-shadow: inset 2px 0 0 var(--b10x-color-accent); }
+.menu__link--active:not(.menu__link--sublist) { color: var(--b10x-color-heading); font-weight: 560; box-shadow: inset 2px 0 0 var(--b10x-product-hue, var(--b10x-color-accent)); }
 .table-of-contents { font-size: 0.8rem; }
 .table-of-contents__link { color: var(--b10x-color-muted); }
 .table-of-contents__link--active { color: var(--b10x-color-heading); }
@@ -314,3 +317,18 @@ pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-bloc
 .b10x-showcase { padding-block: 4rem 5rem; }
 .b10x-showcase h1 { max-width: 48rem; margin: 0 0 1rem; font-size: clamp(2.1rem, 3.6vw, 3rem); font-weight: 620; line-height: 1.1; letter-spacing: -0.045em; }
 .b10x-showcase__lede { max-width: 46rem; margin: 0 0 2rem; color: var(--b10x-color-muted); font-size: 1.04rem; line-height: 1.7; }
+
+/* Status admonitions (:::shipped[…], or a title starting Shipped/Decided/Planned). */
+.theme-admonition.b10x-admonition--shipped { --b10x-admonition: var(--b10x-status-shipped); }
+.theme-admonition.b10x-admonition--decided { --b10x-admonition: var(--b10x-status-decided); }
+.theme-admonition.b10x-admonition--planned { --b10x-admonition: var(--b10x-status-planned); }
+.b10x-admonition [class*='admonitionHeading'] { color: var(--b10x-color-heading); letter-spacing: 0; text-transform: none; }
+.b10x-admonition [class*='admonitionIcon'] { display: none; }
+.b10x-admonition__title { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; font-size: 0.95rem; font-weight: 620; }
+.b10x-admonition__rest { letter-spacing: -0.005em; }
+
+/* Mermaid diagrams sit on the page ground with the product type. */
+.b10x-mermaid svg { max-width: 100%; height: auto; font-family: var(--b10x-font-sans) !important; }
+
+.b10x-mermaid :is(.edgeLabel, .edgeLabel rect, .edgeLabel .label rect) { background-color: transparent !important; fill: var(--b10x-color-canvas) !important; }
+.b10x-mermaid .edgeLabel :is(span, p) { background: var(--b10x-color-canvas) !important; color: var(--b10x-color-text) !important; }

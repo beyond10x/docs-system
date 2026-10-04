@@ -46,6 +46,14 @@ test('product-site data, layout and plugin subpaths load without Docusaurus them
   assert.equal(prism.productPrismDarkTheme.plain.backgroundColor, '#0c1516');
   assert.equal(typeof site.withProductSite, 'function');
   assert.equal(typeof site.default, 'function');
+  const [guard, palette, chips] = await Promise.all([
+    import('@beyond10x/docs-system/admonition-guard'),
+    import('@beyond10x/docs-system/product-palette'),
+    import('@beyond10x/docs-system/rehype-semantic-chips'),
+  ]);
+  assert.equal(typeof guard.rawAdmonitionSourceProblems, 'function');
+  assert.equal(palette.STATUS_RAMP.light.shipped, '#006948');
+  assert.equal(typeof chips.default, 'function');
 });
 
 test('published schema subpaths load as JSON in plain Node', async () => {

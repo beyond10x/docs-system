@@ -16,6 +16,7 @@ import type {
   RelatedTool,
   TerminalEntry,
   TerminalSession,
+  TerminalTone,
 } from './product-data.js';
 
 export {StatusBadge};
@@ -45,14 +46,16 @@ export function Terminal({session, transcript, children, title, caption, animate
   const resolved = useMemo(() => {
     if (session !== undefined) {
       const parsed = parseTerminalSession(session);
-      return {entries: parsed.entries, title: parsed.title, provenance: parsed.recordedWith};
+      return {entries: parsed.entries, title: parsed.title, provenance: parsed.recordedWith, tones: parsed.tones};
     }
     const text = transcript ?? (typeof children === 'string' ? children : Children.toArray(children).filter((child) => typeof child === 'string').join(''));
     if (!text.trim()) throw new Error('Terminal requires a session, a transcript, or transcript children');
-    return {entries: parseTranscript(text), title: undefined, provenance: undefined};
+    return {entries: parseTranscript(text), title: undefined, provenance: undefined, tones: undefined};
   }, [session, transcript, children]);
   const label = title ?? resolved.title ?? 'Terminal';
   const footer = caption ?? resolved.provenance;
+  const gutter = resolved.entries.some((entry) => entry.exitCode !== undefined);
+  const summary = terminalSummary(resolved.entries, resolved.tones);
   const commands = resolved.entries.map((entry) => entry.command).join('\n');
   const figure = useRef<HTMLElement>(null);
   const progress = useTyping(resolved.entries, animate, figure);
@@ -74,22 +77,72 @@ export function Terminal({session, transcript, children, title, caption, animate
       <button type="button" className="b10x-terminal__copy" onClick={copy} aria-describedby={statusId}>{copied ? 'Copied' : 'Copy commands'}</button>
       <span className="b10x-sr-only" role="status" id={statusId}>{copied ? 'Commands copied to the clipboard' : ''}</span>
     </div>
-    <pre className="b10x-terminal__body" tabIndex={0}><code>{resolved.entries.map((entry, index) => <TerminalLines key={index} entry={entry} prompt={prompt} shown={progress?.[index]} last={index === resolved.entries.length - 1} />)}</code></pre>
-    {footer && <figcaption className="b10x-terminal__foot"><span className="b10x-terminal__dot" aria-hidden="true" />{footer}</figcaption>}
+    <pre className="b10x-terminal__body" tabIndex={0}><code>{resolved.entries.map((entry, index) => <TerminalLines key={index} entry={entry} prompt={prompt} shown={progress?.[index]} last={index === resolved.entries.length - 1} gutter={gutter} tones={resolved.tones} />)}</code></pre>
+    {(footer || summary) && <figcaption className="b10x-terminal__foot">{footer && <><span className="b10x-terminal__dot" aria-hidden="true" /><span className="b10x-terminal__provenance">{footer}</span></>}{summary && <span className="b10x-terminal__summary">{summary}</span>}</figcaption>}
   </figure>;
 }
 
-function TerminalLines({entry, prompt, shown, last}: {entry: TerminalEntry; prompt: string; shown?: {command: number; output: boolean}; last: boolean}): ReactNode {
+function TerminalLines({entry, prompt, shown, last, gutter, tones}: {entry: TerminalEntry; prompt: string; shown?: {command: number; output: boolean}; last: boolean; gutter: boolean; tones?: Record<string, TerminalTone>}): ReactNode {
   const typed = shown ? entry.command.slice(0, shown.command) : entry.command;
   const rest = shown ? entry.command.slice(shown.command) : '';
   const outputVisible = !shown || shown.output;
   const failed = entry.exitCode !== undefined && entry.exitCode !== 0;
+  const blank = gutter ? <span className="b10x-terminal__gutter" aria-hidden="true"> </span> : null;
+  const exit = entry.exitCode === undefined ? blank : <span className={`b10x-terminal__gutter b10x-terminal__gutter--${failed ? 'failed' : 'passed'}`} title={`exit ${entry.exitCode}`} aria-hidden="true">{failed ? '✕' : '✓'}</span>;
+  const json = /^\s*[[{]/.test(entry.output ?? '');
   return <>
-    {entry.comment && <span className="b10x-terminal__comment"># {entry.comment}{'\n'}</span>}
-    <span className="b10x-terminal__line"><span className="b10x-terminal__prompt" aria-hidden="true">{prompt} </span><span className="b10x-terminal__command">{typed}<span className="b10x-terminal__pending">{rest}</span></span>{'\n'}</span>
-    {entry.output !== undefined && entry.output !== '' && <span className={['b10x-terminal__output', failed && 'b10x-terminal__output--failed', !outputVisible && 'b10x-terminal__pending'].filter(Boolean).join(' ')}>{entry.output}{'\n'}</span>}
+    {entry.comment && <span className="b10x-terminal__comment">{blank}# {entry.comment}{'\n'}</span>}
+    <span className="b10x-terminal__line">{exit}<span className="b10x-terminal__prompt" aria-hidden="true">{prompt} </span><span className="b10x-terminal__command">{typed}<span className="b10x-terminal__pending">{rest}</span></span>{'\n'}</span>
+    {entry.output !== undefined && entry.output !== '' && <span className={['b10x-terminal__output', failed && 'b10x-terminal__output--failed', !outputVisible && 'b10x-terminal__pending'].filter(Boolean).join(' ')}>{entry.output.split('\n').map((line, index) => <span key={index}>{blank}{toneLine(line, tones, json)}{'\n'}</span>)}</span>}
     {!last && '\n'}
   </>;
+}
+
+/** Colour recorded output: the session's tone words first, then JSON tokens when the output is JSON. */
+export function toneLine(line: string, tones: Record<string, TerminalTone> | undefined, json: boolean): ReactNode[] {
+  const words = Object.keys(tones ?? {}).sort((left, right) => right.length - left.length);
+  const pattern = words.length ? new RegExp(words.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g') : undefined;
+  const parts: ReactNode[] = [];
+  let cursor = 0;
+  const plain = (text: string): void => { if (text) parts.push(...(json ? jsonTokens(text, parts.length) : [text])); };
+  if (pattern) {
+    for (const match of line.matchAll(pattern)) {
+      plain(line.slice(cursor, match.index));
+      parts.push(<span key={`t${parts.length}`} className={`b10x-terminal__tone b10x-terminal__tone--${tones![match[0]]}`}>{match[0]}</span>);
+      cursor = match.index! + match[0].length;
+    }
+  }
+  plain(line.slice(cursor));
+  return parts;
+}
+
+function jsonTokens(text: string, offset: number): ReactNode[] {
+  const parts: ReactNode[] = [];
+  const token = /("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|-?\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b|[{}[\],:]/g;
+  let cursor = 0;
+  for (const match of text.matchAll(token)) {
+    if (match.index! > cursor) parts.push(text.slice(cursor, match.index));
+    const kind = match[1] !== undefined ? (match[2] !== undefined ? 'key' : 'string') : match[3] !== undefined ? 'literal' : /^[-\d]/.test(match[0]) ? 'literal' : 'punctuation';
+    if (kind === 'key') {
+      parts.push(<span key={`j${offset}-${parts.length}`} className="b10x-terminal__json--key">{match[1]}</span>, <span key={`j${offset}-${parts.length + 1}`} className="b10x-terminal__json--punctuation">{match[2]}</span>);
+    } else parts.push(<span key={`j${offset}-${parts.length}`} className={`b10x-terminal__json--${kind}`}>{match[0]}</span>);
+    cursor = match.index! + match[0].length;
+  }
+  if (cursor < text.length) parts.push(text.slice(cursor));
+  return parts;
+}
+
+/** "3/3 exit 0 · 6 ✓ · 0 ✕": exits from the recording, tone counts from its tone words. */
+export function terminalSummary(entries: readonly TerminalEntry[], tones?: Record<string, TerminalTone>): string | undefined {
+  const recorded = entries.filter((entry) => entry.exitCode !== undefined);
+  if (!recorded.length) return undefined;
+  const clean = recorded.filter((entry) => entry.exitCode === 0).length;
+  const parts = [`${clean}/${recorded.length} exit 0`];
+  if (tones && Object.keys(tones).length) {
+    const count = (tone: TerminalTone): number => Object.entries(tones).filter(([, value]) => value === tone).reduce((sum, [word]) => sum + entries.reduce((total, entry) => total + ((entry.output ?? '').split(word).length - 1), 0), 0);
+    parts.push(`${count('true')} ✓`, `${count('false')} ✕`);
+  }
+  return parts.join(' · ');
 }
 
 /** Type the commands once, when the terminal first scrolls into view; the full text is shown until then. */
@@ -200,26 +253,33 @@ const STATUS_LABELS: Record<ProductStatus, string> = {shipped: 'Shipped', decide
 export interface StatusStripProps {
   items: readonly ProductStatusItem[];
   label?: string;
+  /** Captions above each group; the defaults state what each status means. */
+  groupLabels?: Partial<Record<ProductStatus, string>>;
 }
 
-/** What exists today and what does not, counted from the items themselves. */
-export function StatusStrip({items, label = 'Status'}: StatusStripProps): ReactNode {
-  const counts = STATUS_ORDER.map((status) => ({status, count: items.filter((item) => item.status === status).length})).filter((entry) => entry.count > 0);
-  const summary = counts.map(({status, count}) => `${count} ${STATUS_LABELS[status].toLowerCase()}`).join(', ');
+const STATUS_GROUP_LABELS: Record<ProductStatus, string> = {shipped: 'Shipped · runs today', decided: 'Decided · recorded, not built', planned: 'Planned · roadmap only'};
+
+/** What exists today and what does not, counted from the items themselves and grouped by state. */
+export function StatusStrip({items, label = 'Status', groupLabels = {}}: StatusStripProps): ReactNode {
+  const groups = STATUS_ORDER.map((status) => ({status, items: items.filter((item) => item.status === status)})).filter((group) => group.items.length > 0);
+  const summary = groups.map(({status, items: members}) => `${members.length} ${STATUS_LABELS[status].toLowerCase()}`).join(', ');
   return <section className="b10x-status-strip" aria-label={label}>
     <div className="b10x-status-strip__bar" role="img" aria-label={`${items.length} capabilities: ${summary}`}>
-      {counts.map(({status, count}) => <span key={status} className={`b10x-status-strip__segment b10x-status-strip__segment--${status}`} style={{flexGrow: count} as CSSProperties} />)}
+      {groups.map(({status, items: members}) => <span key={status} className={`b10x-status-strip__segment b10x-status-strip__segment--${status}`} style={{flexGrow: members.length} as CSSProperties} />)}
     </div>
     <ul className="b10x-status-strip__legend" aria-hidden="true">
-      {counts.map(({status, count}) => <li key={status}><span className={`b10x-status-strip__key b10x-status-strip__key--${status}`} /><strong>{count}</strong> {STATUS_LABELS[status].toLowerCase()}</li>)}
+      {groups.map(({status, items: members}) => <li key={status}><StatusBadge status={status} /><strong>{members.length}</strong></li>)}
     </ul>
-    <ul className="b10x-status-strip__items">
-      {[...items].sort((left, right) => STATUS_ORDER.indexOf(left.status) - STATUS_ORDER.indexOf(right.status)).map((item) => <li key={item.label}>
-        <StatusBadge status={item.status} />
-        <span className="b10x-status-strip__label">{item.href ? <Link to={item.href}>{item.label}</Link> : item.label}</span>
-        {item.detail && <span className="b10x-status-strip__detail">{item.detail}</span>}
-      </li>)}
-    </ul>
+    {groups.map(({status, items: members}) => <div className={`b10x-status-strip__group b10x-status-strip__group--${status}`} key={status}>
+      <p className="b10x-status-strip__group-title">{groupLabels[status] ?? STATUS_GROUP_LABELS[status]}</p>
+      <ul className="b10x-status-strip__items">
+        {members.map((item) => <li key={item.label}>
+          <StatusBadge status={item.status} />
+          <span className="b10x-status-strip__label">{item.href ? <Link to={item.href}>{item.label}</Link> : item.label}</span>
+          {item.detail && <span className="b10x-status-strip__detail">{item.detail}</span>}
+        </li>)}
+      </ul>
+    </div>)}
   </section>;
 }
 

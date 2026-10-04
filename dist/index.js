@@ -21,3 +21,6 @@ export * from './product-graphs.js';
 export { Feature, FeatureGrid, Flow, FlowStep, ProductHero, ProductLanding, ProductSection, RelatedTools, StatusStrip, Terminal } from './product.js';
 export * from './session-charts.js';
 export * from './session-data.js';
+export * from './admonition-guard.js';
+export * from './product-palette.js';
+export { annotateProtocolSource, chipMeaning, PROTOCOL_KIND_MAGIC_COMMENTS } from './rehype-semantic-chips.js';

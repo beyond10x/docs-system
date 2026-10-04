@@ -22,3 +22,7 @@ export {Feature, FeatureGrid, Flow, FlowStep, ProductHero, ProductLanding, Produ
 export type {FeatureGridProps, FeatureProps, FlowProps, FlowStepProps, ProductHeroProps, ProductSectionProps, RelatedToolsProps, StatusStripProps, TerminalProps} from './product.js';
 export * from './session-charts.js';
 export * from './session-data.js';
+export * from './admonition-guard.js';
+export * from './product-palette.js';
+export {annotateProtocolSource, chipMeaning, PROTOCOL_KIND_MAGIC_COMMENTS} from './rehype-semantic-chips.js';
+export type {ChipKind, ChipMeaning} from './rehype-semantic-chips.js';

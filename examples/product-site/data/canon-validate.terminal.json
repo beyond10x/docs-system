@@ -1,0 +1,28 @@
+{
+  "format": "b10x-terminal/1",
+  "title": "canon / repository root",
+  "entries": [
+    {
+      "command": "canon validate --path fixtures/investigation/protocol.yaml",
+      "output": "valid: protocol `investigation` revision 1",
+      "exitCode": 0
+    },
+    {
+      "command": "canon validate --path fixtures/investigation/invalid/undeclared-claim.yaml",
+      "output": "error[undeclared-claim]: outcome `supported` references claim `explanation.refuted`, which is not declared",
+      "exitCode": 1
+    },
+    {
+      "command": "canon compile --path fixtures/investigation/protocol.yaml | jq '.outcomes'",
+      "output": "{\n  \"supported\": {\n    \"description\": \"The explanation is supported.\",\n    \"requires\": {\n      \"claim\": {\n        \"id\": \"explanation.supported\",\n        \"is\": \"true\"\n      }\n    }\n  }\n}",
+      "exitCode": 0
+    }
+  ],
+  "recordedWith": "canon 0.0.0 built from canon 8d1599e; recorded 2026-10-04",
+  "tones": {
+    "valid:": "true",
+    "passed:": "true",
+    "failed:": "false",
+    "error": "false"
+  }
+}

@@ -154,8 +154,8 @@ test('Terminal renders recorded and quoted sessions with a commands-only copy co
   const markup = renderToStaticMarkup(createElement(Terminal, {session}));
   assert.match(markup, /<button type="button" class="b10x-terminal__copy"/);
   assert.match(markup, /canon conform run/);
-  assert.match(markup, /conform: 1 passed, 0 failed, 0 unreadable/);
-  assert.match(markup, /canon 0\.0\.0 built from canon 323038d/);
+  assert.match(markup, /conform: 9 passed, 0 failed, 0 unreadable/);
+  assert.match(markup, /canon 0\.0\.0 built from canon 8d1599e/);
   assert.doesNotMatch(markup, /b10x-terminal__pending">[^<]/, 'nothing is hidden without animation');
   assert.deepEqual(parseTranscript('# say why\n$ a --b\nout 1\n# not a comment\n\n$ c\n'), [
     {command: 'a --b', comment: 'say why', output: 'out 1\n# not a comment'},
@@ -178,7 +178,7 @@ test('product components render status honestly and keep the maturity badge unch
   assert.ok(markup.indexOf('>y<') < markup.indexOf('>x<'), 'shipped items list first');
   assert.match(markup, /href="https:\/\/beyond10x\.github\.io\/els\/"/);
   assert.equal(renderToStaticMarkup(createElement(StatusBadge, {maturity: 'stable'})), '<span class="b10x-status b10x-status--stable">stable</span>');
-  assert.equal(renderToStaticMarkup(createElement(StatusBadge, {status: 'decided'})), '<span class="b10x-status b10x-status--decided">Decided</span>');
+  assert.equal(renderToStaticMarkup(createElement(StatusBadge, {status: 'decided'})), '<span class="b10x-status b10x-status--decided"><span class="b10x-status__glyph" aria-hidden="true">◐</span>Decided</span>');
 });
 
 test('the landing reader inlines referenced files and the page renders every section', async () => {

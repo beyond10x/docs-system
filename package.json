@@ -53,7 +53,11 @@
     "./product-components.css": "./styles/product-components.css",
     "./session-charts": "./dist/session-charts.js",
     "./session-data": "./dist/session-data.js",
-    "./schema/session-composition/v0": "./schema/b10x.session-composition.v0.schema.json"
+    "./schema/session-composition/v0": "./schema/b10x.session-composition.v0.schema.json",
+    "./admonition-guard": "./dist/admonition-guard.js",
+    "./product-palette": "./dist/product-palette.js",
+    "./rehype-semantic-chips": "./dist/rehype-semantic-chips.js",
+    "./navbar-active": "./dist/navbar-active.js"
   },
   "files": [
     "dist",
