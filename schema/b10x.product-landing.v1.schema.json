@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://beyond10x.github.io/schema/b10x.product-landing.v1.json",
   "title": "b10x product landing page",
-  "description": "The landing page of a product site. A string where a session or graph is expected is a path, relative to this file, that the product-site plugin reads at build time.",
+  "description": "The landing page of a product site. A string where a session, graph, case, code pair or status list is expected is a path, relative to this file, that the product-site plugin reads at build time.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -73,6 +73,178 @@
         "terminalCaption": {
           "type": "string",
           "minLength": 1
+        },
+        "art": {
+          "description": "Hero art rendered from the product's own data. Takes precedence over terminal.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "session"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "terminal"
+                },
+                "session": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "$ref": "b10x.terminal.v1.json"
+                    }
+                  ]
+                },
+                "caption": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "data"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "protocol-graph"
+                },
+                "data": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "$ref": "b10x.protocol-graph.v1.json"
+                    }
+                  ]
+                },
+                "caption": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "data"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "domain-graph"
+                },
+                "data": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "$ref": "b10x.domain-graph.v1.json"
+                    }
+                  ]
+                },
+                "caption": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "data"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "case"
+                },
+                "data": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "$ref": "b10x.case.v1.json"
+                    }
+                  ]
+                },
+                "caption": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "data"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "code-pair"
+                },
+                "data": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "$ref": "b10x.code-pair.v1.json"
+                    }
+                  ]
+                },
+                "caption": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          ]
+        },
+        "kpis": {
+          "description": "The KPI row under the hero. Each entry names a count the template takes from the art, the graphs or the status section; numbers are never typed.",
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/kpiCount"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "count"
+                ],
+                "properties": {
+                  "count": {
+                    "$ref": "#/$defs/kpiCount"
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            ]
+          }
         }
       }
     },
@@ -162,6 +334,15 @@
                   },
                   "status": {
                     "$ref": "#/$defs/status"
+                  },
+                  "icon": {
+                    "enum": [
+                      "action",
+                      "evidence",
+                      "claim",
+                      "outcome",
+                      "obligation"
+                    ]
                   }
                 }
               }
@@ -240,29 +421,46 @@
               "minLength": 1
             },
             "items": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "label",
-                  "status"
-                ],
-                "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "status": {
-                    "$ref": "#/$defs/status"
-                  },
-                  "detail": {
-                    "type": "string"
-                  },
-                  "href": {
-                    "type": "string"
+              "description": "The status items, or a path to a b10x-status/1 file that the plugin reads at build time.",
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "label",
+                      "status"
+                    ],
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "$ref": "#/$defs/status"
+                      },
+                      "detail": {
+                        "type": "string"
+                      },
+                      "href": {
+                        "type": "string"
+                      }
+                    }
                   }
                 }
-              }
+              ]
+            },
+            "asOf": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "source": {
+              "type": "string",
+              "minLength": 1
             }
           }
         },
@@ -293,31 +491,68 @@
             "tools": {
               "type": "array",
               "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "name",
-                  "description",
-                  "href"
-                ],
-                "properties": {
-                  "name": {
-                    "type": "string"
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "name",
+                      "description",
+                      "href"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "href": {
+                        "type": "string"
+                      },
+                      "mark": {
+                        "type": "string",
+                        "maxLength": 3
+                      },
+                      "status": {
+                        "$ref": "#/$defs/status"
+                      }
+                    }
                   },
-                  "description": {
-                    "type": "string"
-                  },
-                  "href": {
-                    "type": "string"
-                  },
-                  "mark": {
-                    "type": "string",
-                    "maxLength": 3
-                  },
-                  "status": {
-                    "$ref": "#/$defs/status"
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "relation"
+                    ],
+                    "description": "A family product; name, mark, description and link come from the docs-system family registry.",
+                    "properties": {
+                      "id": {
+                        "enum": [
+                          "canon",
+                          "els",
+                          "loom",
+                          "commission",
+                          "ess"
+                        ]
+                      },
+                      "relation": {
+                        "enum": [
+                          "uses",
+                          "used-by",
+                          "beside",
+                          "specifies",
+                          "specified-by"
+                        ]
+                      },
+                      "via": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
                   }
-                }
+                ]
               }
             }
           }
@@ -436,6 +671,24 @@
             }
           }
         }
+      ]
+    },
+    "kpiCount": {
+      "enum": [
+        "entities",
+        "relations",
+        "lifecycles",
+        "nodes",
+        "actions",
+        "evidence",
+        "claims",
+        "outcomes",
+        "obligations",
+        "commands",
+        "capabilities",
+        "shipped",
+        "decided",
+        "planned"
       ]
     }
   }

@@ -29,7 +29,7 @@ const protocols = ['software-change', 'incident-response', 'software-change-bugf
 async function validator() {
   const ajv = new Ajv2020({allErrors: true, strict: true});
   addFormats(ajv);
-  for (const name of ['terminal.v1', 'protocol-graph.v1', 'domain-graph.v1', 'product-landing.v1', 'session-composition.v0']) {
+  for (const name of ['terminal.v1', 'protocol-graph.v1', 'domain-graph.v1', 'case.v1', 'code-pair.v1', 'status.v1', 'product-landing.v1', 'session-composition.v0']) {
     ajv.addSchema(JSON.parse(await fs.readFile(path.join(root, `schema/b10x.${name}.schema.json`), 'utf8')));
   }
   return (id, value) => {
@@ -172,7 +172,8 @@ test('product components render status honestly and keep the maturity badge unch
     createElement(StatusStrip, {items: [{label: 'x', status: 'planned'}, {label: 'y', status: 'shipped'}, {label: 'z', status: 'shipped'}]}),
     createElement(RelatedTools, {tools: [{name: 'ELS', description: 'Engineering protocols', href: 'https://beyond10x.github.io/els/'}]}),
   ));
-  assert.match(markup, /<ol class="b10x-feature-grid b10x-feature-grid--3" aria-label="What it does">/);
+  // Two cards default to two columns (P12: columns follow the card count).
+  assert.match(markup, /<ol class="b10x-feature-grid b10x-feature-grid--2" aria-label="What it does">/);
   assert.match(markup, /--b10x-flow-count:2/);
   assert.match(markup, /aria-label="3 capabilities: 2 shipped, 1 planned"/);
   assert.ok(markup.indexOf('>y<') < markup.indexOf('>x<'), 'shipped items list first');
@@ -184,12 +185,12 @@ test('product components render status honestly and keep the maturity badge unch
 test('the landing reader inlines referenced files and the page renders every section', async () => {
   const watched = new Set();
   const landing = await readLanding(path.join(example, 'product.json'), watched);
-  assert.equal(typeof landing.product.terminal, 'object');
+  assert.equal(typeof landing.product.art.session, 'object');
   assert.equal(landing.sections.find((section) => section.kind === 'protocol-graph').data.format, 'b10x-protocol-graph/1');
   assert.ok([...watched].some((file) => file.endsWith('software-change.protocol-graph.json')));
   const markup = renderToStaticMarkup(createElement(ProductLanding, {data: landing}));
   assert.match(markup, /<h1 id="b10x-hero-title">.*<em>What has been earned\.<\/em><\/h1>/);
-  for (const id of ['what', 'how', 'protocol', 'status', 'related']) assert.match(markup, new RegExp(`<section class="b10x-product-section" id="${id}"`));
+  for (const id of ['what', 'how', 'protocol', 'status', 'related']) assert.match(markup, new RegExp(`<section class="b10x-product-section[^"]*" id="${id}"`));
   assert.match(markup, />01 \/ What it does</);
 });
 

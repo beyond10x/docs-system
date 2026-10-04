@@ -1,0 +1,20 @@
+{
+  "format": "b10x-case/1",
+  "case": "INV-18",
+  "protocol": "investigation/1",
+  "frames": [
+    {
+      "label": "Revision r1",
+      "claims": [{"name": "explanation.supported", "value": "true"}],
+      "outcomes": [{"name": "supported", "state": "legitimate"}]
+    },
+    {
+      "label": "Revision r2",
+      "current": true,
+      "claims": [{"name": "explanation.supported", "value": "unknown"}],
+      "outcomes": [{"name": "supported", "state": "blocked"}],
+      "notes": ["falsification-1, observation-1 excluded: revision_mismatch"]
+    }
+  ],
+  "recordedWith": "Two canon evaluate runs over canon fixtures/investigation/evidence-revision-binding.yaml, the same two evidence records, case at r1 then r2; canon 0.0.0 built from canon f5c070f; recorded 2026-10-04"
+}

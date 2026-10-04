@@ -2,18 +2,26 @@ import {Children, isValidElement, useEffect, useId, useMemo, useRef, useState} f
 import type {CSSProperties, ReactNode} from 'react';
 import Link from '@docusaurus/Link';
 import useBrokenLinks from '@docusaurus/useBrokenLinks';
+import CodeBlock from '@theme/CodeBlock';
 import {DomainGraph, ProtocolGraph} from './charts.js';
-import {StatusBadge} from './components.js';
-import {parseTerminalSession, parseTranscript} from './product-data.js';
+import {StatusBadge, Truth} from './components.js';
+import type {ProtocolKindName} from './components.js';
+import {buildHref, buildLabel, FAMILY, familyMembers, isFamilyRelatedTool, relationPhrase} from './family.js';
+import type {DocsSystemBuild} from './family.js';
+import type {ProductId} from './product-palette.js';
+import {landingKpis, parseCaseDocument, parseCodePairDocument, parseStatusDocument, parseTerminalSession, parseTranscript} from './product-data.js';
 import type {
   ProductAction,
+  ProductArt,
   ProductFeature,
   ProductFlowStep,
   ProductLandingData,
   ProductLandingSection,
   ProductStatus,
   ProductStatusItem,
-  RelatedTool,
+  RelatedToolEntry,
+  ResolvedKpi,
+  StatusDocumentItem,
   TerminalEntry,
   TerminalSession,
   TerminalTone,
@@ -70,7 +78,7 @@ export function Terminal({session, transcript, children, title, caption, animate
       setCopied(false);
     }
   };
-  return <figure ref={figure} className={['b10x-terminal', tilt && 'b10x-terminal--tilt'].filter(Boolean).join(' ')} aria-label={label}>
+  return <figure ref={figure} className={['b10x-terminal', tilt && 'b10x-terminal--tilt', gutter && 'b10x-terminal--gutter'].filter(Boolean).join(' ')} aria-label={label}>
     <div className="b10x-terminal__bar">
       <span className="b10x-terminal__lights" aria-hidden="true"><i /><i /><i /></span>
       <span className="b10x-terminal__title">{label}</span>
@@ -198,8 +206,9 @@ export interface FeatureProps extends Omit<ProductFeature, 'description'> {
 }
 
 /** One card of a `FeatureGrid`, for MDX authors who prefer children to an `items` array. */
-export function Feature({title, description, href, status, children}: FeatureProps): ReactNode {
-  return <li className="b10x-feature">
+export function Feature({title, description, href, status, icon, children}: FeatureProps): ReactNode {
+  return <li className={['b10x-feature', icon && 'b10x-feature--icon'].filter(Boolean).join(' ')}>
+    {icon && <KindIcon kind={icon} />}
     <h3>{href ? <Link to={href}>{title}</Link> : title}</h3>
     {status && <StatusBadge status={status} />}
     {description && <p>{description}</p>}
@@ -207,15 +216,30 @@ export function Feature({title, description, href, status, children}: FeaturePro
   </li>;
 }
 
+/** A protocol kind's glyph as a 16 px icon in the kind colour (the same glyph as kind chips and legends). */
+export function KindIcon({kind, label}: {kind: ProtocolKindName; label?: string}): ReactNode {
+  return <span className={`b10x-kind-icon b10x-kind-icon--${kind}`} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true} />;
+}
+
 export interface FeatureGridProps {
   items?: readonly ProductFeature[];
   children?: ReactNode;
+  /** Defaults from the number of cards: 4 → 2 × 2, 7–8 → 4 columns, otherwise up to 3. */
   columns?: 2 | 3 | 4;
   label?: string;
 }
 
-export function FeatureGrid({items, children, columns = 3, label = 'What it does'}: FeatureGridProps): ReactNode {
-  return <ol className={`b10x-feature-grid b10x-feature-grid--${columns}`} aria-label={label}>
+/** Columns that leave no orphan row for common counts. */
+export function featureColumns(count: number): 2 | 3 | 4 {
+  if (count === 4 || count <= 2) return 2;
+  if (count === 7 || count === 8) return 4;
+  return 3;
+}
+
+export function FeatureGrid({items, children, columns, label = 'What it does'}: FeatureGridProps): ReactNode {
+  const count = (items?.length ?? 0) + Children.toArray(children).filter(isValidElement).length;
+  const resolved = columns ?? featureColumns(count);
+  return <ol className={`b10x-feature-grid b10x-feature-grid--${resolved}`} aria-label={label}>
     {items?.map((item) => <Feature key={item.title} {...item} />)}
     {children}
   </ol>;
@@ -255,21 +279,41 @@ export interface StatusStripProps {
   label?: string;
   /** Captions above each group; the defaults state what each status means. */
   groupLabels?: Partial<Record<ProductStatus, string>>;
+  /** Provenance of a `b10x-status/1` file: when it was checked and what produced it. */
+  asOf?: string;
+  source?: string;
 }
 
 const STATUS_GROUP_LABELS: Record<ProductStatus, string> = {shipped: 'Shipped · runs today', decided: 'Decided · recorded, not built', planned: 'Planned · roadmap only'};
 
-/** What exists today and what does not, counted from the items themselves and grouped by state. */
-export function StatusStrip({items, label = 'Status', groupLabels = {}}: StatusStripProps): ReactNode {
-  const groups = STATUS_ORDER.map((status) => ({status, items: items.filter((item) => item.status === status)})).filter((group) => group.items.length > 0);
+function statusGroups<T extends ProductStatusItem>(items: readonly T[]): Array<{status: ProductStatus; items: T[]}> {
+  return STATUS_ORDER.map((status) => ({status, items: items.filter((item) => item.status === status)})).filter((group) => group.items.length > 0);
+}
+
+/** The proportion bar and its legend: counts per status, glyph and word beside every colour. */
+export function StatusSummary({items}: {items: readonly ProductStatusItem[]}): ReactNode {
+  const groups = statusGroups(items);
   const summary = groups.map(({status, items: members}) => `${members.length} ${STATUS_LABELS[status].toLowerCase()}`).join(', ');
-  return <section className="b10x-status-strip" aria-label={label}>
+  return <>
     <div className="b10x-status-strip__bar" role="img" aria-label={`${items.length} capabilities: ${summary}`}>
       {groups.map(({status, items: members}) => <span key={status} className={`b10x-status-strip__segment b10x-status-strip__segment--${status}`} style={{flexGrow: members.length} as CSSProperties} />)}
     </div>
     <ul className="b10x-status-strip__legend" aria-hidden="true">
       {groups.map(({status, items: members}) => <li key={status}><StatusBadge status={status} /><strong>{members.length}</strong></li>)}
     </ul>
+  </>;
+}
+
+function StatusProvenance({asOf, source}: {asOf?: string; source?: string}): ReactNode {
+  if (!asOf && !source) return null;
+  return <p className="b10x-status-strip__source">{[asOf && `As of ${asOf}`, source].filter(Boolean).join(' · ')}</p>;
+}
+
+/** What exists today and what does not, counted from the items themselves and grouped by state. */
+export function StatusStrip({items, label = 'Status', groupLabels = {}, asOf, source}: StatusStripProps): ReactNode {
+  const groups = statusGroups(items);
+  return <section className="b10x-status-strip" aria-label={label}>
+    <StatusSummary items={items} />
     {groups.map(({status, items: members}) => <div className={`b10x-status-strip__group b10x-status-strip__group--${status}`} key={status}>
       <p className="b10x-status-strip__group-title">{groupLabels[status] ?? STATUS_GROUP_LABELS[status]}</p>
       <ul className="b10x-status-strip__items">
@@ -280,28 +324,148 @@ export function StatusStrip({items, label = 'Status', groupLabels = {}}: StatusS
         </li>)}
       </ul>
     </div>)}
+    <StatusProvenance asOf={asOf} source={source} />
+  </section>;
+}
+
+export interface StatusTableProps {
+  /** A `b10x-status/1` document, imported from the same file the landing's status section reads. */
+  data: unknown;
+  label?: string;
+  /** Show only these statuses. */
+  only?: readonly ProductStatus[];
+}
+
+/**
+ * The status page table: every item with its badge and detail, grouped by area when the file has
+ * areas, under the same proportion bar as the landing strip.
+ */
+export function StatusTable({data, label = 'Status of every capability', only}: StatusTableProps): ReactNode {
+  const parsed = useMemo(() => {
+    try {
+      return {document: parseStatusDocument(data)};
+    } catch (error) {
+      return {error: error instanceof Error ? error.message : String(error)};
+    }
+  }, [data]);
+  if ('error' in parsed) return <aside className="b10x-callout b10x-callout--danger" role="alert"><p className="b10x-callout__title b10x-eyebrow">Cannot render status table</p><div className="b10x-callout__content"><p><code>{parsed.error}</code></p></div></aside>;
+  const items = parsed.document!.items.filter((item) => !only || only.includes(item.status));
+  // Array.from, not a spread: the site's loose Babel transform turns a spread Set into [Set].
+  const areas = Array.from(new Set(items.map((item) => item.area ?? '')));
+  const grouped = areas.some(Boolean);
+  const row = (item: StatusDocumentItem): ReactNode => <tr key={item.label}>
+    <th scope="row">{item.href ? <Link to={item.href}>{item.label}</Link> : item.label}</th>
+    <td><StatusBadge status={item.status} /></td>
+    <td>{item.detail ?? '—'}</td>
+  </tr>;
+  return <section className="b10x-status-table" aria-label={label}>
+    <StatusSummary items={items} />
+    <div className="b10x-table-wrap"><table>
+      <thead><tr><th scope="col">Capability</th><th scope="col">Status</th><th scope="col">Detail</th></tr></thead>
+      {grouped
+        ? areas.map((area) => <tbody key={area || 'other'}>
+          <tr className="b10x-status-table__area"><th scope="rowgroup" colSpan={3}>{area || 'Other'}</th></tr>
+          {items.filter((item) => (item.area ?? '') === area).map(row)}
+        </tbody>)
+        : <tbody>{items.map(row)}</tbody>}
+    </table></div>
+    <StatusProvenance asOf={parsed.document!.asOf} source={parsed.document!.source} />
   </section>;
 }
 
 export interface RelatedToolsProps {
-  tools: readonly RelatedTool[];
+  /** Tools written out in full, or `{id, relation}` entries resolved from the family registry. */
+  tools: readonly RelatedToolEntry[];
   label?: string;
+  /** The product whose site this is; completes the relation phrase ("uses Canon"). */
+  current?: ProductId;
 }
 
-export function RelatedTools({tools, label = 'Related tools'}: RelatedToolsProps): ReactNode {
+export function RelatedTools({tools, label = 'Related tools', current}: RelatedToolsProps): ReactNode {
   return <ul className="b10x-related" aria-label={label}>
-    {tools.map((tool) => <li key={tool.name}>
-      <Link className="b10x-related__card" to={tool.href}>
-        <span className="b10x-mark" aria-hidden="true">{tool.mark ?? tool.name.slice(0, 1)}</span>
-        <span className="b10x-related__copy">
-          <strong>{tool.name}</strong>
-          <span>{tool.description}</span>
-        </span>
-        {tool.status && <StatusBadge status={tool.status} />}
-        <span className="b10x-related__arrow" aria-hidden="true">→</span>
-      </Link>
-    </li>)}
+    {tools.map((tool) => {
+      if (isFamilyRelatedTool(tool)) {
+        const member = FAMILY[tool.id];
+        if (!member) throw new Error(`RelatedTools: unknown family id ${JSON.stringify(tool.id)}`);
+        return <li key={member.id}>
+          <Link className={`b10x-related__card b10x-related__card--family b10x-family--${member.id}`} to={member.url}>
+            <span className="b10x-mark b10x-mark--family" aria-hidden="true">{member.mark}</span>
+            <span className="b10x-related__copy">
+              <strong>{member.name}</strong>
+              <span>{member.description}</span>
+              <span className="b10x-related__relation">{relationPhrase(tool.relation, current)}{tool.via && <> <span aria-hidden="true">→</span> {tool.via}</>}</span>
+            </span>
+            <span className="b10x-related__arrow" aria-hidden="true">→</span>
+          </Link>
+        </li>;
+      }
+      return <li key={tool.name}>
+        <Link className="b10x-related__card" to={tool.href}>
+          <span className="b10x-mark" aria-hidden="true">{tool.mark ?? tool.name.slice(0, 1)}</span>
+          <span className="b10x-related__copy">
+            <strong>{tool.name}</strong>
+            <span>{tool.description}</span>
+          </span>
+          {tool.status && <StatusBadge status={tool.status} />}
+          <span className="b10x-related__arrow" aria-hidden="true">→</span>
+        </Link>
+      </li>;
+    })}
   </ul>;
+}
+
+/** Every family product as a chip, the current one highlighted. Rendered in the product-site footer. */
+export function FamilyStrip({current, label = 'beyond10x tools'}: {current?: ProductId; label?: string}): ReactNode {
+  return <nav className="b10x-family-strip" aria-label={label}>
+    <p className="b10x-family-strip__label" aria-hidden="true">{label}</p>
+    <ul>
+      {familyMembers().map((member) => <li key={member.id}>
+        <a className={['b10x-family-chip', `b10x-family--${member.id}`, member.id === current && 'is-current'].filter(Boolean).join(' ')} href={member.url} aria-current={member.id === current ? 'true' : undefined} title={member.tagline}>
+          <span className="b10x-mark b10x-mark--family b10x-mark--small" aria-hidden="true">{member.mark}</span>
+          {member.name}
+          {member.id === current && <span className="b10x-sr-only"> (this site)</span>}
+        </a>
+      </li>)}
+    </ul>
+  </nav>;
+}
+
+/** "This build: docs-system 929f965", linked to the commit when it is one. */
+export function BuildLine({build}: {build: DocsSystemBuild}): ReactNode {
+  const href = buildHref(build);
+  return <p className="b10x-build-line"><span className="b10x-build-line__label">This build</span>{href ? <a href={href}>{buildLabel(build)}</a> : <span>{buildLabel(build)}</span>}</p>;
+}
+
+/** The navbar product switcher: a disclosure next to the wordmark listing the family. */
+export function ProductSwitcher({current}: {current: ProductId}): ReactNode {
+  const ref = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    const close = (event: Event): void => {
+      const element = ref.current;
+      if (!element?.open) return;
+      if (event instanceof KeyboardEvent ? event.key === 'Escape' : !element.contains(event.target as Node)) {
+        element.open = false;
+        if (event instanceof KeyboardEvent) element.querySelector('summary')?.focus();
+      }
+    };
+    document.addEventListener('pointerdown', close);
+    document.addEventListener('keydown', close);
+    return () => { document.removeEventListener('pointerdown', close); document.removeEventListener('keydown', close); };
+  }, []);
+  return <details className="b10x-product-switcher" ref={ref}>
+    <summary className="b10x-product-switcher__toggle" aria-label="Switch to another beyond10x tool">
+      <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" /></svg>
+    </summary>
+    <ul className="b10x-product-switcher__panel">
+      {familyMembers().map((member) => <li key={member.id}>
+        <a className={['b10x-product-switcher__item', `b10x-family--${member.id}`, member.id === current && 'is-current'].filter(Boolean).join(' ')} href={member.url} aria-current={member.id === current ? 'true' : undefined}>
+          <span className="b10x-mark b10x-mark--family" aria-hidden="true">{member.mark}</span>
+          <span className="b10x-product-switcher__copy"><strong>{member.name}</strong><span>{member.tagline}</span></span>
+          {member.id === current && <span className="b10x-product-switcher__here">You are here</span>}
+        </a>
+      </li>)}
+    </ul>
+  </details>;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -316,21 +480,111 @@ export interface ProductHeroProps {
   actions?: readonly ProductAction[];
   meta?: ReactNode;
   aside?: ReactNode;
+  /** The KPI row under the hero, spanning both columns. */
+  kpis?: readonly ResolvedKpi[];
+  /** Element id of the heading; change it when a page shows more than one hero. */
+  titleId?: string;
 }
 
-export function ProductHero({eyebrow, promise, lede, actions = [], meta, aside}: ProductHeroProps): ReactNode {
+export function ProductHero({eyebrow, promise, lede, actions = [], meta, aside, kpis, titleId = 'b10x-hero-title'}: ProductHeroProps): ReactNode {
   const lines = promise.length > 1 ? promise.slice(0, -1) : [];
   const emphasis = promise[promise.length - 1];
-  return <section className={['b10x-hero', aside ? '' : 'b10x-hero--solo'].filter(Boolean).join(' ')} aria-labelledby="b10x-hero-title">
+  return <section className={['b10x-hero', aside ? '' : 'b10x-hero--solo'].filter(Boolean).join(' ')} aria-labelledby={titleId}>
     <div className="b10x-hero__copy">
       {eyebrow && <p className="b10x-kicker"><span className="b10x-kicker__dot" aria-hidden="true" />{eyebrow}</p>}
-      <h1 id="b10x-hero-title">{lines.map((line) => <span key={line}>{line}<br /></span>)}<em>{emphasis}</em></h1>
+      <h1 id={titleId}>{lines.map((line) => <span key={line}>{line}<br /></span>)}<em>{emphasis}</em></h1>
       <p className="b10x-hero__lede">{lede}</p>
       {actions.length > 0 && <div className="b10x-hero__actions">{actions.map((action) => <Link key={action.href} to={action.href} className={action.kind === 'primary' ? 'b10x-button' : 'b10x-text-link'}>{action.label} <span aria-hidden="true">{action.kind === 'primary' ? '→' : action.href.startsWith('#') ? '↓' : '→'}</span></Link>)}</div>}
       {meta && <p className="b10x-hero__meta">{meta}</p>}
     </div>
     {aside && <div className="b10x-hero__aside">{aside}</div>}
+    {kpis && kpis.length > 0 && <KpiRow items={kpis} />}
   </section>;
+}
+
+const STATUS_GLYPH: Record<ProductStatus, string> = {shipped: '●', decided: '◐', planned: '○'};
+
+/** Numbered KPI tiles. Values are counted from data (see `landingKpis`), never typed. */
+export function KpiRow({items, label = 'Key figures'}: {items: readonly ResolvedKpi[]; label?: string}): ReactNode {
+  return <dl className="b10x-kpis" aria-label={label} style={{'--b10x-kpi-count': items.length} as CSSProperties}>
+    {items.map((item, index) => <div key={`${item.count}-${index}`} className={`b10x-kpi b10x-kpi--${item.tone}`}>
+      <dt className="b10x-kpi__label"><span className="b10x-kpi__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>{item.tone !== 'product' && <span className="b10x-kpi__glyph" aria-hidden="true">{STATUS_GLYPH[item.tone]}</span>}{item.label}</dt>
+      <dd className="b10x-kpi__value">{item.value}</dd>
+    </div>)}
+  </dl>;
+}
+
+/** The hero aside drawn from the product's own data. */
+export function HeroArt({art}: {art: ProductArt}): ReactNode {
+  const body = (() => {
+    switch (art.kind) {
+      case 'terminal': return <Terminal session={art.session} tilt animate caption={art.caption} />;
+      case 'protocol-graph': return <ProtocolGraph data={art.data} variant="hero" caption={art.caption} />;
+      case 'domain-graph': return <DomainGraph data={art.data} variant="hero" caption={art.caption} />;
+      case 'case': return <CaseCard data={art.data} caption={art.caption} />;
+      case 'code-pair': return <CodePair data={art.data} caption={art.caption} />;
+      default: return null;
+    }
+  })();
+  return <div className={`b10x-hero-art b10x-hero-art--${art.kind}`}>{body}</div>;
+}
+
+function DataError({kind, message}: {kind: string; message: string}): ReactNode {
+  return <aside className="b10x-callout b10x-callout--danger" role="alert"><p className="b10x-callout__title b10x-eyebrow">Cannot render {kind}</p><div className="b10x-callout__content"><p><code>{message}</code></p></div></aside>;
+}
+
+function useParsed<T>(data: unknown, parse: (value: unknown) => T): {value: T} | {error: string} {
+  return useMemo(() => {
+    try {
+      return {value: parse(data)};
+    } catch (error) {
+      return {error: error instanceof Error ? error.message : String(error)};
+    }
+  }, [data, parse]);
+}
+
+const STATE_GLYPHS: Record<string, string> = {blocked: '⊘', legitimate: '✓', admissible: '○', inadmissible: '⊘', earned: '✓'};
+
+/**
+ * A case evaluated more than once, frame by frame: claims as truth chips, outcome and action states
+ * as neutral outlined chips (they are not truth values). From a `b10x-case/1` recording.
+ */
+export function CaseCard({data, caption}: {data: unknown; caption?: ReactNode}): ReactNode {
+  const parsed = useParsed(data, parseCaseDocument);
+  if ('error' in parsed) return <DataError kind="case card" message={parsed.error} />;
+  const document = parsed.value;
+  return <figure className="b10x-case" aria-label={`Case ${document.case}${document.protocol ? ` under ${document.protocol}` : ''}`}>
+    <p className="b10x-case__kicker">Case <code>{document.case}</code>{document.protocol && <> · <code>{document.protocol}</code></>}</p>
+    <ol className="b10x-case__frames" style={{'--b10x-case-frames': document.frames.length} as CSSProperties}>
+      {document.frames.map((frame, index) => <li key={`${frame.label}-${index}`} className={['b10x-case__frame', frame.current && 'is-current'].filter(Boolean).join(' ')}>
+        <p className="b10x-case__label">{frame.label}{frame.current && <span className="b10x-case__current"> · current</span>}</p>
+        <ul className="b10x-case__rows">
+          {frame.claims?.map((claim) => <li key={`c-${claim.name}`}><code>{claim.name}</code><Truth value={claim.value} /></li>)}
+          {frame.outcomes?.map((outcome) => <li key={`o-${outcome.name}`}><code>{outcome.name}</code><span className="b10x-chip b10x-chip--state"><span className="b10x-chip__glyph" aria-hidden="true">{STATE_GLYPHS[outcome.state] ?? '·'}</span><span className="b10x-chip__text">{outcome.state}</span></span></li>)}
+          {frame.actions?.map((action) => <li key={`a-${action.name}`}><code>{action.name}</code><span className="b10x-chip b10x-chip--state"><span className="b10x-chip__glyph" aria-hidden="true">{STATE_GLYPHS[action.state] ?? '·'}</span><span className="b10x-chip__text">{action.state}</span></span></li>)}
+        </ul>
+        {frame.notes?.map((note) => <p key={note} className="b10x-case__note">{note}</p>)}
+      </li>)}
+    </ol>
+    {caption && <figcaption className="b10x-case__caption">{caption}</figcaption>}
+    {document.recordedWith && <p className="b10x-case__source">{document.recordedWith}</p>}
+  </figure>;
+}
+
+/** A source and what was generated from it, from a `b10x-code-pair/1` document. */
+export function CodePair({data, caption}: {data: unknown; caption?: ReactNode}): ReactNode {
+  const parsed = useParsed(data, parseCodePairDocument);
+  if ('error' in parsed) return <DataError kind="code pair" message={parsed.error} />;
+  const document = parsed.value;
+  return <figure className="b10x-code-pair">
+    <div className="b10x-code-pair__panes">
+      <div className="b10x-code-pair__pane"><CodeBlock language={document.from.language} title={document.from.title}>{document.from.code.replace(/\s+$/, '')}</CodeBlock></div>
+      <p className="b10x-code-pair__via"><span className="b10x-code-pair__arrow" aria-hidden="true" />{document.via ? <code>{document.via}</code> : <span>generates</span>}</p>
+      <div className="b10x-code-pair__pane"><CodeBlock language={document.to.language} title={document.to.title}>{document.to.code.replace(/\s+$/, '')}</CodeBlock></div>
+    </div>
+    {caption && <figcaption className="b10x-code-pair__caption">{caption}</figcaption>}
+    {document.recordedWith && <p className="b10x-code-pair__source">{document.recordedWith}</p>}
+  </figure>;
 }
 
 export interface ProductSectionProps {
@@ -340,16 +594,18 @@ export interface ProductSectionProps {
   eyebrow?: string;
   title: ReactNode;
   lede?: ReactNode;
+  /** The section's content kind; graph and status sections sit on the alternate ground. */
+  kind?: ProductLandingSection['kind'];
   children?: ReactNode;
 }
 
-export function ProductSection({id, number, eyebrow, title, lede, children}: ProductSectionProps): ReactNode {
+export function ProductSection({id, number, eyebrow, title, lede, kind, children}: ProductSectionProps): ReactNode {
   // Register the anchor so Docusaurus link checking knows `#id` exists.
   const links = useBrokenLinks();
   if (id) links.collectAnchor(id);
   const titleId = id ? `${id}-title` : undefined;
   const kicker = [number !== undefined ? String(number).padStart(2, '0') : undefined, eyebrow].filter(Boolean).join(' / ');
-  return <section className="b10x-product-section" id={id} aria-labelledby={titleId}>
+  return <section className={['b10x-product-section', kind && `b10x-product-section--${kind}`].filter(Boolean).join(' ')} id={id} aria-labelledby={titleId}>
     <header className="b10x-product-section__header">
       {kicker && <p className="b10x-kicker">{kicker}</p>}
       <h2 id={titleId}>{title}</h2>
@@ -359,29 +615,38 @@ export function ProductSection({id, number, eyebrow, title, lede, children}: Pro
   </section>;
 }
 
-export function ProductLanding({data}: {data: ProductLandingData}): ReactNode {
-  const terminal = data.product.terminal;
+/** The landing hero: art from `product.art` (or the older `product.terminal`) and the KPI row. */
+export function LandingHero({data, titleId}: {data: ProductLandingData; titleId?: string}): ReactNode {
+  const {product} = data;
+  const art: ProductArt | undefined = product.art ?? (product.terminal !== undefined ? {kind: 'terminal', session: product.terminal, ...(product.terminalCaption ? {caption: product.terminalCaption} : {})} : undefined);
+  const kpis = useMemo(() => landingKpis(data), [data]);
+  return <ProductHero
+    eyebrow={product.eyebrow}
+    promise={product.promise}
+    lede={product.lede}
+    actions={product.actions}
+    meta={product.meta}
+    aside={art ? <HeroArt art={art} /> : undefined}
+    kpis={kpis}
+    titleId={titleId}
+  />;
+}
+
+export function ProductLanding({data, current}: {data: ProductLandingData; current?: ProductId}): ReactNode {
   return <div className="b10x-product">
-    <ProductHero
-      eyebrow={data.product.eyebrow}
-      promise={data.product.promise}
-      lede={data.product.lede}
-      actions={data.product.actions}
-      meta={data.product.meta}
-      aside={terminal !== undefined ? <Terminal session={terminal} tilt caption={data.product.terminalCaption} /> : undefined}
-    />
-    {data.sections.map((section, index) => <ProductSection key={`${section.kind}-${index}`} id={sectionId(data.sections, index)} number={index + 1} eyebrow={section.eyebrow} title={section.title} lede={section.lede}>
-      <LandingSection section={section} />
+    <LandingHero data={data} />
+    {data.sections.map((section, index) => <ProductSection key={`${section.kind}-${index}`} id={sectionId(data.sections, index)} number={index + 1} eyebrow={section.eyebrow} title={section.title} lede={section.lede} kind={section.kind}>
+      <LandingSection section={section} current={current} />
     </ProductSection>)}
   </div>;
 }
 
-function LandingSection({section}: {section: ProductLandingSection}): ReactNode {
+function LandingSection({section, current}: {section: ProductLandingSection; current?: ProductId}): ReactNode {
   switch (section.kind) {
     case 'features': return <FeatureGrid items={section.items} />;
     case 'flow': return <Flow steps={section.steps} />;
-    case 'status': return <StatusStrip items={section.items} />;
-    case 'related': return <RelatedTools tools={section.tools} />;
+    case 'status': return typeof section.items === 'string' ? <DataError kind="status" message={`status file ${section.items} was not read; the product-site plugin reads it at build time`} /> : <StatusStrip items={section.items} asOf={section.asOf} source={section.source} />;
+    case 'related': return <RelatedTools tools={section.tools} current={current} />;
     case 'terminal': return <Terminal session={section.session} />;
     case 'protocol-graph': return <ProtocolGraph data={section.data} caption={section.caption} />;
     case 'domain-graph': return <DomainGraph data={section.data} caption={section.caption} />;

@@ -40,6 +40,17 @@ canon-ir/1
   </Feature>
 </FeatureGrid>
 
+Columns follow the number of cards (four cards make a 2 × 2 grid, five make three columns). A card
+may carry a protocol kind's glyph as its icon, the same glyph the kind chips and graph legends use.
+
+<FeatureGrid label="What a protocol declares" items={[
+  {title: 'Actions', icon: 'action', description: 'What may be done, and what each action may produce.'},
+  {title: 'Evidence kinds', icon: 'evidence', description: 'What an observation records, and when it stops applying.'},
+  {title: 'Claims', icon: 'claim', description: 'What is TRUE, FALSE or UNKNOWN, from evidence alone.'},
+  {title: 'Outcomes', icon: 'outcome', description: 'How a case may conclude, and what it must have earned.'},
+  {title: 'Obligations', icon: 'obligation', description: 'What remains owed before a case may close.'},
+]} />
+
 ## Flow
 
 <Flow steps={[
@@ -63,6 +74,17 @@ The existing maturity badge still renders: <StatusBadge maturity="development" /
 ]} />
 
 ## Related tools
+
+Named by family id and a relation word; the name, mark, hue, description and link come from the
+docs-system family registry, so every site describes a tool the same way.
+
+<RelatedTools current="canon" tools={[
+  {id: 'els', relation: 'uses', via: 'protocol/1'},
+  {id: 'loom', relation: 'beside'},
+  {id: 'ess', relation: 'specifies'},
+]} />
+
+Written out in full, the older form still renders as before:
 
 <RelatedTools tools={[
   {name: 'ELS', description: 'Engineering protocols on Canon.', href: 'https://beyond10x.github.io/els/'},

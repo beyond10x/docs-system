@@ -48,6 +48,7 @@ declare module '@docusaurus/useDocusaurusContext' {
 
 declare module '@docusaurus/useGlobalData' {
   export default function useGlobalData(): Record<string, unknown>;
+  export function usePluginData(pluginName: string, pluginId?: string, options?: {failfast?: boolean}): unknown;
 }
 
 declare module '@theme-init/Admonition' {
@@ -60,4 +61,33 @@ declare module '@docusaurus/ErrorBoundary' {
   import type {ComponentType, ReactNode} from 'react';
   const ErrorBoundary: ComponentType<{fallback?: (params: Record<string, unknown>) => ReactNode; children?: ReactNode}>;
   export default ErrorBoundary;
+}
+
+declare module '@theme-init/Footer/Layout' {
+  import type {ComponentType, ReactNode} from 'react';
+  const FooterLayout: ComponentType<{style?: 'dark' | 'light'; links?: ReactNode; logo?: ReactNode; copyright?: ReactNode}>;
+  export default FooterLayout;
+}
+
+declare module '@theme-init/Navbar/Logo' {
+  import type {ComponentType} from 'react';
+  const NavbarLogo: ComponentType<Record<string, unknown>>;
+  export default NavbarLogo;
+}
+
+declare module '@theme-init/DocItem/Content' {
+  import type {ComponentType, ReactNode} from 'react';
+  const DocItemContent: ComponentType<{children?: ReactNode}>;
+  export default DocItemContent;
+}
+
+declare module '@theme/MDXContent' {
+  import type {ComponentType, ReactNode} from 'react';
+  const MDXContent: ComponentType<{children?: ReactNode}>;
+  export default MDXContent;
+}
+
+declare module '@docusaurus/plugin-content-docs/client' {
+  export function useDoc(): {metadata: {title: string; permalink: string; id: string}; frontMatter: Record<string, unknown>; contentTitle?: string};
+  export function useDocsSidebar(): {name: string; items: unknown[]} | null;
 }

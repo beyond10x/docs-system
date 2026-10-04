@@ -1,3 +1,4 @@
+import type { DocsSystemBuild } from './family.js';
 import type { ProductLandingData } from './product-data.js';
 import type { ProductId } from './product-palette.js';
 export interface ProductSiteOptions {
@@ -16,6 +17,11 @@ export interface ProductSiteOptions {
     fonts?: boolean;
     /** Fail the build when a raw `:::kind Title` line reaches a page. Default true. */
     admonitionGuard?: boolean;
+    /**
+     * With `trailingSlash: false`, write a redirect at `x/index.html` for every `x.html`, so `/docs/x/`
+     * reaches the page instead of a 404. Default true.
+     */
+    trailingSlashRedirects?: boolean;
 }
 /** Self-hosted font files, served from `styles/static` under `<baseUrl>b10x-fonts/`. */
 export declare const PRODUCT_FONT_DIRECTORY: string;
@@ -31,6 +37,8 @@ interface SiteContext {
     baseUrl: string;
     siteConfig?: {
         title?: string;
+        url?: string;
+        trailingSlash?: boolean;
     };
 }
 interface PluginActions {
@@ -41,6 +49,7 @@ interface PluginActions {
         exact?: boolean;
         modules?: Record<string, string>;
     }): void;
+    setGlobalData?(data: unknown): void;
 }
 export interface ProductSitePlugin {
     name: string;
@@ -62,6 +71,16 @@ export interface ProductSitePlugin {
 export default function productSitePlugin(context: SiteContext, options?: ProductSiteOptions): ProductSitePlugin;
 /** Read a landing file and inline every referenced terminal session and graph document. */
 export declare function readLanding(file: string, watched?: Set<string>): Promise<ProductLandingData>;
+/**
+ * The docs-system revision this site is built with: `B10X_DOCS_SYSTEM_REVISION`, else the commit
+ * the site's lockfile pins, else this package's own Git checkout, else its version.
+ */
+export declare function docsSystemBuild(siteDir: string): Promise<DocsSystemBuild>;
+/**
+ * With `trailingSlash: false` Docusaurus writes `docs/x.html`, and static hosts answer `docs/x/` with
+ * a 404. Write a redirect at `docs/x/index.html` for every page that has none, keeping query and hash.
+ */
+export declare function writeTrailingSlashRedirects(outDir: string, baseUrl: string, origin: string): Promise<string[]>;
 /** Mermaid themed from the tokens, per colour mode. Added only beside `@docusaurus/theme-mermaid`. */
 export declare function productMermaidTheme(): {
     name: string;

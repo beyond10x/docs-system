@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.code-pair.v1.json",
+  "title": "b10x code pair",
+  "description": "A source excerpt and the excerpt generated from it, quoted verbatim by the repository's generator.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "from", "to"],
+  "properties": {
+    "format": {"const": "b10x-code-pair/1"},
+    "from": {"$ref": "#/$defs/pane"},
+    "to": {"$ref": "#/$defs/pane"},
+    "via": {"type": "string", "minLength": 1, "description": "The step between them, for example a generator command."},
+    "recordedWith": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "pane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "language", "code"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "language": {"type": "string", "minLength": 1},
+        "code": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

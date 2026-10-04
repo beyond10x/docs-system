@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+- Add the family registry (`@beyond10x/docs-system/family`): related tools may be named
+  `{id, relation, via?}` and take name, unique mark (C, El, L, Co, Es), signature hue, description
+  and link from it. With `product` set, the footer shows a family strip with the current product
+  highlighted, a "This build" line names the docs-system revision, and the navbar wordmark gets a
+  product switcher.
+- Add `b10x-status/1`: a landing status section may name a status file (`"items": "data/status.json"`)
+  and `<StatusTable data={…}/>` renders the same file on the status page, grouped by `area`.
+- Add hero art from data: `product.art` with kinds `terminal`, `protocol-graph`, `domain-graph`,
+  `case` (`b10x-case/1`) and `code-pair` (`b10x-code-pair/1`), and `product.kpis`, a KPI row counted
+  from the art, the graphs and the status section. `ProtocolGraph` and `DomainGraph` take
+  `variant="hero"`. `product.terminal` still works.
+- Documentation pages with `status`, `lede` or `source` front matter open with a page header
+  (kicker "Category · n of m" from the sidebar, title, lede, status badge, source line).
+- Graph and status sections sit on the alternate ground, cards carry light-mode depth, feature grids
+  take their columns from the card count (4 → 2 × 2), and protocol kinds have glyphs reused in kind
+  chips, graph legends and feature `icon`s.
+- Motion only under `prefers-reduced-motion: no-preference`: hero graph edges draw once, the hero
+  terminal types once, the status bar grows.
+- Top-level sidebar categories read as kickers. With `trailingSlash: false` the build writes a
+  redirect at `x/index.html` for every `x.html`, so `/docs/x/` no longer 404s on static hosts.
+- At phone width the hero terminal wraps long commands with a hanging indent, and graphs wider than
+  their frame offer a "Fit to width" toggle.
+
 - Self-host Inter (variable) and Fira Code as latin-subset woff2 with `font-display: swap` and
   preload; `withProductSite` serves them under `<baseUrl>b10x-fonts/` with their OFL licences.
 - Fail the product-site build when a raw `:::kind Title` line reaches a page, and refuse

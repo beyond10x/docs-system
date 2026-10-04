@@ -1,0 +1,19 @@
+{
+  "format": "b10x-status/1",
+  "asOf": "2026-10-04",
+  "source": "Canon status as of 2026-10-04, quoted for the template example",
+  "items": [
+    {"label": "protocol/1 source model and parser", "status": "shipped", "area": "Language", "detail": "Unknown keys and explicit nulls are refused."},
+    {"label": "Deterministic validation", "status": "shipped", "area": "Language", "detail": "References, duplicates and claim cycles, in a stable order."},
+    {"label": "canon-ir/1 compilation", "status": "shipped", "area": "Language", "detail": "Canonical ordering and explicit defaults."},
+    {"label": "canon conform run", "status": "shipped", "area": "Evaluation", "detail": "Runs canon-conformance/1 scenarios."},
+    {"label": "Three-valued claim evaluation", "status": "shipped", "area": "Evaluation", "detail": "canon evaluate over a case snapshot and an evidence directory.", "href": "/docs/meaning"},
+    {"label": "Evidence bound to revisions", "status": "planned", "area": "Evaluation", "detail": "Evidence applies only to the revision it was observed on."},
+    {"label": "Evidence freshness", "status": "planned", "area": "Evaluation", "detail": "Evidence expires against the evaluation instant."},
+    {"label": "Action admissibility", "status": "planned", "area": "Evaluation", "detail": "From preconditions and authority decisions."},
+    {"label": "Outcomes", "status": "planned", "area": "Evaluation", "detail": "Earned or blocked; no completion through an undeclared outcome."},
+    {"label": "Cases compose at run time", "status": "decided", "area": "Design", "detail": "Recorded as ADR 0081."},
+    {"label": "Step order, red before green", "status": "decided", "area": "Design", "detail": "Recorded as ADR 0084."},
+    {"label": "Semantic diff", "status": "planned", "area": "Design", "detail": "Classify a protocol change as tightening, relaxation or breaking."}
+  ]
+}

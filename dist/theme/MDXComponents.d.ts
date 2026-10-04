@@ -1,16 +1,21 @@
 import { DomainGraph, ProtocolGraph } from '../charts.js';
 import { EmptyState, Kind, Truth } from '../components.js';
 import { CompositionGraph, SessionKpis, SessionTimeline, StatTiles, StepBars } from '../session-charts.js';
-import { Feature, FeatureGrid, Flow, FlowStep, RelatedTools, StatusBadge, StatusStrip, Terminal } from '../product.js';
+import { CaseCard, CodePair, FamilyStrip, Feature, FeatureGrid, Flow, FlowStep, HeroArt, KindIcon, RelatedTools, StatusBadge, StatusStrip, StatusTable, Terminal } from '../product.js';
 declare const _default: {
+    CaseCard: typeof CaseCard;
+    CodePair: typeof CodePair;
     CompositionGraph: typeof CompositionGraph;
     DomainGraph: typeof DomainGraph;
     EmptyState: typeof EmptyState;
+    FamilyStrip: typeof FamilyStrip;
     Feature: typeof Feature;
     FeatureGrid: typeof FeatureGrid;
     Flow: typeof Flow;
     FlowStep: typeof FlowStep;
+    HeroArt: typeof HeroArt;
     Kind: typeof Kind;
+    KindIcon: typeof KindIcon;
     ProtocolGraph: typeof ProtocolGraph;
     RelatedTools: typeof RelatedTools;
     SessionKpis: typeof SessionKpis;
@@ -18,6 +23,7 @@ declare const _default: {
     StatTiles: typeof StatTiles;
     StatusBadge: typeof StatusBadge;
     StatusStrip: typeof StatusStrip;
+    StatusTable: typeof StatusTable;
     StepBars: typeof StepBars;
     Terminal: typeof Terminal;
     Truth: typeof Truth;

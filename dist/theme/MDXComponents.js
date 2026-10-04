@@ -3,17 +3,22 @@ import MDXComponents from '@theme-init/MDXComponents';
 import { DomainGraph, ProtocolGraph } from '../charts.js';
 import { EmptyState, Kind, Truth } from '../components.js';
 import { CompositionGraph, SessionKpis, SessionTimeline, StatTiles, StepBars } from '../session-charts.js';
-import { Feature, FeatureGrid, Flow, FlowStep, RelatedTools, StatusBadge, StatusStrip, Terminal } from '../product.js';
+import { CaseCard, CodePair, FamilyStrip, Feature, FeatureGrid, Flow, FlowStep, HeroArt, KindIcon, RelatedTools, StatusBadge, StatusStrip, StatusTable, Terminal } from '../product.js';
 export default {
     ...MDXComponents,
+    CaseCard,
+    CodePair,
     CompositionGraph,
     DomainGraph,
     EmptyState,
+    FamilyStrip,
     Feature,
     FeatureGrid,
     Flow,
     FlowStep,
+    HeroArt,
     Kind,
+    KindIcon,
     ProtocolGraph,
     RelatedTools,
     SessionKpis,
@@ -21,6 +26,7 @@ export default {
     StatTiles,
     StatusBadge,
     StatusStrip,
+    StatusTable,
     StepBars,
     Terminal,
     Truth,

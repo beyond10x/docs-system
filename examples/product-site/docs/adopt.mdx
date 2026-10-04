@@ -8,7 +8,7 @@ description: What a product repository changes to use the product-site layer.
 ```ts title="website/docusaurus.config.ts"
 import {withProductSite} from '@beyond10x/docs-system/product-site';
 
-export default withProductSite(config, {landing: './product.json', mark: 'C'});
+export default withProductSite(config, {landing: './product.json', product: 'canon'});
 ```
 
 `withProductSite` adds the product plugin (tokens, theme layer, MDX components, landing route), the
@@ -27,5 +27,13 @@ time. The landing page takes the route `/`, so documentation moves to `routeBase
 | Hero and terminal sessions | `b10x-terminal/1` | the repository's generator, from a real run |
 | Protocol graph | `b10x-protocol-graph/1` | from `canon compile` output |
 | Domain graph | `b10x-domain-graph/1` | from `ess specify compile` output |
+| Status strip and status page | `b10x-status/1` | the repository's status record |
+| Case card hero | `b10x-case/1` | from evaluator runs such as `canon evaluate` |
+| Code pair hero | `b10x-code-pair/1` | a source excerpt and its generated excerpt, verbatim |
+
+`product.art` picks the hero aside from one of these files and `product.kpis` names counts the
+template takes from them, so no number on the landing page is typed. Related tools are family ids
+plus a relation word (`{"id": "els", "relation": "uses"}`); the registry supplies the rest.
+Documentation pages opt into a page header with `status`, `lede` or `source` front matter.
 
 JSON Schemas for each are exported from `@beyond10x/docs-system/schema/*`.
