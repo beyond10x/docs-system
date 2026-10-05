@@ -9,6 +9,9 @@
 import { PRODUCT_SIGNATURES } from './product-palette.js';
 /** Family order. ELS and ESS are never adjacent (their hues are the closest pair, style plan § 4). */
 export const FAMILY_ORDER = ['canon', 'els', 'loom', 'commission', 'ess'];
+/** The GitHub repository and project-site path, where they differ from the product id (the id is
+ * the palette key and stays stable across a repository rename). */
+const REPOSITORY = { els: 'engineering-protocols' };
 const COPY = {
     canon: { tagline: 'Protocol calculus', description: 'A formal language and a deterministic calculus for evidence-governed protocols: what is known, what is owed, what has been earned.' },
     els: { tagline: 'Engineering protocols on Canon', description: 'Engineering protocols written in Canon: which claims must hold, which evidence counts, which actions need authority.' },
@@ -21,8 +24,8 @@ export const FAMILY = Object.fromEntries(FAMILY_ORDER.map((id) => [id, {
         name: PRODUCT_SIGNATURES[id].name,
         mark: PRODUCT_SIGNATURES[id].mark,
         ...COPY[id],
-        url: `https://beyond10x.github.io/${id}/`,
-        repository: `https://github.com/beyond10x/${id}`,
+        url: `https://beyond10x.github.io/${REPOSITORY[id] ?? id}/`,
+        repository: `https://github.com/beyond10x/${REPOSITORY[id] ?? id}`,
     }]));
 export function familyMembers() {
     return FAMILY_ORDER.map((id) => FAMILY[id]);

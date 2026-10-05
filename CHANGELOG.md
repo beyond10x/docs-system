@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- The family member `els` is named "Engineering protocols" and links https://beyond10x.github.io/engineering-protocols/
+  and https://github.com/beyond10x/engineering-protocols, after the repository rename. The product id
+  and palette key stay `els`.
 - Add the family registry (`@beyond10x/docs-system/family`): related tools may be named
   `{id, relation, via?}` and take name, unique mark (C, El, L, Co, Es), signature hue, description
   and link from it. With `product` set, the footer shows a family strip with the current product
