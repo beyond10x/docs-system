@@ -40,7 +40,11 @@ test('P9: one family registry with unique marks, validated hues in CSS, and ELS 
 
 test('P9: related tools from ids and a relation word; the written-out form renders as before', () => {
   const markup = render(createElement(RelatedTools, {current: 'canon', tools: [{id: 'els', relation: 'uses', via: 'protocol/1'}, {id: 'ess', relation: 'specifies'}, {name: 'Other', description: 'Hand-written', href: 'https://example.org/'}]}));
-  assert.match(markup, /b10x-family--els[\s\S]*>El<[\s\S]*>ELS<[\s\S]*Engineering protocols written in Canon[\s\S]*uses Canon[\s\S]*protocol\/1/);
+  assert.match(markup, /b10x-family--els[\s\S]*>El<[\s\S]*>Engineering protocols<[\s\S]*Engineering protocols written in Canon[\s\S]*uses Canon[\s\S]*protocol\/1/);
+  assert.match(markup, /b10x-family--els" href="https:\/\/beyond10x\.github\.io\/engineering-protocols\/"/);
+  assert.equal(FAMILY.els.url, 'https://beyond10x.github.io/engineering-protocols/');
+  assert.equal(FAMILY.els.repository, 'https://github.com/beyond10x/engineering-protocols');
+  assert.equal(FAMILY.canon.repository, 'https://github.com/beyond10x/canon');
   assert.match(markup, /href="https:\/\/beyond10x\.github\.io\/ess\/"[\s\S]*specifies Canon/);
   assert.match(markup, /<a class="b10x-related__card" href="https:\/\/example\.org\/"><span class="b10x-mark" aria-hidden="true">O<\/span>/);
   assert.equal(relationPhrase('used-by'), 'used by');
