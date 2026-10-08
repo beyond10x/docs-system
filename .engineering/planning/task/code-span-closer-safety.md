@@ -1,5 +1,5 @@
 ---
-format: aep.planning-md/1
+format: aep.planning-md/3
 id: task:code-span-closer-safety
 kind: task
 status: implemented
@@ -15,6 +15,10 @@ refs:
 relations:
 - derived_from: task:passive-mdx-code-span-scanner
 revision: 4
+transitions:
+- {from: "draft", to: "proposed", at: "2026-09-03T14:02:03Z", actor: "human:timo", revision: 2, imported: true}
+- {from: "proposed", to: "active", at: "2026-09-03T14:02:03Z", actor: "human:timo", revision: 3, imported: true}
+- {from: "active", to: "implemented", at: "2026-09-03T14:02:38Z", actor: "human:timo", revision: 4, decided_on: {"recorded":{"test_result":1}}, imported: true}
 ---
 # Keep MDX visible after escaped-looking code-span closers
 

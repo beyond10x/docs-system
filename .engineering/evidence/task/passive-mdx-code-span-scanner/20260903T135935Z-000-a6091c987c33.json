@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-03T13:59:35Z",
+  "actor": "human:timo",
+  "artifact": "task:passive-mdx-code-span-scanner",
+  "kind": "task",
+  "revision": 3,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "npm test (36/36), npm run build:check, and exact AEP CLI page passive-MDX validation",
+    "reference": "tests/v3.test.mjs"
+  }
+}

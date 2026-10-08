@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-03T13:44:49Z",
+  "actor": "human:timo",
+  "artifact": "task:shared-code-block-rendering",
+  "kind": "task",
+  "revision": 4,
+  "change": {
+    "change": "evidence",
+    "kind": "verification",
+    "source": "npm run build:check and PostCSS parse",
+    "reference": "styles/tokens.css"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-03T14:16:53Z",
+  "actor": "human:timo",
+  "artifact": "task:passive-mdx-code-span-scanner",
+  "kind": "task",
+  "revision": 6,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "MDX-AST code-span and component-name regressions plus exact AEP CLI page validation",
+    "reference": "tests/v3.test.mjs"
+  }
+}
