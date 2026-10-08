@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.8.0 — 2026-10-08
 
 - The family member `els` is named "Engineering protocols" and links https://beyond10x.github.io/engineering-protocols/
   and https://github.com/beyond10x/engineering-protocols, after the repository rename. The product id
