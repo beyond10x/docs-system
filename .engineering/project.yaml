@@ -1,9 +1,8 @@
-version: aep.project/1
-
-protocol: adp/1
+planning_scope: docs-system
 profile: development.standard
+protocol: adp/1
 protocols: git+https://github.com/beyond10x/aep.git#9de3c9995c551782cc9c34155580b54a272040e2
-
-summary: >-
-  Shared public documentation schemas, passive collection, presentation components, and design
-  tokens consumed by the unified beyond10x Website and repository documentation surfaces.
+store:
+  git: {}
+summary: Shared public documentation schemas, passive collection, presentation components, and design tokens consumed by the unified beyond10x Website and repository documentation surfaces.
+version: aep.project/5

@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-03T14:25:59Z",
+  "actor": "human:timo",
+  "artifact": "task:conservative-code-span-boundaries",
+  "kind": "task",
+  "revision": 8,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "Format-specific Markdown/MDX plus GFM tests; Agent Platform README; AEP CLI page; npm test 36/36; build:check",
+    "reference": "tests/v3.test.mjs"
+  }
+}

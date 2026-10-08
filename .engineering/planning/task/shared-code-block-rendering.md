@@ -1,5 +1,5 @@
 ---
-format: aep.planning-md/1
+format: aep.planning-md/3
 id: task:shared-code-block-rendering
 kind: task
 status: implemented
@@ -15,6 +15,9 @@ refs:
 - provider: website-artifact
   reference: story:site-wide-code-fence-rendering-audit
 revision: 5
+transitions:
+- {from: "draft", to: "active", at: "2026-09-03T13:30:42Z", actor: "human:timo", revision: 2, imported: true}
+- {from: "active", to: "implemented", at: "2026-09-03T13:44:49Z", actor: "human:timo", revision: 5, decided_on: {"recorded":{"test_result":2,"verification":1}}, imported: true}
 ---
 # Polish shared code-block rendering
 

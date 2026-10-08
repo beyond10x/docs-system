@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-03T14:19:41Z",
+  "actor": "human:timo",
+  "artifact": "task:conservative-code-span-boundaries",
+  "kind": "task",
+  "revision": 7,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "Parser-confirmed block/span regressions including malformed fences; npm test 36/36; build:check; full AEP CLI page",
+    "reference": "tests/v3.test.mjs"
+  }
+}

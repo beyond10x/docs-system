@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-03T14:16:53Z",
+  "actor": "human:timo",
+  "artifact": "task:conservative-code-span-boundaries",
+  "kind": "task",
+  "revision": 6,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "MDX-AST regressions, npm test (36/36), npm run build:check, fixture validation, and exact AEP CLI page validation",
+    "reference": "tests/v3.test.mjs"
+  }
+}

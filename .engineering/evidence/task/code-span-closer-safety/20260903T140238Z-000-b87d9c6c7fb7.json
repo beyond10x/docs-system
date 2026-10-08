@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-03T14:02:38Z",
+  "actor": "human:timo",
+  "artifact": "task:code-span-closer-safety",
+  "kind": "task",
+  "revision": 3,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "npm test (36/36), npm run build:check, exact AEP CLI page validation, and escaped-looking closer regressions",
+    "reference": "tests/v3.test.mjs"
+  }
+}

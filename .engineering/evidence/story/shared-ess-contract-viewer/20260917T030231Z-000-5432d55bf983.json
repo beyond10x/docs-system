@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-17T03:02:31Z",
+  "actor": "human:timo",
+  "artifact": "story:shared-ess-contract-viewer",
+  "kind": "story",
+  "revision": 6,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "npm run gate; npm run test:browser; Website integration browser checks",
+    "reference": "tests/ess-viewer.browser.mjs"
+  }
+}

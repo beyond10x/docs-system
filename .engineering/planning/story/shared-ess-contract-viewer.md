@@ -1,5 +1,5 @@
 ---
-format: aep.planning-md/1
+format: aep.planning-md/3
 id: story:shared-ess-contract-viewer
 kind: story
 status: active
@@ -26,6 +26,9 @@ scope:
 - confidence: cited
   path: tests
 revision: 8
+transitions:
+- {from: "draft", to: "proposed", at: "2026-09-17T02:08:56Z", actor: "human:timo", revision: 3, imported: true}
+- {from: "proposed", to: "active", at: "2026-09-17T02:08:56Z", actor: "human:timo", revision: 4, imported: true}
 ---
 # Explore ESS contracts through the shared documentation UI
 

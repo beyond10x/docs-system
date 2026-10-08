@@ -1,5 +1,5 @@
 ---
-format: aep.planning-md/1
+format: aep.planning-md/3
 id: task:conservative-code-span-boundaries
 kind: task
 status: implemented
@@ -15,6 +15,10 @@ refs:
 relations:
 - derived_from: task:passive-mdx-code-span-scanner
 revision: 8
+transitions:
+- {from: "draft", to: "proposed", at: "2026-09-03T14:07:55Z", actor: "human:timo", revision: 2, imported: true}
+- {from: "proposed", to: "active", at: "2026-09-03T14:07:55Z", actor: "human:timo", revision: 3, imported: true}
+- {from: "active", to: "implemented", at: "2026-09-03T14:08:28Z", actor: "human:timo", revision: 4, decided_on: {"recorded":{"test_result":1}}, imported: true}
 ---
 # Keep passive MDX checks conservative at block boundaries
 
