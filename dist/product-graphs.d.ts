@@ -20,7 +20,19 @@ export type ProtocolPredicate = {
         kind: string;
         result?: string | null;
     };
+}
+/** True when the case gives input `id` one of the values in `in`. */
+ | {
+    input: {
+        id: string;
+        in: string[];
+    };
 };
+/** A case input as `canon-ir/1` declares it: the values a case may give it. */
+export interface ProtocolCaseInput {
+    description?: string | null;
+    values: string[];
+}
 export interface ProtocolGraphNode {
     /** Unique within the document; by convention `<kind>:<name>`. */
     id: string;
@@ -34,6 +46,8 @@ export interface ProtocolGraphNode {
     effect?: string;
     /** Actions: capabilities whose authority the action requires. */
     capabilities?: string[];
+    /** Obligations only: the predicate under which the obligation applies. Omitted when it always applies. */
+    applicable_when?: ProtocolPredicate;
 }
 export interface ProtocolGraphEdge {
     from: string;
@@ -54,6 +68,10 @@ export interface ProtocolGraphDocument {
         description?: string;
         source?: string;
     };
+    /** The case inputs that `input` predicate leaves test, keyed by input id. */
+    case?: {
+        inputs: Record<string, ProtocolCaseInput>;
+    };
     nodes: ProtocolGraphNode[];
     edges: ProtocolGraphEdge[];
 }
@@ -63,12 +81,18 @@ export declare const PROTOCOL_KIND_LABELS: Record<ProtocolNodeKind, {
 }>;
 /** Read and check a `b10x-protocol-graph/1` document. Throws with the offending path. */
 export declare function parseProtocolGraph(value: unknown): ProtocolGraphDocument;
-/** One line of a predicate, indented by depth, for text and tooltips. */
+/**
+ * One line of a predicate, indented by depth, for text and tooltips. It reads as `text`, then
+ * `reference` (an identifier, set in code), then `suffix`: an input leaf is `input <id> in <values>`.
+ */
 export interface PredicateLine {
     depth: number;
     text: string;
     reference?: string;
+    suffix?: string;
 }
+/** A predicate line as plain text, the way the text listing writes it. */
+export declare function predicateLineText(line: PredicateLine): string;
 export declare function predicateLines(value: ProtocolPredicate, depth?: number): PredicateLine[];
 export interface ProtocolGraphLayoutNode {
     node: ProtocolGraphNode;

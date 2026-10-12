@@ -1,0 +1,273 @@
+{
+  "incident-response.protocol-graph.json": {
+    "action:emergency.leave": [
+      [
+        0,
+        "all of",
+        null
+      ],
+      [
+        1,
+        "claim",
+        "impact.bounded"
+      ],
+      [
+        1,
+        "claim",
+        "service.healthy"
+      ]
+    ],
+    "claim:cause.identified": [
+      [
+        0,
+        "evidence = supported:",
+        "cause_analysis"
+      ]
+    ],
+    "claim:impact.bounded": [
+      [
+        0,
+        "evidence = bounded:",
+        "impact_assessment"
+      ]
+    ],
+    "claim:service.healthy": [
+      [
+        0,
+        "evidence = healthy:",
+        "operational_observation"
+      ]
+    ],
+    "outcome:mitigated": [
+      [
+        0,
+        "all of",
+        null
+      ],
+      [
+        1,
+        "claim is unknown:",
+        "cause.identified"
+      ],
+      [
+        1,
+        "claim",
+        "service.healthy"
+      ]
+    ],
+    "outcome:resolved": [
+      [
+        0,
+        "all of",
+        null
+      ],
+      [
+        1,
+        "claim",
+        "cause.identified"
+      ],
+      [
+        1,
+        "claim",
+        "service.healthy"
+      ]
+    ]
+  },
+  "investigation.protocol-graph.json": {
+    "claim:explanation.supported": [
+      [
+        0,
+        "all of",
+        null
+      ],
+      [
+        1,
+        "evidence = survived:",
+        "falsification_attempt"
+      ],
+      [
+        1,
+        "any evidence:",
+        "supporting_observation"
+      ]
+    ],
+    "outcome:supported": [
+      [
+        0,
+        "claim",
+        "explanation.supported"
+      ]
+    ]
+  },
+  "software-change-bugfix.protocol-graph.json": {
+    "action:implementation.edit": [
+      [
+        0,
+        "claim",
+        "regression.reproduced"
+      ]
+    ],
+    "action:repository.merge": [
+      [
+        0,
+        "claim",
+        "implementation.verified"
+      ]
+    ],
+    "claim:implementation.reviewed": [
+      [
+        0,
+        "evidence = approved:",
+        "code_review"
+      ]
+    ],
+    "claim:implementation.verified": [
+      [
+        0,
+        "all of",
+        null
+      ],
+      [
+        1,
+        "claim",
+        "implementation.reviewed"
+      ],
+      [
+        1,
+        "claim",
+        "regression.reproduced"
+      ],
+      [
+        1,
+        "claim",
+        "tests.pass"
+      ]
+    ],
+    "claim:regression.reproduced": [
+      [
+        0,
+        "evidence = failed:",
+        "test_result"
+      ]
+    ],
+    "claim:tests.pass": [
+      [
+        0,
+        "evidence = passed:",
+        "test_result"
+      ]
+    ],
+    "outcome:fixed": [
+      [
+        0,
+        "claim",
+        "implementation.verified"
+      ]
+    ]
+  },
+  "software-change.protocol-graph.json": {
+    "action:repository.merge": [
+      [
+        0,
+        "claim",
+        "implementation.verified"
+      ]
+    ],
+    "claim:coverage.not_degraded": [
+      [
+        0,
+        "evidence = not_degraded:",
+        "coverage_report"
+      ]
+    ],
+    "claim:deployment.healthy": [
+      [
+        0,
+        "evidence = healthy:",
+        "operational_observation"
+      ]
+    ],
+    "claim:implementation.reviewed": [
+      [
+        0,
+        "evidence = approved:",
+        "code_review"
+      ]
+    ],
+    "claim:implementation.verified": [
+      [
+        0,
+        "all of",
+        null
+      ],
+      [
+        1,
+        "claim",
+        "coverage.not_degraded"
+      ],
+      [
+        1,
+        "claim",
+        "implementation.reviewed"
+      ],
+      [
+        1,
+        "claim",
+        "tests.pass"
+      ]
+    ],
+    "claim:objective.realized": [
+      [
+        0,
+        "evidence = realized:",
+        "objective_observation"
+      ]
+    ],
+    "claim:release.proven": [
+      [
+        0,
+        "all of",
+        null
+      ],
+      [
+        1,
+        "claim",
+        "implementation.verified"
+      ],
+      [
+        1,
+        "evidence = reproducible:",
+        "build_provenance"
+      ]
+    ],
+    "claim:tests.pass": [
+      [
+        0,
+        "evidence = passed:",
+        "test_result"
+      ]
+    ],
+    "outcome:accepted": [
+      [
+        0,
+        "all of",
+        null
+      ],
+      [
+        1,
+        "claim",
+        "deployment.healthy"
+      ],
+      [
+        1,
+        "claim",
+        "objective.realized"
+      ],
+      [
+        1,
+        "claim",
+        "release.proven"
+      ]
+    ]
+  }
+}

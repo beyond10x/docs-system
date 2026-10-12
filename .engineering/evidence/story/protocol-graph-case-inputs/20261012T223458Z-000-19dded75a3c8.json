@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-12T22:34:58Z",
+  "actor": "human:timo",
+  "artifact": "story:protocol-graph-case-inputs",
+  "kind": "story",
+  "revision": 4,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "npm ci --ignore-scripts && npm run build && npm run gate on 08279e2: exit 0, 163 node tests pass, 0 fail"
+  }
+}

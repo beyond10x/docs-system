@@ -571,6 +571,14 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
 
 .b10x-graph__hint { margin: 0.75rem 0 0; color: var(--b10x-color-muted); font-size: 0.75rem; }
 .b10x-graph__caption { margin-top: 0.4rem; color: var(--b10x-color-muted); font-size: 0.8rem; }
+.b10x-graph__inputs { margin-top: 0.6rem; font-size: 0.8rem; }
+.b10x-graph__inputs-title { margin-bottom: 0.3rem !important; color: var(--b10x-color-muted); font: 650 0.64rem/1.3 var(--b10x-font-sans); letter-spacing: 0.13em; text-transform: uppercase; }
+.b10x-graph__inputs dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 0.75rem; margin: 0; }
+.b10x-graph__inputs dl > div { display: contents; }
+.b10x-graph__inputs dt { margin: 0; font-weight: 400; }
+.b10x-graph__inputs dd { display: flex; flex-wrap: wrap; gap: 0.3rem 0.6rem; align-items: baseline; margin: 0; }
+.b10x-graph__inputs-values { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.b10x-graph__inputs-text { color: var(--b10x-color-muted); }
 .b10x-graph__source { margin: 0.6rem 0 0; color: var(--b10x-color-muted); font: 0.72rem/1.5 var(--b10x-font-mono); }
 .b10x-graph__table { margin-top: 0.9rem; border-top: 1px solid var(--b10x-color-hairline, var(--b10x-color-line)); padding-top: 0.6rem; }
 .b10x-graph__table summary { color: var(--b10x-color-text); cursor: pointer; font-size: 0.82rem; font-weight: 550; }
