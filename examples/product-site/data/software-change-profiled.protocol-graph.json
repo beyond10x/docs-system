@@ -1,0 +1,154 @@
+{
+  "format": "b10x-protocol-graph/1",
+  "protocol": {
+    "id": "software.change.profiled",
+    "revision": 1,
+    "description": "One protocol for several kinds of change: the case input change_kind decides whether a failing test must come first, so a bugfix and a feature share one graph.",
+    "source": "design draft software.change.profiled/1, written against canon-ir/1 case inputs"
+  },
+  "case": {
+    "inputs": {
+      "change_kind": {
+        "description": "What kind of change the case is.",
+        "values": [
+          "bugfix",
+          "feature",
+          "docs"
+        ]
+      }
+    }
+  },
+  "nodes": [
+    {
+      "id": "action:implementation.edit",
+      "kind": "action",
+      "name": "implementation.edit",
+      "description": "Change the implementation. A bugfix waits for a failing test.",
+      "effect": "write",
+      "capabilities": [
+        "implementation.write"
+      ],
+      "predicate": {
+        "any": [
+          {
+            "not": {
+              "input": {
+                "id": "change_kind",
+                "in": [
+                  "bugfix"
+                ]
+              }
+            }
+          },
+          {
+            "claim": {
+              "id": "regression.reproduced"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "action:tests.run",
+      "kind": "action",
+      "name": "tests.run",
+      "description": "Run the suite.",
+      "effect": "execute"
+    },
+    {
+      "id": "evidence:test_result",
+      "kind": "evidence",
+      "name": "test_result",
+      "description": "The suite's result: pass or fail."
+    },
+    {
+      "id": "claim:regression.reproduced",
+      "kind": "claim",
+      "name": "regression.reproduced",
+      "description": "A new test fails before the fix.",
+      "predicate": {
+        "evidence": {
+          "kind": "test_result",
+          "result": "fail"
+        }
+      }
+    },
+    {
+      "id": "claim:tests.pass",
+      "kind": "claim",
+      "name": "tests.pass",
+      "description": "The suite passes.",
+      "predicate": {
+        "evidence": {
+          "kind": "test_result",
+          "result": "pass"
+        }
+      }
+    },
+    {
+      "id": "outcome:accepted",
+      "kind": "outcome",
+      "name": "accepted",
+      "description": "The change may merge.",
+      "predicate": {
+        "claim": {
+          "id": "tests.pass"
+        }
+      }
+    },
+    {
+      "id": "obligation:reproduce_first",
+      "kind": "obligation",
+      "name": "reproduce_first",
+      "description": "A bugfix or feature records the failing test it answers.",
+      "applicable_when": {
+        "input": {
+          "id": "change_kind",
+          "in": [
+            "bugfix",
+            "feature"
+          ]
+        }
+      },
+      "predicate": {
+        "claim": {
+          "id": "regression.reproduced"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "action:tests.run",
+      "to": "evidence:test_result",
+      "kind": "produces"
+    },
+    {
+      "from": "evidence:test_result",
+      "to": "claim:regression.reproduced",
+      "kind": "establishes",
+      "qualifier": "fail"
+    },
+    {
+      "from": "evidence:test_result",
+      "to": "claim:tests.pass",
+      "kind": "establishes",
+      "qualifier": "pass"
+    },
+    {
+      "from": "claim:regression.reproduced",
+      "to": "obligation:reproduce_first",
+      "kind": "requires"
+    },
+    {
+      "from": "claim:tests.pass",
+      "to": "outcome:accepted",
+      "kind": "requires"
+    },
+    {
+      "from": "claim:regression.reproduced",
+      "to": "action:implementation.edit",
+      "kind": "gates"
+    }
+  ]
+}

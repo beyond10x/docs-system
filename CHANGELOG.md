@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- `b10x-protocol-graph/1` carries Canon case inputs in the `canon-ir/1` shape: an optional top-level
+  `case: {inputs: {<id>: {description, values}}}`, an `input` predicate leaf
+  `{"input": {"id": <id>, "in": [<value>, …]}}`, and `applicable_when` on `obligation` nodes only.
+  The schema and `parseProtocolGraph` refuse an input leaf that names an undeclared input or value
+  and `applicable_when` on any other node kind, naming the path. `predicateLines` reads an input
+  leaf as `input <id> in <values>` (new `PredicateLine.suffix`, and `predicateLineText` for the
+  plain-text form). `ProtocolGraph` lists the case inputs with their values under the caption and
+  shows an obligation's "applicable when" lines before its discharge rule. Existing graphs validate
+  and render as before.
+
 ## 0.8.0 — 2026-10-08
 
 - The family member `els` is named "Engineering protocols" and links https://beyond10x.github.io/engineering-protocols/

@@ -7,6 +7,7 @@ import {
   layoutProtocolGraph,
   parseDomainGraph,
   parseProtocolGraph,
+  predicateLineText,
   predicateLines,
   protocolLineage,
 } from './product-graphs.js';
@@ -15,6 +16,8 @@ import type {
   DomainGraphDocument,
   DomainGraphLayout,
   DomainRelation,
+  PredicateLine,
+  ProtocolCaseInput,
   ProtocolGraphDocument,
   ProtocolGraphEdge,
   ProtocolGraphLayout,
@@ -197,6 +200,7 @@ function ProtocolGraphView({document, layout, title, description, caption, varia
       ? <>{legend}<p className="b10x-sr-only" id={`${base}-hint`}>Hover or focus a node to trace what it rests on.</p></>
       : <div className="b10x-graph__tools"><p className="b10x-graph__hint" id={`${base}-hint`} data-pagefind-ignore>Hover or focus a node to trace what it rests on and what rests on it. Press Enter to pin it, Escape to clear.</p><FitToggle {...sizing} /></div>}
     {caption && <figcaption className="b10x-graph__caption">{caption}</figcaption>}
+    {!hero && document.case && <CaseInputs inputs={document.case.inputs} />}
     {!hero && <ProtocolTable document={document} />}
     {!hero && document.protocol.source && <p className="b10x-graph__source">Source: {document.protocol.source}</p>}
   </figure>;
@@ -237,6 +241,7 @@ function ProtocolTooltip({id, placed, layout, document, byId}: {id: string; plac
     <p className="b10x-graph__tooltip-kicker">{kicker(node)}</p>
     <p className="b10x-graph__tooltip-name"><code>{node.name}</code></p>
     {node.description && <p className="b10x-graph__tooltip-text">{node.description}</p>}
+    {node.applicable_when && <TooltipSection title="Applicable when"><Predicate value={node.applicable_when} /></TooltipSection>}
     {node.predicate && <TooltipSection title={node.kind === 'claim' ? 'True when' : node.kind === 'action' ? 'Admissible when' : 'Requires'}><Predicate value={node.predicate} /></TooltipSection>}
     {node.capabilities?.length ? <TooltipSection title="Needs authority">{node.capabilities.map((capability) => <code key={capability}>{capability}</code>)}</TooltipSection> : null}
     {produces.length > 0 && <TooltipSection title="May produce">{produces.map((edge) => <code key={edge.to}>{nameOf(edge.to)}</code>)}</TooltipSection>}
@@ -252,7 +257,24 @@ function TooltipSection({title, children}: {title: string; children: ReactNode})
 }
 
 function Predicate({value}: {value: ProtocolPredicate}): ReactNode {
-  return <ul className="b10x-graph__predicate">{predicateLines(value).map((line, index) => <li key={index} style={{'--b10x-depth': line.depth} as CSSProperties}>{line.reference ? <>{line.text} <code>{line.reference}</code></> : <span>{line.text}</span>}</li>)}</ul>;
+  return <ul className="b10x-graph__predicate">{predicateLines(value).map((line, index) => <li key={index} style={{'--b10x-depth': line.depth} as CSSProperties}>{line.reference ? <>{line.text} <code>{line.reference}</code>{line.suffix && <> {line.suffix}</>}</> : <span>{line.text}</span>}</li>)}</ul>;
+}
+
+function ruleText(lines: PredicateLine[]): string {
+  return lines.map((line) => `${'  '.repeat(line.depth)}${predicateLineText(line)}`).join('\n');
+}
+
+/** The case inputs a protocol tests, each with the values a case may give it. */
+function CaseInputs({inputs}: {inputs: Record<string, ProtocolCaseInput>}): ReactNode {
+  const entries = Object.entries(inputs);
+  if (!entries.length) return null;
+  return <div className="b10x-graph__inputs" role="group" aria-label="Case inputs">
+    <p className="b10x-graph__inputs-title">Case inputs</p>
+    <dl>{entries.map(([id, input]) => <div key={id}>
+      <dt><code>{id}</code></dt>
+      <dd><span className="b10x-graph__inputs-values">{input.values.map((value) => <code key={value}>{value}</code>)}</span>{input.description && <span className="b10x-graph__inputs-text">{input.description}</span>}</dd>
+    </div>)}</dl>
+  </div>;
 }
 
 function ProtocolTable({document}: {document: ProtocolGraphDocument}): ReactNode {
@@ -272,7 +294,7 @@ function ProtocolTable({document}: {document: ProtocolGraphDocument}): ReactNode
         <tbody>{nodes.map((node) => <tr key={node.id}>
           <th scope="row"><code>{node.name}</code></th>
           <td>{node.description ?? '—'}</td>
-          <td>{[node.predicate ? predicateLines(node.predicate).map((line) => `${'  '.repeat(line.depth)}${line.text}${line.reference ? ` ${line.reference}` : ''}`).join('\n') : '', node.capabilities?.length ? `needs ${node.capabilities.join(', ')}` : '', node.effect ? `effect ${node.effect}` : ''].filter(Boolean).join('\n') || '—'}</td>
+          <td>{[node.applicable_when ? ['applicable when', ruleText(predicateLines(node.applicable_when, 1))].join('\n') : '', node.predicate ? ruleText(predicateLines(node.predicate)) : '', node.capabilities?.length ? `needs ${node.capabilities.join(', ')}` : '', node.effect ? `effect ${node.effect}` : ''].filter(Boolean).join('\n') || '—'}</td>
           <td>{links(node)}</td>
         </tr>)}</tbody>
       </table></div>;

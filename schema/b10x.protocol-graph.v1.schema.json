@@ -2,12 +2,33 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://beyond10x.github.io/schema/b10x.protocol-graph.v1.json",
   "title": "b10x protocol graph",
-  "description": "A Canon protocol as nodes and edges, emitted from canon-ir/1 for the ProtocolGraph renderer. Nodes are ordered by kind (action, evidence, claim, outcome, obligation), then by name.",
+  "description": "A Canon protocol as nodes and edges, emitted from canon-ir/1 for the ProtocolGraph renderer. Nodes are ordered by kind (action, evidence, claim, outcome, obligation), then by name. An optional case section declares the case inputs (canon-ir/1 case.inputs) that input predicate leaves test, and an obligation may carry applicable_when, the predicate under which it applies.",
   "type": "object",
   "additionalProperties": false,
   "required": ["format", "protocol", "nodes", "edges"],
   "properties": {
     "format": {"const": "b10x-protocol-graph/1"},
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inputs"],
+      "description": "Case inputs as canon-ir/1 declares them: each input names the values a case may give it. Input predicate leaves may name only these inputs and values.",
+      "properties": {
+        "inputs": {
+          "type": "object",
+          "propertyNames": {"type": "string", "minLength": 1},
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["values"],
+            "properties": {
+              "description": {"type": ["string", "null"], "minLength": 1},
+              "values": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+            }
+          }
+        }
+      }
+    },
     "protocol": {
       "type": "object",
       "additionalProperties": false,
@@ -32,8 +53,10 @@
           "description": {"type": "string", "minLength": 1},
           "predicate": {"$ref": "#/$defs/predicate", "description": "Claim true_when, outcome requires, or action precondition; omit an empty all."},
           "effect": {"type": "string", "minLength": 1},
-          "capabilities": {"type": "array", "items": {"type": "string", "minLength": 1}}
-        }
+          "capabilities": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "applicable_when": {"$ref": "#/$defs/predicate", "description": "Obligations only: the predicate under which the obligation applies (canon-ir/1 applicable_when); omitted when it always applies."}
+        },
+        "allOf": [{"if": {"properties": {"applicable_when": true}, "required": ["applicable_when"]}, "then": {"properties": {"kind": {"const": "obligation"}}}}]
       }
     },
     "edges": {
@@ -68,6 +91,12 @@
           "additionalProperties": false,
           "required": ["evidence"],
           "properties": {"evidence": {"type": "object", "additionalProperties": false, "required": ["kind"], "properties": {"kind": {"type": "string", "minLength": 1}, "result": {"type": ["string", "null"], "minLength": 1}}}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["input"],
+          "properties": {"input": {"type": "object", "additionalProperties": false, "required": ["id", "in"], "properties": {"id": {"type": "string", "minLength": 1}, "in": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}}}}
         }
       ]
     }

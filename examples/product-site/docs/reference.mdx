@@ -4,6 +4,7 @@ description: A wide graph and an identifier table on an ordinary documentation p
 ---
 
 import softwareChange from '@site/data/software-change.protocol-graph.json';
+import softwareChangeProfiled from '@site/data/software-change-profiled.protocol-graph.json';
 import commission from '@site/data/commission.domain-graph.json';
 
 This page keeps the sidebar and the table of contents, the narrowest column a graph meets. A graph
@@ -12,6 +13,13 @@ wider than the column scrolls inside its own frame; it never widens the column o
 ## A protocol wider than the column
 
 <ProtocolGraph data={softwareChange} />
+
+## A protocol with case inputs
+
+One protocol can describe several kinds of change. The case input is listed under the graph, an
+`input` predicate leaf tests it, and an obligation shows when it applies before what discharges it.
+
+<ProtocolGraph data={softwareChangeProfiled} caption="One protocol, three kinds of change." />
 
 ## A domain
 

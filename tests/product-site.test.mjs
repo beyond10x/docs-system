@@ -9,7 +9,7 @@ import addFormats from 'ajv-formats';
 import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {countCrossings, layeredLayout} from '../dist/graph-layout.js';
-import {layoutDomainGraph, layoutProtocolGraph, parseDomainGraph, parseProtocolGraph, predicateLines, protocolLineage} from '../dist/product-graphs.js';
+import {layoutDomainGraph, layoutProtocolGraph, parseDomainGraph, parseProtocolGraph, predicateLineText, predicateLines, protocolLineage} from '../dist/product-graphs.js';
 import {parseTerminalSession, parseTranscript} from '../dist/product-data.js';
 import {decisionSteps, formatDuration, parseSessionComposition, sessionKpis} from '../dist/session-data.js';
 import {productPrismDarkTheme, productPrismTheme} from '../dist/prism-themes.js';
@@ -24,7 +24,7 @@ const {SessionTimeline, StepBars, CompositionGraph, SessionKpis} = await import(
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const example = path.join(root, 'examples/product-site');
 const readJson = async (file) => JSON.parse(await fs.readFile(path.join(example, file), 'utf8'));
-const protocols = ['software-change', 'incident-response', 'software-change-bugfix', 'investigation'];
+const protocols = ['software-change', 'incident-response', 'software-change-bugfix', 'investigation', 'software-change-profiled'];
 
 async function validator() {
   const ajv = new Ajv2020({allErrors: true, strict: true});
@@ -131,6 +131,143 @@ test('predicates read as nested lines and lineage follows both directions', asyn
   const lineage = protocolLineage(data, 'claim:implementation.verified');
   for (const id of ['action:tests.run', 'evidence:test_result', 'claim:release.proven', 'outcome:accepted', 'action:repository.merge']) assert.ok(lineage.has(id), id);
   assert.ok(!lineage.has('claim:deployment.healthy'));
+});
+
+const lineTuples = (lines) => lines.map((line) => [line.depth, line.text, line.reference ?? null, line.suffix ?? null]);
+
+test('a protocol graph carries case inputs, input leaves and an obligation applicable_when', async () => {
+  const check = await validator();
+  const data = await readJson('data/software-change-profiled.protocol-graph.json');
+  assert.deepEqual(check('protocol-graph.v1', data), []);
+  assert.equal(parseProtocolGraph(data), data);
+  const edit = data.nodes.find((node) => node.id === 'action:implementation.edit');
+  assert.deepEqual(lineTuples(predicateLines(edit.predicate)), [
+    [0, 'any of', null, null],
+    [1, 'not', null, null],
+    [2, 'input', 'change_kind', 'in bugfix'],
+    [1, 'claim', 'regression.reproduced', null],
+  ]);
+  const obligation = data.nodes.find((node) => node.id === 'obligation:reproduce_first');
+  assert.deepEqual(predicateLines(obligation.applicable_when).map(predicateLineText), ['input change_kind in bugfix, feature']);
+  assert.deepEqual(predicateLines(edit.predicate).map(predicateLineText), ['any of', 'not', 'input change_kind in bugfix', 'claim regression.reproduced']);
+});
+
+test('the reader refuses input leaves and applicable_when it cannot honour, naming the path', async () => {
+  const base = await readJson('data/software-change-profiled.protocol-graph.json');
+  const clone = () => structuredClone(base);
+  const node = (document, id) => document.nodes.find((entry) => entry.id === id);
+  const indexOf = (id) => base.nodes.findIndex((entry) => entry.id === id);
+  const obligationPath = `nodes\\[${indexOf('obligation:reproduce_first')}\\]`;
+  const editPath = `nodes\\[${indexOf('action:implementation.edit')}\\]`;
+  const claimPath = `nodes\\[${indexOf('claim:tests.pass')}\\]`;
+
+  const onClaim = clone(); node(onClaim, 'claim:tests.pass').applicable_when = {input: {id: 'change_kind', in: ['bugfix']}};
+  assert.throws(() => parseProtocolGraph(onClaim), new RegExp(`${claimPath}\\.applicable_when is allowed only on an obligation`));
+
+  const undeclared = clone(); node(undeclared, 'obligation:reproduce_first').applicable_when = {input: {id: 'change_size', in: ['small']}};
+  assert.throws(() => parseProtocolGraph(undeclared), new RegExp(`${obligationPath}\\.applicable_when\\.input\\.id names undeclared input change_size`));
+
+  const value = clone(); node(value, 'action:implementation.edit').predicate.any[0].not.input.in = ['bugfix', 'refactor'];
+  assert.throws(() => parseProtocolGraph(value), new RegExp(`${editPath}\\.predicate\\.any\\[0\\]\\.not\\.input\\.in\\[1\\] names value refactor that input change_kind does not declare`));
+
+  const noCase = clone(); delete noCase.case;
+  assert.throws(() => parseProtocolGraph(noCase), new RegExp(`${editPath}\\.predicate\\.any\\[0\\]\\.not\\.input\\.id names undeclared input change_kind`));
+
+  const empty = clone(); node(empty, 'obligation:reproduce_first').applicable_when.input.in = [];
+  assert.throws(() => parseProtocolGraph(empty), new RegExp(`${obligationPath}\\.applicable_when\\.input\\.in must be a non-empty array`));
+
+  const repeated = clone(); node(repeated, 'obligation:reproduce_first').applicable_when.input.in = ['bugfix', 'bugfix'];
+  assert.throws(() => parseProtocolGraph(repeated), new RegExp(`${obligationPath}\\.applicable_when\\.input\\.in\\[1\\] duplicates bugfix`));
+
+  const extra = clone(); node(extra, 'obligation:reproduce_first').applicable_when.input.is = 'true';
+  assert.throws(() => parseProtocolGraph(extra), new RegExp(`${obligationPath}\\.applicable_when\\.input has unknown field is`));
+
+  const badApplicable = clone(); node(badApplicable, 'obligation:reproduce_first').applicable_when = {all: [], input: {id: 'change_kind', in: ['bugfix']}};
+  assert.throws(() => parseProtocolGraph(badApplicable), /applicable_when must have exactly one of all, any, not, claim, evidence, input/);
+
+  const badCase = clone(); badCase.case.inputs.change_kind.values = [];
+  assert.throws(() => parseProtocolGraph(badCase), /case\.inputs\.change_kind\.values must be a non-empty array/);
+  const badDescription = clone(); badDescription.case.inputs.change_kind.description = '';
+  assert.throws(() => parseProtocolGraph(badDescription), /case\.inputs\.change_kind\.description must be a non-empty string or null/);
+  const nullDescription = clone(); nullDescription.case.inputs.change_kind.description = null;
+  assert.equal(parseProtocolGraph(nullDescription), nullDescription);
+  const repeatedValue = clone(); repeatedValue.case.inputs.change_kind.values = ['bugfix', 'docs', 'bugfix'];
+  assert.throws(() => parseProtocolGraph(repeatedValue), /case\.inputs\.change_kind\.values\[2\] duplicates bugfix/);
+  const caseExtra = clone(); caseExtra.case.profiles = {};
+  assert.throws(() => parseProtocolGraph(caseExtra), /case has unknown field profiles/);
+
+  const legacy = await readJson('data/investigation.protocol-graph.json');
+  const message = structuredClone(legacy); message.nodes.find((entry) => entry.kind === 'claim').predicate = {all: [], any: []};
+  assert.throws(() => parseProtocolGraph(message), /must have exactly one of all, any, not, claim, evidence, input/);
+});
+
+test('the protocol-graph schema accepts the input form only as canon-ir/1 writes it, and applicable_when only on obligations', async () => {
+  const check = await validator();
+  const base = await readJson('data/software-change-profiled.protocol-graph.json');
+  const clone = () => structuredClone(base);
+  const node = (document, id) => document.nodes.find((entry) => entry.id === id);
+  const refused = (document, label) => assert.notDeepEqual(check('protocol-graph.v1', document), [], label);
+
+  const onClaim = clone(); node(onClaim, 'claim:tests.pass').applicable_when = {input: {id: 'change_kind', in: ['bugfix']}};
+  refused(onClaim, 'applicable_when on a claim');
+  const onAction = clone(); node(onAction, 'action:tests.run').applicable_when = {claim: {id: 'tests.pass'}};
+  refused(onAction, 'applicable_when on an action');
+  const flat = clone(); node(flat, 'obligation:reproduce_first').applicable_when = {input: 'change_kind', in: ['bugfix']};
+  refused(flat, 'flat input form');
+  const empty = clone(); node(empty, 'obligation:reproduce_first').applicable_when.input.in = [];
+  refused(empty, 'empty in');
+  const repeated = clone(); node(repeated, 'obligation:reproduce_first').applicable_when.input.in = ['bugfix', 'bugfix'];
+  refused(repeated, 'repeated in');
+  const blankId = clone(); node(blankId, 'obligation:reproduce_first').applicable_when.input.id = '';
+  refused(blankId, 'blank input id');
+  const extraLeaf = clone(); node(extraLeaf, 'obligation:reproduce_first').applicable_when.input.is = 'true';
+  refused(extraLeaf, 'extra input field');
+  const caseExtra = clone(); caseExtra.case.profiles = {};
+  refused(caseExtra, 'extra case field');
+  const emptyValues = clone(); emptyValues.case.inputs.change_kind.values = [];
+  refused(emptyValues, 'empty values');
+  const repeatedValues = clone(); repeatedValues.case.inputs.change_kind.values = ['docs', 'docs'];
+  refused(repeatedValues, 'repeated values');
+  const inputExtra = clone(); inputExtra.case.inputs.change_kind.default = 'docs';
+  refused(inputExtra, 'extra input declaration field');
+  const nullDescription = clone(); nullDescription.case.inputs.change_kind.description = null;
+  assert.deepEqual(check('protocol-graph.v1', nullDescription), [], 'null description');
+});
+
+test('every committed protocol graph from before case inputs validates and reads the same lines', async () => {
+  const check = await validator();
+  const snapshot = JSON.parse(await fs.readFile(path.join(root, 'tests/fixtures/protocol-graph/predicate-lines.snapshot.json'), 'utf8'));
+  const committed = (await fs.readdir(path.join(example, 'data'))).filter((file) => file.endsWith('.protocol-graph.json')).sort();
+  assert.deepEqual(committed.filter((file) => file !== 'software-change-profiled.protocol-graph.json'), Object.keys(snapshot).sort());
+  for (const file of committed) {
+    const data = await readJson(`data/${file}`);
+    assert.deepEqual(check('protocol-graph.v1', data), [], file);
+    assert.equal(parseProtocolGraph(data), data, file);
+  }
+  for (const [file, expected] of Object.entries(snapshot)) {
+    const data = await readJson(`data/${file}`);
+    const actual = Object.fromEntries(data.nodes.filter((node) => node.predicate).map((node) => [node.id, predicateLines(node.predicate)]));
+    const recorded = Object.fromEntries(Object.entries(expected).map(([id, lines]) => [id, lines.map(([depth, text, reference]) => reference === null ? {depth, text} : {depth, text, reference})]));
+    assert.deepEqual(actual, recorded, file);
+    const markup = renderToStaticMarkup(createElement(ProtocolGraph, {data}));
+    assert.doesNotMatch(markup, /b10x-graph__inputs|applicable when/i, file);
+  }
+});
+
+test('ProtocolGraph lists case inputs near the caption and shows applicability before the discharge rule', async () => {
+  const data = await readJson('data/software-change-profiled.protocol-graph.json');
+  const markup = renderToStaticMarkup(createElement(ProtocolGraph, {data, caption: 'One protocol, three kinds of change.'}));
+  assert.match(markup, /<div class="b10x-graph__inputs" role="group" aria-label="Case inputs">/);
+  assert.match(markup, /<dt><code>change_kind<\/code><\/dt><dd><span class="b10x-graph__inputs-values"><code>bugfix<\/code><code>feature<\/code><code>docs<\/code><\/span><span class="b10x-graph__inputs-text">What kind of change the case is\.<\/span><\/dd>/);
+  const caption = markup.indexOf('b10x-graph__caption');
+  const inputs = markup.indexOf('b10x-graph__inputs');
+  assert.ok(caption > 0 && inputs > caption && inputs < markup.indexOf('Protocol as text'), 'inputs sit after the caption, before the text table');
+  assert.match(markup, /<td>applicable when\n {2}input change_kind in bugfix, feature\nclaim regression\.reproduced<\/td>/);
+  assert.match(markup, /<td>any of\n {2}not\n {4}input change_kind in bugfix\n {2}claim regression\.reproduced\nneeds implementation\.write\neffect write<\/td>/);
+  assert.equal((markup.match(/class="b10x-graph__node /g) ?? []).length, data.nodes.length);
+  assert.doesNotMatch(markup, /<script|on[a-z]+="|foreignObject/i);
+  const hero = renderToStaticMarkup(createElement(ProtocolGraph, {data, variant: 'hero'}));
+  assert.doesNotMatch(hero, /b10x-graph__inputs/, 'the compact hero art keeps no text blocks');
 });
 
 test('ProtocolGraph and DomainGraph render accessible static SVG, and refuse bad data visibly', async () => {
