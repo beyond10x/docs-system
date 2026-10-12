@@ -2,7 +2,7 @@
 format: aep.planning-md/3
 id: story:protocol-graph-case-inputs
 kind: story
-status: active
+status: implemented
 title: Carry Canon case inputs in protocol graphs
 scope:
 - confidence: inferred
@@ -23,10 +23,11 @@ scope:
   path: src/product.tsx
 - confidence: inferred
   path: tests/product-site.test.mjs
-revision: 4
+revision: 5
 transitions:
 - {from: "draft", to: "proposed", at: "2026-10-12T21:35:45Z", actor: "human:timo", revision: 3}
 - {from: "proposed", to: "active", at: "2026-10-12T21:35:45Z", actor: "human:timo", revision: 4}
+- {from: "active", to: "implemented", at: "2026-10-12T22:34:58Z", actor: "human:timo", revision: 5, decided_on: {"recorded":{"test_result":1}}}
 ---
 # Carry Canon case inputs in protocol graphs
 
