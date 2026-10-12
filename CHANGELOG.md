@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.9.0 — 2026-10-12
 
 - `b10x-protocol-graph/1` carries Canon case inputs in the `canon-ir/1` shape: an optional top-level
   `case: {inputs: {<id>: {description, values}}}`, an `input` predicate leaf
