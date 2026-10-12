@@ -34,6 +34,7 @@ export function parseProtocolGraph(value) {
         throw new Error('protocol.revision must be a positive integer');
     optionalText(protocol.description, 'protocol.description');
     optionalText(protocol.source, 'protocol.source');
+    const inputs = caseInputs(document.case);
     const kinds = new Map();
     list(document.nodes, 'nodes').forEach((entry, index) => {
         const path = `nodes[${index}]`;
@@ -50,7 +51,12 @@ export function parseProtocolGraph(value) {
         if (node.capabilities !== undefined)
             list(node.capabilities, `${path}.capabilities`).forEach((capability, position) => text(capability, `${path}.capabilities[${position}]`));
         if (node.predicate !== undefined)
-            predicate(node.predicate, `${path}.predicate`);
+            predicate(node.predicate, `${path}.predicate`, inputs);
+        if (node.applicable_when !== undefined) {
+            if (node.kind !== 'obligation')
+                throw new Error(`${path}.applicable_when is allowed only on an obligation, not on a ${node.kind}`);
+            predicate(node.applicable_when, `${path}.applicable_when`, inputs);
+        }
     });
     list(document.edges, 'edges').forEach((entry, index) => {
         const path = `edges[${index}]`;
@@ -71,16 +77,48 @@ export function parseProtocolGraph(value) {
     });
     return value;
 }
-function predicate(value, path) {
+function caseInputs(value) {
+    const inputs = new Map();
+    if (value === undefined)
+        return inputs;
+    const section = object(value, 'case');
+    onlyFields(section, ['inputs'], 'case');
+    const declared = object(section.inputs, 'case.inputs');
+    for (const [id, entry] of Object.entries(declared)) {
+        const path = `case.inputs.${id}`;
+        if (id.length === 0)
+            throw new Error('case.inputs has an empty input id');
+        const input = object(entry, path);
+        onlyFields(input, ['description', 'values'], path);
+        if (input.description !== undefined && input.description !== null && (typeof input.description !== 'string' || input.description.length === 0))
+            throw new Error(`${path}.description must be a non-empty string or null`);
+        inputs.set(id, distinctTexts(input.values, `${path}.values`));
+    }
+    return inputs;
+}
+function predicate(value, path, inputs) {
     const node = object(value, path);
     const keys = Object.keys(node);
     if (keys.length !== 1)
-        throw new Error(`${path} must have exactly one of all, any, not, claim, evidence`);
+        throw new Error(`${path} must have exactly one of all, any, not, claim, evidence, input`);
     const [key] = keys;
     if (key === 'all' || key === 'any')
-        list(node[key], `${path}.${key}`).forEach((child, index) => predicate(child, `${path}.${key}[${index}]`));
+        list(node[key], `${path}.${key}`).forEach((child, index) => predicate(child, `${path}.${key}[${index}]`, inputs));
     else if (key === 'not')
-        predicate(node.not, `${path}.not`);
+        predicate(node.not, `${path}.not`, inputs);
+    else if (key === 'input') {
+        const input = object(node.input, `${path}.input`);
+        onlyFields(input, ['id', 'in'], `${path}.input`);
+        const id = text(input.id, `${path}.input.id`);
+        const values = distinctTexts(input.in, `${path}.input.in`);
+        const declared = inputs.get(id);
+        if (!declared)
+            throw new Error(`${path}.input.id names undeclared input ${id}`);
+        [...values].forEach((candidate, index) => {
+            if (!declared.has(candidate))
+                throw new Error(`${path}.input.in[${index}] names value ${candidate} that input ${id} does not declare`);
+        });
+    }
     else if (key === 'claim') {
         const claim = object(node.claim, `${path}.claim`);
         text(claim.id, `${path}.claim.id`);
@@ -96,6 +134,10 @@ function predicate(value, path) {
     else
         throw new Error(`${path} has unknown predicate ${key}`);
 }
+/** A predicate line as plain text, the way the text listing writes it. */
+export function predicateLineText(line) {
+    return [line.text, line.reference, line.suffix].filter(Boolean).join(' ');
+}
 export function predicateLines(value, depth = 0) {
     if ('all' in value)
         return value.all.length === 1 ? predicateLines(value.all[0], depth) : [{ depth, text: 'all of' }, ...value.all.flatMap((child) => predicateLines(child, depth + 1))];
@@ -107,6 +149,8 @@ export function predicateLines(value, depth = 0) {
         const is = value.claim.is ?? 'true';
         return [{ depth, text: is === 'true' ? 'claim' : `claim is ${is}:`, reference: value.claim.id }];
     }
+    if ('input' in value)
+        return [{ depth, text: 'input', reference: value.input.id, suffix: `in ${value.input.in.join(', ')}` }];
     const result = value.evidence.result;
     return [{ depth, text: result ? `evidence = ${result}:` : 'any evidence:', reference: value.evidence.kind }];
 }
@@ -328,4 +372,23 @@ function text(value, path) {
 function optionalText(value, path) {
     if (value !== undefined)
         text(value, path);
+}
+function onlyFields(value, allowed, path) {
+    const unknown = Object.keys(value).find((key) => !allowed.includes(key));
+    if (unknown !== undefined)
+        throw new Error(`${path} has unknown field ${unknown}`);
+}
+/** A non-empty array of distinct non-empty strings, in order. */
+function distinctTexts(value, path) {
+    const entries = list(value, path);
+    if (entries.length === 0)
+        throw new Error(`${path} must be a non-empty array`);
+    const seen = new Set();
+    entries.forEach((entry, index) => {
+        const item = text(entry, `${path}[${index}]`);
+        if (seen.has(item))
+            throw new Error(`${path}[${index}] duplicates ${item}`);
+        seen.add(item);
+    });
+    return seen;
 }
