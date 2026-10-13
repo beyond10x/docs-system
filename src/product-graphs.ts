@@ -27,7 +27,11 @@ export type ProtocolPredicate =
   | {claim: {id: string; is?: ProtocolTruth}}
   | {evidence: {kind: string; result?: string | null}}
   /** True when the case gives input `id` one of the values in `in`. */
-  | {input: {id: string; in: string[]}};
+  | {input: {id: string; in: string[]}}
+  /** Order form: true when the first evidence of `kind` (about `subject`, when named) has `result`. */
+  | {first: {kind: string; result: string; subject?: string}}
+  /** Order form: true when evidence of kind `first` (about `subject`, when named) precedes evidence of kind `then`. */
+  | {before: {first: string; then: string; subject?: string}};
 
 /** A case input as `canon-ir/1` declares it: the values a case may give it. */
 export interface ProtocolCaseInput {
@@ -157,7 +161,7 @@ function caseInputs(value: unknown): CaseInputs {
 function predicate(value: unknown, path: string, inputs: CaseInputs): void {
   const node = object(value, path);
   const keys = Object.keys(node);
-  if (keys.length !== 1) throw new Error(`${path} must have exactly one of all, any, not, claim, evidence, input`);
+  if (keys.length !== 1) throw new Error(`${path} must have exactly one of all, any, not, claim, evidence, input, first, before`);
   const [key] = keys;
   if (key === 'all' || key === 'any') list(node[key], `${path}.${key}`).forEach((child, index) => predicate(child, `${path}.${key}[${index}]`, inputs));
   else if (key === 'not') predicate(node.not, `${path}.not`, inputs);
@@ -179,12 +183,26 @@ function predicate(value: unknown, path: string, inputs: CaseInputs): void {
     const evidence = object(node.evidence, `${path}.evidence`);
     text(evidence.kind, `${path}.evidence.kind`);
     if (evidence.result !== undefined && evidence.result !== null) text(evidence.result, `${path}.evidence.result`);
+  } else if (key === 'first') {
+    const first = object(node.first, `${path}.first`);
+    onlyFields(first, ['kind', 'result', 'subject'], `${path}.first`);
+    text(first.kind, `${path}.first.kind`);
+    text(first.result, `${path}.first.result`);
+    optionalText(first.subject, `${path}.first.subject`);
+  } else if (key === 'before') {
+    const before = object(node.before, `${path}.before`);
+    onlyFields(before, ['first', 'then', 'subject'], `${path}.before`);
+    const earlier = text(before.first, `${path}.before.first`);
+    const later = text(before.then, `${path}.before.then`);
+    optionalText(before.subject, `${path}.before.subject`);
+    if (earlier === later) throw new Error(`${path}.before orders evidence ${earlier} before itself`);
   } else throw new Error(`${path} has unknown predicate ${key}`);
 }
 
 /**
  * One line of a predicate, indented by depth, for text and tooltips. It reads as `text`, then
- * `reference` (an identifier, set in code), then `suffix`: an input leaf is `input <id> in <values>`.
+ * `reference` (an identifier, set in code), then `suffix`: an input leaf is `input <id> in <values>`,
+ * a `before` leaf `evidence <first> before <then>`, and an order form naming a subject ends `about <subject>`.
  */
 export interface PredicateLine {depth: number; text: string; reference?: string; suffix?: string}
 
@@ -202,6 +220,14 @@ export function predicateLines(value: ProtocolPredicate, depth = 0): PredicateLi
     return [{depth, text: is === 'true' ? 'claim' : `claim is ${is}:`, reference: value.claim.id}];
   }
   if ('input' in value) return [{depth, text: 'input', reference: value.input.id, suffix: `in ${value.input.in.join(', ')}`}];
+  if ('first' in value) {
+    const about = value.first.subject ? `about ${value.first.subject}` : undefined;
+    return [about ? {depth, text: `first evidence = ${value.first.result}:`, reference: value.first.kind, suffix: about} : {depth, text: `first evidence = ${value.first.result}:`, reference: value.first.kind}];
+  }
+  if ('before' in value) {
+    const about = value.before.subject ? ` about ${value.before.subject}` : '';
+    return [{depth, text: 'evidence', reference: value.before.first, suffix: `before ${value.before.then}${about}`}];
+  }
   const result = value.evidence.result;
   return [{depth, text: result ? `evidence = ${result}:` : 'any evidence:', reference: value.evidence.kind}];
 }
