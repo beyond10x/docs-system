@@ -100,7 +100,7 @@ function predicate(value, path, inputs) {
     const node = object(value, path);
     const keys = Object.keys(node);
     if (keys.length !== 1)
-        throw new Error(`${path} must have exactly one of all, any, not, claim, evidence, input`);
+        throw new Error(`${path} must have exactly one of all, any, not, claim, evidence, input, first, before`);
     const [key] = keys;
     if (key === 'all' || key === 'any')
         list(node[key], `${path}.${key}`).forEach((child, index) => predicate(child, `${path}.${key}[${index}]`, inputs));
@@ -131,6 +131,22 @@ function predicate(value, path, inputs) {
         if (evidence.result !== undefined && evidence.result !== null)
             text(evidence.result, `${path}.evidence.result`);
     }
+    else if (key === 'first') {
+        const first = object(node.first, `${path}.first`);
+        onlyFields(first, ['kind', 'result', 'subject'], `${path}.first`);
+        text(first.kind, `${path}.first.kind`);
+        text(first.result, `${path}.first.result`);
+        optionalText(first.subject, `${path}.first.subject`);
+    }
+    else if (key === 'before') {
+        const before = object(node.before, `${path}.before`);
+        onlyFields(before, ['first', 'then', 'subject'], `${path}.before`);
+        const earlier = text(before.first, `${path}.before.first`);
+        const later = text(before.then, `${path}.before.then`);
+        optionalText(before.subject, `${path}.before.subject`);
+        if (earlier === later)
+            throw new Error(`${path}.before orders evidence ${earlier} before itself`);
+    }
     else
         throw new Error(`${path} has unknown predicate ${key}`);
 }
@@ -151,6 +167,14 @@ export function predicateLines(value, depth = 0) {
     }
     if ('input' in value)
         return [{ depth, text: 'input', reference: value.input.id, suffix: `in ${value.input.in.join(', ')}` }];
+    if ('first' in value) {
+        const about = value.first.subject ? `about ${value.first.subject}` : undefined;
+        return [about ? { depth, text: `first evidence = ${value.first.result}:`, reference: value.first.kind, suffix: about } : { depth, text: `first evidence = ${value.first.result}:`, reference: value.first.kind }];
+    }
+    if ('before' in value) {
+        const about = value.before.subject ? ` about ${value.before.subject}` : '';
+        return [{ depth, text: 'evidence', reference: value.before.first, suffix: `before ${value.before.then}${about}` }];
+    }
     const result = value.evidence.result;
     return [{ depth, text: result ? `evidence = ${result}:` : 'any evidence:', reference: value.evidence.kind }];
 }
