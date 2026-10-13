@@ -27,6 +27,22 @@ export type ProtocolPredicate = {
         id: string;
         in: string[];
     };
+}
+/** Order form: true when the first evidence of `kind` (about `subject`, when named) has `result`. */
+ | {
+    first: {
+        kind: string;
+        result: string;
+        subject?: string;
+    };
+}
+/** Order form: true when evidence of kind `first` (about `subject`, when named) precedes evidence of kind `then`. */
+ | {
+    before: {
+        first: string;
+        then: string;
+        subject?: string;
+    };
 };
 /** A case input as `canon-ir/1` declares it: the values a case may give it. */
 export interface ProtocolCaseInput {
@@ -83,7 +99,8 @@ export declare const PROTOCOL_KIND_LABELS: Record<ProtocolNodeKind, {
 export declare function parseProtocolGraph(value: unknown): ProtocolGraphDocument;
 /**
  * One line of a predicate, indented by depth, for text and tooltips. It reads as `text`, then
- * `reference` (an identifier, set in code), then `suffix`: an input leaf is `input <id> in <values>`.
+ * `reference` (an identifier, set in code), then `suffix`: an input leaf is `input <id> in <values>`,
+ * a `before` leaf `evidence <first> before <then>`, and an order form naming a subject ends `about <subject>`.
  */
 export interface PredicateLine {
     depth: number;
