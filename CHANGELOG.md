@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.10.0 — 2026-10-13
 
 - `b10x-protocol-graph/1` carries Canon 0.3.0's order forms in the `canon-ir/1` shape: a `first`
   predicate leaf `{"first": {"kind": <kind>, "result": <result>, "subject"?: <artifact>}}` and a
