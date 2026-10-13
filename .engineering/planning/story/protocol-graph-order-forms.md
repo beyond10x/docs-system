@@ -2,7 +2,7 @@
 format: aep.planning-md/3
 id: story:protocol-graph-order-forms
 kind: story
-status: active
+status: implemented
 title: Carry Canon order forms in protocol graphs
 scope:
 - confidence: inferred
@@ -21,10 +21,11 @@ scope:
   path: src/product-graphs.ts
 - confidence: inferred
   path: tests/product-site.test.mjs
-revision: 4
+revision: 5
 transitions:
 - {from: "draft", to: "proposed", at: "2026-10-13T02:47:53Z", actor: "human:timo", revision: 3}
 - {from: "proposed", to: "active", at: "2026-10-13T02:47:53Z", actor: "human:timo", revision: 4}
+- {from: "active", to: "implemented", at: "2026-10-13T02:57:17Z", actor: "human:timo", revision: 5, decided_on: {"recorded":{"test_result":1}}}
 ---
 # Carry Canon order forms in protocol graphs
 

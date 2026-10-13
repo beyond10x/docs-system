@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-13T02:57:17Z",
+  "actor": "human:timo",
+  "artifact": "story:protocol-graph-order-forms",
+  "kind": "story",
+  "revision": 4,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "npm run gate at f029989: 167 node tests pass, cargo bundle tests pass, exit 0",
+    "reference": "f029989"
+  }
+}
