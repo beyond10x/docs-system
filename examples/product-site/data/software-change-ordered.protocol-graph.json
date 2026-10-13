@@ -1,0 +1,171 @@
+{
+  "format": "b10x-protocol-graph/1",
+  "protocol": {
+    "id": "software.change.ordered",
+    "revision": 1,
+    "description": "A change whose acceptance depends on the order of its evidence: the regression test fails first, and it runs before the implementation changes.",
+    "source": "design draft software.change.ordered/1, written against canon-ir/1 order forms"
+  },
+  "nodes": [
+    {
+      "id": "action:implementation.edit",
+      "kind": "action",
+      "name": "implementation.edit",
+      "description": "Change the implementation.",
+      "effect": "write",
+      "capabilities": [
+        "implementation.write"
+      ]
+    },
+    {
+      "id": "action:tests.run",
+      "kind": "action",
+      "name": "tests.run",
+      "description": "Run the suite.",
+      "effect": "execute"
+    },
+    {
+      "id": "evidence:implementation_change",
+      "kind": "evidence",
+      "name": "implementation_change",
+      "description": "A recorded change to the implementation."
+    },
+    {
+      "id": "evidence:test_result",
+      "kind": "evidence",
+      "name": "test_result",
+      "description": "The suite's result: pass or fail."
+    },
+    {
+      "id": "claim:regression.reproduced",
+      "kind": "claim",
+      "name": "regression.reproduced",
+      "description": "The first test result recorded is a failure.",
+      "predicate": {
+        "first": {
+          "kind": "test_result",
+          "result": "fail"
+        }
+      }
+    },
+    {
+      "id": "claim:test.precedes.fix",
+      "kind": "claim",
+      "name": "test.precedes.fix",
+      "description": "The regression test ran before the implementation changed, and no implementation change came before a test result.",
+      "predicate": {
+        "all": [
+          {
+            "before": {
+              "first": "test_result",
+              "then": "implementation_change",
+              "subject": "regression_test"
+            }
+          },
+          {
+            "not": {
+              "before": {
+                "first": "implementation_change",
+                "then": "test_result"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "claim:tests.pass",
+      "kind": "claim",
+      "name": "tests.pass",
+      "description": "The suite passes.",
+      "predicate": {
+        "evidence": {
+          "kind": "test_result",
+          "result": "pass"
+        }
+      }
+    },
+    {
+      "id": "outcome:accepted",
+      "kind": "outcome",
+      "name": "accepted",
+      "description": "The change may merge.",
+      "predicate": {
+        "all": [
+          {
+            "claim": {
+              "id": "tests.pass"
+            }
+          },
+          {
+            "claim": {
+              "id": "test.precedes.fix"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "obligation:reproduce_first",
+      "kind": "obligation",
+      "name": "reproduce_first",
+      "description": "The first result of the regression test is a failure.",
+      "predicate": {
+        "first": {
+          "kind": "test_result",
+          "result": "fail",
+          "subject": "regression_test"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "action:implementation.edit",
+      "to": "evidence:implementation_change",
+      "kind": "produces"
+    },
+    {
+      "from": "action:tests.run",
+      "to": "evidence:test_result",
+      "kind": "produces"
+    },
+    {
+      "from": "evidence:test_result",
+      "to": "claim:regression.reproduced",
+      "kind": "establishes",
+      "qualifier": "fail"
+    },
+    {
+      "from": "evidence:test_result",
+      "to": "claim:test.precedes.fix",
+      "kind": "establishes"
+    },
+    {
+      "from": "evidence:implementation_change",
+      "to": "claim:test.precedes.fix",
+      "kind": "establishes"
+    },
+    {
+      "from": "evidence:test_result",
+      "to": "claim:tests.pass",
+      "kind": "establishes",
+      "qualifier": "pass"
+    },
+    {
+      "from": "claim:tests.pass",
+      "to": "outcome:accepted",
+      "kind": "requires"
+    },
+    {
+      "from": "claim:test.precedes.fix",
+      "to": "outcome:accepted",
+      "kind": "requires"
+    },
+    {
+      "from": "evidence:test_result",
+      "to": "obligation:reproduce_first",
+      "kind": "requires"
+    }
+  ]
+}

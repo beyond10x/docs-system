@@ -24,7 +24,7 @@ const {SessionTimeline, StepBars, CompositionGraph, SessionKpis} = await import(
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const example = path.join(root, 'examples/product-site');
 const readJson = async (file) => JSON.parse(await fs.readFile(path.join(example, file), 'utf8'));
-const protocols = ['software-change', 'incident-response', 'software-change-bugfix', 'investigation', 'software-change-profiled'];
+const protocols = ['software-change', 'incident-response', 'software-change-bugfix', 'investigation', 'software-change-profiled', 'software-change-ordered'];
 
 async function validator() {
   const ajv = new Ajv2020({allErrors: true, strict: true});
@@ -238,7 +238,8 @@ test('every committed protocol graph from before case inputs validates and reads
   const check = await validator();
   const snapshot = JSON.parse(await fs.readFile(path.join(root, 'tests/fixtures/protocol-graph/predicate-lines.snapshot.json'), 'utf8'));
   const committed = (await fs.readdir(path.join(example, 'data'))).filter((file) => file.endsWith('.protocol-graph.json')).sort();
-  assert.deepEqual(committed.filter((file) => file !== 'software-change-profiled.protocol-graph.json'), Object.keys(snapshot).sort());
+  const later = ['software-change-profiled.protocol-graph.json', 'software-change-ordered.protocol-graph.json'];
+  assert.deepEqual(committed.filter((file) => !later.includes(file)), Object.keys(snapshot).sort());
   for (const file of committed) {
     const data = await readJson(`data/${file}`);
     assert.deepEqual(check('protocol-graph.v1', data), [], file);
@@ -268,6 +269,157 @@ test('ProtocolGraph lists case inputs near the caption and shows applicability b
   assert.doesNotMatch(markup, /<script|on[a-z]+="|foreignObject/i);
   const hero = renderToStaticMarkup(createElement(ProtocolGraph, {data, variant: 'hero'}));
   assert.doesNotMatch(hero, /b10x-graph__inputs/, 'the compact hero art keeps no text blocks');
+});
+
+test('a protocol graph carries the first and before order forms, with and without a subject', async () => {
+  const check = await validator();
+  const data = await readJson('data/software-change-ordered.protocol-graph.json');
+  assert.deepEqual(check('protocol-graph.v1', data), []);
+  assert.equal(parseProtocolGraph(data), data);
+  const lines = Object.fromEntries(data.nodes.filter((node) => node.predicate).map((node) => [node.id, lineTuples(predicateLines(node.predicate))]));
+  assert.deepEqual(lines, {
+    'claim:regression.reproduced': [[0, 'first evidence = fail:', 'test_result', null]],
+    'claim:test.precedes.fix': [
+      [0, 'all of', null, null],
+      [1, 'evidence', 'test_result', 'before implementation_change about regression_test'],
+      [1, 'not', null, null],
+      [2, 'evidence', 'implementation_change', 'before test_result'],
+    ],
+    'claim:tests.pass': [[0, 'evidence = pass:', 'test_result', null]],
+    'outcome:accepted': [[0, 'all of', null, null], [1, 'claim', 'tests.pass', null], [1, 'claim', 'test.precedes.fix', null]],
+    'obligation:reproduce_first': [[0, 'first evidence = fail:', 'test_result', 'about regression_test']],
+  });
+  assert.deepEqual(predicateLines({first: {kind: 'review', result: 'approved'}}).map(predicateLineText), ['first evidence = approved: review']);
+  assert.deepEqual(predicateLines({before: {first: 'review', then: 'merge', subject: 'change'}}).map(predicateLineText), ['evidence review before merge about change']);
+
+  const inApplicability = {
+    format: 'b10x-protocol-graph/1',
+    protocol: {id: 'order.applicability', revision: 1},
+    nodes: [
+      {id: 'evidence:review', kind: 'evidence', name: 'review'},
+      {id: 'obligation:second_review', kind: 'obligation', name: 'second_review', applicable_when: {any: [{first: {kind: 'review', result: 'rejected', subject: 'change'}}, {before: {first: 'merge', then: 'review'}}]}, predicate: {evidence: {kind: 'review', result: 'approved'}}},
+    ],
+    edges: [{from: 'evidence:review', to: 'obligation:second_review', kind: 'requires'}],
+  };
+  assert.deepEqual(check('protocol-graph.v1', inApplicability), []);
+  assert.equal(parseProtocolGraph(inApplicability), inApplicability);
+  assert.deepEqual(predicateLines(inApplicability.nodes[1].applicable_when).map(predicateLineText), ['any of', 'first evidence = rejected: review about change', 'evidence merge before review']);
+
+  const markup = renderToStaticMarkup(createElement(ProtocolGraph, {data}));
+  assert.match(markup, /<td>all of\n {2}evidence test_result before implementation_change about regression_test\n {2}not\n {4}evidence implementation_change before test_result<\/td>/);
+  assert.match(markup, /<td>first evidence = fail: test_result about regression_test<\/td>/);
+  assert.match(markup, /<td>first evidence = fail: test_result<\/td>/);
+  assert.equal((markup.match(/class="b10x-graph__node /g) ?? []).length, data.nodes.length);
+  assert.doesNotMatch(markup, /<script|on[a-z]+="|foreignObject/i);
+});
+
+test('the reader refuses order forms it cannot honour, naming the path', async () => {
+  const base = await readJson('data/software-change-ordered.protocol-graph.json');
+  const clone = () => structuredClone(base);
+  const node = (document, id) => document.nodes.find((entry) => entry.id === id);
+  const at = (id) => `nodes\\[${base.nodes.findIndex((entry) => entry.id === id)}\\]`;
+  const precedes = at('claim:test.precedes.fix');
+  const reproduced = at('claim:regression.reproduced');
+  const obligation = at('obligation:reproduce_first');
+
+  const selfOrdered = clone(); node(selfOrdered, 'claim:test.precedes.fix').predicate.all[0].before.then = 'test_result';
+  assert.throws(() => parseProtocolGraph(selfOrdered), new RegExp(`${precedes}\\.predicate\\.all\\[0\\]\\.before orders evidence test_result before itself`));
+  const nestedSelf = clone(); node(nestedSelf, 'claim:test.precedes.fix').predicate.all[1].not.before.then = 'implementation_change';
+  assert.throws(() => parseProtocolGraph(nestedSelf), new RegExp(`${precedes}\\.predicate\\.all\\[1\\]\\.not\\.before orders evidence implementation_change before itself`));
+
+  const firstExtra = clone(); node(firstExtra, 'claim:regression.reproduced').predicate.first.is = 'true';
+  assert.throws(() => parseProtocolGraph(firstExtra), new RegExp(`${reproduced}\\.predicate\\.first has unknown field is`));
+  const beforeExtra = clone(); node(beforeExtra, 'claim:test.precedes.fix').predicate.all[0].before.result = 'pass';
+  assert.throws(() => parseProtocolGraph(beforeExtra), new RegExp(`${precedes}\\.predicate\\.all\\[0\\]\\.before has unknown field result`));
+  const noResult = clone(); delete node(noResult, 'claim:regression.reproduced').predicate.first.result;
+  assert.throws(() => parseProtocolGraph(noResult), new RegExp(`${reproduced}\\.predicate\\.first\\.result must be a non-empty string`));
+  const noKind = clone(); delete node(noKind, 'claim:regression.reproduced').predicate.first.kind;
+  assert.throws(() => parseProtocolGraph(noKind), new RegExp(`${reproduced}\\.predicate\\.first\\.kind must be a non-empty string`));
+  const nullResult = clone(); node(nullResult, 'claim:regression.reproduced').predicate.first.result = null;
+  assert.throws(() => parseProtocolGraph(nullResult), new RegExp(`${reproduced}\\.predicate\\.first\\.result must be a non-empty string`));
+  const noThen = clone(); delete node(noThen, 'claim:test.precedes.fix').predicate.all[0].before.then;
+  assert.throws(() => parseProtocolGraph(noThen), new RegExp(`${precedes}\\.predicate\\.all\\[0\\]\\.before\\.then must be a non-empty string`));
+  const noFirst = clone(); delete node(noFirst, 'claim:test.precedes.fix').predicate.all[0].before.first;
+  assert.throws(() => parseProtocolGraph(noFirst), new RegExp(`${precedes}\\.predicate\\.all\\[0\\]\\.before\\.first must be a non-empty string`));
+  const blankSubject = clone(); node(blankSubject, 'claim:test.precedes.fix').predicate.all[0].before.subject = '';
+  assert.throws(() => parseProtocolGraph(blankSubject), new RegExp(`${precedes}\\.predicate\\.all\\[0\\]\\.before\\.subject must be a non-empty string`));
+  const nullSubject = clone(); node(nullSubject, 'obligation:reproduce_first').predicate.first.subject = null;
+  assert.throws(() => parseProtocolGraph(nullSubject), new RegExp(`${obligation}\\.predicate\\.first\\.subject must be a non-empty string`));
+  const notObject = clone(); node(notObject, 'claim:regression.reproduced').predicate = {first: 'test_result'};
+  assert.throws(() => parseProtocolGraph(notObject), new RegExp(`${reproduced}\\.predicate\\.first must be an object`));
+
+  const two = clone(); node(two, 'claim:regression.reproduced').predicate = {first: {kind: 'test_result', result: 'fail'}, before: {first: 'test_result', then: 'implementation_change'}};
+  assert.throws(() => parseProtocolGraph(two), /must have exactly one of all, any, not, claim, evidence, input, first, before/);
+});
+
+test('the protocol-graph schema accepts the order forms only as canon-ir/1 writes them', async () => {
+  const check = await validator();
+  const base = await readJson('data/software-change-ordered.protocol-graph.json');
+  const clone = () => structuredClone(base);
+  const node = (document, id) => document.nodes.find((entry) => entry.id === id);
+  const refused = (document, label) => assert.notDeepEqual(check('protocol-graph.v1', document), [], label);
+  assert.deepEqual(check('protocol-graph.v1', base), [], 'the order-form example itself');
+  const selfOrdered = clone(); node(selfOrdered, 'claim:test.precedes.fix').predicate.all[0].before.then = 'test_result';
+  assert.deepEqual(check('protocol-graph.v1', selfOrdered), [], 'the schema cannot compare first and then, and does not try');
+
+  const firstExtra = clone(); node(firstExtra, 'claim:regression.reproduced').predicate.first.is = 'true';
+  refused(firstExtra, 'extra first field');
+  const beforeExtra = clone(); node(beforeExtra, 'claim:test.precedes.fix').predicate.all[0].before.result = 'pass';
+  refused(beforeExtra, 'extra before field');
+  const noResult = clone(); delete node(noResult, 'claim:regression.reproduced').predicate.first.result;
+  refused(noResult, 'first without result');
+  const noKind = clone(); delete node(noKind, 'claim:regression.reproduced').predicate.first.kind;
+  refused(noKind, 'first without kind');
+  const nullResult = clone(); node(nullResult, 'claim:regression.reproduced').predicate.first.result = null;
+  refused(nullResult, 'first with a null result');
+  const noThen = clone(); delete node(noThen, 'claim:test.precedes.fix').predicate.all[0].before.then;
+  refused(noThen, 'before without then');
+  const noFirst = clone(); delete node(noFirst, 'claim:test.precedes.fix').predicate.all[0].before.first;
+  refused(noFirst, 'before without first');
+  const blankThen = clone(); node(blankThen, 'claim:test.precedes.fix').predicate.all[0].before.then = '';
+  refused(blankThen, 'blank then');
+  const blankSubject = clone(); node(blankSubject, 'claim:test.precedes.fix').predicate.all[0].before.subject = '';
+  refused(blankSubject, 'blank subject');
+  const nullSubject = clone(); node(nullSubject, 'obligation:reproduce_first').predicate.first.subject = null;
+  refused(nullSubject, 'null subject');
+  const flat = clone(); node(flat, 'claim:regression.reproduced').predicate = {first: 'test_result', result: 'fail'};
+  refused(flat, 'flat first form');
+  const two = clone(); node(two, 'claim:regression.reproduced').predicate = {first: {kind: 'test_result', result: 'fail'}, before: {first: 'test_result', then: 'implementation_change'}};
+  refused(two, 'two leaves in one predicate');
+});
+
+test('every committed protocol graph from before order forms validates and reads the same lines', async () => {
+  const check = await validator();
+  const snapshot = JSON.parse(await fs.readFile(path.join(root, 'tests/fixtures/protocol-graph/predicate-lines.snapshot.json'), 'utf8'));
+  const committed = (await fs.readdir(path.join(example, 'data'))).filter((file) => file.endsWith('.protocol-graph.json')).sort();
+  const before = committed.filter((file) => file !== 'software-change-ordered.protocol-graph.json');
+  assert.deepEqual(before, [...Object.keys(snapshot), 'software-change-profiled.protocol-graph.json'].sort());
+  for (const file of before) {
+    const data = await readJson(`data/${file}`);
+    assert.deepEqual(check('protocol-graph.v1', data), [], file);
+    assert.equal(parseProtocolGraph(data), data, file);
+    const markup = renderToStaticMarkup(createElement(ProtocolGraph, {data}));
+    assert.doesNotMatch(markup, /first evidence|evidence <code>[^<]*<\/code> before /, file);
+  }
+  for (const [file, expected] of Object.entries(snapshot)) {
+    const data = await readJson(`data/${file}`);
+    const actual = Object.fromEntries(data.nodes.filter((node) => node.predicate).map((node) => [node.id, lineTuples(predicateLines(node.predicate))]));
+    const recorded = Object.fromEntries(Object.entries(expected).map(([id, lines]) => [id, lines.map(([depth, text, reference]) => [depth, text, reference, null])]));
+    assert.deepEqual(actual, recorded, file);
+  }
+  const profiled = await readJson('data/software-change-profiled.protocol-graph.json');
+  const rules = Object.fromEntries(profiled.nodes.flatMap((node) => [
+    ...(node.applicable_when ? [[`${node.id} applicable_when`, lineTuples(predicateLines(node.applicable_when))]] : []),
+    ...(node.predicate ? [[node.id, lineTuples(predicateLines(node.predicate))]] : []),
+  ]));
+  assert.deepEqual(rules, {
+    'action:implementation.edit': [[0, 'any of', null, null], [1, 'not', null, null], [2, 'input', 'change_kind', 'in bugfix'], [1, 'claim', 'regression.reproduced', null]],
+    'claim:regression.reproduced': [[0, 'evidence = fail:', 'test_result', null]],
+    'claim:tests.pass': [[0, 'evidence = pass:', 'test_result', null]],
+    'outcome:accepted': [[0, 'claim', 'tests.pass', null]],
+    'obligation:reproduce_first applicable_when': [[0, 'input', 'change_kind', 'in bugfix, feature']],
+    'obligation:reproduce_first': [[0, 'claim', 'regression.reproduced', null]],
+  });
 });
 
 test('ProtocolGraph and DomainGraph render accessible static SVG, and refuse bad data visibly', async () => {
