@@ -75,6 +75,13 @@ declare module '@theme-init/Navbar/Logo' {
   export default NavbarLogo;
 }
 
+declare module '@theme-init/TOCItems/Tree' {
+  import type {ComponentType} from 'react';
+  interface TocHeading {value: string; id: string; level: number; children: TocHeading[]}
+  const TOCItemsTree: ComponentType<{toc: readonly TocHeading[]; className?: string; linkClassName?: string | null; isChild?: boolean}>;
+  export default TOCItemsTree;
+}
+
 declare module '@theme-init/DocItem/Content' {
   import type {ComponentType, ReactNode} from 'react';
   const DocItemContent: ComponentType<{children?: ReactNode}>;

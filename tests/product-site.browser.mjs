@@ -143,6 +143,46 @@ check(23, 'code-block copy and wrap buttons never cover code on a phone or a nar
   }
 });
 
+check(24, 'table-of-contents labels of long code headings stay in the rail and break only at spaces, after / or _ and before .', async () => {
+  for (const width of [1440, 1280, 997, 390]) {
+    const {page, close} = await open('docs/code', {width});
+    try {
+      if (width < 997) {
+        await page.locator('.theme-doc-toc-mobile button').click();
+        await page.locator('.theme-doc-toc-mobile .table-of-contents__link code').first().waitFor();
+        await page.waitForTimeout(400);
+      }
+      const labels = await page.evaluate(narrow => {
+        const toc = document.querySelector(narrow ? '.theme-doc-toc-mobile' : '.theme-doc-toc-desktop');
+        const rail = toc.getBoundingClientRect();
+        return [...toc.querySelectorAll('.table-of-contents__link')].filter(link => link.querySelector('code')).map(link => {
+          const breaks = [];
+          let right = 0;
+          const walker = document.createTreeWalker(link, NodeFilter.SHOW_TEXT);
+          let previous = null;
+          for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            for (let index = 0; index < node.length; index++) {
+              const range = document.createRange(); range.setStart(node, index); range.setEnd(node, index + 1);
+              const box = range.getBoundingClientRect();
+              if (!box.width) { if (previous && /\s/.test(node.data[index])) previous.character = ' '; continue; }
+              right = Math.max(right, box.right);
+              const character = node.data[index];
+              if (previous && box.top > previous.top + 2 && !/[\s/_]/.test(previous.character) && !/[\s.]/.test(character)) breaks.push(`${previous.character}|${character}`);
+              previous = {top: box.top, character};
+            }
+          }
+          return {text: link.textContent.slice(0, 48), right: Math.round(right), rail: Math.round(rail.right), breaks};
+        });
+      }, width < 997);
+      assert.ok(labels.length >= 2, `${width}px: the example has code headings in the table of contents`);
+      for (const label of labels) {
+        assert.ok(label.right <= label.rail + 1, `${width}px "${label.text}" ends at ${label.right}, the rail at ${label.rail}`);
+        assert.deepEqual(label.breaks, [], `${width}px "${label.text}" breaks inside a word`);
+      }
+    } finally { await close(); }
+  }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {

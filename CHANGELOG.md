@@ -25,6 +25,10 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - On a touch screen or a window up to 996 px wide, a code block's copy and wrap buttons sit in its
   caption bar and never cover the first line. They stay visible there, and a long title wraps
   instead of running under them ([#23](https://github.com/beyond10x/docs-system/issues/23)).
+- In the table of contents, a heading written as code (a command or a path) stays inside the rail.
+  It wraps at spaces, after `/` and `_`, and before `.`, never between two letters. The theme's
+  `TOCItems/Tree` is wrapped to mark those break points
+  ([#24](https://github.com/beyond10x/docs-system/issues/24)).
 
 ## 0.10.0 — 2026-10-13
 

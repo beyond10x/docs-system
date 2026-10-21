@@ -11,6 +11,7 @@ import {renderToStaticMarkup} from 'react-dom/server';
 import {countCrossings, layeredLayout} from '../dist/graph-layout.js';
 import {layoutDomainGraph, layoutProtocolGraph, parseDomainGraph, parseProtocolGraph, predicateLineText, predicateLines, protocolLineage} from '../dist/product-graphs.js';
 import {landingTitle, parseTerminalSession, parseTranscript} from '../dist/product-data.js';
+import {breakableToc, breakableTocLabel} from '../dist/toc.js';
 import {decisionSteps, formatDuration, parseSessionComposition, sessionKpis} from '../dist/session-data.js';
 import {productPrismDarkTheme, productPrismTheme} from '../dist/prism-themes.js';
 import {activeNavbarItem, docItemLink, navbarItemScore} from '../dist/navbar-active.js';
@@ -497,6 +498,17 @@ test('#21: the landing title leaves the product name to the site title when that
   assert.equal(landingTitle(product, 'ModelSpec docs'), 'Specify models. Check shapes.');
   assert.equal(landingTitle(product, 'Beyond10x'), 'ModelSpec — Specify models. Check shapes.');
   assert.equal(landingTitle(product, undefined), 'ModelSpec — Specify models. Check shapes.');
+});
+
+test('#24: a code heading in the table of contents breaks only at separators', () => {
+  const word = text => `<span class="b10x-toc-word">${text}</span>`;
+  assert.equal(breakableTocLabel('Plain words/and paths'), 'Plain words/and paths');
+  assert.equal(breakableTocLabel('<code>check a/two_layer.mspec --stage</code>'), `<code>${word('check')} ${word('a/<wbr>two_<wbr>layer<wbr>.mspec')} ${word('--stage')}</code>`);
+  assert.equal(breakableTocLabel('Run <code>a/b</code> then c/d'), `Run <code>${word('a/<wbr>b')}</code> then c/d`);
+  assert.equal(breakableTocLabel('<code>.env ../up a.b&amp;c</code>'), `<code>${word('.env')} ${word('../<wbr>up')} ${word('a<wbr>.b&amp;c')}</code>`);
+  const [heading] = breakableToc([{id: 'x', level: 2, value: '<code>a/b</code>', children: [{id: 'y', level: 3, value: '<code>c_d</code>', children: []}]}]);
+  assert.equal(heading.value, `<code>${word('a/<wbr>b')}</code>`);
+  assert.equal(heading.children[0].value, `<code>${word('c_<wbr>d')}</code>`);
 });
 
 test('withProductSite adds one plugin, the matched Prism themes and a dark default', () => {

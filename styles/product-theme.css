@@ -278,6 +278,9 @@ pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-bloc
 .table-of-contents { font-size: 0.8rem; }
 .table-of-contents__link { color: var(--b10x-color-muted); }
 .table-of-contents__link--active { color: var(--b10x-color-heading); }
+/* A code heading wraps between words and after "/", never inside a word. */
+.table-of-contents code { overflow-wrap: normal; word-break: normal; }
+.table-of-contents .b10x-toc-word { white-space: nowrap; }
 .pagination-nav__link { border-color: var(--b10x-color-hairline); border-radius: 7px; }
 .pagination-nav__link:hover { border-color: var(--b10x-color-accent); }
 .pagination-nav__sublabel { color: var(--b10x-color-muted); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
