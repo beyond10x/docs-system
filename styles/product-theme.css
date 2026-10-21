@@ -253,11 +253,11 @@ pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-bloc
 }
 .theme-code-block > [class*='codeBlockTitle']::after { color: var(--b10x-color-muted); content: var(--b10x-code-label); font: 600 0.62rem/1.8 var(--b10x-font-sans); letter-spacing: 0.12em; text-transform: uppercase; }
 .theme-code-block pre[class*='language-'] { padding-block: 1.1rem; font-size: 0.82rem; line-height: 1.8; }
-/* Copy and wrap controls appear on intent, as on the hand-built pages, which have none. */
+/* Copy and wrap controls appear on intent, as on the hand-built pages, which have none. The group selectors outrank Docusaurus's own 0.4 hover rule, which has the same specificity as a shorter selector and wins by bundle order. */
 .theme-code-block button.clean-btn { border-color: var(--b10x-code-border); opacity: 0; }
-.theme-code-block:is(:hover, :focus-within) button.clean-btn { opacity: 0.85; }
+.theme-code-block:is(:hover, :focus-within) [class*='buttonGroup'] button.clean-btn { opacity: 0.85; }
 .theme-code-block button.clean-btn:is(:hover, :focus-visible) { opacity: 1; }
-@media (hover: none) { .theme-code-block button.clean-btn { opacity: 0.85; } }
+@media (hover: none) { .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] button.clean-btn { opacity: 0.85; } }
 /* On a phone or a narrow window the controls sit in the caption bar, so they never cover the first line. */
 @media (hover: none), (pointer: coarse), (max-width: 996px) {
   .theme-code-block { --b10x-code-bar: var(--b10x-touch-target); }
@@ -268,7 +268,7 @@ pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-bloc
   .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] button.clean-btn { min-inline-size: var(--b10x-code-bar); min-block-size: 0; block-size: 100%; justify-content: center; border-color: transparent; background: transparent; }
   .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] button.clean-btn:is(:hover, :focus-visible) { border-color: var(--b10x-code-border); }
 }
-@media (max-width: 996px) and (hover: hover) and (pointer: fine) { .theme-code-block button.clean-btn { opacity: 0.85; } }
+@media (max-width: 996px) and (hover: hover) and (pointer: fine) { .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] button.clean-btn { opacity: 0.85; } }
 .theme-code-block-highlighted-line { box-shadow: inset 2px 0 0 var(--b10x-color-accent); }
 [class*='codeLineNumber'] { color: color-mix(in srgb, var(--b10x-color-muted) 70%, transparent) !important; }
 

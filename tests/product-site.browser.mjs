@@ -137,13 +137,13 @@ check(23, 'code-block copy and wrap buttons never cover code on a phone or a nar
     const {page, close} = await open('docs/code', {width, touch});
     try {
       await page.locator('.theme-code-block [class*="buttonGroup"] button').first().waitFor();
-      await page.waitForFunction(() => [...document.querySelectorAll('.theme-code-block [class*="buttonGroup"] button')].every(button => button.getAnimations().every(animation => animation.playState === 'finished')));
       const blocks = page.locator('.theme-code-block');
       assert.ok(await blocks.count() >= 2, 'the example has code blocks with and without a title');
       for (let index = 0; index < await blocks.count(); index++) {
         const block = blocks.nth(index);
         await block.scrollIntoViewIfNeeded();
         if (!touch) await block.hover();
+        await block.evaluate(element => Promise.all([...element.querySelectorAll('[class*="buttonGroup"] button')].flatMap(button => button.getAnimations().map(animation => animation.finished))));
         const found = await block.evaluate(element => {
           const group = element.querySelector('[class*="buttonGroup"]');
           const code = element.querySelector('pre');
