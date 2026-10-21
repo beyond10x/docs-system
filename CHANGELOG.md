@@ -50,6 +50,10 @@ All notable changes to this project are documented in this file. From 0.11.0 the
   wider than the column, as Markdown tables do. `ScrollableTable` moved to its own module, so
   `./renderers` still loads without the Docusaurus theme
   ([#27](https://github.com/beyond10x/docs-system/issues/27)).
+- A protocol graph whose claim predicate uses `input … in [...]` renders in the browser. The client
+  build turned a copied `Set` into a one-element array, so the graph failed after hydration with
+  "names value [object Set]" and React reported a hydration mismatch (#418)
+  ([#28](https://github.com/beyond10x/docs-system/issues/28)).
 
 ## 0.10.0 — 2026-10-13
 

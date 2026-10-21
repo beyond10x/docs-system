@@ -284,6 +284,19 @@ check(27, 'a chart or graph text table wider than a phone is a named region with
   assert.ok(overflowing > 0, 'no text table overflows at 390 px, so the check proves nothing');
 });
 
+check(28, 'a protocol graph with an input predicate renders in the browser as it was prerendered', async () => {
+  const {page, errors, close} = await open('docs/reference');
+  try {
+    const logged = []; page.on('console', message => { if (message.type() === 'error' && !message.location().url.endsWith('/favicon.ico')) logged.push(message.text()); });
+    await page.reload({waitUntil: 'load'});
+    await page.waitForTimeout(500);
+    const failed = await page.locator('.b10x-graph-error').allTextContents();
+    assert.deepEqual(failed, [], 'every graph on the page renders after hydration');
+    assert.deepEqual(errors, []);
+    assert.deepEqual(logged, []);
+  } finally { await close(); }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {

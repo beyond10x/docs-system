@@ -172,7 +172,7 @@ function predicate(value: unknown, path: string, inputs: CaseInputs): void {
     const values = distinctTexts(input.in, `${path}.input.in`);
     const declared = inputs.get(id);
     if (!declared) throw new Error(`${path}.input.id names undeclared input ${id}`);
-    [...values].forEach((candidate, index) => {
+    Array.from(values).forEach((candidate, index) => {
       if (!declared.has(candidate)) throw new Error(`${path}.input.in[${index}] names value ${candidate} that input ${id} does not declare`);
     });
   } else if (key === 'claim') {
