@@ -256,6 +256,17 @@ pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-bloc
 .theme-code-block:is(:hover, :focus-within) button.clean-btn { opacity: 0.85; }
 .theme-code-block button.clean-btn:is(:hover, :focus-visible) { opacity: 1; }
 @media (hover: none) { .theme-code-block button.clean-btn { opacity: 0.85; } }
+/* On a phone or a narrow window the controls sit in the caption bar, so they never cover the first line. */
+@media (hover: none), (pointer: coarse), (max-width: 996px) {
+  .theme-code-block { --b10x-code-bar: var(--b10x-touch-target); }
+  .theme-code-block[class*='language-']::before,
+  .theme-code-block > [class*='codeBlockTitle'] { display: flex; align-items: center; box-sizing: border-box; min-block-size: var(--b10x-code-bar); padding-inline-end: calc(2 * var(--b10x-code-bar) + 0.75rem); overflow-wrap: anywhere; }
+  .theme-code-block > [class*='codeBlockTitle']::after { flex: none; overflow-wrap: normal; }
+  .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] { top: calc(1px - var(--b10x-code-bar)); right: 0.25rem; align-items: center; block-size: calc(var(--b10x-code-bar) - 2px); }
+  .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] button.clean-btn { min-inline-size: var(--b10x-code-bar); min-block-size: 0; block-size: 100%; justify-content: center; border-color: transparent; background: transparent; }
+  .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] button.clean-btn:is(:hover, :focus-visible) { border-color: var(--b10x-code-border); }
+}
+@media (max-width: 996px) and (hover: hover) and (pointer: fine) { .theme-code-block button.clean-btn { opacity: 0.85; } }
 .theme-code-block-highlighted-line { box-shadow: inset 2px 0 0 var(--b10x-color-accent); }
 [class*='codeLineNumber'] { color: color-mix(in srgb, var(--b10x-color-muted) 70%, transparent) !important; }
 

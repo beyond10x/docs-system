@@ -110,6 +110,39 @@ check(22, 'a table stays inside the article column and scrolls in a labelled reg
   }
 });
 
+check(23, 'code-block copy and wrap buttons never cover code on a phone or a narrow window', async () => {
+  for (const [width, touch] of [[390, true], [390, false], [996, false]]) {
+    const {page, close} = await open('docs/code', {width, touch});
+    try {
+      await page.locator('.theme-code-block [class*="buttonGroup"] button').first().waitFor();
+      await page.waitForTimeout(200);
+      const blocks = page.locator('.theme-code-block');
+      assert.ok(await blocks.count() >= 2, 'the example has code blocks with and without a title');
+      for (let index = 0; index < await blocks.count(); index++) {
+        const block = blocks.nth(index);
+        await block.scrollIntoViewIfNeeded();
+        if (!touch) await block.hover();
+        const found = await block.evaluate(element => {
+          const group = element.querySelector('[class*="buttonGroup"]');
+          const code = element.querySelector('pre');
+          if (!group || !code) return null;
+          const buttons = group.getBoundingClientRect(); const lines = code.getBoundingClientRect(); const frame = element.getBoundingClientRect();
+          const title = element.querySelector('[class*="codeBlockTitle"]');
+          const text = title && document.createRange(); text?.selectNodeContents(title);
+          const textRight = text ? Math.max(...[...text.getClientRects()].map(rect => rect.right)) : 0;
+          return {title: title && [Math.round(textRight), title.scrollWidth - title.clientWidth], buttons: [Math.round(buttons.top), Math.round(buttons.bottom), Math.round(buttons.left), Math.round(buttons.right)], code: Math.round(lines.top), frame: [Math.round(frame.top), Math.round(frame.right)], opacity: Math.min(...[...group.querySelectorAll('button')].map(button => Number(getComputedStyle(button).opacity)))};
+        });
+        assert.ok(found, `${width}px block ${index} has its button group`);
+        const where = `${width}px${touch ? ' touch' : ''} block ${index}`;
+        assert.ok(found.buttons[1] <= found.code + 1, `${where}: buttons end at ${found.buttons[1]}, the code starts at ${found.code}`);
+        assert.ok(found.buttons[0] >= found.frame[0] - 1 && found.buttons[3] <= found.frame[1] + 1, `${where}: buttons ${found.buttons} leave the block ${found.frame}`);
+        assert.ok(found.opacity >= 0.8, `${where}: buttons are faint (${found.opacity})`);
+        if (found.title) assert.ok(found.title[0] <= found.buttons[2] + 1 && found.title[1] <= 0, `${where}: the title text ends at ${found.title[0]} and overflows its bar by ${found.title[1]}px; the buttons start at ${found.buttons[2]}`);
+      }
+    } finally { await close(); }
+  }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {
