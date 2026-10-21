@@ -108,6 +108,28 @@ check(22, 'a table stays inside the article column and scrolls in a labelled reg
       if (width === 390) assert.ok(tables.some(table => table.overflowing), 'the example has a table wider than a phone column');
     } finally { await close(); }
   }
+  const surfaces = [['docs/reference', '.theme-admonition table'], ['docs/charts', '.b10x-graph__table table'], ['session', '.b10x-chart__table table']];
+  for (const [url, selector] of surfaces) for (const theme of themes) for (const width of [1280, 390]) {
+    const {page, close} = await open(url, {width, theme});
+    try {
+      await page.evaluate(() => { for (const details of document.querySelectorAll('details.b10x-graph__table, details.b10x-chart__table')) details.open = true; });
+      const table = page.locator(selector).first();
+      await table.waitFor({state: 'visible'});
+      await table.locator('th').first().scrollIntoViewIfNeeded();
+      await page.waitForTimeout(200);
+      const box = await table.locator('xpath=..').boundingBox();
+      const header = await table.locator('th').first().boundingBox();
+      const row = await page.screenshot({clip: {x: box.x, y: header.y + 4, width: box.width, height: 1}}).catch(error => { throw new Error(`${url} ${theme} ${width}px ${JSON.stringify([box, header])}: ${error.message.split("\n")[0]}`); });
+      const [edge, middle] = await page.evaluate(async data => {
+        const image = new Image(); image.src = `data:image/png;base64,${data}`; await image.decode();
+        const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = 1;
+        const context = canvas.getContext('2d'); context.drawImage(image, 0, 0);
+        return [6 * devicePixelRatio, image.width * 0.6].map(x => Array.from(context.getImageData(Math.round(x), 0, 1, 1).data.slice(0, 3)));
+      }, row.toString('base64'));
+      const delta = Math.max(...edge.map((value, index) => Math.abs(value - middle[index])));
+      assert.ok(delta <= 3, `${url} ${theme} ${width}px: "${selector}" paints its edge ${edge} against its row ${middle}`);
+    } finally { await close(); }
+  }
 });
 
 check(23, 'code-block copy and wrap buttons never cover code on a phone or a narrow window', async () => {

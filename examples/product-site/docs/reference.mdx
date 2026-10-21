@@ -49,3 +49,11 @@ a kind, a `before` leaf that one kind of evidence precedes another, either about
 | `first` | `{"first": {"kind": <kind>, "result": <result>}}` | `{"first": {"kind": "review.approved", "result": "pass"}}` | `first evidence = pass: review.approved` |
 | `before` | `{"before": {"first": <kind>, "then": <kind>}}` | `{"before": {"first": "regression.test", "then": "fix.merged"}}` | `evidence regression.test before fix.merged` |
 | `input` | `{"input": {"id": <id>, "in": [<value>, …]}}` | `{"input": {"id": "change.size", "in": ["large"]}}` | `input change.size in large` |
+
+:::tip[A table in an admonition]
+
+| Value | Meaning |
+| --- | --- |
+| `pass` | The evidence holds. |
+
+:::

@@ -443,7 +443,8 @@
   padding: 1.6rem 1.75rem 1.25rem;
   border: 1px solid var(--b10x-color-hairline, var(--b10x-color-line));
   border-radius: 9px;
-  background: var(--b10x-graph-canvas);
+  --b10x-table-surface: var(--b10x-graph-canvas);
+  background: var(--b10x-table-surface);
 }
 .b10x-graph__header { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem 2.5rem; align-items: start; margin-bottom: 1.6rem; }
 .b10x-graph__heading { min-width: 0; max-width: 40rem; }
@@ -666,7 +667,7 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
 .b10x-stat-tile__value { margin: 0.35rem 0 0; color: var(--b10x-color-heading); font: 600 1.9rem/1.15 var(--b10x-font-sans); letter-spacing: -0.03em; }
 .b10x-stat-tile__detail { margin: 0.2rem 0 0; color: var(--b10x-color-muted); font-size: 0.76rem; line-height: 1.45; }
 
-.b10x-chart { min-width: 0; max-width: 100%; margin: 1.5rem 0; padding: 1.4rem 1.6rem 1.1rem; border: 1px solid var(--b10x-color-hairline, var(--b10x-color-line)); border-radius: 9px; background: var(--b10x-graph-node); }
+.b10x-chart { min-width: 0; max-width: 100%; margin: 1.5rem 0; padding: 1.4rem 1.6rem 1.1rem; border: 1px solid var(--b10x-color-hairline, var(--b10x-color-line)); border-radius: 9px; --b10x-table-surface: var(--b10x-graph-node); background: var(--b10x-table-surface); }
 .b10x-chart__header { margin-bottom: 0.8rem; }
 .b10x-chart__title { display: block; color: var(--b10x-color-heading); font-size: 1.05rem; font-weight: 620; letter-spacing: -0.015em; }
 .b10x-chart__description { max-width: 52rem; margin: 0.25rem 0 0; color: var(--b10x-color-muted); font-size: 0.86rem; line-height: 1.55; }
@@ -845,7 +846,7 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
 /* Hero art and KPI row                                                                        */
 
 .b10x-hero-art { --b10x-kind-entity: var(--b10x-product-hue); min-width: 0; }
-.b10x-graph--hero { margin: 0; padding: 1rem 1.1rem 0.9rem; border-color: color-mix(in srgb, var(--b10x-product-hue) 30%, var(--b10x-color-hairline, var(--b10x-color-line))); background: var(--b10x-color-panel, var(--b10x-color-surface)); }
+.b10x-graph--hero { margin: 0; padding: 1rem 1.1rem 0.9rem; border-color: color-mix(in srgb, var(--b10x-product-hue) 30%, var(--b10x-color-hairline, var(--b10x-color-line))); --b10x-table-surface: var(--b10x-color-panel, var(--b10x-color-surface)); background: var(--b10x-table-surface); }
 .b10x-graph--hero .b10x-graph__hero-title { margin-bottom: 0.7rem; }
 .b10x-graph--hero .b10x-graph__hero-title code { padding: 0; border: 0; background: none; color: var(--b10x-color-heading); font-size: 1em; letter-spacing: 0.02em; text-transform: none; }
 .b10x-graph--hero .b10x-graph__hero-title span { color: var(--b10x-color-heading); font-family: var(--b10x-font-mono); letter-spacing: 0.02em; text-transform: none; }

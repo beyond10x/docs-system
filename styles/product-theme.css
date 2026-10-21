@@ -204,13 +204,14 @@ a { text-underline-offset: 4px; }
 /* Identifiers in tables wrap at spaces, never inside a word; a table still wider than the column scrolls in its frame. */
 :is(.markdown, .b10x-graph__table, .b10x-chart__table) :is(td, th) code { overflow-wrap: normal; word-break: normal; white-space: normal; }
 .markdown table tr { background: transparent; border: 0; }
-/* A table never widens the column; when it is wider, its frame scrolls and an edge shadow marks the hidden side. */
+/* A table never widens the column; when it is wider, its frame scrolls and an edge shadow marks the hidden side.
+   The covers take the colour of the surface the table sits on: a box with its own background sets --b10x-table-surface. */
 .markdown .b10x-table-wrap {
   contain: inline-size;
   margin-bottom: var(--ifm-spacing-vertical);
   background:
-    linear-gradient(to right, var(--b10x-color-canvas) 30%, transparent) left / 2.5rem 100% no-repeat local,
-    linear-gradient(to left, var(--b10x-color-canvas) 30%, transparent) right / 2.5rem 100% no-repeat local,
+    linear-gradient(to right, var(--b10x-table-surface, var(--b10x-color-canvas)) 30%, transparent) left / 2.5rem 100% no-repeat local,
+    linear-gradient(to left, var(--b10x-table-surface, var(--b10x-color-canvas)) 30%, transparent) right / 2.5rem 100% no-repeat local,
     radial-gradient(farthest-side at 0 50%, var(--b10x-color-line), transparent) left / 0.9rem 100% no-repeat scroll,
     radial-gradient(farthest-side at 100% 50%, var(--b10x-color-line), transparent) right / 0.9rem 100% no-repeat scroll;
 }
@@ -221,7 +222,8 @@ a { text-underline-offset: 4px; }
   border: 0;
   border-left: 3px solid var(--b10x-admonition, var(--b10x-color-amber));
   border-radius: 0 6px 6px 0;
-  background: color-mix(in srgb, var(--b10x-admonition, var(--b10x-color-amber)) 8%, var(--b10x-color-canvas));
+  --b10x-table-surface: color-mix(in srgb, var(--b10x-admonition, var(--b10x-color-amber)) 8%, var(--b10x-color-canvas));
+  background: var(--b10x-table-surface);
   box-shadow: none;
   color: var(--b10x-color-text);
 }

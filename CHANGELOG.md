@@ -25,7 +25,8 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - A Markdown table never widens the article column or overruns the table-of-contents gutter. A
   table wider than the column scrolls in its own frame, which becomes a labelled, focusable region
   with edge shadows on the hidden side and a line of guidance below it. Code in table cells wraps at
-  spaces and never inside a word, at every width
+  spaces and never inside a word, at every width. The shadows' covers take the colour of the box the
+  table sits in: an admonition, a graph or a chart sets `--b10x-table-surface`
   ([#22](https://github.com/beyond10x/docs-system/issues/22)).
 - On a touch screen or a window up to 996 px wide, a code block's copy and wrap buttons sit in its
   caption bar and never cover the first line. They stay visible there, and a long title wraps
