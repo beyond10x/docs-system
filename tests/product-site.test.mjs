@@ -529,6 +529,11 @@ test('#24: a code heading in the table of contents breaks only at separators', (
   assert.equal(breakableTocLabel('<code>check a/two_layer.mspec --stage</code>'), `<code>${word('check')} ${word('a/<wbr>two_<wbr>layer<wbr>.mspec')} ${word('--stage')}</code>`);
   assert.equal(breakableTocLabel('Run <code>a/b</code> then c/d'), `Run <code>${word('a/<wbr>b')}</code> then c/d`);
   assert.equal(breakableTocLabel('<code>.env ../up a.b&amp;c</code>'), `<code>${word('.env')} ${word('../<wbr>up')} ${word('a<wbr>.b&amp;c')}</code>`);
+  assert.equal(breakableTocLabel('<code>check-every-surface --stage a-</code>'), `<code>${word('check-<wbr>every-<wbr>surface')} ${word('--stage')} ${word('a-')}</code>`);
+  assert.equal(breakableTocLabel('<code>std::collections::HashMap</code>'), `<code>${word('std::<wbr>collections::<wbr>Hash<wbr>Map')}</code>`);
+  assert.equal(breakableTocLabel('<code>ProductLanding2Value</code>'), `<code>${word('Product<wbr>Landing2<wbr>Value')}</code>`);
+  assert.equal(breakableTocLabel(`<code>${'a'.repeat(25)} ${'b'.repeat(24)}</code>`), `<code>${'a'.repeat(25)} ${word('b'.repeat(24))}</code>`);
+  assert.equal(breakableTocLabel(`<code>${'&amp;'.repeat(24)}</code>`), `<code>${word('&amp;'.repeat(24))}</code>`);
   const [heading] = breakableToc([{id: 'x', level: 2, value: '<code>a/b</code>', children: [{id: 'y', level: 3, value: '<code>c_d</code>', children: []}]}]);
   assert.equal(heading.value, `<code>${word('a/<wbr>b')}</code>`);
   assert.equal(heading.children[0].value, `<code>${word('c_<wbr>d')}</code>`);

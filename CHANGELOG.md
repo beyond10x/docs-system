@@ -30,9 +30,10 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - On a touch screen or a window up to 996 px wide, a code block's copy and wrap buttons sit in its
   caption bar and never cover the first line. They stay visible there, and a long title wraps
   instead of running under them ([#23](https://github.com/beyond10x/docs-system/issues/23)).
-- In the table of contents, a heading written as code (a command or a path) stays inside the rail.
-  It wraps at spaces, after `/` and `_`, and before `.`, never between two letters. The theme's
-  `TOCItems/Tree` is wrapped to mark those break points
+- In the table of contents, a heading written as code (a command, a path or an identifier) stays
+  inside the rail. It wraps at spaces, after `/`, `_`, a joining `-` and `::`, before `.` and where a
+  capital follows a lower-case letter. A word with more than 24 characters between those points breaks
+  anywhere instead of overflowing. The theme's `TOCItems/Tree` is wrapped to mark those break points
   ([#24](https://github.com/beyond10x/docs-system/issues/24)).
 - Every page has a share image: `withProductSite` serves a 1200 × 630 card at
   `<baseUrl>b10x-social/card.png` and sets it as `themeConfig.image` unless the site sets its own.
