@@ -18,7 +18,7 @@ import productSitePlugin, {readLanding, withProductSite} from '../dist/product-s
 
 register('./theme-loader.mjs', import.meta.url);
 const {ProtocolGraph, DomainGraph} = await import('../dist/charts.js');
-const {Terminal, FeatureGrid, Feature, Flow, StatusStrip, RelatedTools, ProductLanding, StatusBadge} = await import('../dist/product.js');
+const {Terminal, FeatureGrid, Feature, Flow, StatusStrip, RelatedTools, ProductLanding, ProductHero, StatusBadge, opensInNewTab} = await import('../dist/product.js');
 const {SessionTimeline, StepBars, CompositionGraph, SessionKpis} = await import('../dist/session-charts.js');
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -481,6 +481,14 @@ test('the landing reader inlines referenced files and the page renders every sec
   assert.match(markup, /<h1 id="b10x-hero-title">.*<em>What has been earned\.<\/em><\/h1>/);
   for (const id of ['what', 'how', 'protocol', 'status', 'related']) assert.match(markup, new RegExp(`<section class="b10x-product-section[^"]*" id="${id}"`));
   assert.match(markup, />01 \/ What it does</);
+});
+
+test('#20: a hero action Docusaurus opens in a new tab carries a visually hidden label', () => {
+  for (const href of ['https://example.org/', 'pathname:///pitch/', '//example.org/x', 'mailto:a@example.org']) assert.equal(opensInNewTab(href), true, href);
+  for (const href of ['/docs/', '#protocol', 'docs/x', './x']) assert.equal(opensInNewTab(href), false, href);
+  const markup = renderToStaticMarkup(createElement(ProductHero, {promise: ['P.'], lede: 'L', actions: [{label: 'Docs', href: '/docs/', kind: 'primary'}, {label: 'Deck', href: 'pathname:///deck/'}]}));
+  assert.match(markup, /Deck <span aria-hidden="true">↗<\/span><span class="b10x-sr-only"> \(opens in new tab\)<\/span>/);
+  assert.equal(markup.match(/opens in new tab/g).length, 1);
 });
 
 test('withProductSite adds one plugin, the matched Prism themes and a dark default', () => {

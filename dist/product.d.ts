@@ -120,6 +120,8 @@ export interface ProductHeroProps {
     titleId?: string;
 }
 export declare function ProductHero({ eyebrow, promise, lede, actions, meta, aside, kpis, titleId }: ProductHeroProps): ReactNode;
+/** Docusaurus `Link` opens an href with a scheme (including `pathname://`) or a protocol-relative one in a new tab. */
+export declare function opensInNewTab(href: string): boolean;
 /** Numbered KPI tiles. Values are counted from data (see `landingKpis`), never typed. */
 export declare function KpiRow({ items, label }: {
     items: readonly ResolvedKpi[];

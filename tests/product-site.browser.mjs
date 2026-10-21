@@ -57,6 +57,20 @@ check(19, 'hero terminal output is visible at first paint and after scrolling to
   }
 });
 
+check(20, 'a hero action that opens a new tab says so in its accessible name', async () => {
+  const {page, close} = await open('');
+  try {
+    const actions = await page.locator('.b10x-hero__actions a').evaluateAll(links => links.map(link => {
+      const spoken = node => node.nodeType === Node.TEXT_NODE ? node.textContent : node.getAttribute?.('aria-hidden') === 'true' ? '' : [...node.childNodes].map(spoken).join('');
+      return {href: link.getAttribute('href'), newTab: link.target === '_blank', name: spoken(link).replace(/\s+/g, ' ').trim()};
+    }));
+    assert.ok(actions.some(action => action.newTab), 'the example hero has an action that opens a new tab');
+    for (const action of actions) {
+      assert.equal(/\(opens in new tab\)/.test(action.name), action.newTab, `${action.href}: "${action.name}"`);
+    }
+  } finally { await close(); }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {

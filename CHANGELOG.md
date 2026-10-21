@@ -11,6 +11,9 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - The hero terminal shows every command and output line at first paint, at every width and in both
   themes. It no longer types its commands out; `<Terminal animate>` in a page still does
   ([#19](https://github.com/beyond10x/docs-system/issues/19)).
+- A hero action whose `href` opens a new tab (any scheme, `pathname://` or `//`) ends with `↗` and
+  carries a visually hidden "(opens in new tab)" in its accessible name
+  ([#20](https://github.com/beyond10x/docs-system/issues/20)).
 
 ## 0.10.0 — 2026-10-13
 

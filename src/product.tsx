@@ -494,12 +494,25 @@ export function ProductHero({eyebrow, promise, lede, actions = [], meta, aside, 
       {eyebrow && <p className="b10x-kicker"><span className="b10x-kicker__dot" aria-hidden="true" />{eyebrow}</p>}
       <h1 id={titleId}>{lines.map((line) => <span key={line}>{line}<br /></span>)}<em>{emphasis}</em></h1>
       <p className="b10x-hero__lede">{lede}</p>
-      {actions.length > 0 && <div className="b10x-hero__actions">{actions.map((action) => <Link key={action.href} to={action.href} className={action.kind === 'primary' ? 'b10x-button' : 'b10x-text-link'}>{action.label} <span aria-hidden="true">{action.kind === 'primary' ? '→' : action.href.startsWith('#') ? '↓' : '→'}</span></Link>)}</div>}
+      {actions.length > 0 && <div className="b10x-hero__actions">{actions.map((action) => <HeroAction key={action.href} action={action} />)}</div>}
       {meta && <p className="b10x-hero__meta">{meta}</p>}
     </div>
     {aside && <div className="b10x-hero__aside">{aside}</div>}
     {kpis && kpis.length > 0 && <KpiRow items={kpis} />}
   </section>;
+}
+
+/** Docusaurus `Link` opens an href with a scheme (including `pathname://`) or a protocol-relative one in a new tab. */
+export function opensInNewTab(href: string): boolean {
+  return /^(?:[A-Za-z][A-Za-z\d+.-]*:|\/\/)/.test(href);
+}
+
+function HeroAction({action}: {action: ProductAction}): ReactNode {
+  const newTab = opensInNewTab(action.href);
+  const glyph = newTab ? '↗' : action.kind !== 'primary' && action.href.startsWith('#') ? '↓' : '→';
+  return <Link to={action.href} className={action.kind === 'primary' ? 'b10x-button' : 'b10x-text-link'}>
+    {action.label} <span aria-hidden="true">{glyph}</span>{newTab && <span className="b10x-sr-only"> (opens in new tab)</span>}
+  </Link>;
 }
 
 /** Numbered KPI tiles. Values are counted from data (see `landingKpis`), never typed. */

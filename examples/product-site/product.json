@@ -19,6 +19,10 @@
       {
         "label": "See a protocol",
         "href": "#protocol"
+      },
+      {
+        "label": "Source",
+        "href": "https://github.com/beyond10x/canon"
       }
     ],
     "meta": "Rust · protocol/1 source · canon-ir/1 compiled form · Apache-2.0",

@@ -272,7 +272,16 @@ export function ProductSwitcher({ current }) {
 export function ProductHero({ eyebrow, promise, lede, actions = [], meta, aside, kpis, titleId = 'b10x-hero-title' }) {
     const lines = promise.length > 1 ? promise.slice(0, -1) : [];
     const emphasis = promise[promise.length - 1];
-    return _jsxs("section", { className: ['b10x-hero', aside ? '' : 'b10x-hero--solo'].filter(Boolean).join(' '), "aria-labelledby": titleId, children: [_jsxs("div", { className: "b10x-hero__copy", children: [eyebrow && _jsxs("p", { className: "b10x-kicker", children: [_jsx("span", { className: "b10x-kicker__dot", "aria-hidden": "true" }), eyebrow] }), _jsxs("h1", { id: titleId, children: [lines.map((line) => _jsxs("span", { children: [line, _jsx("br", {})] }, line)), _jsx("em", { children: emphasis })] }), _jsx("p", { className: "b10x-hero__lede", children: lede }), actions.length > 0 && _jsx("div", { className: "b10x-hero__actions", children: actions.map((action) => _jsxs(Link, { to: action.href, className: action.kind === 'primary' ? 'b10x-button' : 'b10x-text-link', children: [action.label, " ", _jsx("span", { "aria-hidden": "true", children: action.kind === 'primary' ? '→' : action.href.startsWith('#') ? '↓' : '→' })] }, action.href)) }), meta && _jsx("p", { className: "b10x-hero__meta", children: meta })] }), aside && _jsx("div", { className: "b10x-hero__aside", children: aside }), kpis && kpis.length > 0 && _jsx(KpiRow, { items: kpis })] });
+    return _jsxs("section", { className: ['b10x-hero', aside ? '' : 'b10x-hero--solo'].filter(Boolean).join(' '), "aria-labelledby": titleId, children: [_jsxs("div", { className: "b10x-hero__copy", children: [eyebrow && _jsxs("p", { className: "b10x-kicker", children: [_jsx("span", { className: "b10x-kicker__dot", "aria-hidden": "true" }), eyebrow] }), _jsxs("h1", { id: titleId, children: [lines.map((line) => _jsxs("span", { children: [line, _jsx("br", {})] }, line)), _jsx("em", { children: emphasis })] }), _jsx("p", { className: "b10x-hero__lede", children: lede }), actions.length > 0 && _jsx("div", { className: "b10x-hero__actions", children: actions.map((action) => _jsx(HeroAction, { action: action }, action.href)) }), meta && _jsx("p", { className: "b10x-hero__meta", children: meta })] }), aside && _jsx("div", { className: "b10x-hero__aside", children: aside }), kpis && kpis.length > 0 && _jsx(KpiRow, { items: kpis })] });
+}
+/** Docusaurus `Link` opens an href with a scheme (including `pathname://`) or a protocol-relative one in a new tab. */
+export function opensInNewTab(href) {
+    return /^(?:[A-Za-z][A-Za-z\d+.-]*:|\/\/)/.test(href);
+}
+function HeroAction({ action }) {
+    const newTab = opensInNewTab(action.href);
+    const glyph = newTab ? '↗' : action.kind !== 'primary' && action.href.startsWith('#') ? '↓' : '→';
+    return _jsxs(Link, { to: action.href, className: action.kind === 'primary' ? 'b10x-button' : 'b10x-text-link', children: [action.label, " ", _jsx("span", { "aria-hidden": "true", children: glyph }), newTab && _jsx("span", { className: "b10x-sr-only", children: " (opens in new tab)" })] });
 }
 /** Numbered KPI tiles. Values are counted from data (see `landingKpis`), never typed. */
 export function KpiRow({ items, label = 'Key figures' }) {
