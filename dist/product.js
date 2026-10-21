@@ -282,7 +282,7 @@ export function KpiRow({ items, label = 'Key figures' }) {
 export function HeroArt({ art }) {
     const body = (() => {
         switch (art.kind) {
-            case 'terminal': return _jsx(Terminal, { session: art.session, tilt: true, animate: true, caption: art.caption });
+            case 'terminal': return _jsx(Terminal, { session: art.session, tilt: true, caption: art.caption });
             case 'protocol-graph': return _jsx(ProtocolGraph, { data: art.data, variant: "hero", caption: art.caption });
             case 'domain-graph': return _jsx(DomainGraph, { data: art.data, variant: "hero", caption: art.caption });
             case 'case': return _jsx(CaseCard, { data: art.data, caption: art.caption });

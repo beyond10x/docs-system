@@ -516,7 +516,7 @@ export function KpiRow({items, label = 'Key figures'}: {items: readonly Resolved
 export function HeroArt({art}: {art: ProductArt}): ReactNode {
   const body = (() => {
     switch (art.kind) {
-      case 'terminal': return <Terminal session={art.session} tilt animate caption={art.caption} />;
+      case 'terminal': return <Terminal session={art.session} tilt caption={art.caption} />;
       case 'protocol-graph': return <ProtocolGraph data={art.data} variant="hero" caption={art.caption} />;
       case 'domain-graph': return <DomainGraph data={art.data} variant="hero" caption={art.caption} />;
       case 'case': return <CaseCard data={art.data} caption={art.caption} />;

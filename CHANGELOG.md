@@ -1,5 +1,17 @@
 # Changelog
 
+All notable changes to this project are documented in this file. From 0.11.0 the format follows
+[Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/), and the project uses
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Fixed
+
+- The hero terminal shows every command and output line at first paint, at every width and in both
+  themes. It no longer types its commands out; `<Terminal animate>` in a page still does
+  ([#19](https://github.com/beyond10x/docs-system/issues/19)).
+
 ## 0.10.0 — 2026-10-13
 
 - `b10x-protocol-graph/1` carries Canon 0.3.0's order forms in the `canon-ir/1` shape: a `first`
