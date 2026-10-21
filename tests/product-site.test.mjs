@@ -564,8 +564,9 @@ test('graphs, legends and table identifiers never clip or break', async () => {
     assert.match(rule(css, viewport), /contain: inline-size/, `${viewport} must not widen the docs column`);
   }
   assert.doesNotMatch(css, /\.b10x-graph__legend[^{]*\{[^}]*white-space: nowrap/, 'legend items wrap');
-  assert.match(theme, /:is\(td, th\) code \{ overflow-wrap: normal; word-break: normal; white-space: nowrap; \}/);
-  assert.match(theme, /\.markdown > table \{ display: block; max-inline-size: 100%; overflow-x: auto; \}/);
+  assert.match(theme, /:is\(td, th\) code \{ overflow-wrap: normal; word-break: normal; white-space: normal; \}/);
+  assert.match(rule(theme, String.raw`\.markdown \.b10x-table-wrap`), /contain: inline-size/, 'a markdown table must not widen the docs column');
+  assert.doesNotMatch(theme, /\.markdown > table \{ display: block/, 'a table keeps its table layout');
 });
 
 function assertNoOverlap(nodes) {

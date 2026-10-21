@@ -17,6 +17,11 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - The home page `<title>` names the product once: when the site title contains the product name the
   landing title is the promise alone, read as `<promise> | <site title>`
   ([#21](https://github.com/beyond10x/docs-system/issues/21)).
+- A Markdown table never widens the article column or overruns the table-of-contents gutter. A
+  table wider than the column scrolls in its own frame, which becomes a labelled, focusable region
+  with edge shadows on the hidden side and a line of guidance below it. Code in table cells wraps at
+  spaces and never inside a word, at every width
+  ([#22](https://github.com/beyond10x/docs-system/issues/22)).
 
 ## 0.10.0 — 2026-10-13
 

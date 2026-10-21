@@ -81,6 +81,35 @@ check(21, 'the home title names the product once', async () => {
   } finally { await close(); }
 });
 
+check(22, 'a table stays inside the article column and scrolls in a labelled region with a cue', async () => {
+  for (const width of widths) {
+    const {page, close} = await open('docs/reference', {width});
+    try {
+      await page.waitForTimeout(200);
+      const tables = await page.evaluate(() => {
+        const column = document.querySelector('article .markdown').getBoundingClientRect();
+        return [...document.querySelectorAll('article .markdown table')].filter(table => table.checkVisibility()).map(table => {
+          let frame = table;
+          while (frame.parentElement && !/auto|scroll/.test(getComputedStyle(frame).overflowX) && frame.parentElement.matches(':not(.markdown)')) frame = frame.parentElement;
+          const box = frame.getBoundingClientRect();
+          const overflowing = table.getBoundingClientRect().width > box.width + 1;
+          const cue = frame.nextElementSibling?.matches('.b10x-table-guidance') && frame.nextElementSibling.offsetHeight > 0;
+          const codes = [...table.querySelectorAll('td code')].map(code => getComputedStyle(code)).map(style => `${style.whiteSpace}/${style.wordBreak}/${style.overflowWrap}`);
+          return {heading: table.rows[0].cells[0].textContent, right: Math.round(box.right), column: Math.round(column.right), overflowing, region: frame.getAttribute('role') === 'region' && frame.tabIndex === 0 && !!frame.getAttribute('aria-label'), cue, codes: [...new Set(codes)]};
+        });
+      });
+      const pageOverflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+      assert.ok(pageOverflow <= 1, `${width}px: the page scrolls sideways by ${pageOverflow}px`);
+      for (const table of tables) {
+        assert.ok(table.right <= table.column + 1, `${width}px "${table.heading}" table ends at ${table.right}, the column at ${table.column}`);
+        if (table.overflowing) assert.ok(table.region && table.cue, `${width}px "${table.heading}" overflows without a labelled region and a visible cue`);
+        assert.deepEqual(table.codes.filter(code => !/^(normal|pre-wrap)\/normal\/normal$/.test(code)), [], `${width}px "${table.heading}" cell code must wrap at spaces only`);
+      }
+      if (width === 390) assert.ok(tables.some(table => table.overflowing), 'the example has a table wider than a phone column');
+    } finally { await close(); }
+  }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {
