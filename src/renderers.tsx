@@ -1,4 +1,5 @@
 import type {ReactNode} from 'react';
+import {ScrollableTable} from './scrollable-table.js';
 
 export interface JsonSchema {
   $ref?: string;
@@ -75,7 +76,7 @@ function Operation({path, method, operation, Heading}: {path: string; method: st
 }
 
 function ResponseTable({responses}: {responses: NonNullable<OpenApiOperation['responses']>}): ReactNode {
-  return <div className="b10x-table-wrap"><table><thead><tr><th scope="col">Status</th><th scope="col">Description</th><th scope="col">Schema</th></tr></thead><tbody>{Object.entries(responses).map(([status, response]) => { const media = Object.values(response.content ?? {})[0]; return <tr key={status}><td><code>{status}</code></td><td>{response.description}</td><td>{media?.schema ? <JsonSchemaViewer schema={media.schema} /> : '—'}</td></tr>; })}</tbody></table></div>;
+  return <ScrollableTable label="Responses"><thead><tr><th scope="col">Status</th><th scope="col">Description</th><th scope="col">Schema</th></tr></thead><tbody>{Object.entries(responses).map(([status, response]) => { const media = Object.values(response.content ?? {})[0]; return <tr key={status}><td><code>{status}</code></td><td>{response.description}</td><td>{media?.schema ? <JsonSchemaViewer schema={media.schema} /> : '—'}</td></tr>; })}</tbody></ScrollableTable>;
 }
 
 function schemaType(schema?: JsonSchema): string {

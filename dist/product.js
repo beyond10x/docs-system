@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import useBrokenLinks from '@docusaurus/useBrokenLinks';
 import CodeBlock from '@theme/CodeBlock';
 import { DomainGraph, ProtocolGraph } from './charts.js';
-import { StatusBadge, StatusGlyph, Truth } from './components.js';
+import { ScrollableTable, StatusBadge, StatusGlyph, Truth } from './components.js';
 import { buildHref, buildLabel, FAMILY, familyMembers, isFamilyRelatedTool, relationPhrase } from './family.js';
 import { landingKpis, parseCaseDocument, parseCodePairDocument, parseStatusDocument, parseTerminalSession, parseTranscript } from './product-data.js';
 export { StatusBadge };
@@ -225,9 +225,9 @@ export function StatusTable({ data, label = 'Status of every capability', only }
     const areas = Array.from(new Set(items.map((item) => item.area ?? '')));
     const grouped = areas.some(Boolean);
     const row = (item) => _jsxs("tr", { children: [_jsx("th", { scope: "row", children: item.href ? _jsx(Link, { to: item.href, children: item.label }) : item.label }), _jsx("td", { children: _jsx(StatusBadge, { status: item.status }) }), _jsx("td", { children: item.detail ?? '—' })] }, item.label);
-    return _jsxs("section", { className: "b10x-status-table", "aria-label": label, children: [_jsx(StatusSummary, { items: items }), _jsx("div", { className: "b10x-table-wrap", children: _jsxs("table", { children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { scope: "col", children: "Capability" }), _jsx("th", { scope: "col", children: "Status" }), _jsx("th", { scope: "col", children: "Detail" })] }) }), grouped
-                            ? areas.map((area) => _jsxs("tbody", { children: [_jsx("tr", { className: "b10x-status-table__area", children: _jsx("th", { scope: "rowgroup", colSpan: 3, children: area || 'Other' }) }), items.filter((item) => (item.area ?? '') === area).map(row)] }, area || 'other'))
-                            : _jsx("tbody", { children: items.map(row) })] }) }), _jsx(StatusProvenance, { asOf: parsed.document.asOf, source: parsed.document.source })] });
+    return _jsxs("section", { className: "b10x-status-table", "aria-label": label, children: [_jsx(StatusSummary, { items: items }), _jsxs(ScrollableTable, { label: `${label} (table)`, children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { scope: "col", children: "Capability" }), _jsx("th", { scope: "col", children: "Status" }), _jsx("th", { scope: "col", children: "Detail" })] }) }), grouped
+                        ? areas.map((area) => _jsxs("tbody", { children: [_jsx("tr", { className: "b10x-status-table__area", children: _jsx("th", { scope: "rowgroup", colSpan: 3, children: area || 'Other' }) }), items.filter((item) => (item.area ?? '') === area).map(row)] }, area || 'other'))
+                        : _jsx("tbody", { children: items.map(row) })] }), _jsx(StatusProvenance, { asOf: parsed.document.asOf, source: parsed.document.source })] });
 }
 export function RelatedTools({ tools, label = 'Related tools', current }) {
     return _jsx("ul", { className: "b10x-related", "aria-label": label, children: tools.map((tool) => {

@@ -43,6 +43,11 @@ All notable changes to this project are documented in this file. From 0.11.0 the
   version and to the home page, in place of the stock Docusaurus copy. The theme overrides
   `NotFound/Content`; a site's own override still wins
   ([#26](https://github.com/beyond10x/docs-system/issues/26)).
+- The text tables under protocol and domain graphs, the session charts' table views, `StatusTable`
+  and the OpenAPI responses table scroll in a named, focusable region with the guidance line when
+  wider than the column, as Markdown tables do. `ScrollableTable` moved to its own module, so
+  `./renderers` still loads without the Docusaurus theme
+  ([#27](https://github.com/beyond10x/docs-system/issues/27)).
 
 ## 0.10.0 — 2026-10-13
 

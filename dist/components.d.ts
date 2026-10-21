@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, InputHTMLAttributes, ReactNode } from 'react';
+import type { InputHTMLAttributes, ReactNode } from 'react';
 import type { ProductStatus } from './product-data.js';
 import type { AnyDocumentationSurface, ChangeLedgerEntry, EcosystemRegistry, Journey, Maturity, RegistrySurface } from './types.js';
 export type HeadingLevel = 1 | 2 | 3 | 4;
@@ -197,11 +197,8 @@ export declare function DependencyGraph({ nodes, edges, title, description, minW
 export declare function Diagram({ kind, source, src, title, description, download, minWidth, initialPosition, alternative }: DiagramProps): ReactNode;
 /** Frame already-rendered content without invoking a diagram renderer or nesting viewports. */
 export declare function DiagramFrame(props: DiagramFrameProps): ReactNode;
-export interface ScrollableTableProps extends ComponentPropsWithoutRef<'table'> {
-    label?: string;
-}
-/** Keep native table semantics while making overflowing columns reachable without page scrolling. */
-export declare function ScrollableTable({ children, label, ...props }: ScrollableTableProps): ReactNode;
+export { ScrollableTable } from './scrollable-table.js';
+export type { ScrollableTableProps } from './scrollable-table.js';
 export interface ProjectCardProps {
     surface: AnyDocumentationSurface;
     headingLevel?: 2 | 3 | 4;

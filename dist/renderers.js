@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { ScrollableTable } from './scrollable-table.js';
 export function JsonSchemaViewer({ schema, depth = 0 }) {
     const composition = schema.oneOf ?? schema.anyOf ?? schema.allOf;
     if (schema.$ref)
@@ -28,7 +29,7 @@ function Operation({ path, method, operation, Heading }) {
     return _jsxs("article", { className: "b10x-api-operation", id: id, children: [_jsxs("p", { className: "b10x-api-route", children: [_jsx("strong", { children: method.toUpperCase() }), " ", _jsx("code", { children: path })] }), _jsx(Heading, { children: operation.summary ?? operation.operationId ?? path }), operation.description && _jsx("p", { children: operation.description }), operation.parameters?.length ? _jsx("dl", { children: operation.parameters.map((parameter) => _jsxs("div", { children: [_jsxs("dt", { children: [_jsx("code", { children: parameter.name }), parameter.required && _jsx("b", { children: "required" })] }), _jsxs("dd", { children: [parameter.in, " \u00B7 ", schemaType(parameter.schema), parameter.description && ` · ${parameter.description}`] })] }, `${parameter.in}-${parameter.name}`)) }) : null, _jsx(ResponseTable, { responses: operation.responses ?? {} })] });
 }
 function ResponseTable({ responses }) {
-    return _jsx("div", { className: "b10x-table-wrap", children: _jsxs("table", { children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { scope: "col", children: "Status" }), _jsx("th", { scope: "col", children: "Description" }), _jsx("th", { scope: "col", children: "Schema" })] }) }), _jsx("tbody", { children: Object.entries(responses).map(([status, response]) => { const media = Object.values(response.content ?? {})[0]; return _jsxs("tr", { children: [_jsx("td", { children: _jsx("code", { children: status }) }), _jsx("td", { children: response.description }), _jsx("td", { children: media?.schema ? _jsx(JsonSchemaViewer, { schema: media.schema }) : '—' })] }, status); }) })] }) });
+    return _jsxs(ScrollableTable, { label: "Responses", children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { scope: "col", children: "Status" }), _jsx("th", { scope: "col", children: "Description" }), _jsx("th", { scope: "col", children: "Schema" })] }) }), _jsx("tbody", { children: Object.entries(responses).map(([status, response]) => { const media = Object.values(response.content ?? {})[0]; return _jsxs("tr", { children: [_jsx("td", { children: _jsx("code", { children: status }) }), _jsx("td", { children: response.description }), _jsx("td", { children: media?.schema ? _jsx(JsonSchemaViewer, { schema: media.schema }) : '—' })] }, status); }) })] });
 }
 function schemaType(schema) {
     if (!schema)

@@ -177,24 +177,7 @@ function DiagramViewport({ children, title, description, download, minWidth = 0,
     }, [initialPosition, minimum]);
     return _jsx(DiagramFrameContext.Provider, { value: true, children: _jsxs("figure", { className: "b10x-diagram", "aria-labelledby": titleId, children: [_jsx("div", { ref: viewport, className: "b10x-diagram__viewport", style: style, tabIndex: 0, role: "region", "aria-labelledby": titleId, "aria-describedby": `${descriptionId} ${instructionsId}`, "aria-details": alternative ? alternativeId : undefined, children: _jsx("div", { className: "b10x-diagram__canvas", children: _jsx("div", { children: children }) }) }), _jsxs("p", { className: "b10x-diagram__guidance", id: instructionsId, "data-pagefind-ignore": true, children: [_jsx("span", { "aria-hidden": "true", children: "\u2194" }), _jsxs("span", { children: [_jsx("strong", { children: "Pan the full-size diagram:" }), " swipe or scroll, or focus the canvas and use the arrow keys."] })] }), _jsxs("figcaption", { children: [_jsx("strong", { id: titleId, children: title }), _jsx("span", { id: descriptionId, children: description }), download && _jsx("a", { className: "b10x-touch-link", href: download, download: true, children: "Download source" })] }), alternative && _jsx(DiagramTextAlternative, { alternative: alternative, id: alternativeId })] }) });
 }
-/** Keep native table semantics while making overflowing columns reachable without page scrolling. */
-export function ScrollableTable({ children, label = 'Table', ...props }) {
-    const viewport = useRef(null);
-    const instructionsId = `b10x-table-${useId().replaceAll(':', '')}-instructions`;
-    const [overflow, setOverflow] = useState(false);
-    useEffect(() => {
-        const element = viewport.current;
-        if (!element)
-            return;
-        const measure = () => setOverflow(element.scrollWidth > element.clientWidth + 1);
-        measure();
-        const observer = new ResizeObserver(measure);
-        observer.observe(element);
-        observer.observe(element.querySelector('table'));
-        return () => observer.disconnect();
-    }, []);
-    return _jsxs(_Fragment, { children: [_jsx("div", { ref: viewport, className: "b10x-table-wrap", tabIndex: overflow ? 0 : undefined, role: overflow ? 'region' : undefined, "aria-label": overflow ? label : undefined, "aria-describedby": overflow ? instructionsId : undefined, children: _jsx("table", { ...props, children: children }) }), _jsx("p", { className: "b10x-table-guidance", id: instructionsId, hidden: !overflow, "data-pagefind-ignore": true, children: "More columns: swipe horizontally, or focus the table and use the arrow keys." })] });
-}
+export { ScrollableTable } from './scrollable-table.js';
 export function ProjectCard({ surface, headingLevel = 3, title = surface.name, titleUrl = surface.canonicalUrl, actionUrl, actionLabel }) {
     const action = declaredAdoption(surface) ?? fallbackAdoption(surface);
     const Heading = headingTag(headingLevel);

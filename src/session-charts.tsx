@@ -1,5 +1,6 @@
 import {useId, useMemo, useState} from 'react';
 import type {CSSProperties, ReactNode} from 'react';
+import {ScrollableTable} from './scrollable-table.js';
 import {layeredLayout} from './graph-layout.js';
 import {decisionSteps, formatDuration, parseSessionComposition, sessionClock, sessionKpis} from './session-data.js';
 import type {CompositionGraphData, SessionCompositionDocument, SessionKpiOptions, StatTileData} from './session-data.js';
@@ -171,7 +172,7 @@ export function SessionTimeline({data, title = 'Who did what, when', description
     </div>
     <details className="b10x-chart__table">
       <summary>Table view</summary>
-      <div className="b10x-table-wrap"><table>
+      <ScrollableTable label="Episodes">
         <thead><tr><th scope="col">Lane</th><th scope="col">Protocol</th><th scope="col">Episode</th><th scope="col">Start</th><th scope="col">End</th><th scope="col">Duration</th></tr></thead>
         <tbody>{document.episodes.map((episode, index) => <tr key={index}>
           <td>{document.lanes.find((lane) => lane.id === episode.lane)?.label}</td>
@@ -179,7 +180,7 @@ export function SessionTimeline({data, title = 'Who did what, when', description
           <td>{episode.label}{episode.discarded ? ' (discarded)' : ''}{episode.approximate ? ' (approximate)' : ''}</td>
           <td>{episode.start}</td><td>{episode.end}</td><td>{formatDuration(at(episode.end) - at(episode.start))}</td>
         </tr>)}</tbody>
-      </table></div>
+      </ScrollableTable>
     </details>
   </figure>;
 }
@@ -262,10 +263,10 @@ export function StepBars({data, rows, parts, title = 'Step by step', description
     </div>
     <details className="b10x-chart__table">
       <summary>Table view</summary>
-      <div className="b10x-table-wrap"><table>
+      <ScrollableTable label="Time per step">
         <thead><tr><th scope="col">Item</th>{resolvedParts.map((part) => <th scope="col" key={part.label}>{part.label}</th>)}<th scope="col">Total</th></tr></thead>
         <tbody>{resolvedRows.map((row) => <tr key={row.label}><th scope="row">{row.label}</th>{row.values.map((value, index) => <td key={index}>{formatDuration(value)}</td>)}<td>{formatDuration(row.values.reduce((sum, value) => sum + value, 0))}</td></tr>)}</tbody>
-      </table></div>
+      </ScrollableTable>
     </details>
   </figure>;
 }
@@ -353,10 +354,10 @@ export function CompositionGraph({data, title = 'The composition behind it', des
     </div>
     <details className="b10x-chart__table">
       <summary>Table view</summary>
-      <div className="b10x-table-wrap"><table>
+      <ScrollableTable label="Composition nodes">
         <thead><tr><th scope="col">Column</th><th scope="col">Node</th><th scope="col">Detail</th><th scope="col">Leads to</th></tr></thead>
         <tbody>{graph.nodes.map((node) => <tr key={node.id}><td>{graph.columns[node.col]}</td><th scope="row">{node.label}</th><td>{subtitle(node) || '—'}</td><td>{graph.edges.filter(([from]) => from === node.id).map(([, to]) => byId.get(to)?.label).join(', ') || '—'}</td></tr>)}</tbody>
-      </table></div>
+      </ScrollableTable>
     </details>
   </figure>;
 }

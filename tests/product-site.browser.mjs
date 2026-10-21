@@ -230,6 +230,36 @@ check(26, 'the not-found page links back to the docs and the home page', async (
   }
 });
 
+check(27, 'a chart or graph text table wider than a phone is a named region with guidance', async () => {
+  let overflowing = 0;
+  for (const url of ['docs/charts', 'docs/status', 'session']) {
+    const {page, errors, close} = await open(url, {width: 390});
+    try {
+      await page.evaluate(() => { for (const details of document.querySelectorAll('.b10x-graph__table, .b10x-chart__table')) details.open = true; });
+      await page.waitForTimeout(300);
+      const frames = await page.evaluate(() => [...document.querySelectorAll('.b10x-graph__table .b10x-table-wrap, .b10x-chart__table .b10x-table-wrap, .b10x-status-table .b10x-table-wrap')]
+        .filter(frame => frame.scrollWidth > frame.clientWidth + 1)
+        .map(frame => {
+          const guidance = document.getElementById(frame.getAttribute('aria-describedby') ?? '');
+          return {
+            head: frame.querySelector('caption, th')?.textContent.trim(),
+            role: frame.getAttribute('role'), label: frame.getAttribute('aria-label'), tabIndex: frame.tabIndex,
+            guidance: guidance && !guidance.hidden && guidance.getClientRects().length ? guidance.textContent.trim() : null,
+          };
+        }));
+      overflowing += frames.length;
+      for (const frame of frames) {
+        assert.equal(frame.role, 'region', `/${url} "${frame.head}" is not a region`);
+        assert.ok(frame.label && frame.label !== 'Table', `/${url} "${frame.head}" is named "${frame.label}"`);
+        assert.equal(frame.tabIndex, 0, `/${url} "${frame.head}" cannot be focused`);
+        assert.ok(frame.guidance, `/${url} "${frame.head}" has no visible guidance`);
+      }
+      assert.deepEqual(errors, []);
+    } finally { await close(); }
+  }
+  assert.ok(overflowing > 0, 'no text table overflows at 390 px, so the check proves nothing');
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {

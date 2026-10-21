@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import useBrokenLinks from '@docusaurus/useBrokenLinks';
 import CodeBlock from '@theme/CodeBlock';
 import {DomainGraph, ProtocolGraph} from './charts.js';
-import {StatusBadge, StatusGlyph, Truth} from './components.js';
+import {ScrollableTable, StatusBadge, StatusGlyph, Truth} from './components.js';
 import type {ProtocolKindName} from './components.js';
 import {buildHref, buildLabel, FAMILY, familyMembers, isFamilyRelatedTool, relationPhrase} from './family.js';
 import type {DocsSystemBuild} from './family.js';
@@ -360,7 +360,7 @@ export function StatusTable({data, label = 'Status of every capability', only}: 
   </tr>;
   return <section className="b10x-status-table" aria-label={label}>
     <StatusSummary items={items} />
-    <div className="b10x-table-wrap"><table>
+    <ScrollableTable label={`${label} (table)`}>
       <thead><tr><th scope="col">Capability</th><th scope="col">Status</th><th scope="col">Detail</th></tr></thead>
       {grouped
         ? areas.map((area) => <tbody key={area || 'other'}>
@@ -368,7 +368,7 @@ export function StatusTable({data, label = 'Status of every capability', only}: 
           {items.filter((item) => (item.area ?? '') === area).map(row)}
         </tbody>)
         : <tbody>{items.map(row)}</tbody>}
-    </table></div>
+    </ScrollableTable>
     <StatusProvenance asOf={parsed.document!.asOf} source={parsed.document!.source} />
   </section>;
 }
