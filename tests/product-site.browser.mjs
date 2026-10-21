@@ -211,7 +211,12 @@ check(25, 'every page has a share image, and the home description fits a search 
   for (const url of ['', 'docs/code']) {
     const {page, close} = await open(url);
     try {
-      const meta = await page.evaluate(() => Object.fromEntries(['name="description"', 'property="og:description"', 'property="og:image"', 'name="twitter:image"', 'name="twitter:card"'].map(key => [key, document.querySelector(`meta[${key}]`)?.content ?? null])));
+      // Crawlers and link unfurlers read the served HTML; during hydration the head briefly drops the page's own tags.
+      const html = await (await page.request.get(page.url())).text();
+      const meta = await page.evaluate(source => {
+        const served = new DOMParser().parseFromString(source, 'text/html');
+        return Object.fromEntries(['name="description"', 'property="og:description"', 'property="og:image"', 'name="twitter:image"', 'name="twitter:card"'].map(key => [key, served.querySelector(`meta[${key}]`)?.content ?? null]));
+      }, html);
       assert.equal(meta['name="twitter:card"'], 'summary_large_image');
       assert.match(meta['property="og:image"'] ?? '', /^https?:\/\/.+\.png$/, `/${url} og:image`);
       assert.equal(meta['name="twitter:image"'], meta['property="og:image"'], `/${url} twitter:image`);
