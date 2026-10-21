@@ -293,6 +293,7 @@
 .b10x-button:hover { background: var(--b10x-color-accent-strong, var(--b10x-color-link)); color: var(--b10x-color-on-accent); text-decoration: none; }
 .b10x-text-link { color: var(--b10x-color-accent, var(--b10x-color-link)); font-size: 0.9rem; font-weight: 550; text-decoration: none; }
 .b10x-text-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.b10x-not-found__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 2rem; }
 
 .b10x-product-section { padding-block: 4.4rem; border-top: 1px solid var(--b10x-color-hairline, var(--b10x-color-line)); }
 .b10x-product-section__header { max-width: 44rem; margin-bottom: 2.2rem; }

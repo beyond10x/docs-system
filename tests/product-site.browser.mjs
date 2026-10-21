@@ -206,6 +206,30 @@ check(25, 'every page has a share image, and the home description fits a search 
   }
 });
 
+check(26, 'the not-found page links back to the docs and the home page', async () => {
+  for (const width of [1440, 390]) {
+    const {page, errors, close} = await open('docs/does-not-exist', {width});
+    try {
+      await page.waitForFunction(() => document.querySelector('main h1'));
+      const content = await page.evaluate(() => {
+        const main = document.querySelector('main');
+        return {
+          text: main.innerText,
+          links: [...main.querySelectorAll('a[href]')].filter(link => link.getClientRects().length).map(link => ({name: link.innerText.trim(), href: new URL(link.getAttribute('href'), location.href).pathname})),
+          overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        };
+      });
+      assert.doesNotMatch(content.text, /contact the owner of the site/, `${width}px still shows the stock copy`);
+      const docs = content.links.find(link => /^\/product-site\/docs(\/|$)/.test(link.href));
+      assert.ok(docs, `${width}px no link into the docs: ${JSON.stringify(content.links)}`);
+      assert.equal((await page.request.get(new URL(docs.href, server.url).href)).status(), 200, `${width}px ${docs.href}`);
+      assert.ok(content.links.some(link => link.href === '/product-site/'), `${width}px no link to the home page: ${JSON.stringify(content.links)}`);
+      assert.ok(content.overflow <= 0, `${width}px the page scrolls sideways by ${content.overflow}px`);
+      assert.deepEqual(errors, []);
+    } finally { await close(); }
+  }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {

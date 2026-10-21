@@ -12,6 +12,7 @@ import {countCrossings, layeredLayout} from '../dist/graph-layout.js';
 import {layoutDomainGraph, layoutProtocolGraph, parseDomainGraph, parseProtocolGraph, predicateLineText, predicateLines, protocolLineage} from '../dist/product-graphs.js';
 import {landingDescription, landingTitle, parseTerminalSession, parseTranscript} from '../dist/product-data.js';
 import {breakableToc, breakableTocLabel} from '../dist/toc.js';
+import {docsEntry} from '../dist/not-found.js';
 import {decisionSteps, formatDuration, parseSessionComposition, sessionKpis} from '../dist/session-data.js';
 import {productPrismDarkTheme, productPrismTheme} from '../dist/prism-themes.js';
 import {activeNavbarItem, docItemLink, navbarItemScore} from '../dist/navbar-active.js';
@@ -531,6 +532,16 @@ test('#24: a code heading in the table of contents breaks only at separators', (
   const [heading] = breakableToc([{id: 'x', level: 2, value: '<code>a/b</code>', children: [{id: 'y', level: 3, value: '<code>c_d</code>', children: []}]}]);
   assert.equal(heading.value, `<code>${word('a/<wbr>b')}</code>`);
   assert.equal(heading.children[0].value, `<code>${word('c_<wbr>d')}</code>`);
+});
+
+test('#26: the not-found page links to the main doc of the latest docs version', () => {
+  const version = (name, isLast, mainDocId, docs) => ({name, isLast, path: `/x/docs/${name}`, mainDocId, docs});
+  const docs = {path: '/x/docs', versions: [version('next', false, 'a', [{id: 'a', path: '/x/docs/next/a'}]), version('1', true, 'intro', [{id: 'b', path: '/x/docs/b'}, {id: 'intro', path: '/x/docs/intro'}])]};
+  assert.equal(docsEntry({default: docs}), '/x/docs/intro');
+  assert.equal(docsEntry({api: {...docs, path: '/x/api'}, default: docs}), '/x/docs/intro');
+  assert.equal(docsEntry({api: {path: '/x/api', versions: [version('only', false, 'gone', [])]}}), '/x/docs/only');
+  assert.equal(docsEntry({api: {path: '/x/api', versions: []}}), '/x/api');
+  assert.equal(docsEntry({}), undefined);
 });
 
 test('withProductSite adds one plugin, the matched Prism themes and a dark default', () => {

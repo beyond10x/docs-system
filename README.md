@@ -330,7 +330,8 @@ using `@docusaurus/theme-mermaid` get diagrams themed from the tokens and should
 
 The wrapper adds the product plugin (the shared tokens plus `product-components.css` and
 `product-theme.css`, a theme path that registers the product MDX components, status admonitions and
-the `@theme/ProductLandingPage` route component), the font directory to `staticDirectories`, a
+the `@theme/ProductLandingPage` route component, and a not-found page linking to the main doc and
+the home page), the font directory to `staticDirectories`, a
 default 1200 × 630 share card at `<baseUrl>b10x-social/card.png` as `themeConfig.image` (a site that
 sets `themeConfig.image` keeps its own), the
 chips pass and status admonition keywords to the docs and pages plugins, Prism themes whose every

@@ -39,6 +39,10 @@ All notable changes to this project are documented in this file. From 0.11.0 the
   Without `product.description`, the home page's meta description is the lede cut to 160
   characters at the last whole sentence or word, no longer the full lede
   ([#25](https://github.com/beyond10x/docs-system/issues/25)).
+- The not-found page says the address has no page and links to the main doc of the latest docs
+  version and to the home page, in place of the stock Docusaurus copy. The theme overrides
+  `NotFound/Content`; a site's own override still wins
+  ([#26](https://github.com/beyond10x/docs-system/issues/26)).
 
 ## 0.10.0 — 2026-10-13
 
