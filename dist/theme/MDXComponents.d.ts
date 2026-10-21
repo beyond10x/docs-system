@@ -1,5 +1,5 @@
 import { DomainGraph, ProtocolGraph } from '../charts.js';
-import { EmptyState, Kind, Truth } from '../components.js';
+import { EmptyState, Kind, ScrollableTable, Truth } from '../components.js';
 import { CompositionGraph, SessionKpis, SessionTimeline, StatTiles, StepBars } from '../session-charts.js';
 import { CaseCard, CodePair, FamilyStrip, Feature, FeatureGrid, Flow, FlowStep, HeroArt, KindIcon, RelatedTools, StatusBadge, StatusStrip, StatusTable, Terminal } from '../product.js';
 declare const _default: {
@@ -25,6 +25,7 @@ declare const _default: {
     StatusStrip: typeof StatusStrip;
     StatusTable: typeof StatusTable;
     StepBars: typeof StepBars;
+    table: typeof ScrollableTable;
     Terminal: typeof Terminal;
     Truth: typeof Truth;
 };

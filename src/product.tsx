@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import useBrokenLinks from '@docusaurus/useBrokenLinks';
 import CodeBlock from '@theme/CodeBlock';
 import {DomainGraph, ProtocolGraph} from './charts.js';
-import {StatusBadge, StatusGlyph, Truth} from './components.js';
+import {ScrollableTable, StatusBadge, StatusGlyph, Truth} from './components.js';
 import type {ProtocolKindName} from './components.js';
 import {buildHref, buildLabel, FAMILY, familyMembers, isFamilyRelatedTool, relationPhrase} from './family.js';
 import type {DocsSystemBuild} from './family.js';
@@ -360,7 +360,7 @@ export function StatusTable({data, label = 'Status of every capability', only}: 
   </tr>;
   return <section className="b10x-status-table" aria-label={label}>
     <StatusSummary items={items} />
-    <div className="b10x-table-wrap"><table>
+    <ScrollableTable label={`${label} (table)`}>
       <thead><tr><th scope="col">Capability</th><th scope="col">Status</th><th scope="col">Detail</th></tr></thead>
       {grouped
         ? areas.map((area) => <tbody key={area || 'other'}>
@@ -368,7 +368,7 @@ export function StatusTable({data, label = 'Status of every capability', only}: 
           {items.filter((item) => (item.area ?? '') === area).map(row)}
         </tbody>)
         : <tbody>{items.map(row)}</tbody>}
-    </table></div>
+    </ScrollableTable>
     <StatusProvenance asOf={parsed.document!.asOf} source={parsed.document!.source} />
   </section>;
 }
@@ -494,12 +494,25 @@ export function ProductHero({eyebrow, promise, lede, actions = [], meta, aside, 
       {eyebrow && <p className="b10x-kicker"><span className="b10x-kicker__dot" aria-hidden="true" />{eyebrow}</p>}
       <h1 id={titleId}>{lines.map((line) => <span key={line}>{line}<br /></span>)}<em>{emphasis}</em></h1>
       <p className="b10x-hero__lede">{lede}</p>
-      {actions.length > 0 && <div className="b10x-hero__actions">{actions.map((action) => <Link key={action.href} to={action.href} className={action.kind === 'primary' ? 'b10x-button' : 'b10x-text-link'}>{action.label} <span aria-hidden="true">{action.kind === 'primary' ? '→' : action.href.startsWith('#') ? '↓' : '→'}</span></Link>)}</div>}
+      {actions.length > 0 && <div className="b10x-hero__actions">{actions.map((action) => <HeroAction key={action.href} action={action} />)}</div>}
       {meta && <p className="b10x-hero__meta">{meta}</p>}
     </div>
     {aside && <div className="b10x-hero__aside">{aside}</div>}
     {kpis && kpis.length > 0 && <KpiRow items={kpis} />}
   </section>;
+}
+
+/** Docusaurus `Link` opens an href with a scheme (including `pathname://`) or a protocol-relative one in a new tab. */
+export function opensInNewTab(href: string): boolean {
+  return /^(?:[A-Za-z][A-Za-z\d+.-]*:|\/\/)/.test(href);
+}
+
+function HeroAction({action}: {action: ProductAction}): ReactNode {
+  const newTab = opensInNewTab(action.href);
+  const glyph = newTab ? '↗' : action.kind !== 'primary' && action.href.startsWith('#') ? '↓' : '→';
+  return <Link to={action.href} className={action.kind === 'primary' ? 'b10x-button' : 'b10x-text-link'}>
+    {action.label} <span aria-hidden="true">{glyph}</span>{newTab && <span className="b10x-sr-only"> (opens in new tab)</span>}
+  </Link>;
 }
 
 /** Numbered KPI tiles. Values are counted from data (see `landingKpis`), never typed. */
@@ -516,7 +529,7 @@ export function KpiRow({items, label = 'Key figures'}: {items: readonly Resolved
 export function HeroArt({art}: {art: ProductArt}): ReactNode {
   const body = (() => {
     switch (art.kind) {
-      case 'terminal': return <Terminal session={art.session} tilt animate caption={art.caption} />;
+      case 'terminal': return <Terminal session={art.session} tilt caption={art.caption} />;
       case 'protocol-graph': return <ProtocolGraph data={art.data} variant="hero" caption={art.caption} />;
       case 'domain-graph': return <DomainGraph data={art.data} variant="hero" caption={art.caption} />;
       case 'case': return <CaseCard data={art.data} caption={art.caption} />;

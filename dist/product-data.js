@@ -156,6 +156,32 @@ export function parseCodePairDocument(value) {
 }
 export const ART_KINDS = ['terminal', 'protocol-graph', 'domain-graph', 'case', 'code-pair'];
 export const KPI_COUNTS = ['entities', 'relations', 'lifecycles', 'nodes', 'actions', 'evidence', 'claims', 'outcomes', 'obligations', 'commands', 'capabilities', 'shipped', 'decided', 'planned'];
+/**
+ * The landing page's title before Docusaurus appends ` | <site title>`: the promise, led by the
+ * product name only when the site title does not already carry it, so the name appears once.
+ */
+export function landingTitle(product, siteTitle) {
+    const promise = product.promise.join(' ');
+    return siteTitle?.includes(product.name) ? promise : `${product.name} — ${promise}`;
+}
+/** The longest meta description a search result shows whole. */
+export const META_DESCRIPTION_LIMIT = 160;
+/**
+ * The landing page's meta description: `product.description` when given, else the lede. A longer
+ * lede is cut after its last whole sentence within the limit, or else at a word with an ellipsis.
+ * The limit counts code points, as the schema's `maxLength` does, and includes the ellipsis.
+ */
+export function landingDescription(product, limit = META_DESCRIPTION_LIMIT) {
+    const text = (product.description ?? product.lede).replace(/\s+/g, ' ').trim();
+    const points = Array.from(text);
+    if (points.length <= limit)
+        return text;
+    const sentences = points.slice(0, limit + 1).join('').match(/^.*[.!?](?=\s)/)?.[0];
+    if (sentences && Array.from(sentences).length >= limit / 3)
+        return sentences;
+    const words = points.slice(0, limit - 1).join('').replace(/\s+\S*$/, '').replace(/[\s,;:—–-]+$/, '');
+    return `${words}…`;
+}
 const KPI_LABELS = {
     entities: 'entities in the domain',
     relations: 'relations',

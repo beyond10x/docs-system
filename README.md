@@ -330,7 +330,10 @@ using `@docusaurus/theme-mermaid` get diagrams themed from the tokens and should
 
 The wrapper adds the product plugin (the shared tokens plus `product-components.css` and
 `product-theme.css`, a theme path that registers the product MDX components, status admonitions and
-the `@theme/ProductLandingPage` route component), the font directory to `staticDirectories`, the
+the `@theme/ProductLandingPage` route component, and a not-found page linking to the main doc and
+the home page), the font directory to `staticDirectories`, a
+default 1200 × 630 share card at `<baseUrl>b10x-social/card.png` as `themeConfig.image` (a site that
+sets `themeConfig.image` keeps its own), the
 chips pass and status admonition keywords to the docs and pages plugins, Prism themes whose every
 token clears 4.5:1 on its code surface with the kind-gutter magic comments, and a dark default that
 still follows the reader's system setting. The landing page renders at `/`, so the docs plugin moves to `routeBasePath: 'docs'`.
@@ -343,6 +346,7 @@ field below is optional and additive: a site that sets none of them renders as b
 
 | Field | Shape | Effect |
 | --- | --- | --- |
+| `product.description` | a string of at most 160 characters | the home page's meta and `og:description`; without it the lede, cut at the last whole sentence or word that fits |
 | `product.art` | `{kind, data or session, caption?}`, kind `terminal`, `protocol-graph`, `domain-graph`, `case`, `code-pair` | hero aside drawn from that file; replaces `product.terminal` |
 | `product.kpis` | count names or `{count, label?}`: `entities`, `relations`, `lifecycles`, `nodes`, `actions`, `evidence`, `claims`, `outcomes`, `obligations`, `commands`, `capabilities`, `shipped`, `decided`, `planned` | KPI row; graph counts read the art, then the first graph section; status counts read the status section; a count without a source fails the build |
 | status section `items` | a path to a `b10x-status/1` file | the strip and `<StatusTable data={…}/>` read the same file |

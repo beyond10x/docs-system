@@ -1,5 +1,62 @@
 # Changelog
 
+All notable changes to this project are documented in this file. From 0.11.0 the format follows
+[Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/), and the project uses
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.11.0] - 2026-10-21
+
+### Added
+
+- `product.description` in `b10x-product-landing/1`: at most 160 characters, used as the home page's
+  meta and `og:description` ([#25](https://github.com/beyond10x/docs-system/issues/25)).
+
+### Fixed
+
+- The hero terminal shows every command and output line at first paint, at every width and in both
+  themes. It no longer types its commands out; `<Terminal animate>` in a page still does
+  ([#19](https://github.com/beyond10x/docs-system/issues/19)).
+- A hero action whose `href` opens a new tab (any scheme, `pathname://` or `//`) ends with `↗` and
+  carries a visually hidden "(opens in new tab)" in its accessible name
+  ([#20](https://github.com/beyond10x/docs-system/issues/20)).
+- The home page `<title>` names the product once: when the site title contains the product name the
+  landing title is the promise alone, read as `<promise> | <site title>`
+  ([#21](https://github.com/beyond10x/docs-system/issues/21)).
+- A Markdown table never widens the article column or overruns the table-of-contents gutter. A
+  table wider than the column scrolls in its own frame, which becomes a labelled, focusable region
+  with edge shadows on the hidden side and a line of guidance below it. Code in table cells wraps at
+  spaces and never inside a word, at every width. The shadows' covers take the colour of the box the
+  table sits in: an admonition, a graph or a chart sets `--b10x-table-surface`
+  ([#22](https://github.com/beyond10x/docs-system/issues/22)).
+- On a touch screen or a window up to 996 px wide, a code block's copy and wrap buttons sit in its
+  caption bar and never cover the first line. They stay visible there, and a long title wraps
+  instead of running under them ([#23](https://github.com/beyond10x/docs-system/issues/23)).
+- In the table of contents, a heading written as code (a command, a path or an identifier) stays
+  inside the rail. It wraps at spaces, after `/`, `_`, a joining `-` and `::`, before `.` and where a
+  capital follows a lower-case letter. A word with more than 24 characters between those points breaks
+  anywhere instead of overflowing. The theme's `TOCItems/Tree` is wrapped to mark those break points
+  ([#24](https://github.com/beyond10x/docs-system/issues/24)).
+- Every page has a share image: `withProductSite` serves a 1200 × 630 card at
+  `<baseUrl>b10x-social/card.png` and sets it as `themeConfig.image` unless the site sets its own.
+  Without `product.description`, the home page's meta description is the lede cut to 160
+  characters at the last whole sentence or word, no longer the full lede
+  ([#25](https://github.com/beyond10x/docs-system/issues/25)).
+- The not-found page says the address has no page and links to the main doc of the latest docs
+  version and to the home page, in place of the stock Docusaurus copy. The theme overrides
+  `NotFound/Content`; a site's own override still wins
+  ([#26](https://github.com/beyond10x/docs-system/issues/26)).
+- The text tables under protocol and domain graphs, the session charts' table views, `StatusTable`
+  and the OpenAPI responses table scroll in a named, focusable region with the guidance line when
+  wider than the column, as Markdown tables do. `ScrollableTable` moved to its own module, so
+  `./renderers` still loads without the Docusaurus theme
+  ([#27](https://github.com/beyond10x/docs-system/issues/27)).
+- A protocol graph whose claim predicate uses `input … in [...]` renders in the browser. The client
+  build turned a copied `Set` into a one-element array, so the graph failed after hydration with
+  "names value [object Set]" and React reported a hydration mismatch (React error 418)
+  ([#28](https://github.com/beyond10x/docs-system/issues/28)).
+
 ## 0.10.0 — 2026-10-13
 
 - `b10x-protocol-graph/1` carries Canon 0.3.0's order forms in the `canon-ir/1` shape: a `first`
@@ -202,3 +259,6 @@
 
 - Introduce the public manifest contract, deterministic registry CLI, Docusaurus integration,
   shared tokens, generic React components and read-only schema/diagram renderers.
+
+[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.11.0...HEAD
+[0.11.0]: https://github.com/beyond10x/docs-system/compare/0.10.0...0.11.0

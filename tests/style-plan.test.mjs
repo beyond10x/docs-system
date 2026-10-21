@@ -12,7 +12,7 @@ import {rawAdmonitionHtmlProblems, rawAdmonitionSourceProblems} from '../dist/ad
 import {mermaidThemeVariables, PRODUCT_SIGNATURES, productSignatureCss, STATUS_RAMP, TRUTH} from '../dist/product-palette.js';
 import rehypeSemanticChips, {annotateProtocolSource, chipMeaning, PROTOCOL_KIND_MAGIC_COMMENTS} from '../dist/rehype-semantic-chips.js';
 import {parseTerminalSession} from '../dist/product-data.js';
-import productSitePlugin, {fontHeadTags, PRODUCT_FONT_DIRECTORY, productMermaidTheme, withProductSite} from '../dist/product-site.js';
+import productSitePlugin, {fontHeadTags, PRODUCT_FONT_DIRECTORY, PRODUCT_SOCIAL_DIRECTORY, productMermaidTheme, withProductSite} from '../dist/product-site.js';
 
 register('./theme-loader.mjs', import.meta.url);
 const {KpiRow, Terminal, terminalSummary, StatusStrip} = await import('../dist/product.js');
@@ -34,8 +34,9 @@ test('P1: the self-hosted fonts ship with their OFL licences and load with swap 
   assert.equal((css.match(/font-display:swap/g) ?? []).length, 3);
   assert.match(css, /font-family:"Inter";src:url\("\/canon\/b10x-fonts\/inter-variable-latin\.woff2"\) format\("woff2"\);font-weight:100 900/);
   const config = withProductSite({title: 'X', staticDirectories: ['static', 'public']});
-  assert.deepEqual(config.staticDirectories, ['static', 'public', PRODUCT_FONT_DIRECTORY]);
-  assert.equal(withProductSite({title: 'X'}, {fonts: false}).staticDirectories, undefined);
+  assert.deepEqual(config.staticDirectories, ['static', 'public', PRODUCT_FONT_DIRECTORY, PRODUCT_SOCIAL_DIRECTORY]);
+  assert.deepEqual(withProductSite({title: 'X'}, {fonts: false}).staticDirectories, ['static', PRODUCT_SOCIAL_DIRECTORY]);
+  assert.equal(withProductSite({title: 'X', themeConfig: {image: 'card.png'}}, {fonts: false}).staticDirectories, undefined);
 });
 
 test('P2: raw admonition markers are refused in source and in built HTML, never inside code', () => {

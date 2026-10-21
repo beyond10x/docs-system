@@ -144,6 +144,7 @@ test('OpenApiReference embeds as a section with configurable coherent headings',
   assert.match(markup, /<h4>List widgets<\/h4>/);
   assert.match(markup, /<h4 id="openapi-example-api-schemas">Schemas<\/h4>/);
   assert.match(markup, /<th scope="col">Status<\/th>/);
+  assert.match(markup, /<p class="b10x-table-guidance" id="[^"]+" hidden="" data-pagefind-ignore="true">/, '#27: the responses table carries the overflow guidance');
 
   const defaultMarkup = renderToStaticMarkup(createElement(OpenApiReference, {document}));
   assert.match(defaultMarkup, /<h2 id="openapi-example-api-title">Example API<\/h2>/);

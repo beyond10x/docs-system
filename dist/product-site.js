@@ -22,6 +22,9 @@ import { isProductId, PRODUCT_SIGNATURES, productSignatureCss } from './product-
 import rehypeSemanticChips, { PROTOCOL_KIND_MAGIC_COMMENTS } from './rehype-semantic-chips.js';
 /** Self-hosted font files, served from `styles/static` under `<baseUrl>b10x-fonts/`. */
 export const PRODUCT_FONT_DIRECTORY = fileURLToPath(new URL('../styles/static', import.meta.url));
+/** The default share card, served from `styles/social` as `<baseUrl>b10x-social/card.png`. */
+export const PRODUCT_SOCIAL_DIRECTORY = fileURLToPath(new URL('../styles/social', import.meta.url));
+export const PRODUCT_SOCIAL_CARD = 'b10x-social/card.png';
 const FONT_RANGE = 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2190-21FF,U+2212,U+2215,U+2315,U+25A0-25FF,U+2713,U+2715,U+FEFF,U+FFFD';
 /** `@font-face` rules and preload links for the self-hosted fonts (latin subset, swap). */
 export function fontHeadTags(baseUrl) {
@@ -288,7 +291,7 @@ function withChips(entries, kind) {
 /**
  * Wrap a Docusaurus config: the product layer, self-hosted fonts, matched Prism themes with the
  * protocol/1 kind gutter, meaning chips and status admonitions in docs, Mermaid from the tokens,
- * and a dark default.
+ * a default share card when `themeConfig.image` is unset, and a dark default.
  */
 export function withProductSite(config, options = {}) {
     const themeConfig = (config.themeConfig ?? {});
@@ -297,17 +300,23 @@ export function withProductSite(config, options = {}) {
     const themes = config.themes ?? [];
     const mermaid = themes.some((theme) => theme === '@docusaurus/theme-mermaid' || (Array.isArray(theme) && theme[0] === '@docusaurus/theme-mermaid'));
     const fonts = options.fonts ?? true;
-    const staticDirectories = config.staticDirectories ?? ['static'];
+    const card = themeConfig.image === undefined;
+    const staticDirectories = [
+        ...config.staticDirectories ?? ['static'],
+        ...(fonts ? [PRODUCT_FONT_DIRECTORY] : []),
+        ...(card ? [PRODUCT_SOCIAL_DIRECTORY] : []),
+    ].filter((directory, index, all) => all.indexOf(directory) === index);
     const highlight = { className: 'theme-code-block-highlighted-line', line: 'highlight-next-line', block: { start: 'highlight-start', end: 'highlight-end' } };
     return {
         ...config,
-        ...(fonts ? { staticDirectories: staticDirectories.includes(PRODUCT_FONT_DIRECTORY) ? staticDirectories : [...staticDirectories, PRODUCT_FONT_DIRECTORY] } : {}),
+        ...(fonts || card ? { staticDirectories } : {}),
         ...(config.presets ? { presets: withChips(config.presets, 'preset') } : {}),
         // Standalone themes load after plugins, so the Mermaid override goes right after theme-mermaid.
         ...(mermaid ? { themes: themes.flatMap((theme) => theme === '@docusaurus/theme-mermaid' || (Array.isArray(theme) && theme[0] === '@docusaurus/theme-mermaid') ? [theme, productMermaidTheme] : [theme]) } : {}),
         plugins: [...(withChips(config.plugins, 'plugin') ?? []), [productSitePlugin, { ...options, fonts }]],
         themeConfig: {
             ...themeConfig,
+            ...(card ? { image: PRODUCT_SOCIAL_CARD } : {}),
             colorMode: { defaultMode: 'dark', respectPrefersColorScheme: true, ...colorMode },
             prism: {
                 theme: productPrismTheme,

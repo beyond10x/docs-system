@@ -10,7 +10,9 @@ import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {countCrossings, layeredLayout} from '../dist/graph-layout.js';
 import {layoutDomainGraph, layoutProtocolGraph, parseDomainGraph, parseProtocolGraph, predicateLineText, predicateLines, protocolLineage} from '../dist/product-graphs.js';
-import {parseTerminalSession, parseTranscript} from '../dist/product-data.js';
+import {landingDescription, landingTitle, parseTerminalSession, parseTranscript} from '../dist/product-data.js';
+import {breakableToc, breakableTocLabel} from '../dist/toc.js';
+import {docsEntry} from '../dist/not-found.js';
 import {decisionSteps, formatDuration, parseSessionComposition, sessionKpis} from '../dist/session-data.js';
 import {productPrismDarkTheme, productPrismTheme} from '../dist/prism-themes.js';
 import {activeNavbarItem, docItemLink, navbarItemScore} from '../dist/navbar-active.js';
@@ -18,7 +20,7 @@ import productSitePlugin, {readLanding, withProductSite} from '../dist/product-s
 
 register('./theme-loader.mjs', import.meta.url);
 const {ProtocolGraph, DomainGraph} = await import('../dist/charts.js');
-const {Terminal, FeatureGrid, Feature, Flow, StatusStrip, RelatedTools, ProductLanding, StatusBadge} = await import('../dist/product.js');
+const {Terminal, FeatureGrid, Feature, Flow, StatusStrip, RelatedTools, ProductLanding, ProductHero, StatusBadge, opensInNewTab} = await import('../dist/product.js');
 const {SessionTimeline, StepBars, CompositionGraph, SessionKpis} = await import('../dist/session-charts.js');
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -483,6 +485,81 @@ test('the landing reader inlines referenced files and the page renders every sec
   assert.match(markup, />01 \/ What it does</);
 });
 
+test('#20: a hero action Docusaurus opens in a new tab carries a visually hidden label', () => {
+  for (const href of ['https://example.org/', 'pathname:///pitch/', '//example.org/x', 'mailto:a@example.org']) assert.equal(opensInNewTab(href), true, href);
+  for (const href of ['/docs/', '#protocol', 'docs/x', './x']) assert.equal(opensInNewTab(href), false, href);
+  const markup = renderToStaticMarkup(createElement(ProductHero, {promise: ['P.'], lede: 'L', actions: [{label: 'Docs', href: '/docs/', kind: 'primary'}, {label: 'Deck', href: 'pathname:///deck/'}]}));
+  assert.match(markup, /Deck <span aria-hidden="true">↗<\/span><span class="b10x-sr-only"> \(opens in new tab\)<\/span>/);
+  assert.equal(markup.match(/opens in new tab/g).length, 1);
+});
+
+test('#21: the landing title leaves the product name to the site title when that carries it', () => {
+  const product = {name: 'ModelSpec', promise: ['Specify models.', 'Check shapes.']};
+  assert.equal(landingTitle(product, 'ModelSpec'), 'Specify models. Check shapes.');
+  assert.equal(landingTitle(product, 'ModelSpec docs'), 'Specify models. Check shapes.');
+  assert.equal(landingTitle(product, 'Beyond10x'), 'ModelSpec — Specify models. Check shapes.');
+  assert.equal(landingTitle(product, undefined), 'ModelSpec — Specify models. Check shapes.');
+});
+
+test('#25: the landing description fits a search result', () => {
+  const lede = 'Canon is a formal language and a deterministic calculus for evidence-governed protocols. For one case under one protocol it answers what is known, what is unknown, which obligations remain open.';
+  assert.equal(landingDescription({lede}), 'Canon is a formal language and a deterministic calculus for evidence-governed protocols.');
+  assert.equal(landingDescription({lede, description: 'Evidence-governed protocols.'}), 'Evidence-governed protocols.');
+  assert.equal(landingDescription({lede: 'Short lede.'}), 'Short lede.');
+  const run = `${'word '.repeat(40)}end.`;
+  const cut = landingDescription({lede: run});
+  assert.ok(cut.length <= 160 && cut.endsWith('word…'), cut);
+  const late = `A tiny start. ${'longer clause '.repeat(14)}done.`;
+  assert.match(landingDescription({lede: late}), /clause…$/, 'a first sentence under a third of the limit is not enough');
+  const points = text => Array.from(text).length;
+  const unspaced = landingDescription({lede: 'x'.repeat(200)});
+  assert.equal(points(unspaced), 160, 'a lede with no space is cut to the limit, ellipsis included');
+  assert.ok(unspaced.endsWith('x…'), unspaced);
+  const emoji = landingDescription({lede: '😀'.repeat(170)});
+  assert.equal(points(emoji), 160);
+  assert.doesNotMatch(emoji, /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/, 'no lone surrogate');
+  const fits = `${'a'.repeat(150)}${'😀'.repeat(10)}`;
+  assert.equal(landingDescription({lede: 'Lede.', description: fits}), fits, 'the schema counts code points, so 160 of them fit');
+});
+
+test('#25: withProductSite serves a default share card unless the site sets one', () => {
+  const plain = withProductSite({title: 'X'}, {mark: 'X'});
+  assert.equal(plain.themeConfig.image, 'b10x-social/card.png');
+  assert.ok(plain.staticDirectories.some(directory => directory.endsWith(path.join('styles', 'social'))));
+  assert.ok(plain.staticDirectories.includes('static'));
+  const own = withProductSite({title: 'X', themeConfig: {image: 'img/own.png'}}, {mark: 'X', fonts: false});
+  assert.equal(own.themeConfig.image, 'img/own.png');
+  assert.equal(own.staticDirectories, undefined);
+  const unset = withProductSite({title: 'X', themeConfig: {image: undefined}}, {mark: 'X', fonts: false});
+  assert.equal(unset.themeConfig.image, 'b10x-social/card.png', 'an image key set to undefined gets the card it serves');
+});
+
+test('#24: a code heading in the table of contents breaks only at separators', () => {
+  const word = text => `<span class="b10x-toc-word">${text}</span>`;
+  assert.equal(breakableTocLabel('Plain words/and paths'), 'Plain words/and paths');
+  assert.equal(breakableTocLabel('<code>check a/two_layer.mspec --stage</code>'), `<code>${word('check')} ${word('a/<wbr>two_<wbr>layer<wbr>.mspec')} ${word('--stage')}</code>`);
+  assert.equal(breakableTocLabel('Run <code>a/b</code> then c/d'), `Run <code>${word('a/<wbr>b')}</code> then c/d`);
+  assert.equal(breakableTocLabel('<code>.env ../up a.b&amp;c</code>'), `<code>${word('.env')} ${word('../<wbr>up')} ${word('a<wbr>.b&amp;c')}</code>`);
+  assert.equal(breakableTocLabel('<code>check-every-surface --stage a-</code>'), `<code>${word('check-<wbr>every-<wbr>surface')} ${word('--stage')} ${word('a-')}</code>`);
+  assert.equal(breakableTocLabel('<code>std::collections::HashMap</code>'), `<code>${word('std::<wbr>collections::<wbr>Hash<wbr>Map')}</code>`);
+  assert.equal(breakableTocLabel('<code>ProductLanding2Value</code>'), `<code>${word('Product<wbr>Landing2<wbr>Value')}</code>`);
+  assert.equal(breakableTocLabel(`<code>${'a'.repeat(25)} ${'b'.repeat(24)}</code>`), `<code>${'a'.repeat(25)} ${word('b'.repeat(24))}</code>`);
+  assert.equal(breakableTocLabel(`<code>${'&amp;'.repeat(24)}</code>`), `<code>${word('&amp;'.repeat(24))}</code>`);
+  const [heading] = breakableToc([{id: 'x', level: 2, value: '<code>a/b</code>', children: [{id: 'y', level: 3, value: '<code>c_d</code>', children: []}]}]);
+  assert.equal(heading.value, `<code>${word('a/<wbr>b')}</code>`);
+  assert.equal(heading.children[0].value, `<code>${word('c_<wbr>d')}</code>`);
+});
+
+test('#26: the not-found page links to the main doc of the latest docs version', () => {
+  const version = (name, isLast, mainDocId, docs) => ({name, isLast, path: `/x/docs/${name}`, mainDocId, docs});
+  const docs = {path: '/x/docs', versions: [version('next', false, 'a', [{id: 'a', path: '/x/docs/next/a'}]), version('1', true, 'intro', [{id: 'b', path: '/x/docs/b'}, {id: 'intro', path: '/x/docs/intro'}])]};
+  assert.equal(docsEntry({default: docs}), '/x/docs/intro');
+  assert.equal(docsEntry({api: {...docs, path: '/x/api'}, default: docs}), '/x/docs/intro');
+  assert.equal(docsEntry({api: {path: '/x/api', versions: [version('only', false, 'gone', [])]}}), '/x/docs/only');
+  assert.equal(docsEntry({api: {path: '/x/api', versions: []}}), '/x/api');
+  assert.equal(docsEntry({}), undefined);
+});
+
 test('withProductSite adds one plugin, the matched Prism themes and a dark default', () => {
   const config = withProductSite({title: 'X', plugins: ['existing'], themeConfig: {prism: {additionalLanguages: ['zig']}, colorMode: {respectPrefersColorScheme: false}}}, {mark: 'X'});
   assert.equal(config.plugins.length, 2);
@@ -548,8 +625,9 @@ test('graphs, legends and table identifiers never clip or break', async () => {
     assert.match(rule(css, viewport), /contain: inline-size/, `${viewport} must not widen the docs column`);
   }
   assert.doesNotMatch(css, /\.b10x-graph__legend[^{]*\{[^}]*white-space: nowrap/, 'legend items wrap');
-  assert.match(theme, /:is\(td, th\) code \{ overflow-wrap: normal; word-break: normal; white-space: nowrap; \}/);
-  assert.match(theme, /\.markdown > table \{ display: block; max-inline-size: 100%; overflow-x: auto; \}/);
+  assert.match(theme, /:is\(td, th\) code \{ overflow-wrap: normal; word-break: normal; white-space: normal; \}/);
+  assert.match(rule(theme, String.raw`\.markdown \.b10x-table-wrap`), /contain: inline-size/, 'a markdown table must not widen the docs column');
+  assert.doesNotMatch(theme, /\.markdown > table \{ display: block/, 'a table keeps its table layout');
 });
 
 function assertNoOverlap(nodes) {

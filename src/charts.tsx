@@ -1,5 +1,6 @@
 import {useEffect, useId, useMemo, useRef, useState} from 'react';
 import type {CSSProperties, KeyboardEvent, ReactNode} from 'react';
+import {ScrollableTable} from './scrollable-table.js';
 import {
   DOMAIN_NODE_HEIGHT,
   PROTOCOL_KIND_LABELS,
@@ -288,7 +289,7 @@ function ProtocolTable({document}: {document: ProtocolGraphDocument}): ReactNode
     {KIND_ORDER.map((kind) => {
       const nodes = document.nodes.filter((node) => node.kind === kind);
       if (!nodes.length) return null;
-      return <div className="b10x-table-wrap" key={kind}><table>
+      return <ScrollableTable key={kind} label={`Protocol ${PROTOCOL_KIND_LABELS[kind].plural.toLowerCase()}`}>
         <caption>{PROTOCOL_KIND_LABELS[kind].plural}</caption>
         <thead><tr><th scope="col">Name</th><th scope="col">Description</th><th scope="col">Rule</th><th scope="col">Leads to</th></tr></thead>
         <tbody>{nodes.map((node) => <tr key={node.id}>
@@ -297,7 +298,7 @@ function ProtocolTable({document}: {document: ProtocolGraphDocument}): ReactNode
           <td>{[node.applicable_when ? ['applicable when', ruleText(predicateLines(node.applicable_when, 1))].join('\n') : '', node.predicate ? ruleText(predicateLines(node.predicate)) : '', node.capabilities?.length ? `needs ${node.capabilities.join(', ')}` : '', node.effect ? `effect ${node.effect}` : ''].filter(Boolean).join('\n') || '—'}</td>
           <td>{links(node)}</td>
         </tr>)}</tbody>
-      </table></div>;
+      </ScrollableTable>;
     })}
   </details>;
 }
@@ -528,7 +529,7 @@ function DomainTable({document}: {document: DomainGraphDocument}): ReactNode {
   const names = new Map(document.entities.map((entity) => [entity.id, entity.name]));
   return <details className="b10x-graph__table">
     <summary>Domain as text</summary>
-    <div className="b10x-table-wrap"><table>
+    <ScrollableTable label="Domain entities">
       <caption>Entities</caption>
       <thead><tr><th scope="col">Entity</th><th scope="col">Identity and fields</th><th scope="col">Lifecycle</th><th scope="col">Relations</th></tr></thead>
       <tbody>{document.entities.map((entity) => <tr key={entity.id}>
@@ -537,7 +538,7 @@ function DomainTable({document}: {document: DomainGraphDocument}): ReactNode {
         <td>{entity.lifecycle ? [`states ${entity.lifecycle.states.join(', ')}; initial ${entity.lifecycle.initial}`, ...(entity.lifecycle.transitions ?? []).map((transition) => `${transition.name}: ${transition.from.join(' or ')} → ${transition.to}${transition.commands?.length ? ` (${transition.commands.join(', ')})` : ''}`)].join('\n') : '—'}</td>
         <td>{document.relations.filter((relation) => relation.from === entity.id).map((relation) => `${relation.name} ${relation.kind} ${relation.cardinality} ${names.get(relation.to)}`).join('\n') || '—'}</td>
       </tr>)}</tbody>
-    </table></div>
+    </ScrollableTable>
   </details>;
 }
 

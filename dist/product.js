@@ -4,7 +4,7 @@ import Link from '@docusaurus/Link';
 import useBrokenLinks from '@docusaurus/useBrokenLinks';
 import CodeBlock from '@theme/CodeBlock';
 import { DomainGraph, ProtocolGraph } from './charts.js';
-import { StatusBadge, StatusGlyph, Truth } from './components.js';
+import { ScrollableTable, StatusBadge, StatusGlyph, Truth } from './components.js';
 import { buildHref, buildLabel, FAMILY, familyMembers, isFamilyRelatedTool, relationPhrase } from './family.js';
 import { landingKpis, parseCaseDocument, parseCodePairDocument, parseStatusDocument, parseTerminalSession, parseTranscript } from './product-data.js';
 export { StatusBadge };
@@ -225,9 +225,9 @@ export function StatusTable({ data, label = 'Status of every capability', only }
     const areas = Array.from(new Set(items.map((item) => item.area ?? '')));
     const grouped = areas.some(Boolean);
     const row = (item) => _jsxs("tr", { children: [_jsx("th", { scope: "row", children: item.href ? _jsx(Link, { to: item.href, children: item.label }) : item.label }), _jsx("td", { children: _jsx(StatusBadge, { status: item.status }) }), _jsx("td", { children: item.detail ?? '—' })] }, item.label);
-    return _jsxs("section", { className: "b10x-status-table", "aria-label": label, children: [_jsx(StatusSummary, { items: items }), _jsx("div", { className: "b10x-table-wrap", children: _jsxs("table", { children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { scope: "col", children: "Capability" }), _jsx("th", { scope: "col", children: "Status" }), _jsx("th", { scope: "col", children: "Detail" })] }) }), grouped
-                            ? areas.map((area) => _jsxs("tbody", { children: [_jsx("tr", { className: "b10x-status-table__area", children: _jsx("th", { scope: "rowgroup", colSpan: 3, children: area || 'Other' }) }), items.filter((item) => (item.area ?? '') === area).map(row)] }, area || 'other'))
-                            : _jsx("tbody", { children: items.map(row) })] }) }), _jsx(StatusProvenance, { asOf: parsed.document.asOf, source: parsed.document.source })] });
+    return _jsxs("section", { className: "b10x-status-table", "aria-label": label, children: [_jsx(StatusSummary, { items: items }), _jsxs(ScrollableTable, { label: `${label} (table)`, children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { scope: "col", children: "Capability" }), _jsx("th", { scope: "col", children: "Status" }), _jsx("th", { scope: "col", children: "Detail" })] }) }), grouped
+                        ? areas.map((area) => _jsxs("tbody", { children: [_jsx("tr", { className: "b10x-status-table__area", children: _jsx("th", { scope: "rowgroup", colSpan: 3, children: area || 'Other' }) }), items.filter((item) => (item.area ?? '') === area).map(row)] }, area || 'other'))
+                        : _jsx("tbody", { children: items.map(row) })] }), _jsx(StatusProvenance, { asOf: parsed.document.asOf, source: parsed.document.source })] });
 }
 export function RelatedTools({ tools, label = 'Related tools', current }) {
     return _jsx("ul", { className: "b10x-related", "aria-label": label, children: tools.map((tool) => {
@@ -272,7 +272,16 @@ export function ProductSwitcher({ current }) {
 export function ProductHero({ eyebrow, promise, lede, actions = [], meta, aside, kpis, titleId = 'b10x-hero-title' }) {
     const lines = promise.length > 1 ? promise.slice(0, -1) : [];
     const emphasis = promise[promise.length - 1];
-    return _jsxs("section", { className: ['b10x-hero', aside ? '' : 'b10x-hero--solo'].filter(Boolean).join(' '), "aria-labelledby": titleId, children: [_jsxs("div", { className: "b10x-hero__copy", children: [eyebrow && _jsxs("p", { className: "b10x-kicker", children: [_jsx("span", { className: "b10x-kicker__dot", "aria-hidden": "true" }), eyebrow] }), _jsxs("h1", { id: titleId, children: [lines.map((line) => _jsxs("span", { children: [line, _jsx("br", {})] }, line)), _jsx("em", { children: emphasis })] }), _jsx("p", { className: "b10x-hero__lede", children: lede }), actions.length > 0 && _jsx("div", { className: "b10x-hero__actions", children: actions.map((action) => _jsxs(Link, { to: action.href, className: action.kind === 'primary' ? 'b10x-button' : 'b10x-text-link', children: [action.label, " ", _jsx("span", { "aria-hidden": "true", children: action.kind === 'primary' ? '→' : action.href.startsWith('#') ? '↓' : '→' })] }, action.href)) }), meta && _jsx("p", { className: "b10x-hero__meta", children: meta })] }), aside && _jsx("div", { className: "b10x-hero__aside", children: aside }), kpis && kpis.length > 0 && _jsx(KpiRow, { items: kpis })] });
+    return _jsxs("section", { className: ['b10x-hero', aside ? '' : 'b10x-hero--solo'].filter(Boolean).join(' '), "aria-labelledby": titleId, children: [_jsxs("div", { className: "b10x-hero__copy", children: [eyebrow && _jsxs("p", { className: "b10x-kicker", children: [_jsx("span", { className: "b10x-kicker__dot", "aria-hidden": "true" }), eyebrow] }), _jsxs("h1", { id: titleId, children: [lines.map((line) => _jsxs("span", { children: [line, _jsx("br", {})] }, line)), _jsx("em", { children: emphasis })] }), _jsx("p", { className: "b10x-hero__lede", children: lede }), actions.length > 0 && _jsx("div", { className: "b10x-hero__actions", children: actions.map((action) => _jsx(HeroAction, { action: action }, action.href)) }), meta && _jsx("p", { className: "b10x-hero__meta", children: meta })] }), aside && _jsx("div", { className: "b10x-hero__aside", children: aside }), kpis && kpis.length > 0 && _jsx(KpiRow, { items: kpis })] });
+}
+/** Docusaurus `Link` opens an href with a scheme (including `pathname://`) or a protocol-relative one in a new tab. */
+export function opensInNewTab(href) {
+    return /^(?:[A-Za-z][A-Za-z\d+.-]*:|\/\/)/.test(href);
+}
+function HeroAction({ action }) {
+    const newTab = opensInNewTab(action.href);
+    const glyph = newTab ? '↗' : action.kind !== 'primary' && action.href.startsWith('#') ? '↓' : '→';
+    return _jsxs(Link, { to: action.href, className: action.kind === 'primary' ? 'b10x-button' : 'b10x-text-link', children: [action.label, " ", _jsx("span", { "aria-hidden": "true", children: glyph }), newTab && _jsx("span", { className: "b10x-sr-only", children: " (opens in new tab)" })] });
 }
 /** Numbered KPI tiles. Values are counted from data (see `landingKpis`), never typed. */
 export function KpiRow({ items, label = 'Key figures' }) {
@@ -282,7 +291,7 @@ export function KpiRow({ items, label = 'Key figures' }) {
 export function HeroArt({ art }) {
     const body = (() => {
         switch (art.kind) {
-            case 'terminal': return _jsx(Terminal, { session: art.session, tilt: true, animate: true, caption: art.caption });
+            case 'terminal': return _jsx(Terminal, { session: art.session, tilt: true, caption: art.caption });
             case 'protocol-graph': return _jsx(ProtocolGraph, { data: art.data, variant: "hero", caption: art.caption });
             case 'domain-graph': return _jsx(DomainGraph, { data: art.data, variant: "hero", caption: art.caption });
             case 'case': return _jsx(CaseCard, { data: art.data, caption: art.caption });

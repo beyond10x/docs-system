@@ -43,7 +43,7 @@ declare module '@docusaurus/router' {
 }
 
 declare module '@docusaurus/useDocusaurusContext' {
-  export default function useDocusaurusContext(): {siteConfig: {baseUrl: string; themeConfig: unknown}};
+  export default function useDocusaurusContext(): {siteConfig: {baseUrl: string; title: string; themeConfig: unknown}};
 }
 
 declare module '@docusaurus/useGlobalData' {
@@ -75,6 +75,13 @@ declare module '@theme-init/Navbar/Logo' {
   export default NavbarLogo;
 }
 
+declare module '@theme-init/TOCItems/Tree' {
+  import type {ComponentType} from 'react';
+  interface TocHeading {value: string; id: string; level: number; children: TocHeading[]}
+  const TOCItemsTree: ComponentType<{toc: readonly TocHeading[]; className?: string; linkClassName?: string | null; isChild?: boolean}>;
+  export default TOCItemsTree;
+}
+
 declare module '@theme-init/DocItem/Content' {
   import type {ComponentType, ReactNode} from 'react';
   const DocItemContent: ComponentType<{children?: ReactNode}>;
@@ -90,4 +97,5 @@ declare module '@theme/MDXContent' {
 declare module '@docusaurus/plugin-content-docs/client' {
   export function useDoc(): {metadata: {title: string; permalink: string; id: string}; frontMatter: Record<string, unknown>; contentTitle?: string};
   export function useDocsSidebar(): {name: string; items: unknown[]} | null;
+  export function useAllDocsData(): Record<string, {path: string; versions: {isLast: boolean; path: string; mainDocId: string; docs: {id: string; path: string}[]}[]}>;
 }

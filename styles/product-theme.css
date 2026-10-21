@@ -201,15 +201,29 @@ a { text-underline-offset: 4px; }
 .markdown table th { padding: 0.9rem 0.95rem; border: 0; border-bottom: 1px solid var(--b10x-color-line); color: var(--b10x-color-muted); font-size: 0.68rem; font-weight: 650; letter-spacing: 0.12em; text-align: left; text-transform: uppercase; }
 .markdown table td { padding: 1rem 0.95rem; border: 0; border-bottom: 1px solid var(--b10x-color-hairline); color: var(--b10x-color-muted); vertical-align: top; }
 .markdown table td:first-child { color: var(--b10x-color-text); }
-/* Identifiers in tables never break inside a word; a narrow table scrolls instead. */
-:is(.markdown, .b10x-graph__table, .b10x-chart__table) :is(td, th) code { overflow-wrap: normal; word-break: normal; white-space: nowrap; }
+/* Identifiers in tables wrap at spaces, never inside a word; a table still wider than the column scrolls in its frame. */
+:is(.markdown, .b10x-graph__table, .b10x-chart__table) :is(td, th) code { overflow-wrap: normal; word-break: normal; white-space: normal; }
 .markdown table tr { background: transparent; border: 0; }
+/* A table never widens the column; when it is wider, its frame scrolls and an edge shadow marks the hidden side.
+   The covers take the colour of the surface the table sits on: a box with its own background sets --b10x-table-surface. */
+.markdown .b10x-table-wrap {
+  contain: inline-size;
+  margin-bottom: var(--ifm-spacing-vertical);
+  background:
+    linear-gradient(to right, var(--b10x-table-surface, var(--b10x-color-canvas)) 30%, transparent) left / 2.5rem 100% no-repeat local,
+    linear-gradient(to left, var(--b10x-table-surface, var(--b10x-color-canvas)) 30%, transparent) right / 2.5rem 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--b10x-color-line), transparent) left / 0.9rem 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--b10x-color-line), transparent) right / 0.9rem 100% no-repeat scroll;
+}
+.markdown .b10x-table-wrap > table { margin-bottom: 0; }
+.markdown > p.b10x-table-guidance { margin-top: calc(-1 * var(--ifm-spacing-vertical) + 0.5rem); color: var(--b10x-color-muted); font-size: 0.85rem; line-height: 1.5; }
 
 .theme-admonition {
   border: 0;
   border-left: 3px solid var(--b10x-admonition, var(--b10x-color-amber));
   border-radius: 0 6px 6px 0;
-  background: color-mix(in srgb, var(--b10x-admonition, var(--b10x-color-amber)) 8%, var(--b10x-color-canvas));
+  --b10x-table-surface: color-mix(in srgb, var(--b10x-admonition, var(--b10x-color-amber)) 8%, var(--b10x-color-canvas));
+  background: var(--b10x-table-surface);
   box-shadow: none;
   color: var(--b10x-color-text);
 }
@@ -239,11 +253,22 @@ pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-bloc
 }
 .theme-code-block > [class*='codeBlockTitle']::after { color: var(--b10x-color-muted); content: var(--b10x-code-label); font: 600 0.62rem/1.8 var(--b10x-font-sans); letter-spacing: 0.12em; text-transform: uppercase; }
 .theme-code-block pre[class*='language-'] { padding-block: 1.1rem; font-size: 0.82rem; line-height: 1.8; }
-/* Copy and wrap controls appear on intent, as on the hand-built pages, which have none. */
+/* Copy and wrap controls appear on intent, as on the hand-built pages, which have none. The group selectors outrank Docusaurus's own 0.4 hover rule, which has the same specificity as a shorter selector and wins by bundle order. */
 .theme-code-block button.clean-btn { border-color: var(--b10x-code-border); opacity: 0; }
-.theme-code-block:is(:hover, :focus-within) button.clean-btn { opacity: 0.85; }
+.theme-code-block:is(:hover, :focus-within) [class*='buttonGroup'] button.clean-btn { opacity: 0.85; }
 .theme-code-block button.clean-btn:is(:hover, :focus-visible) { opacity: 1; }
-@media (hover: none) { .theme-code-block button.clean-btn { opacity: 0.85; } }
+@media (hover: none) { .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] button.clean-btn { opacity: 0.85; } }
+/* On a phone or a narrow window the controls sit in the caption bar, so they never cover the first line. */
+@media (hover: none), (pointer: coarse), (max-width: 996px) {
+  .theme-code-block { --b10x-code-bar: var(--b10x-touch-target); }
+  .theme-code-block[class*='language-']::before,
+  .theme-code-block > [class*='codeBlockTitle'] { display: flex; align-items: center; box-sizing: border-box; min-block-size: var(--b10x-code-bar); padding-inline-end: calc(2 * var(--b10x-code-bar) + 0.75rem); overflow-wrap: anywhere; }
+  .theme-code-block > [class*='codeBlockTitle']::after { flex: none; overflow-wrap: normal; }
+  .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] { top: calc(1px - var(--b10x-code-bar)); right: 0.25rem; align-items: center; block-size: calc(var(--b10x-code-bar) - 2px); }
+  .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] button.clean-btn { min-inline-size: var(--b10x-code-bar); min-block-size: 0; block-size: 100%; justify-content: center; border-color: transparent; background: transparent; }
+  .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] button.clean-btn:is(:hover, :focus-visible) { border-color: var(--b10x-code-border); }
+}
+@media (max-width: 996px) and (hover: hover) and (pointer: fine) { .theme-code-block > [class*='codeBlockContent'] > [class*='buttonGroup'] button.clean-btn { opacity: 0.85; } }
 .theme-code-block-highlighted-line { box-shadow: inset 2px 0 0 var(--b10x-color-accent); }
 [class*='codeLineNumber'] { color: color-mix(in srgb, var(--b10x-color-muted) 70%, transparent) !important; }
 
@@ -255,6 +280,9 @@ pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-bloc
 .table-of-contents { font-size: 0.8rem; }
 .table-of-contents__link { color: var(--b10x-color-muted); }
 .table-of-contents__link--active { color: var(--b10x-color-heading); }
+/* A code heading wraps at the break points src/toc.ts marks; a word too long for them breaks anywhere. */
+.table-of-contents code { overflow-wrap: anywhere; word-break: normal; }
+.table-of-contents .b10x-toc-word { white-space: nowrap; }
 .pagination-nav__link { border-color: var(--b10x-color-hairline); border-radius: 7px; }
 .pagination-nav__link:hover { border-color: var(--b10x-color-accent); }
 .pagination-nav__sublabel { color: var(--b10x-color-muted); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
@@ -272,7 +300,6 @@ pre[class*='language-'] { border: 1px solid var(--b10x-code-border); border-bloc
 .footer--dark { --ifm-footer-background-color: var(--b10x-color-canvas); --ifm-footer-color: var(--b10x-color-muted); --ifm-footer-link-color: var(--b10x-color-muted); --ifm-footer-title-color: var(--b10x-color-heading); }
 
 @media (max-width: 996px) {
-  .markdown > table { display: block; max-inline-size: 100%; overflow-x: auto; }
   .navbar { padding-inline: 1.5rem; }
   .navbar__inner { max-width: none; }
   .b10x-product { padding-inline: 1.5rem; }

@@ -1,6 +1,6 @@
 {
   "name": "@beyond10x/docs-system",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": true,
   "description": "Git-pinned documentation shell, components, renderers, and discovery contract for beyond10x.",
   "license": "Apache-2.0",
@@ -76,7 +76,7 @@
     "test:bundle": "cargo test --locked",
     "validate:fixtures": "node dist/cli.js validate fixtures/*.yaml",
     "gate": "npm run build:check && npm test && npm run test:bundle && npm run validate:fixtures",
-    "test:browser": "node tests/ess-viewer.browser.mjs"
+    "test:browser": "node tests/ess-viewer.browser.mjs && node tests/product-site.browser.mjs"
   },
   "dependencies": {
     "ajv": "8.20.0",

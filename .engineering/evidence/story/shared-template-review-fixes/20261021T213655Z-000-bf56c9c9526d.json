@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-21T21:36:55Z",
+  "actor": "human:timo",
+  "artifact": "story:shared-template-review-fixes",
+  "kind": "story",
+  "revision": 7,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "npm run gate and npm run test:browser at 96ce600: 173 node tests pass, ESS viewer and 10 product-site browser checks pass, exit 0",
+    "reference": "96ce600"
+  }
+}
