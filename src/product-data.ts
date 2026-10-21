@@ -347,6 +347,15 @@ export interface ProductLandingData {
   sections: ProductLandingSection[];
 }
 
+/**
+ * The landing page's title before Docusaurus appends ` | <site title>`: the promise, led by the
+ * product name only when the site title does not already carry it, so the name appears once.
+ */
+export function landingTitle(product: {name: string; promise: readonly string[]}, siteTitle?: string): string {
+  const promise = product.promise.join(' ');
+  return siteTitle?.includes(product.name) ? promise : `${product.name} — ${promise}`;
+}
+
 const KPI_LABELS: Record<KpiCount, string> = {
   entities: 'entities in the domain',
   relations: 'relations',

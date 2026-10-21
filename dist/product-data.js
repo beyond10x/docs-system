@@ -156,6 +156,14 @@ export function parseCodePairDocument(value) {
 }
 export const ART_KINDS = ['terminal', 'protocol-graph', 'domain-graph', 'case', 'code-pair'];
 export const KPI_COUNTS = ['entities', 'relations', 'lifecycles', 'nodes', 'actions', 'evidence', 'claims', 'outcomes', 'obligations', 'commands', 'capabilities', 'shipped', 'decided', 'planned'];
+/**
+ * The landing page's title before Docusaurus appends ` | <site title>`: the promise, led by the
+ * product name only when the site title does not already carry it, so the name appears once.
+ */
+export function landingTitle(product, siteTitle) {
+    const promise = product.promise.join(' ');
+    return siteTitle?.includes(product.name) ? promise : `${product.name} — ${promise}`;
+}
 const KPI_LABELS = {
     entities: 'entities in the domain',
     relations: 'relations',

@@ -71,6 +71,16 @@ check(20, 'a hero action that opens a new tab says so in its accessible name', a
   } finally { await close(); }
 });
 
+check(21, 'the home title names the product once', async () => {
+  const {page, close} = await open('');
+  try {
+    const name = await page.locator('.navbar__title').first().innerText();
+    const title = await page.title();
+    assert.equal(title.split(name).length - 1, 1, `"${title}" names "${name}"`);
+    assert.match(title, /What has been earned\./);
+  } finally { await close(); }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {

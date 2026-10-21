@@ -14,6 +14,9 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - A hero action whose `href` opens a new tab (any scheme, `pathname://` or `//`) ends with `↗` and
   carries a visually hidden "(opens in new tab)" in its accessible name
   ([#20](https://github.com/beyond10x/docs-system/issues/20)).
+- The home page `<title>` names the product once: when the site title contains the product name the
+  landing title is the promise alone, read as `<promise> | <site title>`
+  ([#21](https://github.com/beyond10x/docs-system/issues/21)).
 
 ## 0.10.0 — 2026-10-13
 

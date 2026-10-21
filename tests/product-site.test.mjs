@@ -10,7 +10,7 @@ import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {countCrossings, layeredLayout} from '../dist/graph-layout.js';
 import {layoutDomainGraph, layoutProtocolGraph, parseDomainGraph, parseProtocolGraph, predicateLineText, predicateLines, protocolLineage} from '../dist/product-graphs.js';
-import {parseTerminalSession, parseTranscript} from '../dist/product-data.js';
+import {landingTitle, parseTerminalSession, parseTranscript} from '../dist/product-data.js';
 import {decisionSteps, formatDuration, parseSessionComposition, sessionKpis} from '../dist/session-data.js';
 import {productPrismDarkTheme, productPrismTheme} from '../dist/prism-themes.js';
 import {activeNavbarItem, docItemLink, navbarItemScore} from '../dist/navbar-active.js';
@@ -489,6 +489,14 @@ test('#20: a hero action Docusaurus opens in a new tab carries a visually hidden
   const markup = renderToStaticMarkup(createElement(ProductHero, {promise: ['P.'], lede: 'L', actions: [{label: 'Docs', href: '/docs/', kind: 'primary'}, {label: 'Deck', href: 'pathname:///deck/'}]}));
   assert.match(markup, /Deck <span aria-hidden="true">↗<\/span><span class="b10x-sr-only"> \(opens in new tab\)<\/span>/);
   assert.equal(markup.match(/opens in new tab/g).length, 1);
+});
+
+test('#21: the landing title leaves the product name to the site title when that carries it', () => {
+  const product = {name: 'ModelSpec', promise: ['Specify models.', 'Check shapes.']};
+  assert.equal(landingTitle(product, 'ModelSpec'), 'Specify models. Check shapes.');
+  assert.equal(landingTitle(product, 'ModelSpec docs'), 'Specify models. Check shapes.');
+  assert.equal(landingTitle(product, 'Beyond10x'), 'ModelSpec — Specify models. Check shapes.');
+  assert.equal(landingTitle(product, undefined), 'ModelSpec — Specify models. Check shapes.');
 });
 
 test('withProductSite adds one plugin, the matched Prism themes and a dark default', () => {

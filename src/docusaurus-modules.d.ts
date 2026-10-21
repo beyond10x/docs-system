@@ -43,7 +43,7 @@ declare module '@docusaurus/router' {
 }
 
 declare module '@docusaurus/useDocusaurusContext' {
-  export default function useDocusaurusContext(): {siteConfig: {baseUrl: string; themeConfig: unknown}};
+  export default function useDocusaurusContext(): {siteConfig: {baseUrl: string; title: string; themeConfig: unknown}};
 }
 
 declare module '@docusaurus/useGlobalData' {

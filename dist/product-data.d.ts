@@ -247,6 +247,14 @@ export interface ProductLandingData {
     sections: ProductLandingSection[];
 }
 /**
+ * The landing page's title before Docusaurus appends ` | <site title>`: the promise, led by the
+ * product name only when the site title does not already carry it, so the name appears once.
+ */
+export declare function landingTitle(product: {
+    name: string;
+    promise: readonly string[];
+}, siteTitle?: string): string;
+/**
  * Resolve a landing's KPI row from its inlined data. Graph counts read the hero art first, then the
  * first graph section of that kind; status counts read the first status section; `commands` reads
  * the hero terminal. A count with no source throws, so a build cannot show an invented number.
