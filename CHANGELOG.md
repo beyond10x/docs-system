@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-21
+
 ### Added
 
 - `product.description` in `b10x-product-landing/1`: at most 160 characters, used as the home page's
@@ -52,7 +54,7 @@ All notable changes to this project are documented in this file. From 0.11.0 the
   ([#27](https://github.com/beyond10x/docs-system/issues/27)).
 - A protocol graph whose claim predicate uses `input … in [...]` renders in the browser. The client
   build turned a copied `Set` into a one-element array, so the graph failed after hydration with
-  "names value [object Set]" and React reported a hydration mismatch (#418)
+  "names value [object Set]" and React reported a hydration mismatch (React error 418)
   ([#28](https://github.com/beyond10x/docs-system/issues/28)).
 
 ## 0.10.0 — 2026-10-13
@@ -257,3 +259,6 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 - Introduce the public manifest contract, deterministic registry CLI, Docusaurus integration,
   shared tokens, generic React components and read-only schema/diagram renderers.
+
+[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.11.0...HEAD
+[0.11.0]: https://github.com/beyond10x/docs-system/compare/0.10.0...0.11.0
