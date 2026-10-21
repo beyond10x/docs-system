@@ -338,8 +338,8 @@ export function withProductSite<T extends Record<string, unknown>>(config: T, op
     ...(mermaid ? {themes: themes.flatMap((theme) => theme === '@docusaurus/theme-mermaid' || (Array.isArray(theme) && theme[0] === '@docusaurus/theme-mermaid') ? [theme, productMermaidTheme] : [theme])} : {}),
     plugins: [...(withChips(config.plugins as unknown[] | undefined, 'plugin') ?? []), [productSitePlugin, {...options, fonts}]],
     themeConfig: {
-      ...(card ? {image: PRODUCT_SOCIAL_CARD} : {}),
       ...themeConfig,
+      ...(card ? {image: PRODUCT_SOCIAL_CARD} : {}),
       colorMode: {defaultMode: 'dark', respectPrefersColorScheme: true, ...colorMode},
       prism: {
         theme: productPrismTheme,

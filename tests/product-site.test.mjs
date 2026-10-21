@@ -511,6 +511,15 @@ test('#25: the landing description fits a search result', () => {
   assert.ok(cut.length <= 160 && cut.endsWith('word…'), cut);
   const late = `A tiny start. ${'longer clause '.repeat(14)}done.`;
   assert.match(landingDescription({lede: late}), /clause…$/, 'a first sentence under a third of the limit is not enough');
+  const points = text => Array.from(text).length;
+  const unspaced = landingDescription({lede: 'x'.repeat(200)});
+  assert.equal(points(unspaced), 160, 'a lede with no space is cut to the limit, ellipsis included');
+  assert.ok(unspaced.endsWith('x…'), unspaced);
+  const emoji = landingDescription({lede: '😀'.repeat(170)});
+  assert.equal(points(emoji), 160);
+  assert.doesNotMatch(emoji, /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/, 'no lone surrogate');
+  const fits = `${'a'.repeat(150)}${'😀'.repeat(10)}`;
+  assert.equal(landingDescription({lede: 'Lede.', description: fits}), fits, 'the schema counts code points, so 160 of them fit');
 });
 
 test('#25: withProductSite serves a default share card unless the site sets one', () => {
@@ -521,6 +530,8 @@ test('#25: withProductSite serves a default share card unless the site sets one'
   const own = withProductSite({title: 'X', themeConfig: {image: 'img/own.png'}}, {mark: 'X', fonts: false});
   assert.equal(own.themeConfig.image, 'img/own.png');
   assert.equal(own.staticDirectories, undefined);
+  const unset = withProductSite({title: 'X', themeConfig: {image: undefined}}, {mark: 'X', fonts: false});
+  assert.equal(unset.themeConfig.image, 'b10x-social/card.png', 'an image key set to undefined gets the card it serves');
 });
 
 test('#24: a code heading in the table of contents breaks only at separators', () => {

@@ -364,13 +364,15 @@ export const META_DESCRIPTION_LIMIT = 160;
 /**
  * The landing page's meta description: `product.description` when given, else the lede. A longer
  * lede is cut after its last whole sentence within the limit, or else at a word with an ellipsis.
+ * The limit counts code points, as the schema's `maxLength` does, and includes the ellipsis.
  */
 export function landingDescription(product: {lede: string; description?: string}, limit = META_DESCRIPTION_LIMIT): string {
   const text = (product.description ?? product.lede).replace(/\s+/g, ' ').trim();
-  if (text.length <= limit) return text;
-  const sentences = text.slice(0, limit + 1).match(/^.*[.!?](?=\s)/)?.[0];
-  if (sentences && sentences.length >= limit / 3) return sentences;
-  const words = text.slice(0, limit).replace(/\s+\S*$/, '').replace(/[\s,;:—–-]+$/, '');
+  const points = Array.from(text);
+  if (points.length <= limit) return text;
+  const sentences = points.slice(0, limit + 1).join('').match(/^.*[.!?](?=\s)/)?.[0];
+  if (sentences && Array.from(sentences).length >= limit / 3) return sentences;
+  const words = points.slice(0, limit - 1).join('').replace(/\s+\S*$/, '').replace(/[\s,;:—–-]+$/, '');
   return `${words}…`;
 }
 

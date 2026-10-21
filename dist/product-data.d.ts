@@ -261,6 +261,7 @@ export declare const META_DESCRIPTION_LIMIT = 160;
 /**
  * The landing page's meta description: `product.description` when given, else the lede. A longer
  * lede is cut after its last whole sentence within the limit, or else at a word with an ellipsis.
+ * The limit counts code points, as the schema's `maxLength` does, and includes the ellipsis.
  */
 export declare function landingDescription(product: {
     lede: string;
