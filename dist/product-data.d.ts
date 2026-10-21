@@ -229,6 +229,8 @@ export interface ProductLandingData {
         /** The one-line promise, one entry per rendered line; the last line is emphasised. */
         promise: string[];
         lede: string;
+        /** The home page's meta and share description, at most 160 characters. Defaults to the lede, shortened. */
+        description?: string;
         actions: ProductAction[];
         /** A quiet line under the actions: language, formats, licence. */
         meta?: string;
@@ -254,6 +256,16 @@ export declare function landingTitle(product: {
     name: string;
     promise: readonly string[];
 }, siteTitle?: string): string;
+/** The longest meta description a search result shows whole. */
+export declare const META_DESCRIPTION_LIMIT = 160;
+/**
+ * The landing page's meta description: `product.description` when given, else the lede. A longer
+ * lede is cut after its last whole sentence within the limit, or else at a word with an ellipsis.
+ */
+export declare function landingDescription(product: {
+    lede: string;
+    description?: string;
+}, limit?: number): string;
 /**
  * Resolve a landing's KPI row from its inlined data. Graph counts read the hero art first, then the
  * first graph section of that kind; status counts read the first status section; `commands` reads

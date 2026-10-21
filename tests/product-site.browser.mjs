@@ -183,6 +183,29 @@ check(24, 'table-of-contents labels of long code headings stay in the rail and b
   }
 });
 
+check(25, 'every page has a share image, and the home description fits a search result', async () => {
+  for (const url of ['', 'docs/code']) {
+    const {page, close} = await open(url);
+    try {
+      const meta = await page.evaluate(() => Object.fromEntries(['name="description"', 'property="og:description"', 'property="og:image"', 'name="twitter:image"', 'name="twitter:card"'].map(key => [key, document.querySelector(`meta[${key}]`)?.content ?? null])));
+      assert.equal(meta['name="twitter:card"'], 'summary_large_image');
+      assert.match(meta['property="og:image"'] ?? '', /^https?:\/\/.+\.png$/, `/${url} og:image`);
+      assert.equal(meta['name="twitter:image"'], meta['property="og:image"'], `/${url} twitter:image`);
+      const image = await page.request.get(new URL(new URL(meta['property="og:image"']).pathname, server.url).href);
+      assert.equal(image.status(), 200, `/${url} ${meta['property="og:image"']}`);
+      const png = await image.body();
+      assert.equal(png.subarray(1, 4).toString(), 'PNG');
+      assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [1200, 630], 'the card is 1200 × 630');
+      if (url === '') {
+        const description = meta['name="description"'] ?? '';
+        assert.ok(description.length >= 50 && description.length <= 160, `the home description is ${description.length} characters: "${description}"`);
+        assert.match(description, /[.!?…]$/, 'the home description ends a sentence or says it was cut');
+        assert.equal(meta['property="og:description"'], description);
+      }
+    } finally { await close(); }
+  }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {

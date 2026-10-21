@@ -25,6 +25,9 @@ export interface ProductSiteOptions {
 }
 /** Self-hosted font files, served from `styles/static` under `<baseUrl>b10x-fonts/`. */
 export declare const PRODUCT_FONT_DIRECTORY: string;
+/** The default share card, served from `styles/social` as `<baseUrl>b10x-social/card.png`. */
+export declare const PRODUCT_SOCIAL_DIRECTORY: string;
+export declare const PRODUCT_SOCIAL_CARD = "b10x-social/card.png";
 /** `@font-face` rules and preload links for the self-hosted fonts (latin subset, swap). */
 export declare function fontHeadTags(baseUrl: string): HeadTag[];
 interface HeadTag {
@@ -92,7 +95,7 @@ export declare function productMermaidTheme(): {
 /**
  * Wrap a Docusaurus config: the product layer, self-hosted fonts, matched Prism themes with the
  * protocol/1 kind gutter, meaning chips and status admonitions in docs, Mermaid from the tokens,
- * and a dark default.
+ * a default share card when `themeConfig.image` is unset, and a dark default.
  */
 export declare function withProductSite<T extends Record<string, unknown>>(config: T, options?: ProductSiteOptions): T;
 export {};

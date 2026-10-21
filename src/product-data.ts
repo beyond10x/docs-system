@@ -329,6 +329,8 @@ export interface ProductLandingData {
     /** The one-line promise, one entry per rendered line; the last line is emphasised. */
     promise: string[];
     lede: string;
+    /** The home page's meta and share description, at most 160 characters. Defaults to the lede, shortened. */
+    description?: string;
     actions: ProductAction[];
     /** A quiet line under the actions: language, formats, licence. */
     meta?: string;
@@ -354,6 +356,22 @@ export interface ProductLandingData {
 export function landingTitle(product: {name: string; promise: readonly string[]}, siteTitle?: string): string {
   const promise = product.promise.join(' ');
   return siteTitle?.includes(product.name) ? promise : `${product.name} — ${promise}`;
+}
+
+/** The longest meta description a search result shows whole. */
+export const META_DESCRIPTION_LIMIT = 160;
+
+/**
+ * The landing page's meta description: `product.description` when given, else the lede. A longer
+ * lede is cut after its last whole sentence within the limit, or else at a word with an ellipsis.
+ */
+export function landingDescription(product: {lede: string; description?: string}, limit = META_DESCRIPTION_LIMIT): string {
+  const text = (product.description ?? product.lede).replace(/\s+/g, ' ').trim();
+  if (text.length <= limit) return text;
+  const sentences = text.slice(0, limit + 1).match(/^.*[.!?](?=\s)/)?.[0];
+  if (sentences && sentences.length >= limit / 3) return sentences;
+  const words = text.slice(0, limit).replace(/\s+\S*$/, '').replace(/[\s,;:—–-]+$/, '');
+  return `${words}…`;
 }
 
 const KPI_LABELS: Record<KpiCount, string> = {

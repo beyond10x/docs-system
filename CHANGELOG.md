@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+### Added
+
+- `product.description` in `b10x-product-landing/1`: at most 160 characters, used as the home page's
+  meta and `og:description` ([#25](https://github.com/beyond10x/docs-system/issues/25)).
+
 ### Fixed
 
 - The hero terminal shows every command and output line at first paint, at every width and in both
@@ -29,6 +34,11 @@ All notable changes to this project are documented in this file. From 0.11.0 the
   It wraps at spaces, after `/` and `_`, and before `.`, never between two letters. The theme's
   `TOCItems/Tree` is wrapped to mark those break points
   ([#24](https://github.com/beyond10x/docs-system/issues/24)).
+- Every page has a share image: `withProductSite` serves a 1200 × 630 card at
+  `<baseUrl>b10x-social/card.png` and sets it as `themeConfig.image` unless the site sets its own.
+  Without `product.description`, the home page's meta description is the lede cut to 160
+  characters at the last whole sentence or word, no longer the full lede
+  ([#25](https://github.com/beyond10x/docs-system/issues/25)).
 
 ## 0.10.0 — 2026-10-13
 

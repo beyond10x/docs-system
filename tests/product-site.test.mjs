@@ -10,7 +10,7 @@ import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {countCrossings, layeredLayout} from '../dist/graph-layout.js';
 import {layoutDomainGraph, layoutProtocolGraph, parseDomainGraph, parseProtocolGraph, predicateLineText, predicateLines, protocolLineage} from '../dist/product-graphs.js';
-import {landingTitle, parseTerminalSession, parseTranscript} from '../dist/product-data.js';
+import {landingDescription, landingTitle, parseTerminalSession, parseTranscript} from '../dist/product-data.js';
 import {breakableToc, breakableTocLabel} from '../dist/toc.js';
 import {decisionSteps, formatDuration, parseSessionComposition, sessionKpis} from '../dist/session-data.js';
 import {productPrismDarkTheme, productPrismTheme} from '../dist/prism-themes.js';
@@ -498,6 +498,28 @@ test('#21: the landing title leaves the product name to the site title when that
   assert.equal(landingTitle(product, 'ModelSpec docs'), 'Specify models. Check shapes.');
   assert.equal(landingTitle(product, 'Beyond10x'), 'ModelSpec — Specify models. Check shapes.');
   assert.equal(landingTitle(product, undefined), 'ModelSpec — Specify models. Check shapes.');
+});
+
+test('#25: the landing description fits a search result', () => {
+  const lede = 'Canon is a formal language and a deterministic calculus for evidence-governed protocols. For one case under one protocol it answers what is known, what is unknown, which obligations remain open.';
+  assert.equal(landingDescription({lede}), 'Canon is a formal language and a deterministic calculus for evidence-governed protocols.');
+  assert.equal(landingDescription({lede, description: 'Evidence-governed protocols.'}), 'Evidence-governed protocols.');
+  assert.equal(landingDescription({lede: 'Short lede.'}), 'Short lede.');
+  const run = `${'word '.repeat(40)}end.`;
+  const cut = landingDescription({lede: run});
+  assert.ok(cut.length <= 160 && cut.endsWith('word…'), cut);
+  const late = `A tiny start. ${'longer clause '.repeat(14)}done.`;
+  assert.match(landingDescription({lede: late}), /clause…$/, 'a first sentence under a third of the limit is not enough');
+});
+
+test('#25: withProductSite serves a default share card unless the site sets one', () => {
+  const plain = withProductSite({title: 'X'}, {mark: 'X'});
+  assert.equal(plain.themeConfig.image, 'b10x-social/card.png');
+  assert.ok(plain.staticDirectories.some(directory => directory.endsWith(path.join('styles', 'social'))));
+  assert.ok(plain.staticDirectories.includes('static'));
+  const own = withProductSite({title: 'X', themeConfig: {image: 'img/own.png'}}, {mark: 'X', fonts: false});
+  assert.equal(own.themeConfig.image, 'img/own.png');
+  assert.equal(own.staticDirectories, undefined);
 });
 
 test('#24: a code heading in the table of contents breaks only at separators', () => {
