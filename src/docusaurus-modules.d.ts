@@ -105,3 +105,7 @@ declare module '@docusaurus/plugin-content-docs/client' {
   export function useDocsSidebar(): {name: string; items: unknown[]} | null;
   export function useAllDocsData(): Record<string, {path: string; versions: {isLast: boolean; path: string; mainDocId: string; docs: {id: string; path: string}[]}[]}>;
 }
+
+declare module '@theme-init/prism-include-languages' {
+  export default function prismIncludeLanguages(prism: object): void;
+}

@@ -6,6 +6,23 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+## [0.12.1] - 2026-10-22
+
+### Fixed
+
+- A hero protocol or domain graph always fits its column: the canvas scales down to the column
+  width instead of stopping at 0.8 and overflowing into a card that cut its right edge.
+  `HERO_MIN_SCALE` is still exported, deprecated, and no longer read.
+- Inline code in a graph's description, an entity summary, a protocol node description or a case
+  input renders as `<code>` instead of showing its Markdown backticks; aria-labels and tooltips
+  drop the backticks.
+- A ```` ```console ```` fence is a terminal: bare commands are highlighted as Bash with a drawn
+  `$ ` prompt that cannot be selected and that the copy button leaves out; a transcript that
+  writes its own prompts is highlighted as `shell-session`. The block is labelled Terminal.
+- A code or plain-text line wider than its block wraps inside the block with a 2ch hanging indent,
+  so no part of it sits behind the right edge or its fade. This applies to every fence styled by
+  the shared tokens.
+
 ## [0.12.0] - 2026-10-22
 
 ### Added
@@ -308,6 +325,8 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - Introduce the public manifest contract, deterministic registry CLI, Docusaurus integration,
   shared tokens, generic React components and read-only schema/diagram renderers.
 
-[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.11.1...HEAD
+[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.12.1...HEAD
+[0.12.1]: https://github.com/beyond10x/docs-system/compare/0.12.0...0.12.1
+[0.12.0]: https://github.com/beyond10x/docs-system/compare/0.11.1...0.12.0
 [0.11.1]: https://github.com/beyond10x/docs-system/compare/0.11.0...0.11.1
 [0.11.0]: https://github.com/beyond10x/docs-system/compare/0.10.0...0.11.0

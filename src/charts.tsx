@@ -31,19 +31,23 @@ import type {
 const MINIMUM_SCALE = 0.78;
 
 /**
- * `default` is the documentation figure. `hero` is the compact landing-page art: scaled to fit its
- * column but never below `HERO_MIN_SCALE` (a wider graph is cropped at the column edge and scrolls),
- * no header, tooltip or text table (the full figure and its table live further down the page), and
- * edges that draw once when motion is allowed.
+ * `default` is the documentation figure. `hero` is the compact landing-page art: never wider than
+ * its design size and scaled down to fit its column, so no part of the graph is ever cut at the
+ * column edge; no header, tooltip or text table (the full figure and its table live further down
+ * the page), and edges that draw once when motion is allowed.
  */
 export type GraphVariant = 'default' | 'hero';
 
-/** The smallest hero scale: 13 px node names stay at least 10 px on screen. */
+/**
+ * The scale under which a hero graph used to stop shrinking and overflow its column instead.
+ *
+ * @deprecated Since 0.12.1 the hero always fits its column, because the overflow was cut at the
+ * card edge rather than scrolled. Kept for consumers that import it; nothing reads it.
+ */
 export const HERO_MIN_SCALE = 0.8;
 
 function heroCanvasStyle(width: number): CSSProperties {
-  const px = Math.ceil(width);
-  return {maxWidth: `${px}px`, minWidth: `${Math.ceil(px * HERO_MIN_SCALE)}px`};
+  return {maxWidth: `${Math.ceil(width)}px`, minWidth: '0px'};
 }
 
 export interface ProtocolGraphProps {
@@ -132,7 +136,7 @@ function ProtocolGraphView({document, layout, title, description, caption, varia
         <div className="b10x-graph__heading">
           <p className="b10x-graph__kicker">Protocol · revision {document.protocol.revision}</p>
           <strong id={`${base}-title`} className="b10x-graph__title">{heading}</strong>
-          {(description ?? document.protocol.description) && <p className="b10x-graph__description" id={`${base}-description`}>{description ?? document.protocol.description}</p>}
+          {(description ?? document.protocol.description) && <p className="b10x-graph__description" id={`${base}-description`}>{description ?? markdownCode(document.protocol.description)}</p>}
         </div>
         {legend}
       </header>}
@@ -175,7 +179,7 @@ function ProtocolGraphView({document, layout, title, description, caption, varia
                 tabIndex={0}
                 role="button"
                 aria-pressed={pinned === node.id}
-                aria-label={`${PROTOCOL_KIND_LABELS[node.kind].singular} ${node.name}${node.description ? `. ${node.description}` : ''}`}
+                aria-label={`${PROTOCOL_KIND_LABELS[node.kind].singular} ${node.name}${node.description ? `. ${markdownCodeText(node.description)}` : ''}`}
                 aria-describedby={isCurrent ? `${base}-tooltip` : undefined}
                 onPointerEnter={() => setHovered(node.id)}
                 onPointerLeave={() => setHovered(null)}
@@ -241,7 +245,7 @@ function ProtocolTooltip({id, placed, layout, document, byId}: {id: string; plac
   return <div className={`b10x-graph__tooltip b10x-graph__tooltip--${node.kind}`} role="tooltip" id={id} style={style}>
     <p className="b10x-graph__tooltip-kicker">{kicker(node)}</p>
     <p className="b10x-graph__tooltip-name"><code>{node.name}</code></p>
-    {node.description && <p className="b10x-graph__tooltip-text">{node.description}</p>}
+    {node.description && <p className="b10x-graph__tooltip-text">{markdownCode(node.description)}</p>}
     {node.applicable_when && <TooltipSection title="Applicable when"><Predicate value={node.applicable_when} /></TooltipSection>}
     {node.predicate && <TooltipSection title={node.kind === 'claim' ? 'True when' : node.kind === 'action' ? 'Admissible when' : 'Requires'}><Predicate value={node.predicate} /></TooltipSection>}
     {node.capabilities?.length ? <TooltipSection title="Needs authority">{node.capabilities.map((capability) => <code key={capability}>{capability}</code>)}</TooltipSection> : null}
@@ -273,7 +277,7 @@ function CaseInputs({inputs}: {inputs: Record<string, ProtocolCaseInput>}): Reac
     <p className="b10x-graph__inputs-title">Case inputs</p>
     <dl>{entries.map(([id, input]) => <div key={id}>
       <dt><code>{id}</code></dt>
-      <dd><span className="b10x-graph__inputs-values">{input.values.map((value) => <code key={value}>{value}</code>)}</span>{input.description && <span className="b10x-graph__inputs-text">{input.description}</span>}</dd>
+      <dd><span className="b10x-graph__inputs-values">{input.values.map((value) => <code key={value}>{value}</code>)}</span>{input.description && <span className="b10x-graph__inputs-text">{markdownCode(input.description)}</span>}</dd>
     </div>)}</dl>
   </div>;
 }
@@ -294,7 +298,7 @@ function ProtocolTable({document}: {document: ProtocolGraphDocument}): ReactNode
         <thead><tr><th scope="col">Name</th><th scope="col">Description</th><th scope="col">Rule</th><th scope="col">Leads to</th></tr></thead>
         <tbody>{nodes.map((node) => <tr key={node.id}>
           <th scope="row"><code>{node.name}</code></th>
-          <td>{node.description ?? '—'}</td>
+          <td>{node.description ? markdownCode(node.description) : '—'}</td>
           <td>{[node.applicable_when ? ['applicable when', ruleText(predicateLines(node.applicable_when, 1))].join('\n') : '', node.predicate ? ruleText(predicateLines(node.predicate)) : '', node.capabilities?.length ? `needs ${node.capabilities.join(', ')}` : '', node.effect ? `effect ${node.effect}` : ''].filter(Boolean).join('\n') || '—'}</td>
           <td>{links(node)}</td>
         </tr>)}</tbody>
@@ -362,7 +366,7 @@ function DomainGraphView({document, layout, title, description, caption, variant
         <div className="b10x-graph__heading">
           <p className="b10x-graph__kicker">ESS domain · <code>{document.domain.id}</code></p>
           <strong id={`${base}-title`} className="b10x-graph__title">{heading}</strong>
-          {(description ?? document.domain.summary) && <p className="b10x-graph__description">{description ?? document.domain.summary}</p>}
+          {(description ?? document.domain.summary) && <p className="b10x-graph__description">{description ?? markdownCode(document.domain.summary)}</p>}
         </div>
         {legend}
       </header>}
@@ -398,7 +402,7 @@ function DomainGraphView({document, layout, title, description, caption, variant
                 tabIndex={0}
                 role="button"
                 aria-pressed={pinned === entity.id}
-                aria-label={`Entity ${entity.name}${entity.summary ? `. ${entity.summary}` : ''}`}
+                aria-label={`Entity ${entity.name}${entity.summary ? `. ${markdownCodeText(entity.summary)}` : ''}`}
                 aria-describedby={isCurrent ? `${base}-tooltip` : undefined}
                 onPointerEnter={() => setHovered(entity.id)}
                 onPointerLeave={() => setHovered(null)}
@@ -465,7 +469,7 @@ function DomainTooltip({id, placed, layout, document}: {id: string; placed: Doma
   return <div className="b10x-graph__tooltip b10x-graph__tooltip--entity" role="tooltip" id={id} style={tooltipPosition(placed, layout.width, layout.height)}>
     <p className="b10x-graph__tooltip-kicker">Entity</p>
     <p className="b10x-graph__tooltip-name"><code>{entity.name}</code></p>
-    {entity.summary && <p className="b10x-graph__tooltip-text">{entity.summary}</p>}
+    {entity.summary && <p className="b10x-graph__tooltip-text">{markdownCode(entity.summary)}</p>}
     <TooltipSection title="Fields">
       <ul className="b10x-graph__fields">
         <li><code>{entity.identity.name}</code><span>{entity.identity.type}</span><b>identity</b></li>
@@ -567,6 +571,47 @@ function tooltipPosition(placed: {x: number; y: number; width: number; height: n
 
 function GraphError({kind, message}: {kind: string; message: string}): ReactNode {
   return <aside className="b10x-callout b10x-callout--danger b10x-graph-error" role="alert"><p className="b10x-callout__title b10x-eyebrow">Cannot render {kind}</p><div className="b10x-callout__content"><p><code>{message}</code></p></div></aside>;
+}
+
+/**
+ * Splits CommonMark code spans out of generated prose: a run of backticks opens a span that the
+ * next run of the same length closes, one space is trimmed from each end when both ends have one,
+ * and a backslash before a backtick keeps it literal. An unmatched run stays as text.
+ */
+function codeSpans(value: string): Array<{code: boolean; text: string}> {
+  const parts: Array<{code: boolean; text: string}> = [];
+  let plain = '';
+  let index = 0;
+  const runEnd = (at: number): number => { let end = at; while (value[end] === '`') end++; return end; };
+  while (index < value.length) {
+    if (value[index] === '\\' && value[index + 1] === '`') { plain += '`'; index += 2; continue; }
+    if (value[index] !== '`') { plain += value[index]; index++; continue; }
+    const open = runEnd(index);
+    let close = -1;
+    for (let at = value.indexOf('`', open); at >= 0; at = value.indexOf('`', runEnd(at))) {
+      if (runEnd(at) - at === open - index) { close = at; break; }
+    }
+    if (close < 0) { plain += value.slice(index, open); index = open; continue; }
+    let code = value.slice(open, close).replace(/\r?\n/g, ' ');
+    if (code.length > 2 && code.startsWith(' ') && code.endsWith(' ') && code.trim()) code = code.slice(1, -1);
+    if (plain) parts.push({code: false, text: plain});
+    plain = '';
+    parts.push({code: true, text: code});
+    index = close + (open - index);
+  }
+  if (plain) parts.push({code: false, text: plain});
+  return parts;
+}
+
+/** Generated prose with its `code` spans rendered; a string without one comes back unchanged. */
+function markdownCode(value: string | undefined): ReactNode {
+  if (!value || !value.includes('`')) return value;
+  return codeSpans(value).map((part, index) => part.code ? <code key={index}>{part.text}</code> : part.text);
+}
+
+/** The same prose as plain text, for an accessible name: the code spans keep their words, not their backticks. */
+function markdownCodeText(value: string): string {
+  return value.includes('`') ? codeSpans(value).map((part) => part.text).join('') : value;
 }
 
 function classes(...values: Array<string | false | null | undefined>): string {

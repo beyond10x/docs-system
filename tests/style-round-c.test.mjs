@@ -256,9 +256,11 @@ test('P15: the fit toggle is client-only, hero graphs scale to fit, and the hero
   assert.doesNotMatch(full, /b10x-graph__fit/);
   assert.match(full, /min-width:\d+px/);
   const hero = render(createElement(ProtocolGraph, {data: protocol, variant: 'hero'}));
-  // The hero scales to fit but never below 0.8, so labels stay legible; a wider graph scrolls.
+  // Since 0.12.1 (s2-01) the hero scales all the way down to fit: the 0.8 floor overflowed into a
+  // card that cut the graph instead of scrolling it.
   const [, max, min] = hero.match(/b10x-graph__canvas" style="max-width:(\d+)px;min-width:(\d+)px"/).map(Number);
-  assert.equal(min, Math.ceil(max * 0.8));
+  assert.ok(max > 0);
+  assert.equal(min, 0);
   assert.doesNotMatch(hero, /Protocol as text/);
   assert.match(render(createElement(DomainGraph, {data: await readJson('data/commission.domain-graph.json')})), /Domain as text/);
   const components = await css('product-components.css');

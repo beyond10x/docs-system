@@ -231,8 +231,9 @@ aliases deterministic: `sh` becomes `bash`, `console` becomes `shell-session`, a
 `yaml`. Unknown project-specific grammars are retained instead of silently losing highlighting.
 `describeMarkdownFenceLanguage` adds the canonical visible label and distinguishes commands,
 terminal transcripts, plain output, and source. `CommandExample` always uses `shell-session`;
-`CodeExample` normalizes the requested language. The shared tokens apply the same labelled,
-horizontally scrollable code surface to ordinary Docusaurus Markdown fences.
+`CodeExample` normalizes the requested language. The shared tokens apply the same labelled code
+surface to ordinary Docusaurus Markdown fences; a line wider than the block wraps inside it with a
+2ch hanging indent, so nothing is cut at the edge.
 
 `OpenApiReference` is an embeddable section, never a page landmark. It defaults to an h2 and can sit
 under an existing documentation h2 without introducing another h1 or `main`:
@@ -339,7 +340,10 @@ in white on the product's ink, ringed with its hue, or on the family green witho
 neither the config nor the `favicon` option names one, an empty `.nojekyll` at the root of the build
 output when the build has none, the
 chips pass and status admonition keywords to the docs and pages plugins, Prism themes whose every
-token clears 4.5:1 on its code surface with the kind-gutter magic comments, and a dark default that
+token clears 4.5:1 on its code surface with the kind-gutter magic comments, a `console` Prism
+language (a fence of bare commands is highlighted as Bash with a drawn `$ ` prompt that is neither
+selected nor copied; a transcript that writes its own prompts is highlighted as `shell-session`),
+and a dark default that
 still follows the reader's system setting. The landing page renders at `/`, so the docs plugin moves to `routeBasePath: 'docs'`.
 
 `product.json` is a `b10x-product-landing/1` document: the promise (one entry per line, the last one

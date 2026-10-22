@@ -25,7 +25,7 @@ function theme(palette: CodePalette): PrismTheme {
     plain: {color: palette.text, backgroundColor: palette.background},
     styles: [
       {types: ['comment', 'prolog', 'doctype', 'cdata'], style: {color: palette.comment, fontStyle: 'italic'}},
-      {types: ['punctuation', 'operator'], style: {color: palette.punctuation}},
+      {types: ['punctuation', 'operator', 'console-prompt'], style: {color: palette.punctuation}},
       {types: ['keyword', 'selector', 'important', 'atrule', 'tag', 'deleted'], style: {color: palette.keyword}},
       {types: ['string', 'char', 'attr-value', 'regex', 'url', 'inserted'], style: {color: palette.string}},
       {types: ['number', 'boolean', 'constant', 'symbol', 'lifetime-annotation'], style: {color: palette.literal}},

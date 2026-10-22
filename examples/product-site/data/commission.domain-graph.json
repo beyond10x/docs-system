@@ -3,7 +3,7 @@
   "domain": {
     "id": "commission.responsibility",
     "display": "Responsibility",
-    "summary": "An agent revision commissioned to a durable case. The governor owns the case's truth and returns a frontier; a run is one bounded period of execution against it. The executor proposes; it never completes a case.",
+    "summary": "An agent revision commissioned to a durable case. The governor owns the case's truth and returns a `frontier`; a run is one bounded period of execution against it. The executor proposes; it never completes a case.",
     "system": "commission",
     "source": "commission ess/ compiled with ess 0.52.0"
   },

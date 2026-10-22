@@ -1,12 +1,17 @@
 import type { ReactNode } from 'react';
 /**
- * `default` is the documentation figure. `hero` is the compact landing-page art: scaled to fit its
- * column but never below `HERO_MIN_SCALE` (a wider graph is cropped at the column edge and scrolls),
- * no header, tooltip or text table (the full figure and its table live further down the page), and
- * edges that draw once when motion is allowed.
+ * `default` is the documentation figure. `hero` is the compact landing-page art: never wider than
+ * its design size and scaled down to fit its column, so no part of the graph is ever cut at the
+ * column edge; no header, tooltip or text table (the full figure and its table live further down
+ * the page), and edges that draw once when motion is allowed.
  */
 export type GraphVariant = 'default' | 'hero';
-/** The smallest hero scale: 13 px node names stay at least 10 px on screen. */
+/**
+ * The scale under which a hero graph used to stop shrinking and overflow its column instead.
+ *
+ * @deprecated Since 0.12.1 the hero always fits its column, because the overflow was cut at the
+ * card edge rather than scrolled. Kept for consumers that import it; nothing reads it.
+ */
 export declare const HERO_MIN_SCALE = 0.8;
 export interface ProtocolGraphProps {
     /** A `b10x-protocol-graph/1` document, usually imported from the repository's generated JSON. */
