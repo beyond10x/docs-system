@@ -12,7 +12,7 @@ source:
 journeys: [understand, plan-work, specify, build-agents]
 affected:
   repositories: [aep, agentic-principles, docs-system, ess, harness, website]
-  surfaces: [aep/docs, agentic-principles/docs, docs-system/docs, ess/docs, harness/docs, website/docs]
+  surfaces: [aep/docs, agentic-principles/docs, docs-system/docs, ess/docs, website/docs]
   components: [docs-system/collector, website/source-collector]
 relations:
   - target: surface:website/docs
