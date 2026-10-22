@@ -12,7 +12,7 @@ import type {ProductId} from './product-palette.js';
 export interface FamilyMember {
   id: ProductId;
   name: string;
-  /** Unique letter mark: C, El, L, Co, Es. */
+  /** Unique letter mark: C, El, L, Co, Es, A2A. */
   mark: string;
   /** A few words, for the switcher and the family strip. */
   tagline: string;
@@ -24,7 +24,7 @@ export interface FamilyMember {
 }
 
 /** Family order. ELS and ESS are never adjacent (their hues are the closest pair, style plan § 4). */
-export const FAMILY_ORDER: readonly ProductId[] = ['canon', 'els', 'loom', 'commission', 'ess'];
+export const FAMILY_ORDER: readonly ProductId[] = ['canon', 'els', 'loom', 'commission', 'ess', 'a2a'];
 
 /** The GitHub repository and project-site path, where they differ from the product id (the id is
  * the palette key and stays stable across a repository rename). */
@@ -36,6 +36,7 @@ const COPY: Record<ProductId, Pick<FamilyMember, 'tagline' | 'description'>> = {
   loom: {tagline: 'Native agent harness', description: 'The native agent harness: a model that acts, only inside its frontier.'},
   commission: {tagline: 'Agents you can give responsibility to', description: 'Build agents you can give responsibility to: a reusable agent revision bound to a durable case, under a governor.'},
   ess: {tagline: 'Executable system specifications', description: 'Executable system specifications: the contract every product here is held to.'},
+  a2a: {tagline: 'The A2A protocol as a specification', description: 'The A2A (Agent2Agent) protocol as an executable ESS specification, with OpenAPI, AsyncAPI and JSON Schema documents and a Rust crate generated from it.'},
 };
 
 export const FAMILY: Readonly<Record<ProductId, FamilyMember>> = Object.fromEntries(FAMILY_ORDER.map((id) => [id, {

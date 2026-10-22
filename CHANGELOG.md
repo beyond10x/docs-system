@@ -6,6 +6,26 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-10-22
+
+### Added
+
+- `a2a` is a product: `product: 'a2a'` gives the A2A mark and its signature (hue `#db6a98` light,
+  `#c664a8` dark; ink `#8a3a64` at 7.32:1 on white, `#f7c8dd` at 10.95:1 on the dark surface), it
+  joins the family strip after ESS, and a related section can name it. The hues pass the
+  categorical checks in family order, which a new test runs on every signature.
+- `favicon` option of `withProductSite`: a path under one of the site's static directories,
+  passed to Docusaurus as `favicon`. A `favicon` already set in the config wins.
+
+### Fixed
+
+- A product site without a favicon serves a generated SVG at `<baseUrl>b10x-favicon.svg`: the
+  mark in white on the product's ink, ringed with its hue, or on the family green without a
+  product. Browsers had requested `/favicon.ico` and logged a 404.
+- The build output always carries an empty `.nojekyll` at its root, so a GitHub Pages branch
+  deployment does not run Jekyll, which drops every path that starts with `_`. A `.nojekyll`
+  the site's static directory already provides is kept.
+
 ## [0.11.1] - 2026-10-22
 
 ### Fixed

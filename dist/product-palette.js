@@ -19,13 +19,14 @@ export const TRUTH = {
     light: { true: '#139e6f', unknown: '#c98500', false: '#ac312a' },
     dark: { true: '#34aa7c', unknown: '#bb881a', false: '#b24039' },
 };
-/** Family order Canon, ELS, Loom, Commission, ESS; ELS and ESS are never adjacent. */
+/** Family order Canon, ELS, Loom, Commission, ESS, a2a; ELS and ESS are never adjacent. */
 export const PRODUCT_SIGNATURES = {
     canon: { name: 'Canon', mark: 'C', hue: { light: '#26996e', dark: '#3ba97d' }, ink: { light: '#17684a', dark: '#b6e5ce' } },
     els: { name: 'Engineering protocols', mark: 'El', hue: { light: '#a06b01', dark: '#a36e09' }, ink: { light: '#744c00', dark: '#f0cea1' } },
     loom: { name: 'Loom', mark: 'L', hue: { light: '#0e5794', dark: '#4296e7' }, ink: { light: '#23588a', dark: '#b7d8fb' } },
     commission: { name: 'Commission', mark: 'Co', hue: { light: '#946fbd', dark: '#885cb5' }, ink: { light: '#624581', dark: '#ddcbf5' } },
     ess: { name: 'ESS', mark: 'Es', hue: { light: '#8c352a', dark: '#a95043' }, ink: { light: '#843d33', dark: '#f9c6bd' } },
+    a2a: { name: 'a2a', mark: 'A2A', hue: { light: '#db6a98', dark: '#c664a8' }, ink: { light: '#8a3a64', dark: '#f7c8dd' } },
 };
 export function isProductId(value) {
     return typeof value === 'string' && value in PRODUCT_SIGNATURES;

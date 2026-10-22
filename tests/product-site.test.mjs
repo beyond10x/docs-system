@@ -527,7 +527,7 @@ test('#25: withProductSite serves a default share card unless the site sets one'
   assert.equal(plain.themeConfig.image, 'b10x-social/card.png');
   assert.ok(plain.staticDirectories.some(directory => directory.endsWith(path.join('styles', 'social'))));
   assert.ok(plain.staticDirectories.includes('static'));
-  const own = withProductSite({title: 'X', themeConfig: {image: 'img/own.png'}}, {mark: 'X', fonts: false});
+  const own = withProductSite({title: 'X', favicon: 'img/own.svg', themeConfig: {image: 'img/own.png'}}, {mark: 'X', fonts: false});
   assert.equal(own.themeConfig.image, 'img/own.png');
   assert.equal(own.staticDirectories, undefined);
   const unset = withProductSite({title: 'X', themeConfig: {image: undefined}}, {mark: 'X', fonts: false});
