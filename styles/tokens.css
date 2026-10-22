@@ -332,6 +332,7 @@ pre[class*='language-'] {
 .theme-code-block.language-python { --b10x-code-label: 'Python'; }
 .theme-code-block.language-rust { --b10x-code-label: 'Rust'; }
 .theme-code-block.language-shell-session { --b10x-code-label: 'Terminal'; }
+.theme-code-block.language-console { --b10x-code-label: 'Terminal'; }
 .theme-code-block.language-toml { --b10x-code-label: 'TOML'; }
 .theme-code-block.language-yaml { --b10x-code-label: 'YAML'; }
 .theme-code-block.language-css { --b10x-code-label: 'CSS'; }
@@ -342,7 +343,7 @@ pre[class*='language-'] {
 .theme-code-block.language-typescript { --b10x-code-label: 'TypeScript'; }
 .theme-code-block.language-tsx { --b10x-code-label: 'TSX'; }
 
-:is(.theme-code-block, pre[class*='language-']):is(.language-bash, .language-powershell),
+:is(.theme-code-block, pre[class*='language-']):is(.language-bash, .language-powershell, .language-console),
 :is(.b10x-code, .b10x-command)[data-b10x-code-kind='command'] { --b10x-code-accent: var(--b10x-color-lime); }
 :is(.theme-code-block, pre[class*='language-']).language-diff { --b10x-code-accent: var(--b10x-color-warning); }
 :is(.theme-code-block, pre[class*='language-']).language-text,
@@ -385,7 +386,7 @@ pre[class*='language-'] {
   margin: 0;
   border: 0;
   border-radius: 0 !important;
-  /* A line wider than the block scrolls, and an edge shadow marks the hidden side, as on a wide table. */
+  /* Lines wrap (below). A line that still cannot, in a pre outside the wrap rule, scrolls and an edge shadow marks the hidden side. */
   background:
     linear-gradient(to right, var(--prism-background-color, var(--b10x-color-surface-muted)) 30%, transparent) left / 2.5rem 100% no-repeat local,
     linear-gradient(to left, var(--prism-background-color, var(--b10x-color-surface-muted)) 30%, transparent) right / 2.5rem 100% no-repeat local,
@@ -398,6 +399,15 @@ pre[class*='language-'] {
 :where(pre[class*='language-'], code[class*='language-'], .prism-code) { font-family: var(--b10x-font-mono) !important; font-variant-ligatures: none; tab-size: 2; }
 :where(pre[class*='language-'], .prism-code) { line-height: 1.65; }
 .theme-code-block :where(code, [class*='codeBlockLines']) { overflow-wrap: normal; word-break: normal; }
+/* A line wider than the block wraps inside it, at a space where it can, and its continuation rows hang 2ch in, so nothing is cut at the edge. */
+.theme-code-block pre[class*='language-'] > code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.theme-code-block { --b10x-code-hang: 2ch; }
+.theme-code-block .token-line:not(.theme-code-block-highlighted-line, [class*='codeLine']),
+.theme-code-block [class*='codeLineContent'] { padding-inline-start: var(--b10x-code-hang); text-indent: calc(-1 * var(--b10x-code-hang)); }
+.theme-code-block .theme-code-block-highlighted-line:not([class*='codeLine']) { padding-inline-start: calc(var(--ifm-pre-padding) + var(--b10x-code-hang)); text-indent: calc(-1 * var(--b10x-code-hang)); }
+/* A console block's prompt is drawn, not written: it cannot be selected and the copy button copies the source without it. The Prism themes colour it as punctuation. */
+.theme-code-block .token.console-prompt,
+.theme-code-block.language-console .token.shell-symbol { -webkit-user-select: none; user-select: none; }
 .theme-code-block ::selection,
 pre[class*='language-'] ::selection { background: var(--b10x-code-selection); }
 .theme-code-block pre:focus-visible { outline: 2px solid var(--b10x-color-focus); outline-offset: -2px; }

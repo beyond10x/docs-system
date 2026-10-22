@@ -440,6 +440,32 @@ test('ProtocolGraph and DomainGraph render accessible static SVG, and refuse bad
   assert.match(refused, /role="alert"[\s\S]*Cannot render protocol graph/);
 });
 
+test('s2-02: a graph description written in Markdown renders its code spans instead of backticks', async () => {
+  const data = await readJson('data/commission.domain-graph.json');
+  const domain = renderToStaticMarkup(createElement(DomainGraph, {data}));
+  assert.match(domain, /<p class="b10x-graph__description">[^<]*returns a <code>frontier<\/code>; a run/);
+  assert.doesNotMatch(domain, /`/, 'no backtick reaches the page');
+  const spans = renderToStaticMarkup(createElement(DomainGraph, {data: {...data,
+    domain: {...data.domain, summary: 'Reads ``a `b` c`` and `` ` `` and \\`not code\\`; a lone ` stays.'},
+    entities: data.entities.map((entity, index) => index ? entity : {...entity, summary: 'Owns the `frontier`.'})}}));
+  assert.match(spans, /Reads <code>a `b` c<\/code> and <code>`<\/code> and `not code`; a lone ` stays\./);
+  assert.match(spans, /aria-label="Entity Agent\. Owns the frontier\."/);
+  const graph = await readJson('data/software-change.protocol-graph.json');
+  const protocol = renderToStaticMarkup(createElement(ProtocolGraph, {data: {...graph,
+    nodes: graph.nodes.map((node, index) => index ? node : {...node, description: 'Change `src/` on a branch.'})}}));
+  assert.match(protocol, /<td>Change <code>src\/<\/code> on a branch\.<\/td>/);
+  assert.match(protocol, /aria-label="Action repository\.edit\. Change src\/ on a branch\."/);
+  const prose = renderToStaticMarkup(createElement(DomainGraph, {data, description: 'Given `as is`.'}));
+  assert.match(prose, /Given `as is`\./, 'a description the page passes in is the author\'s and renders unchanged');
+});
+
+test('s2-01: a hero graph is never wider than its column; it scales down instead of being cut', async () => {
+  for (const [component, file] of [[DomainGraph, 'data/commission.domain-graph.json'], [ProtocolGraph, 'data/software-change.protocol-graph.json']]) {
+    const hero = renderToStaticMarkup(createElement(component, {data: await readJson(file), variant: 'hero'}));
+    assert.match(hero, /class="b10x-graph__canvas" style="max-width:\d+px;min-width:0px"/, `${file}: the hero canvas has no minimum width`);
+  }
+});
+
 test('Terminal renders recorded and quoted sessions with a commands-only copy control', async () => {
   const session = await readJson('data/canon.terminal.json');
   const markup = renderToStaticMarkup(createElement(Terminal, {session}));

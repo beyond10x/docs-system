@@ -373,39 +373,106 @@ check('s2-07', 'code in a table header cell keeps its case and renders at 12 px 
   }
 });
 
-check('s1-05', 'a code block with a line wider than the block marks the hidden side with an edge shadow', async () => {
-  for (const theme of themes) {
-    const {page, close} = await open('docs/code', {theme});
+check('s2-01', 'a hero graph fits its card at every width: nothing is cut at the right edge and nothing scrolls', async () => {
+  for (const width of [1440, 996, 390]) {
+    const {page, errors, close} = await open('heroes', {width});
+    try {
+      const heroes = await page.evaluate(() => [...document.querySelectorAll('.b10x-graph--hero')].map(figure => {
+        const viewport = figure.querySelector('.b10x-graph__viewport');
+        const svg = figure.querySelector('.b10x-graph__svg').getBoundingClientRect();
+        const frame = viewport.getBoundingClientRect();
+        const aside = figure.closest('.b10x-hero-art').getBoundingClientRect();
+        return {kind: figure.classList.contains('b10x-domain-graph') ? 'domain' : 'protocol', overflow: viewport.scrollWidth - viewport.clientWidth, svgRight: Math.round(svg.right), frameRight: Math.round(frame.right), figureRight: Math.round(figure.getBoundingClientRect().right), asideRight: Math.round(aside.right), page: document.documentElement.clientWidth};
+      }));
+      assert.deepEqual(heroes.map(hero => hero.kind).sort(), ['domain', 'protocol'], `${width}px: the showcase has a domain and a protocol hero graph`);
+      for (const hero of heroes) {
+        assert.ok(hero.overflow <= 1, `${width}px ${hero.kind} hero scrolls by ${hero.overflow}px`);
+        assert.ok(hero.svgRight <= hero.frameRight + 1 && hero.frameRight <= hero.figureRight + 1 && hero.figureRight <= hero.asideRight + 1 && hero.asideRight <= hero.page, `${width}px ${hero.kind} hero: the graph ends at ${hero.svgRight}, its frame at ${hero.frameRight}, the card at ${hero.figureRight}, the aside at ${hero.asideRight}, the page at ${hero.page}`);
+      }
+      assert.deepEqual(errors, []);
+    } finally { await close(); }
+  }
+});
+
+check('s4-01', 'a code line wider than the block wraps inside it with a hanging indent, so no edge or fade hides any of it', async () => {
+  // Replaces s1-05 (0.11.1), which marked a scrolled-off line with an edge shadow the review found too faint to notice.
+  for (const width of [1440, 390]) for (const theme of themes) {
+    const {page, close} = await open('docs/code', {width, theme});
     try {
       await page.locator('.theme-code-block [class*="buttonGroup"] button').first().waitFor();
-      // Sampled on a blank, unhighlighted line near the middle, where the shadow is deepest and no glyph sits.
-      const blocks = await page.evaluate(() => [...document.querySelectorAll('.theme-code-block pre')].map((pre, index) => ({
-        index, wide: pre.scrollWidth > pre.clientWidth + 1,
-        blank: [...pre.querySelectorAll('.token-line')].some(line => !line.textContent.trim() && !line.matches('.theme-code-block-highlighted-line')),
-      })));
-      const wide = blocks.find(block => block.wide && block.blank); const fits = blocks.find(block => !block.wide && block.blank);
-      assert.ok(wide && fits, `${theme}: the example has a code block wider than the column and one that fits, each with a blank line`);
-      const edges = async index => {
-        const pre = page.locator('.theme-code-block pre').nth(index);
-        await pre.scrollIntoViewIfNeeded();
-        await page.waitForTimeout(300);
-        const box = await pre.boundingBox();
-        const y = await pre.evaluate(element => {
-          const middle = element.getBoundingClientRect().top + element.clientHeight / 2;
-          const lines = [...element.querySelectorAll('.token-line')].filter(line => !line.textContent.trim() && !line.matches('.theme-code-block-highlighted-line')).map(line => line.getBoundingClientRect());
-          return lines.map(line => line.top + line.height / 2).sort((one, two) => Math.abs(one - middle) - Math.abs(two - middle))[0];
+      const blocks = await page.evaluate(() => [...document.querySelectorAll('.theme-code-block pre')].map((pre, index) => {
+        const rows = [...pre.querySelectorAll('.token-line')].filter(line => line.textContent.trim() && !line.matches('.theme-code-block-highlighted-line')).map(line => {
+          const range = document.createRange(); range.selectNodeContents(line);
+          const rects = [...range.getClientRects()].filter(rect => rect.width > 0);
+          const first = rects[0];
+          const later = rects.filter(rect => rect.top > first.top + first.height / 2);
+          return {text: line.textContent.slice(0, 30), indented: /^\s/.test(line.textContent), first: first.left, next: later.length ? Math.min(...later.map(rect => rect.left)) : null};
         });
-        const [left, middle, right] = await pixels(page, box, Math.round(y), [2, box.width * 0.6, box.width - 3]);
-        return {left: distance(left, middle), right: distance(right, middle), at: `${Math.round(box.x)},${Math.round(y)} ${JSON.stringify([left, middle, right])}`};
-      };
-      const start = await edges(wide.index);
-      assert.ok(start.right > 12 && start.left <= 3, `${theme}: at the start the right edge differs from the ground by ${start.right}, the left by ${start.left} (${start.at})`);
-      await page.locator('.theme-code-block pre').nth(wide.index).evaluate(pre => { pre.scrollLeft = pre.scrollWidth; });
+        return {index, overflow: pre.scrollWidth - pre.clientWidth, wrapped: rows.filter(row => row.next !== null)};
+      }));
+      const where = `${width}px ${theme}`;
+      for (const block of blocks) assert.ok(block.overflow <= 1, `${where}: block ${block.index} scrolls by ${block.overflow}px`);
+      const wrapped = blocks.flatMap(block => block.wrapped);
+      assert.ok(wrapped.length > 0, `${where}: the example has a line wider than its block`);
+      for (const row of wrapped.filter(row => !row.indented)) assert.ok(row.next - row.first >= 8, `${where}: "${row.text}" continues ${Math.round(row.next - row.first)}px in from its first row`);
+      const yaml = page.locator('.theme-code-block pre').first();
+      await yaml.scrollIntoViewIfNeeded();
       await page.waitForTimeout(300);
-      const end = await edges(wide.index);
-      assert.ok(end.left > 12 && end.right <= 3, `${theme}: at the end the left edge differs from the ground by ${end.left}, the right by ${end.right} (${end.at})`);
-      const still = await edges(fits.index);
-      assert.ok(still.left <= 3 && still.right <= 3, `${theme}: a block that fits paints its edges ${still.left}/${still.right} away from its ground`);
+      const box = await yaml.boundingBox();
+      const y = await yaml.evaluate(element => {
+        const middle = element.getBoundingClientRect().top + element.clientHeight / 2;
+        const lines = [...element.querySelectorAll('.token-line')].filter(line => !line.textContent.trim() && !line.matches('.theme-code-block-highlighted-line')).map(line => line.getBoundingClientRect());
+        return lines.map(line => line.top + line.height / 2).sort((one, two) => Math.abs(one - middle) - Math.abs(two - middle))[0];
+      });
+      const [left, middle, right] = await pixels(page, box, Math.round(y), [2, box.width * 0.6, box.width - 3]);
+      assert.ok(distance(left, middle) <= 3 && distance(right, middle) <= 3, `${where}: a block that fits paints its edges ${distance(left, middle)}/${distance(right, middle)} away from its ground`);
+    } finally { await close(); }
+  }
+});
+
+check('s5-03', 'a console block is highlighted as a shell with a prompt that is neither selected nor copied', async () => {
+  for (const width of [1440, 390]) {
+    const {page, errors, close} = await open('docs/code', {width});
+    try {
+      await page.context().grantPermissions(['clipboard-read', 'clipboard-write'], {origin: new URL(server.url).origin});
+      const blocks = page.locator('.theme-code-block.language-console');
+      // Colours are read after hydration has applied the reader's theme, and after its transition.
+      await blocks.first().locator('[class*="buttonGroup"] button').first().waitFor({state: 'attached'});
+      await page.waitForFunction(() => {
+        const pre = document.querySelector('.theme-code-block.language-console pre');
+        return [...pre.querySelectorAll('.token.function')].some(token => getComputedStyle(token).color !== getComputedStyle(pre).color);
+      }, null, {timeout: 5000}).catch(() => {});
+      await page.waitForTimeout(300);
+      assert.equal(await blocks.count(), 2, `${width}px: the example has a command block and a transcript`);
+      const facts = await blocks.evaluateAll(elements => elements.map(element => {
+        const pre = element.querySelector('pre');
+        const plain = getComputedStyle(pre).color;
+        const prompts = [...element.querySelectorAll('.token.console-prompt, .token.shell-symbol')];
+        const selection = getSelection(); selection.removeAllRanges(); const range = document.createRange(); range.selectNodeContents(pre); selection.addRange(range);
+        const selected = selection.toString(); selection.removeAllRanges();
+        return {
+          label: getComputedStyle(element, '::before').content,
+          prompts: prompts.map(prompt => ({text: prompt.textContent, select: getComputedStyle(prompt).userSelect, visible: prompt.getBoundingClientRect().width > 0})),
+          colours: new Set([...pre.querySelectorAll('.token')].filter(token => token.textContent.trim()).map(token => getComputedStyle(token).color).filter(colour => colour !== plain)).size,
+          selected,
+        };
+      }));
+      const [commands, transcript] = facts;
+      assert.ok(commands.colours >= 3, `${width}px: the command block shows ${commands.colours} token colours besides plain text`);
+      assert.ok(transcript.colours >= 1, `${width}px: the transcript shows ${transcript.colours} token colours besides plain text`);
+      for (const block of facts) {
+        assert.equal(block.label, '"Terminal"', `${width}px: a console block is labelled ${block.label}`);
+        assert.ok(block.prompts.length >= 1 && block.prompts.every(prompt => prompt.visible && prompt.select === 'none'), `${width}px: prompts ${JSON.stringify(block.prompts)}`);
+      }
+      assert.deepEqual(commands.prompts.map(prompt => prompt.text), ['$ ', '$ '], `${width}px: each command, not the comment or the continuation, gets a drawn prompt`);
+      assert.doesNotMatch(commands.selected, /\$/, `${width}px: selecting the command block selects no prompt`);
+      assert.equal(transcript.prompts.length, 1, `${width}px: the transcript keeps its own prompt`);
+      const copy = blocks.first().locator('button[aria-label*="Copy" i]');
+      await blocks.first().hover();
+      await copy.click();
+      const copied = await page.evaluate(() => navigator.clipboard.readText());
+      assert.equal(copied, 'cargo install --locked --path crates/canon-cli\n# check one protocol\ncanon validate --path fixtures/investigation/protocol.yaml \\\n  --format json', `${width}px: the copy button copies the commands without a prompt`);
+      assert.deepEqual(errors, []);
     } finally { await close(); }
   }
 });
