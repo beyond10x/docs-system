@@ -187,6 +187,8 @@ a { text-underline-offset: 4px; }
 
 .main-wrapper { background: var(--b10x-color-canvas); }
 .theme-doc-markdown { font-size: 1rem; }
+/* With no table of contents beside it (theme/DocItem/Layout), the doc column takes the row instead of the theme's 75%. */
+@media (min-width: 997px) { .b10x-doc-item--no-toc > .row > .col { max-width: 100% !important; } }
 .markdown h1,
 .markdown > header > h1 { margin-bottom: 1.4rem; font-weight: 620; line-height: 1.1; letter-spacing: -0.045em; }
 .markdown h2 { margin-top: 3rem; padding-top: 2.4rem; border-top: 1px solid var(--b10x-color-hairline); font-weight: 580; line-height: 1.2; letter-spacing: -0.035em; }

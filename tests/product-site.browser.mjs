@@ -408,6 +408,52 @@ check('s1-05', 'a code block with a line wider than the block marks the hidden s
   }
 });
 
+check('ess-viewer-width', 'a contract explorer page gets the full doc row and the viewer stacks on its own width', async () => {
+  // Reading-pane text width on 0.11.0: 453/333/141 px. The pane must keep at least 600 px at each width.
+  for (const width of [1440, 1280, 1024]) {
+    const {page, errors, close} = await open('docs/contracts', {width});
+    try {
+      await page.waitForSelector('.b10x-contract-page h3');
+      const layout = await page.evaluate(() => {
+        const column = document.querySelector('.b10x-doc-item--no-toc > .row > .col');
+        const pane = document.querySelector('.b10x-contract-page'); const style = getComputedStyle(pane);
+        const sidebar = getComputedStyle(document.querySelector('.b10x-contract-sidebar'));
+        const title = getComputedStyle(document.querySelector('.b10x-contract-header h2'));
+        return {
+          column: column && column.getBoundingClientRect().width, row: column && column.parentElement.getBoundingClientRect().width,
+          toc: !!document.querySelector('.theme-doc-toc-desktop'),
+          text: pane.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight), wrap: style.overflowWrap,
+          sticky: sidebar.position, titleBorder: title.borderTopWidth, titlePadding: title.paddingTop,
+        };
+      });
+      assert.equal(layout.toc, false, `${width}px: the example page renders no table of contents`);
+      assert.ok(layout.column && Math.abs(layout.column - layout.row) <= 1, `${width}px: the doc column is ${layout.column}px of a ${layout.row}px row`);
+      assert.ok(layout.text >= 600, `${width}px: the reading pane has ${layout.text}px for text`);
+      assert.equal(layout.wrap, 'break-word', `${width}px: the pane breaks words with ${layout.wrap}`);
+      assert.equal(layout.sticky, width > 1024 ? 'sticky' : 'static', `${width}px: the contract list is ${layout.sticky}`);
+      assert.deepEqual([layout.titleBorder, layout.titlePadding], ['0px', '0px'], `${width}px: the viewer title carries the doc h2 rule`);
+      assert.deepEqual(errors, []);
+    } finally { await close(); }
+  }
+  for (const [url, toc] of [['docs/reference', true], ['docs/charts', false]]) {
+    const {page, close} = await open(url);
+    try {
+      assert.equal(await page.locator('.theme-doc-toc-desktop').count() > 0, toc, `${url}: table of contents`);
+      assert.equal(await page.locator('.b10x-doc-item--no-toc').count(), 0, `${url}: a page with headings or hide_table_of_contents keeps the theme's layout`);
+    } finally { await close(); }
+  }
+  // At 1024 px the viewport is wider than the old 800 px breakpoint and the viewer narrower than 44rem.
+  for (const [width, stacked] of [[1440, false], [1024, true]]) {
+    const {page, close} = await open('docs/contracts', {width});
+    try {
+      await page.waitForSelector('.b10x-contract-page h3');
+      const [viewer, pane] = await page.evaluate(() => ['.b10x-contract-viewer', '.b10x-contract-page'].map(selector => document.querySelector(selector).clientWidth));
+      assert.equal(viewer < 704, stacked, `${width}px: viewer ${viewer}px`);
+      assert.equal(Math.abs(viewer - pane) <= 1, stacked, `${width}px: a ${viewer}px viewer with a ${pane}px pane`);
+    } finally { await close(); }
+  }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {

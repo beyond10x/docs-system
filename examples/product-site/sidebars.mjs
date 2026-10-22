@@ -19,6 +19,7 @@ export default {
       items: [
         {type: 'doc', id: 'reference', label: 'Reference page'},
         {type: 'doc', id: 'status', label: 'Status'},
+        {type: 'doc', id: 'contracts', label: 'Contract explorer'},
       ],
     },
     {type: 'doc', id: 'adopt', label: 'Adopt the template'},
