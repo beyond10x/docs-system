@@ -14,3 +14,18 @@ export function docsEntry(plugins: Readonly<Record<string, DocsPluginData>>): st
   if (!version) return plugin?.path;
   return version.docs.find(doc => doc.id === version.mainDocId)?.path ?? version.path;
 }
+
+/**
+ * The meta description of the not-found page. Every other page carries one; a 404 without it
+ * leaves a search result or a link preview with no summary.
+ */
+export function notFoundDescription(siteTitle: string | undefined): string {
+  const title = siteTitle?.trim();
+  return title ? `There is no page at this address on ${title}. It may have moved, or the link is out of date.` : 'There is no page at this address. It may have moved, or the link is out of date.';
+}
+
+/**
+ * A 404 has no address of its own to name as canonical, so the page asks search engines not to
+ * index it instead.
+ */
+export const NOT_FOUND_ROBOTS = 'noindex';

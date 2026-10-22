@@ -6,6 +6,20 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+## [0.12.2] - 2026-10-23
+
+### Fixed
+
+- Short inline code with a space or hyphen (24 characters or fewer, such as `cargo install`) stays
+  on one line instead of breaking at its space; longer spans still wrap at spaces, and code in a
+  table cell is unchanged. The rehype chips plugin marks such spans `b10x-code-short`.
+- A protocol kind written as inline code in prose, such as an `evidence` field in a type list,
+  stays code instead of becoming a kind chip with a document-like glyph. Kind chips still come from
+  a table cell whose whole text is the kind, and from `<Kind>` anywhere; truth and status chips are
+  unchanged.
+- The not-found page carries a meta description, as every other page does. A canonical link does
+  not fit a page that has no address of its own, so the page is marked `robots: noindex` instead.
+
 ## [0.12.1] - 2026-10-22
 
 ### Fixed
@@ -325,7 +339,8 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - Introduce the public manifest contract, deterministic registry CLI, Docusaurus integration,
   shared tokens, generic React components and read-only schema/diagram renderers.
 
-[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.12.1...HEAD
+[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.12.2...HEAD
+[0.12.2]: https://github.com/beyond10x/docs-system/compare/0.12.1...0.12.2
 [0.12.1]: https://github.com/beyond10x/docs-system/compare/0.12.0...0.12.1
 [0.12.0]: https://github.com/beyond10x/docs-system/compare/0.11.1...0.12.0
 [0.11.1]: https://github.com/beyond10x/docs-system/compare/0.11.0...0.11.1

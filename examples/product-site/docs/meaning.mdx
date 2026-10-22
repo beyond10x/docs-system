@@ -8,8 +8,9 @@ source: Shipped in docs-system round B; every chip here comes from plain Markdow
 import validateSession from '@site/data/canon-validate.terminal.json';
 
 Authors write plain Markdown. A table cell or inline code that is exactly `TRUE`, `FALSE` or
-`UNKNOWN`, a status word such as `shipped`, or a protocol kind such as `claim`, becomes a chip with
-its glyph. Nothing else changes.
+`UNKNOWN`, or a status word such as `shipped`, becomes a chip with its glyph. A protocol kind such
+as `claim` becomes a chip in a table cell; in prose it stays code, because a word such as
+`evidence` there is usually a field name. Nothing else changes.
 
 ## Three values
 
@@ -27,8 +28,14 @@ its glyph. Nothing else changes.
 | Evidence freshness | planned |
 
 A claim is `UNKNOWN` until applicable evidence decides it. Evidence kinds feed a `claim`; an
-`action` may produce `evidence`; claims earn an `outcome`. In MDX the same chips are
-<Truth value="true" />, <Truth value="unknown" /> and <Kind kind="obligation" />.
+`action` may produce `evidence`; claims earn an `outcome`. Those four stay code. In MDX the chips
+are <Truth value="true" />, <Truth value="unknown" /> and <Kind kind="obligation" />, a kind chip
+anywhere.
+
+| Kind | Example |
+| --- | --- |
+| `claim` | The answer cites a source for every statement |
+| `evidence` | A retrieved passage with its address |
 
 ## Status admonitions
 

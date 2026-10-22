@@ -12,7 +12,7 @@ import {countCrossings, layeredLayout} from '../dist/graph-layout.js';
 import {layoutDomainGraph, layoutProtocolGraph, parseDomainGraph, parseProtocolGraph, predicateLineText, predicateLines, protocolLineage} from '../dist/product-graphs.js';
 import {landingDescription, landingTitle, parseTerminalSession, parseTranscript} from '../dist/product-data.js';
 import {breakableToc, breakableTocLabel} from '../dist/toc.js';
-import {docsEntry} from '../dist/not-found.js';
+import {docsEntry, NOT_FOUND_ROBOTS, notFoundDescription} from '../dist/not-found.js';
 import {decisionSteps, formatDuration, parseSessionComposition, sessionKpis} from '../dist/session-data.js';
 import {productPrismDarkTheme, productPrismTheme} from '../dist/prism-themes.js';
 import {activeNavbarItem, docItemLink, navbarItemScore} from '../dist/navbar-active.js';
@@ -584,6 +584,16 @@ test('#26: the not-found page links to the main doc of the latest docs version',
   assert.equal(docsEntry({api: {path: '/x/api', versions: [version('only', false, 'gone', [])]}}), '/x/docs/only');
   assert.equal(docsEntry({api: {path: '/x/api', versions: []}}), '/x/api');
   assert.equal(docsEntry({}), undefined);
+});
+
+test('s4-02: the not-found page has a description and is not indexed', async () => {
+  assert.equal(notFoundDescription('Canon'), 'There is no page at this address on Canon. It may have moved, or the link is out of date.');
+  assert.equal(notFoundDescription('  '), 'There is no page at this address. It may have moved, or the link is out of date.');
+  assert.equal(notFoundDescription(undefined), notFoundDescription(''));
+  assert.equal(NOT_FOUND_ROBOTS, 'noindex');
+  const source = await fs.readFile(new URL('../src/theme/NotFound/Content/index.tsx', import.meta.url), 'utf8');
+  assert.match(source, /<PageMetadata description=\{notFoundDescription\(siteConfig\.title\)\}>/);
+  assert.match(source, /<meta name="robots" content=\{NOT_FOUND_ROBOTS\} \/>/);
 });
 
 test('withProductSite adds one plugin, the matched Prism themes and a dark default', () => {

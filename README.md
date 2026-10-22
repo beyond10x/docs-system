@@ -324,7 +324,9 @@ on) and `admonitionGuard` (default on: the build fails when a raw `:::kind Title
 Colour roles are reserved and validated per mode: status is an ordinal ramp with ○ ◐ ● glyphs, truth
 values carry ✓ ? ✕, protocol kinds keep the graph colours, and the product hue is identity only.
 In docs, table cells and inline code that are exactly `TRUE`, `FALSE`, `UNKNOWN`, `shipped`,
-`decided`, `planned` or a protocol kind become chips; `:::shipped[Title]` and admonitions titled
+`decided` or `planned` become chips, and a protocol kind becomes a chip in a table cell (in prose it
+stays code; use `<Kind>` for a kind chip there). Short inline code with a space or hyphen, such as
+`cargo install`, stays on one line; `:::shipped[Title]` and admonitions titled
 "Shipped …", "Decided …" or "Planned …" take the status tone. Recorded terminal sessions may carry
 `tones` (`{"passed:": "true"}`); exits show in a gutter. protocol/1 fences get a kind gutter. Sites
 using `@docusaurus/theme-mermaid` get diagrams themed from the tokens and should drop their own
@@ -333,7 +335,7 @@ using `@docusaurus/theme-mermaid` get diagrams themed from the tokens and should
 The wrapper adds the product plugin (the shared tokens plus `product-components.css` and
 `product-theme.css`, a theme path that registers the product MDX components, status admonitions and
 the `@theme/ProductLandingPage` route component, and a not-found page linking to the main doc and
-the home page), the font directory to `staticDirectories`, a
+the home page, with a meta description and `noindex`), the font directory to `staticDirectories`, a
 default 1200 × 630 share card at `<baseUrl>b10x-social/card.png` as `themeConfig.image` (a site that
 sets `themeConfig.image` keeps its own), a generated SVG favicon at `<baseUrl>b10x-favicon.svg` (the mark
 in white on the product's ink, ringed with its hue, or on the family green without a product) when
