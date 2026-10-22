@@ -26,6 +26,14 @@ All notable changes to this project are documented in this file. From 0.11.0 the
   deployment does not run Jekyll, which drops every path that starts with `_`. A `.nojekyll`
   the site's static directory already provides is kept.
 
+### Migration
+
+- From a pin at 0.2.x or earlier: an `EcosystemRegistry` entry is a `RegistrySurface`, a union
+  of the v1/v2 `DocumentationSurface` and the v3, v4 and v5 surface shapes, each with `key` and
+  `repository`. Only the v1/v2 member carries `shell`, so code that types registry entries as
+  `DocumentationSurface` fails to type-check with "Property 'shell' is missing". Type them as
+  `RegistrySurface`. The union has been in place since 0.3.0.
+
 ## [0.11.1] - 2026-10-22
 
 ### Fixed
