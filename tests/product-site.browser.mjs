@@ -1,5 +1,6 @@
 // Rendered-page checks for the product-site template, built from examples/product-site.
-// Each check names the docs-system issue it guards. PRODUCT_SITE_CHECKS=19,22 runs a subset.
+// Each check names the docs-system issue it guards, or the site-review row when there is no issue.
+// PRODUCT_SITE_CHECKS=19,22,s3-01 runs a subset.
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {productSiteServer} from './product-site-server.mjs';
@@ -7,11 +8,32 @@ import {productSiteServer} from './product-site-server.mjs';
 const server = await productSiteServer();
 const browser = await chromium.launch({headless: true, ...(process.env.B10X_CHROME_BIN ? {executablePath: process.env.B10X_CHROME_BIN} : {}), args: ['--no-sandbox', '--disable-dev-shm-usage']})
   .catch(async error => { await server.close(); throw error; });
-const only = process.env.PRODUCT_SITE_CHECKS?.split(',').map(Number);
+const only = process.env.PRODUCT_SITE_CHECKS?.split(',');
 const widths = [1440, 1280, 996, 390];
 const themes = ['light', 'dark'];
 const checks = [];
-const check = (issue, name, run) => { if (!only || only.includes(issue)) checks.push({issue, name, run}); };
+const check = (issue, name, run) => { if (!only || only.includes(String(issue))) checks.push({issue, name, run}); };
+const contrastOf = (fore, back) => {
+  // getComputedStyle gives rgb() in 0-255, and color(srgb …) in 0-1 for a color-mix() result.
+  const luminance = color => {
+    const scale = color.startsWith('color(srgb') ? 1 : 255;
+    const [r, g, b] = color.replace('color(srgb', '').match(/[\d.]+/g).slice(0, 3).map(Number).map(value => { const c = value / scale; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const [a, b] = [luminance(fore), luminance(back)];
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+};
+/** The RGB of one pixel row of the page at the given x offsets inside a box. */
+async function pixels(page, box, y, xs) {
+  const row = await page.screenshot({clip: {x: box.x, y, width: box.width, height: 1}});
+  return page.evaluate(async ({data, xs}) => {
+    const image = new Image(); image.src = `data:image/png;base64,${data}`; await image.decode();
+    const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = 1;
+    const context = canvas.getContext('2d'); context.drawImage(image, 0, 0);
+    return xs.map(x => Array.from(context.getImageData(Math.round(x * devicePixelRatio), 0, 1, 1).data.slice(0, 3)));
+  }, {data: row.toString('base64'), xs});
+}
+const distance = (one, two) => Math.max(...one.map((value, index) => Math.abs(value - two[index])));
 
 async function open(url, {width = 1440, theme = 'light', touch = false} = {}) {
   const context = await browser.newContext({viewport: {width, height: 900}, colorScheme: theme, ...(touch ? {isMobile: true, hasTouch: true} : {})});
@@ -300,6 +322,136 @@ check(28, 'a protocol graph with an input predicate renders in the browser as it
     assert.deepEqual(errors, []);
     assert.deepEqual(logged, []);
   } finally { await close(); }
+});
+
+check('s3-01', 'a link in an admonition takes the link colour and clears 4.5:1 on the admonition ground', async () => {
+  for (const theme of themes) {
+    const {page, close} = await open('docs/reference', {theme});
+    try {
+      const found = await page.evaluate(() => {
+        const link = document.querySelector('.theme-admonition p a[href]');
+        if (!link) return null;
+        const plain = document.querySelector('article .markdown').appendChild(document.createElement('a'));
+        plain.href = '#'; const linkColour = getComputedStyle(plain).color; plain.remove();
+        const box = link.closest('.theme-admonition');
+        return {colour: getComputedStyle(link).color, text: getComputedStyle(box).color, ground: getComputedStyle(box).backgroundColor, linkColour};
+      });
+      assert.ok(found, 'the example has a link in an admonition paragraph');
+      assert.equal(found.colour, found.linkColour, `${theme}: the admonition link is ${found.colour}, a page link ${found.linkColour}, the admonition text ${found.text}`);
+      const contrast = contrastOf(found.colour, found.ground);
+      assert.ok(contrast >= 4.5, `${theme}: the admonition link clears ${contrast.toFixed(2)}:1 on ${found.ground}`);
+    } finally { await close(); }
+  }
+});
+
+check('s2-06', 'status badges render at 12 px or larger', async () => {
+  for (const width of [1440, 390]) {
+    const {page, close} = await open('', {width});
+    try {
+      const sizes = await page.evaluate(() => [...document.querySelectorAll('.b10x-status--shipped, .b10x-status--decided, .b10x-status--planned')]
+        .filter(badge => badge.checkVisibility()).map(badge => `${badge.className} ${parseFloat(getComputedStyle(badge).fontSize)}`));
+      assert.ok(sizes.length > 0, `${width}px: the example home has status badges`);
+      assert.deepEqual(sizes.filter(size => Number(size.split(' ').at(-1)) < 12), [], `${width}px badges under 12 px`);
+    } finally { await close(); }
+  }
+});
+
+check('s2-07', 'code in a table header cell keeps its case and renders at 12 px or larger', async () => {
+  for (const width of [1440, 390]) {
+    const {page, close} = await open('docs/reference', {width});
+    try {
+      const codes = await page.evaluate(() => [...document.querySelectorAll('article .markdown table th code')]
+        .map(code => ({text: code.textContent, size: parseFloat(getComputedStyle(code).fontSize), transform: getComputedStyle(code).textTransform})));
+      assert.ok(codes.length > 0, `${width}px: the example has code in a table header`);
+      for (const code of codes) {
+        assert.ok(code.size >= 12, `${width}px "${code.text}" in a header renders at ${code.size}px`);
+        assert.equal(code.transform, 'none', `${width}px "${code.text}" in a header is transformed`);
+      }
+    } finally { await close(); }
+  }
+});
+
+check('s1-05', 'a code block with a line wider than the block marks the hidden side with an edge shadow', async () => {
+  for (const theme of themes) {
+    const {page, close} = await open('docs/code', {theme});
+    try {
+      await page.locator('.theme-code-block [class*="buttonGroup"] button').first().waitFor();
+      // Sampled on a blank, unhighlighted line near the middle, where the shadow is deepest and no glyph sits.
+      const blocks = await page.evaluate(() => [...document.querySelectorAll('.theme-code-block pre')].map((pre, index) => ({
+        index, wide: pre.scrollWidth > pre.clientWidth + 1,
+        blank: [...pre.querySelectorAll('.token-line')].some(line => !line.textContent.trim() && !line.matches('.theme-code-block-highlighted-line')),
+      })));
+      const wide = blocks.find(block => block.wide && block.blank); const fits = blocks.find(block => !block.wide && block.blank);
+      assert.ok(wide && fits, `${theme}: the example has a code block wider than the column and one that fits, each with a blank line`);
+      const edges = async index => {
+        const pre = page.locator('.theme-code-block pre').nth(index);
+        await pre.scrollIntoViewIfNeeded();
+        await page.waitForTimeout(300);
+        const box = await pre.boundingBox();
+        const y = await pre.evaluate(element => {
+          const middle = element.getBoundingClientRect().top + element.clientHeight / 2;
+          const lines = [...element.querySelectorAll('.token-line')].filter(line => !line.textContent.trim() && !line.matches('.theme-code-block-highlighted-line')).map(line => line.getBoundingClientRect());
+          return lines.map(line => line.top + line.height / 2).sort((one, two) => Math.abs(one - middle) - Math.abs(two - middle))[0];
+        });
+        const [left, middle, right] = await pixels(page, box, Math.round(y), [2, box.width * 0.6, box.width - 3]);
+        return {left: distance(left, middle), right: distance(right, middle), at: `${Math.round(box.x)},${Math.round(y)} ${JSON.stringify([left, middle, right])}`};
+      };
+      const start = await edges(wide.index);
+      assert.ok(start.right > 12 && start.left <= 3, `${theme}: at the start the right edge differs from the ground by ${start.right}, the left by ${start.left} (${start.at})`);
+      await page.locator('.theme-code-block pre').nth(wide.index).evaluate(pre => { pre.scrollLeft = pre.scrollWidth; });
+      await page.waitForTimeout(300);
+      const end = await edges(wide.index);
+      assert.ok(end.left > 12 && end.right <= 3, `${theme}: at the end the left edge differs from the ground by ${end.left}, the right by ${end.right} (${end.at})`);
+      const still = await edges(fits.index);
+      assert.ok(still.left <= 3 && still.right <= 3, `${theme}: a block that fits paints its edges ${still.left}/${still.right} away from its ground`);
+    } finally { await close(); }
+  }
+});
+
+check('ess-viewer-width', 'a contract explorer page gets the full doc row and the viewer stacks on its own width', async () => {
+  // Reading-pane text width on 0.11.0: 453/333/141 px. The pane must keep at least 600 px at each width.
+  for (const width of [1440, 1280, 1024]) {
+    const {page, errors, close} = await open('docs/contracts', {width});
+    try {
+      await page.waitForSelector('.b10x-contract-page h3');
+      const layout = await page.evaluate(() => {
+        const column = document.querySelector('.b10x-doc-item--no-toc > .row > .col');
+        const pane = document.querySelector('.b10x-contract-page'); const style = getComputedStyle(pane);
+        const sidebar = getComputedStyle(document.querySelector('.b10x-contract-sidebar'));
+        const title = getComputedStyle(document.querySelector('.b10x-contract-header h2'));
+        return {
+          column: column && column.getBoundingClientRect().width, row: column && column.parentElement.getBoundingClientRect().width,
+          toc: !!document.querySelector('.theme-doc-toc-desktop'),
+          text: pane.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight), wrap: style.overflowWrap,
+          sticky: sidebar.position, titleBorder: title.borderTopWidth, titlePadding: title.paddingTop,
+        };
+      });
+      assert.equal(layout.toc, false, `${width}px: the example page renders no table of contents`);
+      assert.ok(layout.column && Math.abs(layout.column - layout.row) <= 1, `${width}px: the doc column is ${layout.column}px of a ${layout.row}px row`);
+      assert.ok(layout.text >= 600, `${width}px: the reading pane has ${layout.text}px for text`);
+      assert.equal(layout.wrap, 'break-word', `${width}px: the pane breaks words with ${layout.wrap}`);
+      assert.equal(layout.sticky, width > 1024 ? 'sticky' : 'static', `${width}px: the contract list is ${layout.sticky}`);
+      assert.deepEqual([layout.titleBorder, layout.titlePadding], ['0px', '0px'], `${width}px: the viewer title carries the doc h2 rule`);
+      assert.deepEqual(errors, []);
+    } finally { await close(); }
+  }
+  for (const [url, toc] of [['docs/reference', true], ['docs/charts', false]]) {
+    const {page, close} = await open(url);
+    try {
+      assert.equal(await page.locator('.theme-doc-toc-desktop').count() > 0, toc, `${url}: table of contents`);
+      assert.equal(await page.locator('.b10x-doc-item--no-toc').count(), 0, `${url}: a page with headings or hide_table_of_contents keeps the theme's layout`);
+    } finally { await close(); }
+  }
+  // At 1024 px the viewport is wider than the old 800 px breakpoint and the viewer narrower than 44rem.
+  for (const [width, stacked] of [[1440, false], [1024, true]]) {
+    const {page, close} = await open('docs/contracts', {width});
+    try {
+      await page.waitForSelector('.b10x-contract-page h3');
+      const [viewer, pane] = await page.evaluate(() => ['.b10x-contract-viewer', '.b10x-contract-page'].map(selector => document.querySelector(selector).clientWidth));
+      assert.equal(viewer < 704, stacked, `${width}px: viewer ${viewer}px`);
+      assert.equal(Math.abs(viewer - pane) <= 1, stacked, `${width}px: a ${viewer}px viewer with a ${pane}px pane`);
+    } finally { await close(); }
+  }
 });
 
 const failures = [];

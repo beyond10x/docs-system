@@ -98,7 +98,7 @@
   border: 1px solid color-mix(in srgb, var(--b10x-status-tone) 55%, transparent);
   background: color-mix(in srgb, var(--b10x-status-tone) 14%, transparent);
   color: var(--b10x-color-heading);
-  font: 650 0.62rem/1.4 var(--b10x-font-sans);
+  font: 650 0.75rem/1.4 var(--b10x-font-sans);
   letter-spacing: 0.1em;
   white-space: nowrap;
 }

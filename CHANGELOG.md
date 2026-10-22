@@ -6,6 +6,26 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+## [0.11.1] - 2026-10-22
+
+### Fixed
+
+- A link inside an admonition takes the site's link colour in both themes. Infima's alert colour
+  had made it the alert's near-text ink, so it read as plain text.
+- Status badges (`shipped`, `decided`, `planned`) render at 12 px. They had rendered at 9.9 px.
+- Code in a table header cell renders at 12 px and keeps its case. It had rendered at 9.6 px and
+  uppercase.
+- A code block with a line wider than the block shows an edge shadow on the side that is
+  scrolled out of view, as a wide table does.
+- A doc page with no table of contents (no `##` headings) takes the full row. The theme had
+  reserved a quarter of it for a table of contents that never rendered unless the page set
+  `hide_table_of_contents`.
+- The ESS contract viewer leaves the reading pane 802, 642 and 652 px for text at 1440, 1280 and
+  1024 px windows; it had left 453, 333 and 141 px. It stacks its contract list above the page
+  when the viewer, not the window, is narrower than 44rem. The list is at most 15rem wide and
+  stays in view while the page scrolls. Table cells no longer break identifiers mid-word, and the
+  viewer's title no longer carries the doc `h2` rule and its top spacing.
+
 ## [0.11.0] - 2026-10-21
 
 ### Added
@@ -260,5 +280,6 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - Introduce the public manifest contract, deterministic registry CLI, Docusaurus integration,
   shared tokens, generic React components and read-only schema/diagram renderers.
 
-[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.11.0...HEAD
+[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.11.1...HEAD
+[0.11.1]: https://github.com/beyond10x/docs-system/compare/0.11.0...0.11.1
 [0.11.0]: https://github.com/beyond10x/docs-system/compare/0.10.0...0.11.0

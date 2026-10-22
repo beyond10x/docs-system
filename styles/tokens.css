@@ -385,7 +385,13 @@ pre[class*='language-'] {
   margin: 0;
   border: 0;
   border-radius: 0 !important;
-  background: var(--prism-background-color, var(--b10x-color-surface-muted)) !important;
+  /* A line wider than the block scrolls, and an edge shadow marks the hidden side, as on a wide table. */
+  background:
+    linear-gradient(to right, var(--prism-background-color, var(--b10x-color-surface-muted)) 30%, transparent) left / 2.5rem 100% no-repeat local,
+    linear-gradient(to left, var(--prism-background-color, var(--b10x-color-surface-muted)) 30%, transparent) right / 2.5rem 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--b10x-color-line), transparent) left / 0.9rem 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--b10x-color-line), transparent) right / 0.9rem 100% no-repeat scroll,
+    var(--prism-background-color, var(--b10x-color-surface-muted)) !important;
   box-shadow: none;
 }
 .theme-code-block :where(pre, code),
@@ -760,23 +766,23 @@ pre[class*='language-'] ::selection { background: var(--b10x-code-selection); }
 }
 
 /* ESS contract reference: passive documentation shared by contract owners. */
-.b10x-contract-viewer { --contract-line: var(--b10x-color-line, #d7dfdc); border: 1px solid var(--contract-line); border-radius: 16px; overflow: clip; margin-block: 1.5rem; background: var(--b10x-color-surface, #fff); color: var(--b10x-color-text, #182823); }
+.b10x-contract-viewer { --contract-line: var(--b10x-color-line, #d7dfdc); container-type: inline-size; border: 1px solid var(--contract-line); border-radius: 16px; overflow: clip; margin-block: 1.5rem; background: var(--b10x-color-surface, #fff); color: var(--b10x-color-text, #182823); }
 .b10x-contract-header { padding: 1.6rem 1.8rem; display: flex; gap: 2rem; justify-content: space-between; align-items: start; border-bottom: 1px solid var(--contract-line); }
-.b10x-contract-header h2 { margin-block: .35rem .6rem; }
+.b10x-contract-viewer .b10x-contract-header h2 { margin-block: .35rem .6rem; padding-top: 0; border-top: 0; }
 .b10x-contract-header p { max-width: 52rem; margin-bottom: 0; }
 .b10x-contract-header dl { display: flex; gap: 1.5rem; flex-shrink: 0; margin: 0; }
 .b10x-contract-header dt, .b10x-contract-sidebar small { font-size: .75rem; color: var(--b10x-color-muted, #52665d); }
 .b10x-contract-header dd { margin: .25rem 0 0; font-weight: 600; }
 .b10x-contract-boundary { padding: .75rem 1.8rem; margin: 0; background: var(--b10x-color-surface-muted, #f1f6f3); border-bottom: 1px solid var(--contract-line); font-size: .875rem; }
-.b10x-contract-layout { display: grid; grid-template-columns: minmax(14rem, 19rem) minmax(0, 1fr); align-items: start; }
-.b10x-contract-sidebar { padding: 1.25rem; border-right: 1px solid var(--contract-line); min-width: 0; }
+.b10x-contract-layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); align-items: start; }
+.b10x-contract-sidebar { padding: 1.25rem; border-right: 1px solid var(--contract-line); min-width: 0; position: sticky; top: calc(var(--ifm-navbar-height, 3.75rem) + 1rem); max-height: calc(100vh - var(--ifm-navbar-height, 3.75rem) - 2rem); overflow: auto; }
 .b10x-contract-sidebar label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .5rem; }
 .b10x-contract-sidebar input { box-sizing: border-box; width: 100%; padding: .7rem .8rem; margin-bottom: 1rem; border: 1px solid var(--contract-line); border-radius: 8px; color: inherit; background: var(--b10x-color-surface, #fff); }
 .b10x-contract-sidebar nav { display: grid; gap: .2rem; }
 .b10x-contract-sidebar a { display: flex; flex-direction: column; text-decoration: none; padding: .6rem .7rem; border-radius: 7px; overflow-wrap: anywhere; font-size: .875rem; }
 .b10x-contract-sidebar a[aria-current="page"] { background: var(--b10x-color-surface-muted, #edf5ef); color: var(--b10x-color-link, #125c43); box-shadow: inset 3px 0 currentColor; font-weight: 650; }
 .b10x-contract-sidebar a:hover { background: var(--b10x-color-surface-muted, #edf5ef); }
-.b10x-contract-page { min-width: 0; padding: 1.6rem 2rem; overflow-wrap: anywhere; }
+.b10x-contract-page { min-width: 0; padding: 1.6rem 2rem; overflow-wrap: break-word; }
 .b10x-contract-page h3 { font-size: 1.65rem; margin-block: .4rem 1.4rem; }
 .b10x-contract-page h4 { margin-top: 1.8rem; font-size: 1.25rem; }
 .b10x-contract-page h5 { font-size: 1rem; }
@@ -791,10 +797,11 @@ pre[class*='language-'] ::selection { background: var(--b10x-code-selection); }
 .b10x-contract-provenance dd { margin-left: 0; overflow-wrap: anywhere; }
 .b10x-contract-unresolved { text-decoration: underline dotted; }
 .b10x-contract-error { padding: 1rem; border: 1px solid var(--contract-line, #a22); border-radius: 8px; }
-@media (max-width: 800px) {
+/* Stack on the viewer's own width: a docs column at 1024 px is narrower than the viewport says. */
+@container (max-width: 44rem) {
   .b10x-contract-header { flex-direction: column; padding: 1.2rem; gap: 1rem; }
   .b10x-contract-layout { grid-template-columns: minmax(0, 1fr); }
-  .b10x-contract-sidebar { border-right: 0; border-bottom: 1px solid var(--contract-line); }
+  .b10x-contract-sidebar { border-right: 0; border-bottom: 1px solid var(--contract-line); position: static; max-height: none; overflow: visible; }
   .b10x-contract-sidebar nav { max-height: 17rem; overflow: auto; }
   .b10x-contract-page { padding: 1.2rem; }
   .b10x-contract-boundary { padding-inline: 1.2rem; }

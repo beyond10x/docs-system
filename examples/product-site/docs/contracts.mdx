@@ -1,0 +1,12 @@
+---
+title: Contract explorer
+description: An ESS contract document in the shared viewer, on a page with no table of contents.
+---
+
+import {EssContractViewer} from '@beyond10x/docs-system/ess-contract-viewer';
+import mandate from '../../../tests/fixtures/ess/mandate.json';
+
+A page that only embeds the viewer has no headings, so no table of contents renders and the doc
+column takes the full row.
+
+<EssContractViewer document={mandate} id="mandate" />
