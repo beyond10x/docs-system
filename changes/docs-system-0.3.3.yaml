@@ -11,7 +11,7 @@ source:
   version: 0.3.3
 journeys: [understand, plan-work, specify, build-agents]
 affected:
-  repositories: [aep, agentic-principles, docs-system, ess, harness, website]
+  repositories: [aep, agentic-principles, docs-system, ess, website]
   surfaces: [aep/docs, agentic-principles/docs, docs-system/docs, ess/docs, website/docs]
   components: [docs-system/collector, website/source-collector]
 relations:
