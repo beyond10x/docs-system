@@ -8,6 +8,8 @@
  * ```
  */
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { existsSync, mkdirSync, renameSync, writeFileSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -25,6 +27,37 @@ export const PRODUCT_FONT_DIRECTORY = fileURLToPath(new URL('../styles/static', 
 /** The default share card, served from `styles/social` as `<baseUrl>b10x-social/card.png`. */
 export const PRODUCT_SOCIAL_DIRECTORY = fileURLToPath(new URL('../styles/social', import.meta.url));
 export const PRODUCT_SOCIAL_CARD = 'b10x-social/card.png';
+/**
+ * Generated favicons live below this directory, one content-addressed subdirectory per SVG, and the
+ * chosen one is served as `<baseUrl>b10x-favicon.svg`.
+ */
+export const PRODUCT_FAVICON_ROOT = fileURLToPath(new URL('../.cache/b10x-favicon', import.meta.url));
+export const PRODUCT_FAVICON = 'b10x-favicon.svg';
+/** The family green: the shared accent ink and Canon's hue, for a site without a product. */
+const FAMILY_FAVICON = { hue: '#26996e', ink: '#17684a' };
+/**
+ * The generated favicon: the mark in white on a tile of the product's light ink (at least 6.5:1),
+ * ringed with the product hue. Without a product the tile takes the family green.
+ */
+export function productFaviconSvg(mark, product) {
+    const { hue, ink } = product ? { hue: PRODUCT_SIGNATURES[product].hue.light, ink: PRODUCT_SIGNATURES[product].ink.light } : FAMILY_FAVICON;
+    const letters = [...mark];
+    const size = letters.length >= 3 ? 22 : letters.length === 2 ? 30 : 38;
+    const text = mark.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="2" y="2" width="60" height="60" rx="14" fill="${ink}" stroke="${hue}" stroke-width="4"/>${text ? `<text x="32" y="32" dy="0.35em" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="${size}" font-weight="700" fill="#ffffff">${text}</text>` : ''}</svg>\n`;
+}
+/** Write one generated favicon (once per content) and return the static directory serving it. */
+export function writeProductFavicon(svg) {
+    const directory = path.join(PRODUCT_FAVICON_ROOT, createHash('sha256').update(svg).digest('hex').slice(0, 16));
+    const file = path.join(directory, PRODUCT_FAVICON);
+    if (!existsSync(file)) {
+        mkdirSync(directory, { recursive: true });
+        const partial = `${file}.${process.pid}.partial`;
+        writeFileSync(partial, svg, 'utf8');
+        renameSync(partial, file);
+    }
+    return directory;
+}
 const FONT_RANGE = 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2190-21FF,U+2212,U+2215,U+2315,U+25A0-25FF,U+2713,U+2715,U+FEFF,U+FFFD';
 /** `@font-face` rules and preload links for the self-hosted fonts (latin subset, swap). */
 export function fontHeadTags(baseUrl) {
@@ -84,6 +117,12 @@ export default function productSitePlugin(context, options = {}) {
             if (options.trailingSlashRedirects !== false && context.siteConfig?.trailingSlash === false) {
                 await writeTrailingSlashRedirects(outDir, context.baseUrl, context.siteConfig.url ?? 'http://localhost');
             }
+            // GitHub Pages runs Jekyll over a branch deployment unless the root holds `.nojekyll`, and
+            // Jekyll drops every path that starts with `_`. The build carries one whether or not the
+            // site's static directory does.
+            const nojekyll = path.join(outDir, '.nojekyll');
+            if (!(await exists(nojekyll)))
+                await fs.writeFile(nojekyll, '');
         },
     };
 }
@@ -291,7 +330,8 @@ function withChips(entries, kind) {
 /**
  * Wrap a Docusaurus config: the product layer, self-hosted fonts, matched Prism themes with the
  * protocol/1 kind gutter, meaning chips and status admonitions in docs, Mermaid from the tokens,
- * a default share card when `themeConfig.image` is unset, and a dark default.
+ * a default share card when `themeConfig.image` is unset, a generated favicon when neither the
+ * config nor `options.favicon` names one, and a dark default.
  */
 export function withProductSite(config, options = {}) {
     const themeConfig = (config.themeConfig ?? {});
@@ -301,15 +341,23 @@ export function withProductSite(config, options = {}) {
     const mermaid = themes.some((theme) => theme === '@docusaurus/theme-mermaid' || (Array.isArray(theme) && theme[0] === '@docusaurus/theme-mermaid'));
     const fonts = options.fonts ?? true;
     const card = themeConfig.image === undefined;
+    if (options.favicon !== undefined && (typeof options.favicon !== 'string' || !options.favicon))
+        throw new Error(`product-site favicon must be a non-empty path, received ${JSON.stringify(options.favicon)}`);
+    const ownFavicon = config.favicon ?? options.favicon;
+    const product = isProductId(options.product) ? options.product : undefined;
+    const mark = options.mark ?? (product ? PRODUCT_SIGNATURES[product].mark : config.title?.slice(0, 1)) ?? '';
+    const faviconDirectory = ownFavicon === undefined ? writeProductFavicon(productFaviconSvg(mark, product)) : undefined;
     const staticDirectories = [
         ...config.staticDirectories ?? ['static'],
         ...(fonts ? [PRODUCT_FONT_DIRECTORY] : []),
         ...(card ? [PRODUCT_SOCIAL_DIRECTORY] : []),
+        ...(faviconDirectory ? [faviconDirectory] : []),
     ].filter((directory, index, all) => all.indexOf(directory) === index);
     const highlight = { className: 'theme-code-block-highlighted-line', line: 'highlight-next-line', block: { start: 'highlight-start', end: 'highlight-end' } };
     return {
         ...config,
-        ...(fonts || card ? { staticDirectories } : {}),
+        favicon: ownFavicon ?? PRODUCT_FAVICON,
+        ...(fonts || card || faviconDirectory ? { staticDirectories } : {}),
         ...(config.presets ? { presets: withChips(config.presets, 'preset') } : {}),
         // Standalone themes load after plugins, so the Mermaid override goes right after theme-mermaid.
         ...(mermaid ? { themes: themes.flatMap((theme) => theme === '@docusaurus/theme-mermaid' || (Array.isArray(theme) && theme[0] === '@docusaurus/theme-mermaid') ? [theme, productMermaidTheme] : [theme]) } : {}),

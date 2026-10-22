@@ -746,11 +746,13 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
 .b10x-family--loom { --b10x-family-hue: #0e5794; --b10x-family-ink: #23588a; }
 .b10x-family--commission { --b10x-family-hue: #946fbd; --b10x-family-ink: #624581; }
 .b10x-family--ess { --b10x-family-hue: #8c352a; --b10x-family-ink: #843d33; }
+.b10x-family--a2a { --b10x-family-hue: #db6a98; --b10x-family-ink: #8a3a64; }
 [data-theme='dark'] .b10x-family--canon { --b10x-family-hue: #3ba97d; --b10x-family-ink: #b6e5ce; }
 [data-theme='dark'] .b10x-family--els { --b10x-family-hue: #a36e09; --b10x-family-ink: #f0cea1; }
 [data-theme='dark'] .b10x-family--loom { --b10x-family-hue: #4296e7; --b10x-family-ink: #b7d8fb; }
 [data-theme='dark'] .b10x-family--commission { --b10x-family-hue: #885cb5; --b10x-family-ink: #ddcbf5; }
 [data-theme='dark'] .b10x-family--ess { --b10x-family-hue: #a95043; --b10x-family-ink: #f9c6bd; }
+[data-theme='dark'] .b10x-family--a2a { --b10x-family-hue: #c664a8; --b10x-family-ink: #f7c8dd; }
 
 /* A tinted tile with an ink letter: white on a solid tile misses 4.5:1 for two products. */
 .b10x-mark--family {

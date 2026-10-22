@@ -2,6 +2,8 @@
 // Each check names the docs-system issue it guards, or the site-review row when there is no issue.
 // PRODUCT_SITE_CHECKS=19,22,s3-01 runs a subset.
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import path from 'node:path';
 import {chromium} from 'playwright';
 import {productSiteServer} from './product-site-server.mjs';
 
@@ -314,7 +316,7 @@ check(27, 'a chart or graph text table wider than a phone is a named region with
 check(28, 'a protocol graph with an input predicate renders in the browser as it was prerendered', async () => {
   const {page, errors, close} = await open('docs/reference');
   try {
-    const logged = []; page.on('console', message => { if (message.type() === 'error' && !message.location().url.endsWith('/favicon.ico')) logged.push(message.text()); });
+    const logged = []; page.on('console', message => { if (message.type() === 'error') logged.push(message.text()); });
     await page.reload({waitUntil: 'load'});
     await page.waitForTimeout(500);
     const failed = await page.locator('.b10x-graph-error').allTextContents();
@@ -452,6 +454,25 @@ check('ess-viewer-width', 'a contract explorer page gets the full doc row and th
       assert.equal(Math.abs(viewer - pane) <= 1, stacked, `${width}px: a ${viewer}px viewer with a ${pane}px pane`);
     } finally { await close(); }
   }
+});
+
+check('favicon', 'the site names a generated SVG favicon that is served, and nothing asks for a missing icon', async () => {
+  const {page, close} = await open('');
+  try {
+    const missing = []; page.on('response', response => { if (response.status() >= 400) missing.push(`${response.status()} ${response.url()}`); });
+    await page.reload({waitUntil: 'load'});
+    const href = await page.locator('link[rel="icon"]').first().getAttribute('href');
+    assert.equal(href, '/product-site/b10x-favicon.svg');
+    const icon = await page.request.get(new URL(href, server.url).href);
+    assert.equal(icon.status(), 200);
+    assert.equal(icon.headers()['content-type'], 'image/svg+xml');
+    assert.match(await icon.text(), /^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg"[\s\S]*>C<\/text><\/svg>/);
+    assert.deepEqual(missing, []);
+  } finally { await close(); }
+});
+
+check('nojekyll', 'the build output carries .nojekyll', async () => {
+  assert.equal(await readFile(path.join(server.output, '.nojekyll'), 'utf8'), '');
 });
 
 const failures = [];

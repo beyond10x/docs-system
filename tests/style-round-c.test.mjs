@@ -25,9 +25,9 @@ const css = async (name) => fs.readFile(path.join(root, 'styles', name), 'utf8')
 const render = (element) => renderToStaticMarkup(element);
 
 test('P9: one family registry with unique marks, validated hues in CSS, and ELS never beside ESS', async () => {
-  assert.deepEqual(FAMILY_ORDER, ['canon', 'els', 'loom', 'commission', 'ess']);
+  assert.deepEqual(FAMILY_ORDER, ['canon', 'els', 'loom', 'commission', 'ess', 'a2a']);
   const marks = FAMILY_ORDER.map((id) => FAMILY[id].mark);
-  assert.deepEqual(marks, ['C', 'El', 'L', 'Co', 'Es']);
+  assert.deepEqual(marks, ['C', 'El', 'L', 'Co', 'Es', 'A2A']);
   assert.equal(new Set(marks).size, marks.length);
   assert.ok(Math.abs(FAMILY_ORDER.indexOf('els') - FAMILY_ORDER.indexOf('ess')) > 1);
   const components = await css('product-components.css');
@@ -55,7 +55,7 @@ test('P9: related tools from ids and a relation word; the written-out form rende
 
 test('P9: footer strip and navbar switcher mark the current product; the build line names the revision', async () => {
   const strip = render(createElement(FamilyStrip, {current: 'loom'}));
-  assert.equal((strip.match(/b10x-family-chip /g) ?? []).length, 5);
+  assert.equal((strip.match(/b10x-family-chip /g) ?? []).length, 6);
   assert.match(strip, /b10x-family--loom is-current" href="https:\/\/beyond10x\.github\.io\/loom\/" aria-current="true"/);
   assert.match(strip, /\(this site\)/);
   const switcher = render(createElement(ProductSwitcher, {current: 'canon'}));

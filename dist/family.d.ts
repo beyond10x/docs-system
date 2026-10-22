@@ -2,7 +2,7 @@ import type { ProductId } from './product-palette.js';
 export interface FamilyMember {
     id: ProductId;
     name: string;
-    /** Unique letter mark: C, El, L, Co, Es. */
+    /** Unique letter mark: C, El, L, Co, Es, A2A. */
     mark: string;
     /** A few words, for the switcher and the family strip. */
     tagline: string;

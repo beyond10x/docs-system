@@ -10,9 +10,15 @@ export interface ProductSiteOptions {
     mark?: string;
     /**
      * The product whose signature hue tints the navbar mark, kicker dot and hero emphasis:
-     * 'canon', 'els', 'loom', 'commission' or 'ess'. Status, truth and kind colours never change with it.
+     * 'canon', 'els', 'loom', 'commission', 'ess' or 'a2a'. Status, truth and kind colours never change with it.
      */
     product?: ProductId;
+    /**
+     * The site's favicon, a path under one of its static directories, passed to Docusaurus as
+     * `favicon`. A `favicon` already set in the config wins. With neither, `withProductSite` serves a
+     * generated SVG of the mark on the product hue (the family green without a product).
+     */
+    favicon?: string;
     /** Self-hosted Inter and Fira Code with preload. `withProductSite` turns this on and serves the files. */
     fonts?: boolean;
     /** Fail the build when a raw `:::kind Title` line reaches a page. Default true. */
@@ -28,6 +34,19 @@ export declare const PRODUCT_FONT_DIRECTORY: string;
 /** The default share card, served from `styles/social` as `<baseUrl>b10x-social/card.png`. */
 export declare const PRODUCT_SOCIAL_DIRECTORY: string;
 export declare const PRODUCT_SOCIAL_CARD = "b10x-social/card.png";
+/**
+ * Generated favicons live below this directory, one content-addressed subdirectory per SVG, and the
+ * chosen one is served as `<baseUrl>b10x-favicon.svg`.
+ */
+export declare const PRODUCT_FAVICON_ROOT: string;
+export declare const PRODUCT_FAVICON = "b10x-favicon.svg";
+/**
+ * The generated favicon: the mark in white on a tile of the product's light ink (at least 6.5:1),
+ * ringed with the product hue. Without a product the tile takes the family green.
+ */
+export declare function productFaviconSvg(mark: string, product?: ProductId): string;
+/** Write one generated favicon (once per content) and return the static directory serving it. */
+export declare function writeProductFavicon(svg: string): string;
 /** `@font-face` rules and preload links for the self-hosted fonts (latin subset, swap). */
 export declare function fontHeadTags(baseUrl: string): HeadTag[];
 interface HeadTag {
@@ -95,7 +114,8 @@ export declare function productMermaidTheme(): {
 /**
  * Wrap a Docusaurus config: the product layer, self-hosted fonts, matched Prism themes with the
  * protocol/1 kind gutter, meaning chips and status admonitions in docs, Mermaid from the tokens,
- * a default share card when `themeConfig.image` is unset, and a dark default.
+ * a default share card when `themeConfig.image` is unset, a generated favicon when neither the
+ * config nor `options.favicon` names one, and a dark default.
  */
 export declare function withProductSite<T extends Record<string, unknown>>(config: T, options?: ProductSiteOptions): T;
 export {};

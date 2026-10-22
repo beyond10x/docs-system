@@ -306,7 +306,7 @@ npm run gate
 
 ## Product sites
 
-A product repository (Canon, ELS, Commission, Loom) can turn its Docusaurus site into a product front
+A product repository (Canon, ELS, Commission, Loom, a2a) can turn its Docusaurus site into a product front
 page with one wrapping call. Documentation pages keep their Markdown and inherit the same tokens.
 
 ```ts
@@ -315,9 +315,10 @@ import {withProductSite} from '@beyond10x/docs-system/product-site';
 export default withProductSite(config, {landing: './product.json', mark: 'C'});
 ```
 
-Options: `landing`, `product` (`canon`, `els`, `loom`, `commission` or `ess`: the signature hue on the
-navbar mark, kicker dot and hero emphasis), `mark`, `fonts` (default on) and `admonitionGuard`
-(default on: the build fails when a raw `:::kind Title` line reaches a page).
+Options: `landing`, `product` (`canon`, `els`, `loom`, `commission`, `ess` or `a2a`: the signature hue on
+the navbar mark, kicker dot and hero emphasis), `mark`, `favicon` (a path under one of the site's static
+directories, passed to Docusaurus as `favicon`; a `favicon` set in the config wins), `fonts` (default
+on) and `admonitionGuard` (default on: the build fails when a raw `:::kind Title` line reaches a page).
 
 Colour roles are reserved and validated per mode: status is an ordinal ramp with ○ ◐ ● glyphs, truth
 values carry ✓ ? ✕, protocol kinds keep the graph colours, and the product hue is identity only.
@@ -333,7 +334,10 @@ The wrapper adds the product plugin (the shared tokens plus `product-components.
 the `@theme/ProductLandingPage` route component, and a not-found page linking to the main doc and
 the home page), the font directory to `staticDirectories`, a
 default 1200 × 630 share card at `<baseUrl>b10x-social/card.png` as `themeConfig.image` (a site that
-sets `themeConfig.image` keeps its own), the
+sets `themeConfig.image` keeps its own), a generated SVG favicon at `<baseUrl>b10x-favicon.svg` (the mark
+in white on the product's ink, ringed with its hue, or on the family green without a product) when
+neither the config nor the `favicon` option names one, an empty `.nojekyll` at the root of the build
+output when the build has none, the
 chips pass and status admonition keywords to the docs and pages plugins, Prism themes whose every
 token clears 4.5:1 on its code surface with the kind-gutter magic comments, and a dark default that
 still follows the reader's system setting. The landing page renders at `/`, so the docs plugin moves to `routeBasePath: 'docs'`.
@@ -350,7 +354,7 @@ field below is optional and additive: a site that sets none of them renders as b
 | `product.art` | `{kind, data or session, caption?}`, kind `terminal`, `protocol-graph`, `domain-graph`, `case`, `code-pair` | hero aside drawn from that file; replaces `product.terminal` |
 | `product.kpis` | count names or `{count, label?}`: `entities`, `relations`, `lifecycles`, `nodes`, `actions`, `evidence`, `claims`, `outcomes`, `obligations`, `commands`, `capabilities`, `shipped`, `decided`, `planned` | KPI row; graph counts read the art, then the first graph section; status counts read the status section; a count without a source fails the build |
 | status section `items` | a path to a `b10x-status/1` file | the strip and `<StatusTable data={…}/>` read the same file |
-| related section `tools[]` | `{id, relation, via?}`, id `canon`, `els`, `loom`, `commission`, `ess`; relation `uses`, `used-by`, `beside`, `specifies`, `specified-by` | name, mark, hue, description and link from the family registry |
+| related section `tools[]` | `{id, relation, via?}`, id `canon`, `els`, `loom`, `commission`, `ess`, `a2a`; relation `uses`, `used-by`, `beside`, `specifies`, `specified-by` | name, mark, hue, description and link from the family registry |
 | features `items[].icon` | a protocol kind | the kind's glyph heads the card |
 
 With `product` set, the footer gains the family strip (current product highlighted) and a "This

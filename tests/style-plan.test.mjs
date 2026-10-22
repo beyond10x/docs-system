@@ -33,10 +33,10 @@ test('P1: the self-hosted fonts ship with their OFL licences and load with swap 
   const css = tags.find((tag) => tag.tagName === 'style').innerHTML;
   assert.equal((css.match(/font-display:swap/g) ?? []).length, 3);
   assert.match(css, /font-family:"Inter";src:url\("\/canon\/b10x-fonts\/inter-variable-latin\.woff2"\) format\("woff2"\);font-weight:100 900/);
-  const config = withProductSite({title: 'X', staticDirectories: ['static', 'public']});
+  const config = withProductSite({title: 'X', favicon: 'icon.svg', staticDirectories: ['static', 'public']});
   assert.deepEqual(config.staticDirectories, ['static', 'public', PRODUCT_FONT_DIRECTORY, PRODUCT_SOCIAL_DIRECTORY]);
-  assert.deepEqual(withProductSite({title: 'X'}, {fonts: false}).staticDirectories, ['static', PRODUCT_SOCIAL_DIRECTORY]);
-  assert.equal(withProductSite({title: 'X', themeConfig: {image: 'card.png'}}, {fonts: false}).staticDirectories, undefined);
+  assert.deepEqual(withProductSite({title: 'X', favicon: 'icon.svg'}, {fonts: false}).staticDirectories, ['static', PRODUCT_SOCIAL_DIRECTORY]);
+  assert.equal(withProductSite({title: 'X', favicon: 'icon.svg', themeConfig: {image: 'card.png'}}, {fonts: false}).staticDirectories, undefined);
 });
 
 test('P2: raw admonition markers are refused in source and in built HTML, never inside code', () => {
@@ -71,13 +71,14 @@ test('P3: the roles use exactly the validated values and the product option sets
     loom: ['L', '#0e5794', '#4296e7', '#23588a', '#b7d8fb'],
     commission: ['Co', '#946fbd', '#885cb5', '#624581', '#ddcbf5'],
     ess: ['Es', '#8c352a', '#a95043', '#843d33', '#f9c6bd'],
+    a2a: ['A2A', '#db6a98', '#c664a8', '#8a3a64', '#f7c8dd'],
   });
   const plugin = productSitePlugin({siteDir: example, baseUrl: '/loom/', siteConfig: {title: 'Loom'}}, {product: 'loom'});
   const css = plugin.injectHtmlTags().headTags.map((tag) => tag.innerHTML ?? '').join('\n');
   assert.match(css, /--b10x-product-mark:"L"/);
   assert.equal(productSignatureCss('loom'), ":root,html[data-theme='light']{--b10x-product-hue:#0e5794;--b10x-product-ink:#23588a;}html[data-theme='dark']{--b10x-product-hue:#4296e7;--b10x-product-ink:#b7d8fb;}");
   assert.ok(css.includes(productSignatureCss('loom')));
-  assert.throws(() => productSitePlugin({siteDir: example, baseUrl: '/'}, {product: 'atlas'}), /product must be one of canon, els, loom, commission, ess/);
+  assert.throws(() => productSitePlugin({siteDir: example, baseUrl: '/'}, {product: 'atlas'}), /product must be one of canon, els, loom, commission, ess, a2a/);
 });
 
 test('P3: status components carry glyph and word and group by state', async () => {

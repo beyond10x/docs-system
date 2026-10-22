@@ -9,7 +9,7 @@
  *
  * Links, buttons and focus stay the shared family green. Node-safe.
  */
-export type ProductId = 'canon' | 'els' | 'loom' | 'commission' | 'ess';
+export type ProductId = 'canon' | 'els' | 'loom' | 'commission' | 'ess' | 'a2a';
 export type Mode = 'light' | 'dark';
 /** Planned → decided → shipped, light end first. Ordinal checks pass on both grounds per mode. */
 export declare const STATUS_RAMP: Record<Mode, {
@@ -32,7 +32,7 @@ export interface ProductSignature {
     /** Text ink for the hero emphasis, kicker and mark letter (≥ 6.5:1 light, ≥ 10.6:1 dark). */
     ink: Record<Mode, string>;
 }
-/** Family order Canon, ELS, Loom, Commission, ESS; ELS and ESS are never adjacent. */
+/** Family order Canon, ELS, Loom, Commission, ESS, a2a; ELS and ESS are never adjacent. */
 export declare const PRODUCT_SIGNATURES: Record<ProductId, ProductSignature>;
 export declare function isProductId(value: unknown): value is ProductId;
 /** CSS custom properties for one product's signature, for both colour modes. */
