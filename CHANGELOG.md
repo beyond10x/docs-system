@@ -6,6 +6,16 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+### Fixed
+
+- A link inside an admonition takes the site's link colour in both themes. Infima's alert colour
+  had made it the alert's near-text ink, so it read as plain text.
+- Status badges (`shipped`, `decided`, `planned`) render at 12 px. They had rendered at 9.9 px.
+- Code in a table header cell renders at 12 px and keeps its case. It had rendered at 9.6 px and
+  uppercase.
+- A code block with a line wider than the block shows an edge shadow on the side that is
+  scrolled out of view, as a wide table does.
+
 ## [0.11.0] - 2026-10-21
 
 ### Added

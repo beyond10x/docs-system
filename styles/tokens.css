@@ -385,7 +385,13 @@ pre[class*='language-'] {
   margin: 0;
   border: 0;
   border-radius: 0 !important;
-  background: var(--prism-background-color, var(--b10x-color-surface-muted)) !important;
+  /* A line wider than the block scrolls, and an edge shadow marks the hidden side, as on a wide table. */
+  background:
+    linear-gradient(to right, var(--prism-background-color, var(--b10x-color-surface-muted)) 30%, transparent) left / 2.5rem 100% no-repeat local,
+    linear-gradient(to left, var(--prism-background-color, var(--b10x-color-surface-muted)) 30%, transparent) right / 2.5rem 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--b10x-color-line), transparent) left / 0.9rem 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--b10x-color-line), transparent) right / 0.9rem 100% no-repeat scroll,
+    var(--prism-background-color, var(--b10x-color-surface-muted)) !important;
   box-shadow: none;
 }
 .theme-code-block :where(pre, code),

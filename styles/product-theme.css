@@ -201,6 +201,8 @@ a { text-underline-offset: 4px; }
 .markdown table th { padding: 0.9rem 0.95rem; border: 0; border-bottom: 1px solid var(--b10x-color-line); color: var(--b10x-color-muted); font-size: 0.68rem; font-weight: 650; letter-spacing: 0.12em; text-align: left; text-transform: uppercase; }
 .markdown table td { padding: 1rem 0.95rem; border: 0; border-bottom: 1px solid var(--b10x-color-hairline); color: var(--b10x-color-muted); vertical-align: top; }
 .markdown table td:first-child { color: var(--b10x-color-text); }
+/* Code in a header cell keeps its case and a readable size; 0.88em of the 0.68rem header was 9.6px. */
+.markdown table th code { font-size: 0.75rem; letter-spacing: 0; text-transform: none; }
 /* Identifiers in tables wrap at spaces, never inside a word; a table still wider than the column scrolls in its frame. */
 :is(.markdown, .b10x-graph__table, .b10x-chart__table) :is(td, th) code { overflow-wrap: normal; word-break: normal; white-space: normal; }
 .markdown table tr { background: transparent; border: 0; }
@@ -226,6 +228,9 @@ a { text-underline-offset: 4px; }
   background: var(--b10x-table-surface);
   box-shadow: none;
   color: var(--b10x-color-text);
+  /* Infima's .alert sets the link colour to the alert's near-text ink; a link reads as a link here too. */
+  --ifm-link-color: var(--b10x-color-link);
+  --ifm-link-hover-color: var(--b10x-color-heading);
 }
 .theme-admonition [class*='admonitionHeading'] { color: var(--b10x-admonition, var(--b10x-color-amber)); font-size: 0.78rem; letter-spacing: 0.08em; }
 .theme-admonition [class*='admonitionIcon'] svg { fill: currentColor; }
