@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+## [0.11.1] - 2026-10-22
+
 ### Fixed
 
 - A link inside an admonition takes the site's link colour in both themes. Infima's alert colour
@@ -270,5 +272,6 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - Introduce the public manifest contract, deterministic registry CLI, Docusaurus integration,
   shared tokens, generic React components and read-only schema/diagram renderers.
 
-[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.11.0...HEAD
+[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.11.1...HEAD
+[0.11.1]: https://github.com/beyond10x/docs-system/compare/0.11.0...0.11.1
 [0.11.0]: https://github.com/beyond10x/docs-system/compare/0.10.0...0.11.0
