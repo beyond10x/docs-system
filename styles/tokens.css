@@ -422,6 +422,8 @@ pre[class*='language-'] ::selection { background: var(--b10x-code-selection); }
 }
 .theme-code-block button.clean-btn:is(:hover, :focus-visible) { opacity: 1; }
 :not(pre) > code { padding: 0.12em 0.35em; border: 1px solid color-mix(in srgb, var(--b10x-color-line) 65%, transparent); border-radius: var(--b10x-radius-sm); background: var(--b10x-color-surface-muted); color: var(--b10x-color-heading); font-family: var(--b10x-font-mono); font-size: 0.88em; overflow-wrap: anywhere; }
+/* Short inline code (a command such as `cargo install`, marked by the rehype chips plugin) stays on one line; longer spans still wrap at spaces. */
+:not(pre) > code.b10x-code-short { white-space: nowrap; }
 .b10x-code > .theme-code-block,
 .b10x-command > .theme-code-block { border: 0; border-radius: 0 !important; box-shadow: none; }
 

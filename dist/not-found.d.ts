@@ -16,3 +16,13 @@ export interface DocsPluginData {
  * default docs plugin (or the first one), else that version's root. Undefined without a docs plugin.
  */
 export declare function docsEntry(plugins: Readonly<Record<string, DocsPluginData>>): string | undefined;
+/**
+ * The meta description of the not-found page. Every other page carries one; a 404 without it
+ * leaves a search result or a link preview with no summary.
+ */
+export declare function notFoundDescription(siteTitle: string | undefined): string;
+/**
+ * A 404 has no address of its own to name as canonical, so the page asks search engines not to
+ * index it instead.
+ */
+export declare const NOT_FOUND_ROBOTS = "noindex";

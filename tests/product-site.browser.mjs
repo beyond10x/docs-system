@@ -278,6 +278,12 @@ check(26, 'the not-found page links back to the docs and the home page', async (
       assert.equal((await page.request.get(new URL(docs.href, server.url).href)).status(), 200, `${width}px ${docs.href}`);
       assert.ok(content.links.some(link => link.href === '/product-site/'), `${width}px no link to the home page: ${JSON.stringify(content.links)}`);
       assert.ok(content.overflow <= 0, `${width}px the page scrolls sideways by ${content.overflow}px`);
+      const head = await page.evaluate(() => ({
+        description: document.querySelector('meta[name="description"]')?.getAttribute('content') ?? '',
+        robots: [...document.querySelectorAll('meta[name="robots"]')].map(meta => meta.getAttribute('content')),
+      }));
+      assert.match(head.description, /^There is no page at this address on .+\.$/, `${width}px s4-02: the 404 has no meta description`);
+      assert.deepEqual(head.robots, ['noindex'], `${width}px s4-02: the 404 is not marked noindex`);
       assert.deepEqual(errors, []);
     } finally { await close(); }
   }
@@ -475,6 +481,42 @@ check('s5-03', 'a console block is highlighted as a shell with a prompt that is 
       assert.deepEqual(errors, []);
     } finally { await close(); }
   }
+});
+
+check('s2-03', 'short inline code such as a two-word command never breaks across two lines', async () => {
+  for (const width of [1440, 768, 390]) {
+    const {page, errors, close} = await open('docs/adopt', {width});
+    try {
+      const spans = await page.evaluate(() => [...document.querySelectorAll('main article :not(pre) > code.b10x-code-short')].map(code => ({
+        text: code.textContent,
+        lines: new Set([...code.getClientRects()].filter(rect => rect.width > 0).map(rect => Math.round(rect.top))).size,
+        whiteSpace: getComputedStyle(code).whiteSpace,
+      })));
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      assert.ok(spans.length >= 2, `${width}px: the page marks short inline code: ${JSON.stringify(spans)}`);
+      for (const span of spans) {
+        assert.equal(span.whiteSpace, 'nowrap', `${width}px "${span.text}"`);
+        assert.equal(span.lines, 1, `${width}px "${span.text}" spans ${span.lines} lines`);
+      }
+      assert.ok(overflow <= 0, `${width}px the page scrolls sideways by ${overflow}px`);
+      assert.deepEqual(errors, []);
+    } finally { await close(); }
+  }
+});
+
+check('s1-04', 'a protocol kind written as inline code in prose stays code, with no kind glyph', async () => {
+  const {page, errors, close} = await open('docs/meaning', {width: 1440});
+  try {
+    const found = await page.evaluate(() => ({
+      code: [...document.querySelectorAll('main article p > code')].map(code => code.textContent),
+      chips: [...document.querySelectorAll('main article .b10x-chip--kind')].filter(chip => !chip.closest('td, th')).map(chip => chip.textContent),
+      cells: [...document.querySelectorAll('main article td .b10x-chip--kind')].map(chip => chip.textContent),
+    }));
+    for (const word of ['claim', 'action', 'evidence', 'outcome']) assert.ok(found.code.includes(word), `\`${word}\` in prose is not plain code: ${JSON.stringify(found)}`);
+    assert.deepEqual(found.chips, ['obligation'], 'only the explicit <Kind> chip is a kind chip in prose');
+    assert.deepEqual(found.cells, ['claim', 'evidence'], 'a kind in a table cell is still a chip');
+    assert.deepEqual(errors, []);
+  } finally { await close(); }
 });
 
 check('ess-viewer-width', 'a contract explorer page gets the full doc row and the viewer stacks on its own width', async () => {

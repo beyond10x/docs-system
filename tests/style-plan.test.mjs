@@ -128,6 +128,54 @@ test('P4: reserved words become chips; everything else is left alone', () => {
   assert.equal(tree.children[2].children[0].tagName, 'code', 'code blocks are never chipped');
 });
 
+test('s1-04: a protocol kind in prose stays code; in a table cell it is still a chip', () => {
+  const text = (value) => ({type: 'text', value});
+  const element = (tagName, children, properties = {}) => ({type: 'element', tagName, properties, children});
+  const tree = {type: 'root', children: [
+    element('ul', [element('li', [element('code', [text('evidence')]), text(' — '), element('code', [text('List<String>')])])]),
+    element('p', [text('An '), element('code', [text('action')]), text(' may be '), element('code', [text('shipped')]), text(' or '), element('code', [text('UNKNOWN')]), text('.')]),
+    element('table', [element('tbody', [element('tr', [element('td', [element('code', [text('claim')])]), element('td', [text('Feeds an '), element('code', [text('outcome')])])])])]),
+  ]};
+  rehypeSemanticChips()(tree);
+  const item = tree.children[0].children[0].children;
+  assert.equal(item[0].tagName, 'code', 'a field named evidence is not a kind chip');
+  assert.deepEqual(item[0].children, [text('evidence')]);
+  const paragraph = tree.children[1].children;
+  assert.equal(paragraph[1].tagName, 'code', 'a kind in prose is not a chip');
+  assert.deepEqual(paragraph[3].properties.className, ['b10x-chip', 'b10x-chip--status', 'b10x-chip--shipped'], 'status chips in prose are unchanged');
+  assert.deepEqual(paragraph[5].properties.className, ['b10x-chip', 'b10x-chip--truth', 'b10x-chip--unknown'], 'truth chips in prose are unchanged');
+  const cells = tree.children[2].children[0].children[0].children;
+  assert.deepEqual(cells[0].children[0].properties.className, ['b10x-chip', 'b10x-chip--kind', 'b10x-chip--claim']);
+  assert.deepEqual(cells[1].children[1].properties.className, ['b10x-chip', 'b10x-chip--kind', 'b10x-chip--outcome'], 'a kind inside a cell is a chip');
+});
+
+test('s2-03: short inline code with a space or hyphen is kept on one line', async () => {
+  const text = (value) => ({type: 'text', value});
+  const element = (tagName, children, properties = {}) => ({type: 'element', tagName, properties, children});
+  const tree = {type: 'root', children: [
+    element('p', [
+      element('code', [text('cargo install')]),
+      element('code', [text('b10x-product-landing/1')]),
+      element('code', [text('cargo')]),
+      element('code', [text('cargo install --locked --path crates/cli')]),
+      element('code', [text('a b')], {className: ['existing']}),
+    ]),
+    element('table', [element('tbody', [element('tr', [element('td', [text('Run '), element('code', [text('cargo install')])])])])]),
+    element('pre', [element('code', [text('cargo install')], {className: ['language-text']})]),
+  ]};
+  rehypeSemanticChips()(tree);
+  const [command, schema, word, long, existing] = tree.children[0].children;
+  assert.deepEqual(command.properties.className, ['b10x-code-short']);
+  assert.deepEqual(schema.properties.className, ['b10x-code-short'], 'a hyphen is a break opportunity too');
+  assert.equal(word.properties.className, undefined, 'one word cannot break at a space');
+  assert.equal(long.properties.className, undefined, 'a long span still wraps at its spaces');
+  assert.deepEqual(existing.properties.className, ['existing', 'b10x-code-short']);
+  assert.equal(tree.children[1].children[0].children[0].children[0].children[1].properties.className, undefined, 'code in a table cell is left alone');
+  assert.deepEqual(tree.children[2].children[0].properties.className, ['language-text'], 'fenced code is never marked');
+  const css = await fs.readFile(new URL('../styles/tokens.css', import.meta.url), 'utf8');
+  assert.match(css, /:not\(pre\) > code\.b10x-code-short \{ white-space: nowrap; \}/);
+});
+
 test('P4: status admonitions take the status from the type or the title', () => {
   assert.deepEqual(admonitionStatus('shipped', 'Claim evaluation'), {status: 'shipped', rest: 'Claim evaluation'});
   assert.deepEqual(admonitionStatus('note', 'Planned: evidence bound to revisions'), {status: 'planned', rest: 'evidence bound to revisions'});
