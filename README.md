@@ -485,7 +485,7 @@ Node-safe `@beyond10x/docs-system/ess-document` subpath. Declare the generated J
 `ess-docs/1` data and supplies the shared viewer, a static contents summary, and the exact JSON
 download. Other data catalogs retain their existing rendering.
 
-The unit suite consumes complete ESS 0.25.0 projections from Mandate and Connectors. Browser checks
+The unit suite consumes complete ESS 0.77.0 projections from Mandate and Connectors. Browser checks
 build a standalone Docusaurus fixture in this repository and exercise both consumers:
 
 ```bash

@@ -11,8 +11,8 @@ const fixture = name => JSON.parse(readFileSync(new URL(`./fixtures/ess/${name}.
 const text = value => [{inline: 'text', text: value}];
 const base = () => ({...fixture('mandate'), pages: [structuredClone(fixture('mandate').pages[0])]});
 
-for (const [name, count] of [['mandate', 16], ['connectors', 26]]) {
-  test(`real ESS 0.25.0 ${name} projection preserves all pages, provenance and resolvable links`, () => {
+for (const [name, count] of [['mandate', 17], ['connectors', 29]]) {
+  test(`real ESS 0.77.0 ${name} projection preserves all pages, provenance and resolvable links`, () => {
     const document = fixture(name); const index = parseEssDocument(document);
     assert.equal(index.pages.size, count);
     assert.equal(index.document, document);
