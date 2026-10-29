@@ -2,13 +2,14 @@
 format: aep.planning-md/3
 id: story:protocol-graph-after-form
 kind: story
-status: active
+status: implemented
 title: Carry Canon's after order form in protocol graphs
 summary: b10x-protocol-graph/1 and ProtocolGraph accept and show Canon 0.7.0's after leaf; existing shapes unchanged
-revision: 3
+revision: 4
 transitions:
 - {from: "draft", to: "proposed", at: "2026-10-29T00:54:13Z", actor: "human:timo", revision: 2}
 - {from: "proposed", to: "active", at: "2026-10-29T00:54:13Z", actor: "human:timo", revision: 3}
+- {from: "active", to: "implemented", at: "2026-10-29T01:04:18Z", actor: "human:timo", revision: 4, decided_on: {"recorded":{"test_result":2}}}
 ---
 # Carry Canon's after order form in protocol graphs
 

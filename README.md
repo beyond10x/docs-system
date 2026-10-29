@@ -390,7 +390,7 @@ A protocol graph has nodes of kind `action`, `evidence`, `claim`, `outcome` and 
 by kind, then name; ids `<kind>:<name>`) and edges `produces` (action → evidence), `establishes`
 (evidence → claim, `qualifier` = result), `supports` (claim → claim), `requires` (claim → outcome)
 and `gates` (claim → action, a precondition, traced on hover only). Predicates keep the `canon-ir/1`
-shape (`all`, `any`, `not`, `claim`, `evidence`, `input`, `first`, `before`).
+shape (`all`, `any`, `not`, `claim`, `evidence`, `input`, `first`, `before`, `after`).
 
 The order forms come from Canon 0.3.0's `canon-ir/1`, for protocols whose obligations depend on the
 order of evidence. `{"first": {"kind": "test_result", "result": "fail"}}` holds when the first
@@ -403,6 +403,13 @@ when present), which the line ends with as `about <subject>`. `kind` and `result
 `before` whose `first` and `then` name the same kind, naming the path; the schema cannot compare the
 two and accepts it. Both forms go wherever a predicate does, including an obligation's
 `applicable_when` and inside `all`, `any` and `not`.
+
+Canon 0.7.0 adds a third order form, for a rule that reads a later record.
+`{"after": {"first": "tests_change", "then": {"kind": "test_result", "result": "fail"}}}` holds when
+evidence of the later kind with that result was observed after the first evidence of the first
+kind, and reads as `evidence = fail: test_result after tests_change`. `first`, `then.kind` and
+`then.result` are required non-empty strings, `subject` is optional as above, and no other field is
+accepted at either level. The two kinds may be the same. It goes wherever a predicate does.
 
 Case inputs follow `canon-ir/1` too, so one protocol can describe several kinds of case. An optional
 top-level `case` declares them: `{"inputs": {"change_kind": {"description": "…" or null, "values":
