@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-29T07:15:28Z",
+  "actor": "human:timo",
+  "artifact": "story:protocol-graph-since-leaf",
+  "kind": "story",
+  "revision": 3,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "node --test tests/protocol-graph-since.test.mjs before the change: 1 passed, 2 failed (schema refuses /nodes/0/predicate/all/0; reader: nodes[0].predicate.all[0] has unknown predicate since)"
+  }
+}

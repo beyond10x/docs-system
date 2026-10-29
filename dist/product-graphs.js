@@ -100,7 +100,7 @@ function predicate(value, path, inputs) {
     const node = object(value, path);
     const keys = Object.keys(node);
     if (keys.length !== 1)
-        throw new Error(`${path} must have exactly one of all, any, not, claim, evidence, input, first, before, after`);
+        throw new Error(`${path} must have exactly one of all, any, not, claim, evidence, input, first, before, after, since`);
     const [key] = keys;
     if (key === 'all' || key === 'any')
         list(node[key], `${path}.${key}`).forEach((child, index) => predicate(child, `${path}.${key}[${index}]`, inputs));
@@ -157,6 +157,16 @@ function predicate(value, path, inputs) {
         text(later.result, `${path}.after.then.result`);
         optionalText(after.subject, `${path}.after.subject`);
     }
+    else if (key === 'since') {
+        const since = object(node.since, `${path}.since`);
+        onlyFields(since, ['last', 'then', 'subject'], `${path}.since`);
+        text(since.last, `${path}.since.last`);
+        const later = object(since.then, `${path}.since.then`);
+        onlyFields(later, ['kind', 'result'], `${path}.since.then`);
+        text(later.kind, `${path}.since.then.kind`);
+        text(later.result, `${path}.since.then.result`);
+        optionalText(since.subject, `${path}.since.subject`);
+    }
     else
         throw new Error(`${path} has unknown predicate ${key}`);
 }
@@ -188,6 +198,10 @@ export function predicateLines(value, depth = 0) {
     if ('after' in value) {
         const about = value.after.subject ? ` about ${value.after.subject}` : '';
         return [{ depth, text: `evidence = ${value.after.then.result}:`, reference: value.after.then.kind, suffix: `after ${value.after.first}${about}` }];
+    }
+    if ('since' in value) {
+        const about = value.since.subject ? ` about ${value.since.subject}` : '';
+        return [{ depth, text: `evidence = ${value.since.then.result}:`, reference: value.since.then.kind, suffix: `since ${value.since.last}${about}` }];
     }
     const result = value.evidence.result;
     return [{ depth, text: result ? `evidence = ${result}:` : 'any evidence:', reference: value.evidence.kind }];
