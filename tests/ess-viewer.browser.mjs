@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {viewerServer} from './ess-viewer-server.mjs';
+import {readFileSync} from 'node:fs';
+const pageCount = name => JSON.parse(readFileSync(new URL(`./fixtures/ess/${name}.json`, import.meta.url), 'utf8')).pages.length;
 const server = process.env.ESS_VIEWER_PREVIEW_URL ? undefined : await viewerServer();
 const base = process.env.ESS_VIEWER_PREVIEW_URL ?? server.url;
 const browser = await chromium.launch({headless: true, ...(process.env.B10X_CHROME_BIN ? {executablePath: process.env.B10X_CHROME_BIN} : {}), args: ['--no-sandbox', '--disable-dev-shm-usage']})
@@ -11,7 +13,7 @@ try {
   await page.goto(`${base}/contracts/`, {waitUntil: 'domcontentloaded'});
   await page.waitForSelector('.b10x-contract-viewer');
   assert.equal(await page.locator('h1').count(), 1);
-  assert.equal(await page.getByRole('navigation', {name: 'Contract pages', exact: true}).getByRole('link').count(), 16);
+  assert.equal(await page.getByRole('navigation', {name: 'Contract pages', exact: true}).getByRole('link').count(), pageCount('mandate'));
   await page.getByRole('searchbox', {name: 'Find a contract'}).fill('Principal');
   await page.getByRole('navigation', {name: 'Contract search results'}).waitFor();
   assert.ok(await page.getByRole('navigation', {name: 'Contract search results'}).getByRole('link').count() > 0);
@@ -43,7 +45,7 @@ try {
   assert.deepEqual(errors, []);
   if (server) {
     await page.goto(`${base}/connectors/`);
-    assert.equal(await page.getByRole('navigation', {name: 'Contract pages', exact: true}).getByRole('link').count(), 26);
+    assert.equal(await page.getByRole('navigation', {name: 'Contract pages', exact: true}).getByRole('link').count(), pageCount('connectors'));
     await page.getByRole('searchbox', {name: 'Find a contract'}).fill('command');
     assert.ok(await page.getByRole('navigation', {name: 'Contract search results'}).getByRole('link').count() > 0);
   }

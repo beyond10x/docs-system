@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-29T20:51:32Z",
+  "actor": "human:timo",
+  "artifact": "story:shared-ess-contract-viewer",
+  "kind": "story",
+  "revision": 8,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "npm run gate on 3b02145 (fixtures at ESS 0.77.0): 204 node tests passed, 0 failed, including both real-projection tests (mandate 17 pages, connectors 29 pages); cargo 8 passed; fixtures valid"
+  }
+}

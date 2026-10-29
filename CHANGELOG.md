@@ -6,6 +6,16 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+## [0.14.1] - 2026-10-29
+
+### Changed
+
+- The ESS contract viewer is tested against ESS 0.77.0 projections: the Mandate and Connectors
+  `ess-docs/1` fixtures are regenerated with ESS 0.77.0 (17 and 29 pages, from 16 and 26 at ESS
+  0.25.0). `parseEssDocument` and `EssContractViewer` accept both unchanged, with every link
+  resolved. No distributed file changes.
+- The viewer's browser suite reads each fixture's page count instead of a fixed number.
+
 ## [0.14.0] - 2026-10-29
 
 ### Added
@@ -361,7 +371,8 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - Introduce the public manifest contract, deterministic registry CLI, Docusaurus integration,
   shared tokens, generic React components and read-only schema/diagram renderers.
 
-[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.14.0...HEAD
+[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.14.1...HEAD
+[0.14.1]: https://github.com/beyond10x/docs-system/compare/0.14.0...0.14.1
 [0.14.0]: https://github.com/beyond10x/docs-system/compare/0.13.0...0.14.0
 [0.13.0]: https://github.com/beyond10x/docs-system/compare/0.12.2...0.13.0
 [0.12.2]: https://github.com/beyond10x/docs-system/compare/0.12.1...0.12.2
