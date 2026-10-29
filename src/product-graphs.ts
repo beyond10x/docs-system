@@ -31,7 +31,12 @@ export type ProtocolPredicate =
   /** Order form: true when the first evidence of `kind` (about `subject`, when named) has `result`. */
   | {first: {kind: string; result: string; subject?: string}}
   /** Order form: true when evidence of kind `first` (about `subject`, when named) precedes evidence of kind `then`. */
-  | {before: {first: string; then: string; subject?: string}};
+  | {before: {first: string; then: string; subject?: string}}
+  /**
+   * Order form: true when evidence of kind `then.kind` with result `then.result` (about `subject`,
+   * when named) was observed after the first evidence of kind `first`; the two kinds may be one.
+   */
+  | {after: {first: string; then: {kind: string; result: string}; subject?: string}};
 
 /** A case input as `canon-ir/1` declares it: the values a case may give it. */
 export interface ProtocolCaseInput {
@@ -161,7 +166,7 @@ function caseInputs(value: unknown): CaseInputs {
 function predicate(value: unknown, path: string, inputs: CaseInputs): void {
   const node = object(value, path);
   const keys = Object.keys(node);
-  if (keys.length !== 1) throw new Error(`${path} must have exactly one of all, any, not, claim, evidence, input, first, before`);
+  if (keys.length !== 1) throw new Error(`${path} must have exactly one of all, any, not, claim, evidence, input, first, before, after`);
   const [key] = keys;
   if (key === 'all' || key === 'any') list(node[key], `${path}.${key}`).forEach((child, index) => predicate(child, `${path}.${key}[${index}]`, inputs));
   else if (key === 'not') predicate(node.not, `${path}.not`, inputs);
@@ -196,13 +201,23 @@ function predicate(value: unknown, path: string, inputs: CaseInputs): void {
     const later = text(before.then, `${path}.before.then`);
     optionalText(before.subject, `${path}.before.subject`);
     if (earlier === later) throw new Error(`${path}.before orders evidence ${earlier} before itself`);
+  } else if (key === 'after') {
+    const after = object(node.after, `${path}.after`);
+    onlyFields(after, ['first', 'then', 'subject'], `${path}.after`);
+    text(after.first, `${path}.after.first`);
+    const later = object(after.then, `${path}.after.then`);
+    onlyFields(later, ['kind', 'result'], `${path}.after.then`);
+    text(later.kind, `${path}.after.then.kind`);
+    text(later.result, `${path}.after.then.result`);
+    optionalText(after.subject, `${path}.after.subject`);
   } else throw new Error(`${path} has unknown predicate ${key}`);
 }
 
 /**
  * One line of a predicate, indented by depth, for text and tooltips. It reads as `text`, then
  * `reference` (an identifier, set in code), then `suffix`: an input leaf is `input <id> in <values>`,
- * a `before` leaf `evidence <first> before <then>`, and an order form naming a subject ends `about <subject>`.
+ * a `before` leaf `evidence <first> before <then>`, an `after` leaf `evidence = <result>: <kind> after <first>`,
+ * and an order form naming a subject ends `about <subject>`.
  */
 export interface PredicateLine {depth: number; text: string; reference?: string; suffix?: string}
 
@@ -227,6 +242,10 @@ export function predicateLines(value: ProtocolPredicate, depth = 0): PredicateLi
   if ('before' in value) {
     const about = value.before.subject ? ` about ${value.before.subject}` : '';
     return [{depth, text: 'evidence', reference: value.before.first, suffix: `before ${value.before.then}${about}`}];
+  }
+  if ('after' in value) {
+    const about = value.after.subject ? ` about ${value.after.subject}` : '';
+    return [{depth, text: `evidence = ${value.after.then.result}:`, reference: value.after.then.kind, suffix: `after ${value.after.first}${about}`}];
   }
   const result = value.evidence.result;
   return [{depth, text: result ? `evidence = ${result}:` : 'any evidence:', reference: value.evidence.kind}];

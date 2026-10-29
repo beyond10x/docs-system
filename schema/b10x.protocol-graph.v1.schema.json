@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://beyond10x.github.io/schema/b10x.protocol-graph.v1.json",
   "title": "b10x protocol graph",
-  "description": "A Canon protocol as nodes and edges, emitted from canon-ir/1 for the ProtocolGraph renderer. Nodes are ordered by kind (action, evidence, claim, outcome, obligation), then by name. An optional case section declares the case inputs (canon-ir/1 case.inputs) that input predicate leaves test, and an obligation may carry applicable_when, the predicate under which it applies. Predicates may use the canon-ir/1 order forms first and before.",
+  "description": "A Canon protocol as nodes and edges, emitted from canon-ir/1 for the ProtocolGraph renderer. Nodes are ordered by kind (action, evidence, claim, outcome, obligation), then by name. An optional case section declares the case inputs (canon-ir/1 case.inputs) that input predicate leaves test, and an obligation may carry applicable_when, the predicate under which it applies. Predicates may use the canon-ir/1 order forms first, before and after.",
   "type": "object",
   "additionalProperties": false,
   "required": ["format", "protocol", "nodes", "edges"],
@@ -111,6 +111,13 @@
           "required": ["before"],
           "description": "canon-ir/1 order form: true when evidence of kind first (about subject, when one is named) precedes evidence of kind then. The renderer refuses a first equal to then.",
           "properties": {"before": {"type": "object", "additionalProperties": false, "required": ["first", "then"], "properties": {"first": {"type": "string", "minLength": 1}, "then": {"type": "string", "minLength": 1}, "subject": {"type": "string", "minLength": 1}}}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["after"],
+          "description": "canon-ir/1 order form (Canon 0.7.0): true when evidence of kind then.kind with result then.result (about subject, when one is named) was observed after the first evidence of kind first. The two kinds may be the same.",
+          "properties": {"after": {"type": "object", "additionalProperties": false, "required": ["first", "then"], "properties": {"first": {"type": "string", "minLength": 1}, "then": {"type": "object", "additionalProperties": false, "required": ["kind", "result"], "properties": {"kind": {"type": "string", "minLength": 1}, "result": {"type": "string", "minLength": 1}}}, "subject": {"type": "string", "minLength": 1}}}}
         }
       ]
     }
