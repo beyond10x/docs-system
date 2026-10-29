@@ -49,6 +49,7 @@ a kind, a `before` leaf that one kind of evidence precedes another, either about
 | `first` | `{"first": {"kind": <kind>, "result": <result>}}` | `{"first": {"kind": "review.approved", "result": "pass"}}` | `first evidence = pass: review.approved` |
 | `before` | `{"before": {"first": <kind>, "then": <kind>}}` | `{"before": {"first": "regression.test", "then": "fix.merged"}}` | `evidence regression.test before fix.merged` |
 | `after` | `{"after": {"first": <kind>, "then": {"kind": <kind>, "result": <result>}}}` | `{"after": {"first": "tests.written", "then": {"kind": "tests.run", "result": "fail"}}}` | `evidence = fail: tests.run after tests.written` |
+| `since` | `{"since": {"last": <kind>, "then": {"kind": <kind>, "result": <result>}}}` | `{"since": {"last": "tests.written", "then": {"kind": "tests.run", "result": "fail"}}}` | `evidence = fail: tests.run since tests.written` |
 | `input` | `{"input": {"id": <id>, "in": [<value>, …]}}` | `{"input": {"id": "change.size", "in": ["large"]}}` | `input change.size in large` |
 
 :::tip[A table in an admonition]

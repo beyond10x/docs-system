@@ -390,7 +390,7 @@ A protocol graph has nodes of kind `action`, `evidence`, `claim`, `outcome` and 
 by kind, then name; ids `<kind>:<name>`) and edges `produces` (action → evidence), `establishes`
 (evidence → claim, `qualifier` = result), `supports` (claim → claim), `requires` (claim → outcome)
 and `gates` (claim → action, a precondition, traced on hover only). Predicates keep the `canon-ir/1`
-shape (`all`, `any`, `not`, `claim`, `evidence`, `input`, `first`, `before`, `after`).
+shape (`all`, `any`, `not`, `claim`, `evidence`, `input`, `first`, `before`, `after`, `since`).
 
 The order forms come from Canon 0.3.0's `canon-ir/1`, for protocols whose obligations depend on the
 order of evidence. `{"first": {"kind": "test_result", "result": "fail"}}` holds when the first
@@ -410,6 +410,14 @@ evidence of the later kind with that result was observed after the first evidenc
 kind, and reads as `evidence = fail: test_result after tests_change`. `first`, `then.kind` and
 `then.result` are required non-empty strings, `subject` is optional as above, and no other field is
 accepted at either level. The two kinds may be the same. It goes wherever a predicate does.
+
+Canon 0.8.0 adds a fourth, for a rule that reads a record since the latest one of a kind.
+`{"since": {"last": "tests_change", "then": {"kind": "test_result", "result": "fail"}}}` holds when
+evidence of the later kind with that result, at the same subject revision as the latest evidence of
+the `last` kind, was observed after that record, and reads as `evidence = fail: test_result since
+tests_change`. `last`, `then.kind` and `then.result` are required non-empty strings, `subject` is
+optional as above, and no other field is accepted at either level. The two kinds may be the same.
+It goes wherever a predicate does.
 
 Case inputs follow `canon-ir/1` too, so one protocol can describe several kinds of case. An optional
 top-level `case` declares them: `{"inputs": {"change_kind": {"description": "…" or null, "values":

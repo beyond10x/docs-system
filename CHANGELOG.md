@@ -6,6 +6,15 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+### Added
+
+- `b10x-protocol-graph/1` accepts the `since` predicate leaf Canon 0.8.0 writes in `canon-ir/1`:
+  `{"since": {"last": <kind>, "then": {"kind": <kind>, "result": <result>}, "subject"?: <artifact>}}`,
+  required non-empty strings, an optional non-empty subject and no other field at either level;
+  `last` and `then.kind` may name the same kind. Every other predicate shape is unchanged.
+- `ProtocolGraph` validates the leaf, naming the path of an unknown or missing field, and reads it
+  as `evidence = <result>: <kind> since <last>`, ending `about <subject>` when it names one.
+
 ## [0.13.0] - 2026-10-29
 
 ### Added
