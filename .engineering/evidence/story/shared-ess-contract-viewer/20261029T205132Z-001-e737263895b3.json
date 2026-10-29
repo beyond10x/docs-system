@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-29T20:51:32Z",
+  "actor": "human:timo",
+  "artifact": "story:shared-ess-contract-viewer",
+  "kind": "story",
+  "revision": 8,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "node tests/ess-viewer.browser.mjs on 3b02145 with chrome-headless-shell 1243: navigation, search, no results, deep link, history, focus, diagrams, mobile and dark theme passed for Mandate and Connectors"
+  }
+}
