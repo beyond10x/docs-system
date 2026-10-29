@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-10-29
+
 ### Added
 
 - `b10x-protocol-graph/1` accepts the `since` predicate leaf Canon 0.8.0 writes in `canon-ir/1`:
@@ -359,7 +361,8 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - Introduce the public manifest contract, deterministic registry CLI, Docusaurus integration,
   shared tokens, generic React components and read-only schema/diagram renderers.
 
-[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.13.0...HEAD
+[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.14.0...HEAD
+[0.14.0]: https://github.com/beyond10x/docs-system/compare/0.13.0...0.14.0
 [0.13.0]: https://github.com/beyond10x/docs-system/compare/0.12.2...0.13.0
 [0.12.2]: https://github.com/beyond10x/docs-system/compare/0.12.1...0.12.2
 [0.12.1]: https://github.com/beyond10x/docs-system/compare/0.12.0...0.12.1

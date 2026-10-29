@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-29T07:22:20Z",
+  "actor": "human:timo",
+  "artifact": "story:protocol-graph-since-leaf",
+  "kind": "story",
+  "revision": 4,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "npm run gate at 0.14.0 on 763354d plus the version bump: 204 node tests passed, 0 failed; cargo 8 passed; fixtures valid"
+  }
+}
