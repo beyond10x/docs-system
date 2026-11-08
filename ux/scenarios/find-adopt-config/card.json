@@ -1,0 +1,10 @@
+{
+  "id": "find-adopt-config",
+  "card": "anchor",
+  "persona": "A maintainer of a product repository who has decided to use the template and wants the one change to make.",
+  "task": "From the landing page, find the config line that adopts the product-site template.",
+  "start": "",
+  "keywords": ["adopt", "template", "components", "docs"],
+  "truth": {"path": "docs/adopt", "text": "withProductSite(config, {landing"},
+  "expectations": {"maxActions": 4}
+}

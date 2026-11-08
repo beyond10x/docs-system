@@ -1,0 +1,10 @@
+{
+  "about": "UX loop adapter for the product-site template, measured on examples/product-site built hermetically from this checkout. Gating viewports are 1024x768, the narrowest size with the desktop sidebar (Docusaurus switches at 997 px), and 390x844, the narrowest phone; together they are the tightest case of each of the two layouts, so a page that fits there fits at the other three measured sizes of the same layout. 1440x900, 1280x800 and 768x1024 are measured each round and not gated. The template ships no search, so search is checked as optional: reported, not gated, until R-01's decision is answered. At phone widths the theme toggle and the sidebar live behind the menu toggle, which is the always-visible control there.",
+  "baseUrl": "/product-site/",
+  "viewports": {
+    "gating": ["1024x768", "390x844"],
+    "measured": ["1440x900", "1280x800", "1024x768", "768x1024", "390x844"]
+  },
+  "themes": ["light", "dark"],
+  "scenarios": "scenarios"
+}

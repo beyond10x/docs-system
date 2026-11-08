@@ -32,6 +32,17 @@ npm run gate
 The gate builds committed distribution files, checks they are current, runs tests, validates the
 fixture manifests, and exercises package exports.
 
+## UX loop
+
+`ux/` holds the UI iteration loop for the product-site template: `adapter.json`, scenario cards,
+`baseline.json`, finding records `findings/UXF-nnn.md` and rounds `rounds/R-nn/`. CI's browser step
+(`npm run test:browser`) ends with `npm run ux:gate`, which builds nothing itself and checks the
+example site that `tests/product-site.browser.mjs` just built. A change that improves a value runs
+`npm run ux:gate -- --update` and commits `ux/baseline.json` in the same merge; a change that makes a
+value worse needs `--update --decision <id>` and the decision on file. Every closed S1 or S2 finding
+names its regression asset, and that asset names the finding id. A round's change set holds at most
+five changes and is one task under `story:ux-iteration-loop`.
+
 ## Delivery
 
 Use conventional commits. Commits, tags, pushes, and repository mutations use Atlas-owned bot

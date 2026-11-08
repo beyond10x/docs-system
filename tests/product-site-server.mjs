@@ -3,12 +3,12 @@ import {createServer} from 'node:http';
 import {mkdir, readFile, stat, symlink} from 'node:fs/promises';
 import path from 'node:path';
 
-/** Build the example product site with Docusaurus against this checkout and serve it under its base URL. */
-export async function productSiteServer() {
-  const root = path.resolve(import.meta.dirname, '..');
+const root = path.resolve(import.meta.dirname, '..');
+
+/** Build the example product site with Docusaurus against this checkout; returns the output directory. */
+export async function buildProductSite() {
   const site = path.join(root, 'examples/product-site');
-  const output = path.join(root, '.cache/product-site-build');
-  const base = '/product-site/';
+  const output = path.resolve(root, process.env.B10X_PRODUCT_SITE_OUT ?? '.cache/product-site-build');
   await mkdir(path.join(site, 'node_modules/@beyond10x'), {recursive: true});
   await symlink('../../../..', path.join(site, 'node_modules/@beyond10x/docs-system')).catch(error => { if (error.code !== 'EEXIST') throw error; });
   await new Promise((resolve, reject) => {
@@ -16,6 +16,13 @@ export async function productSiteServer() {
     child.once('error', reject);
     child.once('exit', code => code === 0 ? resolve() : reject(new Error(`product site build exited ${code}`)));
   });
+  return output;
+}
+
+/** Build the example product site (or take B10X_PRODUCT_SITE_BUILT, a finished build) and serve it under its base URL. */
+export async function productSiteServer() {
+  const output = process.env.B10X_PRODUCT_SITE_BUILT ? path.resolve(root, process.env.B10X_PRODUCT_SITE_BUILT) : await buildProductSite();
+  const base = '/product-site/';
   const types = {'.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2'};
   const resolveFile = async pathname => {
     if (!pathname.startsWith(base)) return undefined;
