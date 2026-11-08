@@ -1,0 +1,4489 @@
+{
+  "round": "R-01",
+  "date": "2026-11-08",
+  "commit": "296f431",
+  "headline": {
+    "gate_failures_gating": 28,
+    "gate_failures_all": 72,
+    "overflow_all": 0,
+    "hidden_all": 2,
+    "axe_serious_critical_all": 70,
+    "axe_moderate_minor_all": 0,
+    "optional_missing_all": 120,
+    "screen_only_incomplete_all": 0,
+    "screen_only_actions_median": 3,
+    "cls_max": 0
+  },
+  "gating": [
+    "1024x768",
+    "390x844"
+  ],
+  "viewports": [
+    "1440x900",
+    "1280x800",
+    "1024x768",
+    "768x1024",
+    "390x844"
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "pages": [
+    "",
+    "docs",
+    "docs/adopt",
+    "docs/art",
+    "docs/charts",
+    "docs/code",
+    "docs/contracts",
+    "docs/meaning",
+    "docs/reference",
+    "docs/status",
+    "heroes",
+    "session"
+  ],
+  "metrics": {
+    "site@1440x900@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 1,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 7,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1440x900@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 1,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 7,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-adopt-config@1440x900": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 2,
+      "screen_only.looks": 3,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1.5,
+      "glance_cost.p95": 2
+    },
+    "find-install-command@1440x900": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 3,
+      "screen_only.looks": 4,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 2
+    },
+    "find-not-built@1440x900": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 1,
+      "screen_only.looks": 2,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 2
+    },
+    "site@1280x800@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 7,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1280x800@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 7,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-adopt-config@1280x800": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 2,
+      "screen_only.looks": 3,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1.5,
+      "glance_cost.p95": 2
+    },
+    "find-install-command@1280x800": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 4,
+      "screen_only.looks": 5,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 2
+    },
+    "find-not-built@1280x800": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 1,
+      "screen_only.looks": 2,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 2
+    },
+    "site@1024x768@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 7,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1024x768@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 7,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-adopt-config@1024x768": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 2,
+      "screen_only.looks": 3,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1.5,
+      "glance_cost.p95": 2
+    },
+    "find-install-command@1024x768": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 4,
+      "screen_only.looks": 5,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 2
+    },
+    "find-not-built@1024x768": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 1,
+      "screen_only.looks": 2,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 2
+    },
+    "site@768x1024@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 7,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@768x1024@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 7,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-adopt-config@768x1024": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 3,
+      "screen_only.looks": 4,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 2,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 3
+    },
+    "find-install-command@768x1024": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 5,
+      "screen_only.looks": 6,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 2,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 3
+    },
+    "find-not-built@768x1024": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 4,
+      "screen_only.looks": 5,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 2,
+      "glance_cost.median": 3,
+      "glance_cost.p95": 3
+    },
+    "site@390x844@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 1,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 7,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@390x844@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 1,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 7,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-adopt-config@390x844": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 3,
+      "screen_only.looks": 4,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 2,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 3
+    },
+    "find-install-command@390x844": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 6,
+      "screen_only.looks": 7,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 2,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 3
+    },
+    "find-not-built@390x844": {
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 5,
+      "screen_only.looks": 6,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 2,
+      "glance_cost.median": 3,
+      "glance_cost.p95": 3
+    }
+  },
+  "failures_gating": [
+    "gate 5 accessibility: 1024x768 light / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 light /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1024x768 light /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 1024x768 light /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 light /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 light /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1024x768 light /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 1024x768 dark / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 dark /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1024x768 dark /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 1024x768 dark /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 dark /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 dark /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1024x768 dark /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 390x844 light / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 light /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 390x844 light /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 390x844 light /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 light /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 light /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 390x844 light /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 390x844 dark / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 dark /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 390x844 dark /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 390x844 dark /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 dark /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 dark /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 390x844 dark /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+  ],
+  "failures_all": [
+    "gate 5 accessibility: 1440x900 light / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 2 always visible: 1440x900 light /docs/adopt one screen down, sidebar: covered by div.theme-layout-navbar-left",
+    "gate 5 accessibility: 1440x900 light /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1440x900 light /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 1440x900 light /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1440x900 light /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1440x900 light /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1440x900 light /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 1440x900 dark / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 2 always visible: 1440x900 dark /docs/adopt one screen down, sidebar: covered by div.theme-layout-navbar-left",
+    "gate 5 accessibility: 1440x900 dark /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1440x900 dark /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 1440x900 dark /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1440x900 dark /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1440x900 dark /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1440x900 dark /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 1280x800 light / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1280x800 light /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1280x800 light /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 1280x800 light /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1280x800 light /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1280x800 light /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1280x800 light /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 1280x800 dark / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1280x800 dark /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1280x800 dark /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 1280x800 dark /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1280x800 dark /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1280x800 dark /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1280x800 dark /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 1024x768 light / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 light /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1024x768 light /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 1024x768 light /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 light /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 light /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1024x768 light /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 1024x768 dark / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 dark /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1024x768 dark /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 1024x768 dark /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 dark /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 1024x768 dark /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 1024x768 dark /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 768x1024 light / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 768x1024 light /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 768x1024 light /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 768x1024 light /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 768x1024 light /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 768x1024 light /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 768x1024 light /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 768x1024 dark / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 768x1024 dark /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 768x1024 dark /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 768x1024 dark /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 768x1024 dark /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 768x1024 dark /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 768x1024 dark /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 390x844 light / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 light /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 390x844 light /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 390x844 light /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 light /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 light /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 390x844 light /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)",
+    "gate 5 accessibility: 390x844 dark / axe label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 dark /docs/art axe label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 390x844 dark /docs/art axe link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]",
+    "gate 5 accessibility: 390x844 dark /docs/charts axe label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 dark /docs/reference axe label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]",
+    "gate 5 accessibility: 390x844 dark /heroes axe label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+    "gate 5 accessibility: 390x844 dark /session axe aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+  ],
+  "bots": [
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1,
+          2
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "click \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1,
+          2
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "Enter \"Read the components\"",
+          "Enter \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 3,
+        "looks": 4,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Code\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 3,
+        "looks": 4,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Enter \"Code\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Status\""
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Enter \"Status\""
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1,
+          2
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "click \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 3,
+        "looks": 4,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Code\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Status\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1,
+          2
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "click \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1,
+          2
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "Enter \"Read the components\"",
+          "Enter \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Code\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Enter \"Code\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Status\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Enter \"Status\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1,
+          2
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "click \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Code\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Status\""
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1,
+          2
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "click \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1,
+          2
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "Enter \"Read the components\"",
+          "Enter \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Code\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Enter \"Code\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Status\""
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Enter \"Status\""
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1,
+          2
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "click \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Code\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          2
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Status\""
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 3,
+        "looks": 4,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "open menu",
+          "click \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 3,
+        "looks": 4,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "Enter \"Read the components\"",
+          "open menu",
+          "Enter \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 5,
+        "looks": 6,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "open menu",
+          "click \"Code blocks\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 5,
+        "looks": 6,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "Enter \"Read the components\"",
+          "open menu",
+          "Enter \"Code blocks\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          3
+        ],
+        "timeToAct": [
+          2
+        ],
+        "trail": [
+          "open menu",
+          "click \"Status\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          3
+        ],
+        "timeToAct": [
+          2
+        ],
+        "trail": [
+          "open menu",
+          "Enter \"Status\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 3,
+        "looks": 4,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "open menu",
+          "click \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 5,
+        "looks": 6,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "open menu",
+          "click \"Code blocks\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          3
+        ],
+        "timeToAct": [
+          2
+        ],
+        "trail": [
+          "open menu",
+          "click \"Status\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 3,
+        "looks": 4,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "open menu",
+          "click \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 3,
+        "looks": 4,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "Enter \"Read the components\"",
+          "open menu",
+          "Enter \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 6,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "open menu",
+          "click \"Code blocks\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 6,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "Enter \"Read the components\"",
+          "open menu",
+          "Enter \"Code blocks\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 5,
+        "looks": 6,
+        "steers": 0,
+        "glances": [
+          3
+        ],
+        "timeToAct": [
+          2
+        ],
+        "trail": [
+          "open menu",
+          "click \"Status\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 5,
+        "looks": 6,
+        "steers": 0,
+        "glances": [
+          3
+        ],
+        "timeToAct": [
+          2
+        ],
+        "trail": [
+          "open menu",
+          "Enter \"Status\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-adopt-config",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 3,
+        "looks": 4,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "open menu",
+          "click \"Adopt the template\""
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 6,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          1,
+          3
+        ],
+        "timeToAct": [
+          1,
+          2
+        ],
+        "trail": [
+          "click \"Read the components\"",
+          "open menu",
+          "click \"Code blocks\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-not-built",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 5,
+        "looks": 6,
+        "steers": 0,
+        "glances": [
+          3
+        ],
+        "timeToAct": [
+          2
+        ],
+        "trail": [
+          "open menu",
+          "click \"Status\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "page": "",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-index-1440x900-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-1440x900-light.png"
+    },
+    {
+      "page": "docs/adopt",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [
+          "one screen down, sidebar: covered by div.theme-layout-navbar-left"
+        ],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-adopt-1440x900-light.png"
+    },
+    {
+      "page": "docs/art",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+            "link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-art-1440x900-light.png"
+    },
+    {
+      "page": "docs/charts",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-charts-1440x900-light.png"
+    },
+    {
+      "page": "docs/code",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-code-1440x900-light.png"
+    },
+    {
+      "page": "docs/contracts",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-contracts-1440x900-light.png"
+    },
+    {
+      "page": "docs/meaning",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-meaning-1440x900-light.png"
+    },
+    {
+      "page": "docs/reference",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-1440x900-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1440x900-light.png"
+    },
+    {
+      "page": "heroes",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0.000013141999421296296,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-heroes-1440x900-light.png"
+    },
+    {
+      "page": "session",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-session-1440x900-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-index-1440x900-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-1440x900-dark.png"
+    },
+    {
+      "page": "docs/adopt",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [
+          "one screen down, sidebar: covered by div.theme-layout-navbar-left"
+        ],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-adopt-1440x900-dark.png"
+    },
+    {
+      "page": "docs/art",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+            "link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-art-1440x900-dark.png"
+    },
+    {
+      "page": "docs/charts",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-charts-1440x900-dark.png"
+    },
+    {
+      "page": "docs/code",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-code-1440x900-dark.png"
+    },
+    {
+      "page": "docs/contracts",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-contracts-1440x900-dark.png"
+    },
+    {
+      "page": "docs/meaning",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-meaning-1440x900-dark.png"
+    },
+    {
+      "page": "docs/reference",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-1440x900-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1440x900-dark.png"
+    },
+    {
+      "page": "heroes",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0.000013141999421296296,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-heroes-1440x900-dark.png"
+    },
+    {
+      "page": "session",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-session-1440x900-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-index-1280x800-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-1280x800-light.png"
+    },
+    {
+      "page": "docs/adopt",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-adopt-1280x800-light.png"
+    },
+    {
+      "page": "docs/art",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+            "link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-art-1280x800-light.png"
+    },
+    {
+      "page": "docs/charts",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-charts-1280x800-light.png"
+    },
+    {
+      "page": "docs/code",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-code-1280x800-light.png"
+    },
+    {
+      "page": "docs/contracts",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-contracts-1280x800-light.png"
+    },
+    {
+      "page": "docs/meaning",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-meaning-1280x800-light.png"
+    },
+    {
+      "page": "docs/reference",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-1280x800-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1280x800-light.png"
+    },
+    {
+      "page": "heroes",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-heroes-1280x800-light.png"
+    },
+    {
+      "page": "session",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-session-1280x800-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-index-1280x800-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-1280x800-dark.png"
+    },
+    {
+      "page": "docs/adopt",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-adopt-1280x800-dark.png"
+    },
+    {
+      "page": "docs/art",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+            "link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-art-1280x800-dark.png"
+    },
+    {
+      "page": "docs/charts",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-charts-1280x800-dark.png"
+    },
+    {
+      "page": "docs/code",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-code-1280x800-dark.png"
+    },
+    {
+      "page": "docs/contracts",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-contracts-1280x800-dark.png"
+    },
+    {
+      "page": "docs/meaning",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-meaning-1280x800-dark.png"
+    },
+    {
+      "page": "docs/reference",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-1280x800-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1280x800-dark.png"
+    },
+    {
+      "page": "heroes",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-heroes-1280x800-dark.png"
+    },
+    {
+      "page": "session",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-session-1280x800-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-index-1024x768-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-1024x768-light.png"
+    },
+    {
+      "page": "docs/adopt",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-adopt-1024x768-light.png"
+    },
+    {
+      "page": "docs/art",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+            "link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-art-1024x768-light.png"
+    },
+    {
+      "page": "docs/charts",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-charts-1024x768-light.png"
+    },
+    {
+      "page": "docs/code",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-code-1024x768-light.png"
+    },
+    {
+      "page": "docs/contracts",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-contracts-1024x768-light.png"
+    },
+    {
+      "page": "docs/meaning",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-meaning-1024x768-light.png"
+    },
+    {
+      "page": "docs/reference",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-1024x768-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1024x768-light.png"
+    },
+    {
+      "page": "heroes",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-heroes-1024x768-light.png"
+    },
+    {
+      "page": "session",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-session-1024x768-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-index-1024x768-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-1024x768-dark.png"
+    },
+    {
+      "page": "docs/adopt",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-adopt-1024x768-dark.png"
+    },
+    {
+      "page": "docs/art",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+            "link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-art-1024x768-dark.png"
+    },
+    {
+      "page": "docs/charts",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-charts-1024x768-dark.png"
+    },
+    {
+      "page": "docs/code",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-code-1024x768-dark.png"
+    },
+    {
+      "page": "docs/contracts",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-contracts-1024x768-dark.png"
+    },
+    {
+      "page": "docs/meaning",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-meaning-1024x768-dark.png"
+    },
+    {
+      "page": "docs/reference",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-1024x768-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1024x768-dark.png"
+    },
+    {
+      "page": "heroes",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-heroes-1024x768-dark.png"
+    },
+    {
+      "page": "session",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-session-1024x768-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-index-768x1024-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-768x1024-light.png"
+    },
+    {
+      "page": "docs/adopt",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-adopt-768x1024-light.png"
+    },
+    {
+      "page": "docs/art",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+            "link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-art-768x1024-light.png"
+    },
+    {
+      "page": "docs/charts",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-charts-768x1024-light.png"
+    },
+    {
+      "page": "docs/code",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-code-768x1024-light.png"
+    },
+    {
+      "page": "docs/contracts",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-contracts-768x1024-light.png"
+    },
+    {
+      "page": "docs/meaning",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-meaning-768x1024-light.png"
+    },
+    {
+      "page": "docs/reference",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-768x1024-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-status-768x1024-light.png"
+    },
+    {
+      "page": "heroes",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-heroes-768x1024-light.png"
+    },
+    {
+      "page": "session",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-session-768x1024-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-index-768x1024-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-768x1024-dark.png"
+    },
+    {
+      "page": "docs/adopt",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-adopt-768x1024-dark.png"
+    },
+    {
+      "page": "docs/art",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+            "link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-art-768x1024-dark.png"
+    },
+    {
+      "page": "docs/charts",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-charts-768x1024-dark.png"
+    },
+    {
+      "page": "docs/code",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-code-768x1024-dark.png"
+    },
+    {
+      "page": "docs/contracts",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-contracts-768x1024-dark.png"
+    },
+    {
+      "page": "docs/meaning",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-meaning-768x1024-dark.png"
+    },
+    {
+      "page": "docs/reference",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-768x1024-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-status-768x1024-dark.png"
+    },
+    {
+      "page": "heroes",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-heroes-768x1024-dark.png"
+    },
+    {
+      "page": "session",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-session-768x1024-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [
+          "span: \"canon / repository root\""
+        ],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-index-390x844-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-390x844-light.png"
+    },
+    {
+      "page": "docs/adopt",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-adopt-390x844-light.png"
+    },
+    {
+      "page": "docs/art",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+            "link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-art-390x844-light.png"
+    },
+    {
+      "page": "docs/charts",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-charts-390x844-light.png"
+    },
+    {
+      "page": "docs/code",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-code-390x844-light.png"
+    },
+    {
+      "page": "docs/contracts",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-contracts-390x844-light.png"
+    },
+    {
+      "page": "docs/meaning",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-meaning-390x844-light.png"
+    },
+    {
+      "page": "docs/reference",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-390x844-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-status-390x844-light.png"
+    },
+    {
+      "page": "heroes",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-heroes-390x844-light.png"
+    },
+    {
+      "page": "session",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-session-390x844-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [
+          "span: \"canon / repository root\""
+        ],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (18): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-index-390x844-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-390x844-dark.png"
+    },
+    {
+      "page": "docs/adopt",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-adopt-390x844-dark.png"
+    },
+    {
+      "page": "docs/art",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (6): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]",
+            "link-in-text-block (1): p:nth-child(3) > a[href$=\"heroes\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-art-390x844-dark.png"
+    },
+    {
+      "page": "docs/charts",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (60): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-charts-390x844-dark.png"
+    },
+    {
+      "page": "docs/code",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-code-390x844-dark.png"
+    },
+    {
+      "page": "docs/contracts",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-contracts-390x844-dark.png"
+    },
+    {
+      "page": "docs/meaning",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-meaning-390x844-dark.png"
+    },
+    {
+      "page": "docs/reference",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (43): g[transform=\"translate(0,162)\"], g[transform=\"translate(0,238)\"], g[transform=\"translate(0,314)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-390x844-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-docs-status-390x844-dark.png"
+    },
+    {
+      "page": "heroes",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "label-content-name-mismatch (15): g[transform=\"translate(0,48)\"], g[transform=\"translate(0,124)\"], g[transform=\"translate(328,48)\"]"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-heroes-390x844-dark.png"
+    },
+    {
+      "page": "session",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [
+            "aria-prohibited-attr (109): g:nth-child(2) > .b10x-chart-mark:nth-child(1), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(2), svg[viewBox=\"0 0 1200 340\"] > g:nth-child(2) > .b10x-chart-mark:nth-child(3)"
+          ],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        }
+      },
+      "shot": "shots/pages/page-session-390x844-dark.png"
+    }
+  ]
+}
