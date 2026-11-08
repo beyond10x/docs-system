@@ -109,7 +109,7 @@ export function SessionTimeline({data, title = 'Who did what, when', description
       : flags.approximate
         ? <rect x={f(x0 + 1)} y={f(y + 1)} width={f(Math.max(1, width - 2))} height={barH - 2} rx={4} className="b10x-timeline__bar b10x-timeline__bar--approximate" style={{stroke: colour, fill: colour}} />
         : <rect x={f(x0)} y={f(y)} width={f(width)} height={barH} rx={4} className={['b10x-timeline__bar', flags.open && 'b10x-timeline__bar--open'].filter(Boolean).join(' ')} style={{fill: colour}} />;
-    bars.push(<g key={key} className="b10x-chart-mark" tabIndex={0} aria-label={`${tipTitle}. ${lines.join('. ')}`} aria-describedby={tip?.title === tipTitle ? `${base}-tip` : undefined} {...bind({x: x0, y, width, height: barH, title: tipTitle, lines, key: colour})}>
+    bars.push(<g key={key} className="b10x-chart-mark" role="img" tabIndex={0} aria-label={`${tipTitle}. ${lines.join('. ')}`} aria-describedby={tip?.title === tipTitle ? `${base}-tip` : undefined} {...bind({x: x0, y, width, height: barH, title: tipTitle, lines, key: colour})}>
       <rect className="b10x-chart-hit" x={f(x0 - 3)} y={f(y - 5)} width={f(width + 6)} height={barH + 10} />
       {shape}
     </g>);
@@ -131,14 +131,14 @@ export function SessionTimeline({data, title = 'Who did what, when', description
     const cy = laneY(marksLane) + barH / 2;
     steps.forEach(({decision}) => {
       const cx = x(at(decision.decided));
-      markers.push(<g key={`m${decision.n}`} className="b10x-chart-mark" tabIndex={0} aria-label={`Decision ${decision.n}: ${decision.title}, ${decision.decided} UTC`} {...bind({x: cx - 6, y: cy - 6, width: 12, height: 12, title: `Decision #${decision.n}: ${decision.title}`, lines: [`${decision.decided} UTC · ${decision.adr}`], key: series(slot.get(decisionProtocol))})}>
+      markers.push(<g key={`m${decision.n}`} className="b10x-chart-mark" role="img" tabIndex={0} aria-label={`Decision ${decision.n}: ${decision.title}, ${decision.decided} UTC`} {...bind({x: cx - 6, y: cy - 6, width: 12, height: 12, title: `Decision #${decision.n}: ${decision.title}`, lines: [`${decision.decided} UTC · ${decision.adr}`], key: series(slot.get(decisionProtocol))})}>
         <circle className="b10x-chart-hit" cx={f(cx)} cy={f(cy)} r={12} />
         <path d={`M${f(cx)} ${f(cy - 6)} L${f(cx + 6)} ${f(cy)} L${f(cx)} ${f(cy + 6)} L${f(cx - 6)} ${f(cy)} Z`} className="b10x-timeline__marker" style={{fill: series(slot.get(decisionProtocol))}} />
       </g>);
     });
     (document.operator_marks ?? []).forEach((mark, index) => {
       const cx = x(at(mark.t));
-      markers.push(<g key={`a${index}`} className="b10x-chart-mark" tabIndex={0} aria-label={`Approval at ${mark.t} UTC: ${mark.label}`} {...bind({x: cx - 7, y: cy - 7, width: 14, height: 14, title: mark.kind === 'approval' ? 'Approval' : mark.kind, lines: [mark.label, `${mark.t} UTC`]})}>
+      markers.push(<g key={`a${index}`} className="b10x-chart-mark" role="img" tabIndex={0} aria-label={`Approval at ${mark.t} UTC: ${mark.label}`} {...bind({x: cx - 7, y: cy - 7, width: 14, height: 14, title: mark.kind === 'approval' ? 'Approval' : mark.kind, lines: [mark.label, `${mark.t} UTC`]})}>
         <circle className="b10x-chart-hit" cx={f(cx)} cy={f(cy)} r={12} />
         <path d={`M${f(cx)} ${f(cy - 7)} L${f(cx + 7)} ${f(cy + 6)} L${f(cx - 7)} ${f(cy + 6)} Z`} className="b10x-timeline__marker b10x-timeline__marker--approval" />
       </g>);
@@ -249,7 +249,7 @@ export function StepBars({data, rows, parts, title = 'Step by step', description
                 const width = Math.max(2, x(from + value) - x(from) - (from > 0 ? 1 : 0) - (isLast ? 0 : 1));
                 const colour = series(resolvedParts[part]?.slot);
                 const label = `${row.label}. ${resolvedParts[part]?.label}: ${formatDuration(value)}`;
-                return <g key={part} className="b10x-chart-mark" tabIndex={0} aria-label={label} {...bind({x: x0, y, width, height: barH, title: row.label, lines: [`${resolvedParts[part]?.label}: ${formatDuration(value)}`], key: colour})}>
+                return <g key={part} className="b10x-chart-mark" role="img" tabIndex={0} aria-label={label} {...bind({x: x0, y, width, height: barH, title: row.label, lines: [`${resolvedParts[part]?.label}: ${formatDuration(value)}`], key: colour})}>
                   <rect className="b10x-chart-hit" x={f(x0 - 1)} y={f(y - 5)} width={f(width + 2)} height={barH + 10} />
                   <path d={isLast ? roundedEnd(x0, y, width, barH, 4) : `M${f(x0)},${f(y)} h${f(width)} v${barH} h${f(-width)} Z`} style={{fill: colour}} className="b10x-step-bars__segment" />
                 </g>;

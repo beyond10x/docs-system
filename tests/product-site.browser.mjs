@@ -599,6 +599,14 @@ check('UXF-001', 'a graph node\'s accessible name contains the text it shows', a
   }
 });
 
+check('UXF-002', 'a focusable session chart mark has a role that allows its aria-label', async () => {
+  const {page, close} = await open('session');
+  try {
+    assert.deepEqual(await axeRule(page, 'aria-prohibited-attr'), []);
+    assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('.b10x-chart-mark[aria-label]')].filter(mark => !mark.getAttribute('role')).length), 0);
+  } finally { await close(); }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {
