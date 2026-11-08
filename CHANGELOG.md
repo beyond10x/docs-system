@@ -6,6 +6,34 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-11-08
+
+### Added
+
+- `b10x-docs ux gate --site <built-dir>` checks a built static site in headless Chromium, with no
+  network and no keys: no sideways scroll and no element past its box, the navbar, theme toggle,
+  menu toggle and docs sidebar always visible, no serious or critical axe-core violation, and a
+  screen-only user that completes each scenario card by pointer and by keyboard, in every theme at
+  the gating viewports (1024x768 and 390x844 by default). It also holds `ux/baseline.json` as a
+  lower-is-better ratchet and refuses a closed S1 or S2 finding without a regression asset. A
+  consuming site runs it against its own build with `playwright` and `axe-core` installed; both are
+  optional peer dependencies.
+- `b10x-docs ux round --site <built-dir> --round ux/rounds/R-nn` measures every docs-site viewport
+  (1440x900, 1280x800, 1024x768, 768x1024, 390x844) and writes `report.md`, `round.json`, worst-moment
+  shots, a contact sheet per theme and `ux/rounds/trend.md`.
+- `ux/` runs the loop on the template itself: an adapter, three scenario cards, the baseline, round
+  R-01 and its finding records. CI's browser step ends with the gate.
+
+### Fixed
+
+- A protocol or domain graph node's accessible name starts with the text the node shows (`Action ·
+  Write repository.edit`, `Entity · 2 fields Agent Registered`), so a voice-control user can name
+  what they see (WCAG 2.5.3).
+- Session chart marks take `role="img"`, which allows their `aria-label`; 109 marks on the example
+  session page were announced without it.
+- A link in documentation prose (paragraphs, list items, table cells, quotes) is underlined; its
+  colour alone differed from the text by 1.03:1.
+
 ## [0.14.1] - 2026-10-29
 
 ### Changed
@@ -371,7 +399,8 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - Introduce the public manifest contract, deterministic registry CLI, Docusaurus integration,
   shared tokens, generic React components and read-only schema/diagram renderers.
 
-[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.14.1...HEAD
+[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.15.0...HEAD
+[0.15.0]: https://github.com/beyond10x/docs-system/compare/0.14.1...0.15.0
 [0.14.1]: https://github.com/beyond10x/docs-system/compare/0.14.0...0.14.1
 [0.14.0]: https://github.com/beyond10x/docs-system/compare/0.13.0...0.14.0
 [0.13.0]: https://github.com/beyond10x/docs-system/compare/0.12.2...0.13.0
