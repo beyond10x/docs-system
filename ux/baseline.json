@@ -1,0 +1,350 @@
+{
+  "about": "Lower is better. Written by b10x-docs ux ratchet --update.",
+  "scenarios": {
+    "find-adopt-config@1024x768": {
+      "glance_cost.median": {
+        "value": 1.5,
+        "tolerance": 0.075
+      },
+      "glance_cost.p95": {
+        "value": 2,
+        "tolerance": 0.1
+      },
+      "screen_only.actions": {
+        "value": 2,
+        "tolerance": 0
+      },
+      "screen_only.incomplete": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.keyboard_actions": {
+        "value": 36,
+        "tolerance": 0
+      },
+      "screen_only.looks": {
+        "value": 3,
+        "tolerance": 0
+      },
+      "screen_only.steers": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.time_to_act_steps.max": {
+        "value": 1,
+        "tolerance": 0
+      }
+    },
+    "find-adopt-config@390x844": {
+      "glance_cost.median": {
+        "value": 2,
+        "tolerance": 0.1
+      },
+      "glance_cost.p95": {
+        "value": 3,
+        "tolerance": 0.15
+      },
+      "screen_only.actions": {
+        "value": 3,
+        "tolerance": 0
+      },
+      "screen_only.incomplete": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.keyboard_actions": {
+        "value": 23,
+        "tolerance": 0
+      },
+      "screen_only.looks": {
+        "value": 4,
+        "tolerance": 0
+      },
+      "screen_only.steers": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.time_to_act_steps.max": {
+        "value": 2,
+        "tolerance": 0
+      }
+    },
+    "find-install-command@1024x768": {
+      "glance_cost.median": {
+        "value": 2,
+        "tolerance": 0.1
+      },
+      "glance_cost.p95": {
+        "value": 2,
+        "tolerance": 0.1
+      },
+      "screen_only.actions": {
+        "value": 4,
+        "tolerance": 0
+      },
+      "screen_only.incomplete": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.keyboard_actions": {
+        "value": 11,
+        "tolerance": 0
+      },
+      "screen_only.looks": {
+        "value": 5,
+        "tolerance": 0
+      },
+      "screen_only.steers": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.time_to_act_steps.max": {
+        "value": 1,
+        "tolerance": 0
+      }
+    },
+    "find-install-command@390x844": {
+      "glance_cost.median": {
+        "value": 2,
+        "tolerance": 0.1
+      },
+      "glance_cost.p95": {
+        "value": 3,
+        "tolerance": 0.15
+      },
+      "screen_only.actions": {
+        "value": 6,
+        "tolerance": 0
+      },
+      "screen_only.incomplete": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.keyboard_actions": {
+        "value": 21,
+        "tolerance": 0
+      },
+      "screen_only.looks": {
+        "value": 7,
+        "tolerance": 0
+      },
+      "screen_only.steers": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.time_to_act_steps.max": {
+        "value": 2,
+        "tolerance": 0
+      }
+    },
+    "find-not-built@1024x768": {
+      "glance_cost.median": {
+        "value": 2,
+        "tolerance": 0.1
+      },
+      "glance_cost.p95": {
+        "value": 2,
+        "tolerance": 0.1
+      },
+      "screen_only.actions": {
+        "value": 1,
+        "tolerance": 0
+      },
+      "screen_only.incomplete": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.keyboard_actions": {
+        "value": 9,
+        "tolerance": 0
+      },
+      "screen_only.looks": {
+        "value": 2,
+        "tolerance": 0
+      },
+      "screen_only.steers": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.time_to_act_steps.max": {
+        "value": 1,
+        "tolerance": 0
+      }
+    },
+    "find-not-built@390x844": {
+      "glance_cost.median": {
+        "value": 3,
+        "tolerance": 0.15
+      },
+      "glance_cost.p95": {
+        "value": 3,
+        "tolerance": 0.15
+      },
+      "screen_only.actions": {
+        "value": 5,
+        "tolerance": 0
+      },
+      "screen_only.incomplete": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.keyboard_actions": {
+        "value": 18,
+        "tolerance": 0
+      },
+      "screen_only.looks": {
+        "value": 6,
+        "tolerance": 0
+      },
+      "screen_only.steers": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "screen_only.time_to_act_steps.max": {
+        "value": 2,
+        "tolerance": 0
+      }
+    },
+    "site@1024x768@dark": {
+      "axe.moderate_minor": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "axe.serious_critical": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.hidden": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.optional_missing": {
+        "value": 12,
+        "tolerance": 0
+      },
+      "layout.overflow": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.truncated": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout_shift.cls_max": {
+        "value": 0,
+        "tolerance": 0.01
+      },
+      "motion.running": {
+        "value": 0,
+        "tolerance": 0
+      }
+    },
+    "site@1024x768@light": {
+      "axe.moderate_minor": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "axe.serious_critical": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.hidden": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.optional_missing": {
+        "value": 12,
+        "tolerance": 0
+      },
+      "layout.overflow": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.truncated": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout_shift.cls_max": {
+        "value": 0,
+        "tolerance": 0.01
+      },
+      "motion.running": {
+        "value": 0,
+        "tolerance": 0
+      }
+    },
+    "site@390x844@dark": {
+      "axe.moderate_minor": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "axe.serious_critical": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.hidden": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.optional_missing": {
+        "value": 12,
+        "tolerance": 0
+      },
+      "layout.overflow": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.truncated": {
+        "value": 1,
+        "tolerance": 0
+      },
+      "layout_shift.cls_max": {
+        "value": 0,
+        "tolerance": 0.01
+      },
+      "motion.running": {
+        "value": 0,
+        "tolerance": 0
+      }
+    },
+    "site@390x844@light": {
+      "axe.moderate_minor": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "axe.serious_critical": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.hidden": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.optional_missing": {
+        "value": 12,
+        "tolerance": 0
+      },
+      "layout.overflow": {
+        "value": 0,
+        "tolerance": 0
+      },
+      "layout.truncated": {
+        "value": 1,
+        "tolerance": 0
+      },
+      "layout_shift.cls_max": {
+        "value": 0,
+        "tolerance": 0.01
+      },
+      "motion.running": {
+        "value": 0,
+        "tolerance": 0
+      }
+    }
+  },
+  "tolerances": {
+    "counts": 0,
+    "steps": 0.05,
+    "layout_shift": 0.01
+  }
+}
