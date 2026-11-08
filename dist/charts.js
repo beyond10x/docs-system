@@ -96,10 +96,10 @@ function ProtocolGraphView({ document, layout, title, description, caption, vari
                                     }) }), _jsx("g", { className: "b10x-graph__nodes", children: layout.nodes.map(({ node, x, y, width, height, displayName }) => {
                                         const dim = lineage !== null && !lineage.has(node.id);
                                         const isCurrent = node.id === current;
-                                        return _jsxs("g", { transform: `translate(${f(x)},${f(y)})`, className: classes('b10x-graph__node', `b10x-graph__node--${node.kind}`, dim && 'is-dimmed', isCurrent && 'is-current'), tabIndex: 0, role: "button", "aria-pressed": pinned === node.id, "aria-label": `${PROTOCOL_KIND_LABELS[node.kind].singular} ${node.name}${node.description ? `. ${markdownCodeText(node.description)}` : ''}`, "aria-describedby": isCurrent ? `${base}-tooltip` : undefined, onPointerEnter: () => setHovered(node.id), onPointerLeave: () => setHovered(null), onFocus: () => setHovered(node.id), onBlur: () => setHovered(null), onClick: () => setPinned((value) => value === node.id ? null : node.id), onKeyDown: (event) => { if (event.key === 'Enter' || event.key === ' ') {
+                                        return _jsxs("g", { transform: `translate(${f(x)},${f(y)})`, className: classes('b10x-graph__node', `b10x-graph__node--${node.kind}`, dim && 'is-dimmed', isCurrent && 'is-current'), tabIndex: 0, role: "button", "aria-pressed": pinned === node.id, "aria-label": `${nodeLabel(node, displayName)}${node.description ? `. ${markdownCodeText(node.description)}` : ''}`, "aria-describedby": isCurrent ? `${base}-tooltip` : undefined, onPointerEnter: () => setHovered(node.id), onPointerLeave: () => setHovered(null), onFocus: () => setHovered(node.id), onBlur: () => setHovered(null), onClick: () => setPinned((value) => value === node.id ? null : node.id), onKeyDown: (event) => { if (event.key === 'Enter' || event.key === ' ') {
                                                 event.preventDefault();
                                                 setPinned((value) => value === node.id ? null : node.id);
-                                            } }, children: [_jsx("rect", { className: "b10x-graph__hit", x: -6, y: -6, width: width + 12, height: height + 12, rx: 12 }), _jsx("rect", { className: "b10x-graph__body", width: width, height: height, rx: 8 }), _jsx("rect", { className: "b10x-graph__accent", x: 0, y: 10, width: 3, height: height - 20, rx: 1.5 }), _jsx("text", { className: "b10x-graph__node-kicker", x: 16, y: 22, children: kicker(node) }), _jsx("text", { className: "b10x-graph__node-name", x: 16, y: 42, children: displayName }), _jsx(NodeGlyphs, { node: node, width: width })] }, node.id);
+                                            } }, children: [_jsx("rect", { className: "b10x-graph__hit", x: -6, y: -6, width: width + 12, height: height + 12, rx: 12 }), _jsx("rect", { className: "b10x-graph__body", width: width, height: height, rx: 8 }), _jsx("rect", { className: "b10x-graph__accent", x: 0, y: 10, width: 3, height: height - 20, rx: 1.5 }), _jsx("text", { className: "b10x-graph__node-kicker", x: 16, y: 22, children: `${kicker(node)} ` }), _jsx("text", { className: "b10x-graph__node-name", x: 16, y: 42, children: displayName }), _jsx(NodeGlyphs, { node: node, width: width })] }, node.id);
                                     }) })] }), placed && !hero && _jsx(ProtocolTooltip, { id: `${base}-tooltip`, placed: placed, layout: layout, document: document, byId: byId })] }) }), hero
                 ? _jsxs(_Fragment, { children: [legend, _jsx("p", { className: "b10x-sr-only", id: `${base}-hint`, children: "Hover or focus a node to trace what it rests on." })] })
                 : _jsxs("div", { className: "b10x-graph__tools", children: [_jsx("p", { className: "b10x-graph__hint", id: `${base}-hint`, "data-pagefind-ignore": true, children: "Hover or focus a node to trace what it rests on and what rests on it. Press Enter to pin it, Escape to clear." }), _jsx(FitToggle, { ...sizing })] }), caption && _jsx("figcaption", { className: "b10x-graph__caption", children: caption }), !hero && document.case && _jsx(CaseInputs, { inputs: document.case.inputs }), !hero && _jsx(ProtocolTable, { document: document }), !hero && document.protocol.source && _jsxs("p", { className: "b10x-graph__source", children: ["Source: ", document.protocol.source] })] });
@@ -107,6 +107,12 @@ function ProtocolGraphView({ document, layout, title, description, caption, vari
 function kicker(node) {
     const label = PROTOCOL_KIND_LABELS[node.kind].singular.toUpperCase();
     return node.kind === 'action' && node.effect ? `${label} · ${node.effect.toUpperCase()}` : label;
+}
+/** The node's visible text in reading case, so its accessible name contains its label (WCAG 2.5.3, UXF-001). */
+function nodeLabel(node, displayName) {
+    const kind = PROTOCOL_KIND_LABELS[node.kind].singular;
+    const shown = node.kind === 'action' && node.effect ? `${kind} · ${node.effect.charAt(0).toUpperCase()}${node.effect.slice(1)}` : kind;
+    return `${shown} ${displayName}${displayName === node.name ? '' : `, ${node.name}`}`;
 }
 function NodeGlyphs({ node, width }) {
     const glyphs = [];
@@ -217,13 +223,39 @@ function DomainGraphView({ document, layout, title, description, caption, varian
                                         return _jsx("text", { x: f(start.x + (anchorEnd ? -10 : 10)), y: f(start.y + (end.y < start.y - 4 ? 13 : -6)), textAnchor: anchorEnd ? 'end' : 'start', className: classes('b10x-graph__relation-label', dim && 'is-dimmed'), children: relation.name }, index);
                                     }) }), _jsx("g", { className: "b10x-graph__nodes", children: layout.nodes.map(({ entity, x, y, width, height, displayName }) => {
                                         const isCurrent = entity.id === current;
-                                        return _jsxs("g", { transform: `translate(${f(x)},${f(y)})`, className: classes('b10x-graph__node', 'b10x-graph__node--entity', neighbours !== null && !neighbours.has(entity.id) && 'is-dimmed', isCurrent && 'is-current'), tabIndex: 0, role: "button", "aria-pressed": pinned === entity.id, "aria-label": `Entity ${entity.name}${entity.summary ? `. ${markdownCodeText(entity.summary)}` : ''}`, "aria-describedby": isCurrent ? `${base}-tooltip` : undefined, onPointerEnter: () => setHovered(entity.id), onPointerLeave: () => setHovered(null), onFocus: () => setHovered(entity.id), onBlur: () => setHovered(null), onClick: () => setPinned((value) => value === entity.id ? null : entity.id), onKeyDown: (event) => { if (event.key === 'Enter' || event.key === ' ') {
+                                        return _jsxs("g", { transform: `translate(${f(x)},${f(y)})`, className: classes('b10x-graph__node', 'b10x-graph__node--entity', neighbours !== null && !neighbours.has(entity.id) && 'is-dimmed', isCurrent && 'is-current'), tabIndex: 0, role: "button", "aria-pressed": pinned === entity.id, "aria-label": `${entityLabel(entity, width, displayName)}${entity.summary ? `. ${markdownCodeText(entity.summary)}` : ''}`, "aria-describedby": isCurrent ? `${base}-tooltip` : undefined, onPointerEnter: () => setHovered(entity.id), onPointerLeave: () => setHovered(null), onFocus: () => setHovered(entity.id), onBlur: () => setHovered(null), onClick: () => setPinned((value) => value === entity.id ? null : entity.id), onKeyDown: (event) => { if (event.key === 'Enter' || event.key === ' ') {
                                                 event.preventDefault();
                                                 setPinned((value) => value === entity.id ? null : entity.id);
-                                            } }, children: [_jsx("rect", { className: "b10x-graph__hit", x: -6, y: -6, width: width + 12, height: height + 12, rx: 12 }), _jsx("rect", { className: "b10x-graph__body", width: width, height: height, rx: 8 }), _jsx("rect", { className: "b10x-graph__accent", x: 0, y: 10, width: 3, height: height - 20, rx: 1.5 }), _jsx("text", { className: "b10x-graph__node-kicker", x: 16, y: 21, children: `ENTITY · ${entity.fields.length + 1} FIELD${entity.fields.length ? 'S' : ''}` }), _jsx("text", { className: "b10x-graph__entity-name", x: 16, y: 42, children: displayName }), _jsx(StateChips, { entity: entity, width: width })] }, entity.id);
+                                            } }, children: [_jsx("rect", { className: "b10x-graph__hit", x: -6, y: -6, width: width + 12, height: height + 12, rx: 12 }), _jsx("rect", { className: "b10x-graph__body", width: width, height: height, rx: 8 }), _jsx("rect", { className: "b10x-graph__accent", x: 0, y: 10, width: 3, height: height - 20, rx: 1.5 }), _jsx("text", { className: "b10x-graph__node-kicker", x: 16, y: 21, children: `${entityKicker(entity).toUpperCase()} ` }), _jsx("text", { className: "b10x-graph__entity-name", x: 16, y: 42, children: `${displayName} ` }), _jsx(StateChips, { entity: entity, width: width })] }, entity.id);
                                     }) })] }), placed && !hero && _jsx(DomainTooltip, { id: `${base}-tooltip`, placed: placed, layout: layout, document: document })] }) }), hero
                 ? _jsxs(_Fragment, { children: [legend, _jsx("p", { className: "b10x-sr-only", id: `${base}-hint`, children: "Hover or focus an entity to see what it relates to." })] })
                 : _jsxs("div", { className: "b10x-graph__tools", children: [_jsx("p", { className: "b10x-graph__hint", id: `${base}-hint`, "data-pagefind-ignore": true, children: "Hover or focus an entity to see its fields, lifecycle and relations. Press Enter to pin it, Escape to clear." }), _jsx(FitToggle, { ...sizing })] }), !hero && lifecycles.length > 0 && _jsxs("section", { className: "b10x-lifecycles", "aria-label": "Lifecycles", children: [_jsx("p", { className: "b10x-graph__kicker", children: "Lifecycles with transitions" }), _jsx("div", { children: lifecycles.map((entity) => _jsx(Lifecycle, { entity: entity }, entity.id)) })] }), caption && _jsx("figcaption", { className: "b10x-graph__caption", children: caption }), !hero && _jsx(DomainTable, { document: document }), !hero && document.domain.source && _jsxs("p", { className: "b10x-graph__source", children: ["Source: ", document.domain.source] })] });
+}
+function entityKicker(entity) {
+    return `Entity · ${entity.fields.length + 1} field${entity.fields.length ? 's' : ''}`;
+}
+/** The chip texts a node shows, in order: the states that fit, then `+n` for the rest. */
+function stateChipTexts(entity, width) {
+    const lifecycle = entity.lifecycle;
+    if (!lifecycle)
+        return ['No lifecycle'];
+    const texts = [];
+    let x = 16;
+    for (const [index, state] of lifecycle.states.entries()) {
+        const chipWidth = state.length * 6.3 + (state === lifecycle.initial ? 26 : 16);
+        if (x + chipWidth > width - 16) {
+            if (texts.length)
+                texts.push(`+${lifecycle.states.length - index}`);
+            break;
+        }
+        texts.push(state);
+        x += chipWidth + 6;
+    }
+    return texts;
+}
+/** The node's visible text in reading order, so its accessible name contains its label (WCAG 2.5.3, UXF-001). */
+function entityLabel(entity, width, displayName) {
+    return `${entityKicker(entity)} ${displayName} ${stateChipTexts(entity, width).join(' ')}${displayName === entity.name ? '' : `, ${entity.name}`}`;
 }
 function StateChips({ entity, width }) {
     const lifecycle = entity.lifecycle;
@@ -241,7 +273,7 @@ function StateChips({ entity, width }) {
             x = limit + 1;
             return;
         }
-        chips.push(_jsxs("g", { transform: `translate(${f(x)},${DOMAIN_NODE_HEIGHT - 34})`, className: classes('b10x-graph__state', initial && 'is-initial'), children: [_jsx("rect", { width: f(chipWidth), height: 20, rx: 10 }), initial && _jsx("circle", { cx: 10, cy: 10, r: 3 }), _jsx("text", { x: initial ? 18 : 8, y: 14, children: state })] }, state));
+        chips.push(_jsxs("g", { transform: `translate(${f(x)},${DOMAIN_NODE_HEIGHT - 34})`, className: classes('b10x-graph__state', initial && 'is-initial'), children: [_jsx("rect", { width: f(chipWidth), height: 20, rx: 10 }), initial && _jsx("circle", { cx: 10, cy: 10, r: 3 }), _jsx("text", { x: initial ? 18 : 8, y: 14, children: `${state} ` })] }, state));
         x += chipWidth + 6;
     });
     return _jsx(_Fragment, { children: chips });

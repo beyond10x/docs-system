@@ -584,6 +584,21 @@ check('nojekyll', 'the build output carries .nojekyll', async () => {
   assert.equal(await readFile(path.join(server.output, '.nojekyll'), 'utf8'), '');
 });
 
+// UX loop findings (ux/findings/UXF-nnn.md): each check is the finding's regression asset.
+const axeSource = await readFile(path.resolve(import.meta.dirname, '../node_modules/axe-core/axe.min.js'), 'utf8');
+async function axeRule(page, rule) {
+  await page.addScriptTag({content: axeSource});
+  return page.evaluate(async id => (await window.axe.run(document, {runOnly: {type: 'rule', values: [id]}})).violations
+    .flatMap(violation => violation.nodes.map(node => node.html.slice(0, 120))), rule);
+}
+
+check('UXF-001', 'a graph node\'s accessible name contains the text it shows', async () => {
+  for (const url of ['', 'docs/art', 'docs/charts', 'docs/reference', 'heroes']) for (const width of [1024, 390]) {
+    const {page, close} = await open(url, {width});
+    try { assert.deepEqual(await axeRule(page, 'label-content-name-mismatch'), [], `/${url} ${width}px`); } finally { await close(); }
+  }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {
