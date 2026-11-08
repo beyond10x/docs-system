@@ -323,7 +323,7 @@ loopback and no keys. It fails when any of these is true at a gating viewport, i
 
 A consuming site runs the same gate against its own build:
 
-```console
+```bash
 npm install --save-dev --save-exact playwright@1.62.1 axe-core@4.14.0
 npx playwright install chromium
 npm run build
