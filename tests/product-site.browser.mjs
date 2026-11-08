@@ -607,6 +607,16 @@ check('UXF-002', 'a focusable session chart mark has a role that allows its aria
   } finally { await close(); }
 });
 
+check('UXF-003', 'a link in documentation prose is told apart from its text by more than colour', async () => {
+  for (const theme of themes) {
+    const {page, close} = await open('docs/art', {theme});
+    try {
+      assert.deepEqual(await axeRule(page, 'link-in-text-block'), [], theme);
+      assert.match(await page.locator('.markdown p a[href$="heroes"]').evaluate(link => getComputedStyle(link).textDecorationLine), /underline/, theme);
+    } finally { await close(); }
+  }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {
