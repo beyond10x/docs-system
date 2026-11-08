@@ -179,7 +179,7 @@ function ProtocolGraphView({document, layout, title, description, caption, varia
                 tabIndex={0}
                 role="button"
                 aria-pressed={pinned === node.id}
-                aria-label={`${PROTOCOL_KIND_LABELS[node.kind].singular} ${node.name}${node.description ? `. ${markdownCodeText(node.description)}` : ''}`}
+                aria-label={`${nodeLabel(node, displayName)}${node.description ? `. ${markdownCodeText(node.description)}` : ''}`}
                 aria-describedby={isCurrent ? `${base}-tooltip` : undefined}
                 onPointerEnter={() => setHovered(node.id)}
                 onPointerLeave={() => setHovered(null)}
@@ -191,7 +191,7 @@ function ProtocolGraphView({document, layout, title, description, caption, varia
                 <rect className="b10x-graph__hit" x={-6} y={-6} width={width + 12} height={height + 12} rx={12} />
                 <rect className="b10x-graph__body" width={width} height={height} rx={8} />
                 <rect className="b10x-graph__accent" x={0} y={10} width={3} height={height - 20} rx={1.5} />
-                <text className="b10x-graph__node-kicker" x={16} y={22}>{kicker(node)}</text>
+                <text className="b10x-graph__node-kicker" x={16} y={22}>{`${kicker(node)} `}</text>
                 <text className="b10x-graph__node-name" x={16} y={42}>{displayName}</text>
                 <NodeGlyphs node={node} width={width} />
               </g>;
@@ -214,6 +214,13 @@ function ProtocolGraphView({document, layout, title, description, caption, varia
 function kicker(node: ProtocolGraphNode): string {
   const label = PROTOCOL_KIND_LABELS[node.kind].singular.toUpperCase();
   return node.kind === 'action' && node.effect ? `${label} · ${node.effect.toUpperCase()}` : label;
+}
+
+/** The node's visible text in reading case, so its accessible name contains its label (WCAG 2.5.3, UXF-001). */
+function nodeLabel(node: ProtocolGraphNode, displayName: string): string {
+  const kind = PROTOCOL_KIND_LABELS[node.kind].singular;
+  const shown = node.kind === 'action' && node.effect ? `${kind} · ${node.effect.charAt(0).toUpperCase()}${node.effect.slice(1)}` : kind;
+  return `${shown} ${displayName}${displayName === node.name ? '' : `, ${node.name}`}`;
 }
 
 function NodeGlyphs({node, width}: {node: ProtocolGraphNode; width: number}): ReactNode {
@@ -402,7 +409,7 @@ function DomainGraphView({document, layout, title, description, caption, variant
                 tabIndex={0}
                 role="button"
                 aria-pressed={pinned === entity.id}
-                aria-label={`Entity ${entity.name}${entity.summary ? `. ${markdownCodeText(entity.summary)}` : ''}`}
+                aria-label={`${entityLabel(entity, width, displayName)}${entity.summary ? `. ${markdownCodeText(entity.summary)}` : ''}`}
                 aria-describedby={isCurrent ? `${base}-tooltip` : undefined}
                 onPointerEnter={() => setHovered(entity.id)}
                 onPointerLeave={() => setHovered(null)}
@@ -414,8 +421,8 @@ function DomainGraphView({document, layout, title, description, caption, variant
                 <rect className="b10x-graph__hit" x={-6} y={-6} width={width + 12} height={height + 12} rx={12} />
                 <rect className="b10x-graph__body" width={width} height={height} rx={8} />
                 <rect className="b10x-graph__accent" x={0} y={10} width={3} height={height - 20} rx={1.5} />
-                <text className="b10x-graph__node-kicker" x={16} y={21}>{`ENTITY · ${entity.fields.length + 1} FIELD${entity.fields.length ? 'S' : ''}`}</text>
-                <text className="b10x-graph__entity-name" x={16} y={42}>{displayName}</text>
+                <text className="b10x-graph__node-kicker" x={16} y={21}>{`${entityKicker(entity).toUpperCase()} `}</text>
+                <text className="b10x-graph__entity-name" x={16} y={42}>{`${displayName} `}</text>
                 <StateChips entity={entity} width={width} />
               </g>;
             })}
@@ -437,6 +444,30 @@ function DomainGraphView({document, layout, title, description, caption, variant
   </figure>;
 }
 
+function entityKicker(entity: DomainEntity): string {
+  return `Entity · ${entity.fields.length + 1} field${entity.fields.length ? 's' : ''}`;
+}
+
+/** The chip texts a node shows, in order: the states that fit, then `+n` for the rest. */
+function stateChipTexts(entity: DomainEntity, width: number): string[] {
+  const lifecycle = entity.lifecycle;
+  if (!lifecycle) return ['No lifecycle'];
+  const texts: string[] = [];
+  let x = 16;
+  for (const [index, state] of lifecycle.states.entries()) {
+    const chipWidth = state.length * 6.3 + (state === lifecycle.initial ? 26 : 16);
+    if (x + chipWidth > width - 16) { if (texts.length) texts.push(`+${lifecycle.states.length - index}`); break; }
+    texts.push(state);
+    x += chipWidth + 6;
+  }
+  return texts;
+}
+
+/** The node's visible text in reading order, so its accessible name contains its label (WCAG 2.5.3, UXF-001). */
+function entityLabel(entity: DomainEntity, width: number, displayName: string): string {
+  return `${entityKicker(entity)} ${displayName} ${stateChipTexts(entity, width).join(' ')}${displayName === entity.name ? '' : `, ${entity.name}`}`;
+}
+
 function StateChips({entity, width}: {entity: DomainEntity; width: number}): ReactNode {
   const lifecycle = entity.lifecycle;
   if (!lifecycle) return <text className="b10x-graph__node-meta" x={16} y={DOMAIN_NODE_HEIGHT - 20}>No lifecycle</text>;
@@ -454,7 +485,7 @@ function StateChips({entity, width}: {entity: DomainEntity; width: number}): Rea
     chips.push(<g key={state} transform={`translate(${f(x)},${DOMAIN_NODE_HEIGHT - 34})`} className={classes('b10x-graph__state', initial && 'is-initial')}>
       <rect width={f(chipWidth)} height={20} rx={10} />
       {initial && <circle cx={10} cy={10} r={3} />}
-      <text x={initial ? 18 : 8} y={14}>{state}</text>
+      <text x={initial ? 18 : 8} y={14}>{`${state} `}</text>
     </g>);
     x += chipWidth + 6;
   });

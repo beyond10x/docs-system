@@ -584,6 +584,39 @@ check('nojekyll', 'the build output carries .nojekyll', async () => {
   assert.equal(await readFile(path.join(server.output, '.nojekyll'), 'utf8'), '');
 });
 
+// UX loop findings (ux/findings/UXF-nnn.md): each check is the finding's regression asset.
+const axeSource = await readFile(path.resolve(import.meta.dirname, '../node_modules/axe-core/axe.min.js'), 'utf8');
+async function axeRule(page, rule) {
+  await page.addScriptTag({content: axeSource});
+  return page.evaluate(async id => (await window.axe.run(document, {runOnly: {type: 'rule', values: [id]}})).violations
+    .flatMap(violation => violation.nodes.map(node => node.html.slice(0, 120))), rule);
+}
+
+check('UXF-001', 'a graph node\'s accessible name contains the text it shows', async () => {
+  for (const url of ['', 'docs/art', 'docs/charts', 'docs/reference', 'heroes']) for (const width of [1024, 390]) {
+    const {page, close} = await open(url, {width});
+    try { assert.deepEqual(await axeRule(page, 'label-content-name-mismatch'), [], `/${url} ${width}px`); } finally { await close(); }
+  }
+});
+
+check('UXF-002', 'a focusable session chart mark has a role that allows its aria-label', async () => {
+  const {page, close} = await open('session');
+  try {
+    assert.deepEqual(await axeRule(page, 'aria-prohibited-attr'), []);
+    assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('.b10x-chart-mark[aria-label]')].filter(mark => !mark.getAttribute('role')).length), 0);
+  } finally { await close(); }
+});
+
+check('UXF-003', 'a link in documentation prose is told apart from its text by more than colour', async () => {
+  for (const theme of themes) {
+    const {page, close} = await open('docs/art', {theme});
+    try {
+      assert.deepEqual(await axeRule(page, 'link-in-text-block'), [], theme);
+      assert.match(await page.locator('.markdown p a[href$="heroes"]').evaluate(link => getComputedStyle(link).textDecorationLine), /underline/, theme);
+    } finally { await close(); }
+  }
+});
+
 const failures = [];
 try {
   for (const {issue, name, run} of checks) {

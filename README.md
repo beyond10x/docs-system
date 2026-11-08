@@ -305,6 +305,47 @@ npm ci --ignore-scripts
 npm run gate
 ```
 
+## UX gate
+
+`b10x-docs ux gate` checks a built static site in headless Chromium, with no network beyond
+loopback and no keys. It fails when any of these is true at a gating viewport, in every theme:
+
+- the page scrolls sideways, or an element runs past the viewport or its own box;
+- the navbar, the theme toggle, the menu toggle (phone widths) or the docs sidebar (desktop widths)
+  is missing, outside the viewport or covered, on load and one screen down;
+- axe-core finds a serious or critical violation (WCAG 2.0, 2.1 and 2.2 A and AA tags);
+- the screen-only user, which uses only visible links found by accessible role and name, cannot
+  reach a scenario card's target text, or needs more actions than the card allows, by pointer or by
+  keyboard alone;
+- a value in `ux/baseline.json` got worse, improved without being taken into the baseline, or is
+  missing, or the baseline is worse than `main`'s without a decision id;
+- a closed S1 or S2 record in `ux/findings/` has no regression asset that names it.
+
+A consuming site runs the same gate against its own build:
+
+```bash
+npm install --save-dev --save-exact playwright@1.62.1 axe-core@4.14.0
+npx playwright install chromium
+npm run build
+npx b10x-docs ux gate --site build
+```
+
+It reads `ux/adapter.json` (`--adapter` names another file). The smallest adapter is
+`{"baseUrl": "/"}`: the docs-site defaults gate 1024x768 and 390x844, the narrowest size of each
+Docusaurus layout, measure 1440x900, 1280x800, 1024x768, 768x1024 and 390x844, check the light
+and dark themes and visit every page in the build's `sitemap.xml`. Scenario cards live in
+`ux/scenarios/<id>/card.json`: a start page, the words a reader looks for, the target page and text,
+and the most actions allowed; this repository's cards are examples. Run once with `--update` to
+write `ux/baseline.json`, and again with `--update` in the change that improves a value; a worse
+value needs `--update --decision <id>`. `--out run.json` keeps every measured fact.
+
+`b10x-docs ux round --site build --round ux/rounds/R-nn` is a round's Measure step: it visits every
+measured viewport and writes `report.md`, `round.json`, `shots/` (worst moments and a contact sheet
+per theme) and `ux/rounds/trend.md`. The loop itself (triage, decisions, finding records) is in
+`ux/`. Here, `npm run ux:build` builds `examples/product-site`, and `npm run ux:gate` and
+`npm run ux:round -- ux/rounds/R-nn` run against it; CI runs the gate on every pull request and
+`main` push.
+
 ## Product sites
 
 A product repository (Canon, ELS, Commission, Loom, a2a) can turn its Docusaurus site into a product front

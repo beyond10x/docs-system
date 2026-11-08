@@ -12,7 +12,11 @@ import type {DocumentationManifest, EcosystemChange} from './types.js';
 const [, , command, ...args] = process.argv;
 
 try {
-  if (command === 'validate') {
+  if (command === 'ux') {
+    // Loaded on demand: playwright and axe-core are needed only here.
+    const {uxCommand} = await import('./ux/cli.js');
+    process.exitCode = await uxCommand(args);
+  } else if (command === 'validate') {
     if (args.length === 0) throw new Error('usage: b10x-docs validate <manifest-or-change-or-lock-or-redirect-map>...');
     for (const file of args) {
       const document = await readDocument(file);
@@ -116,7 +120,7 @@ try {
     const changed = await writeDiscoveryBlock(fileOption.value, discoveryOptionsFromManifest(manifest), {check: checkOption.present});
     process.stdout.write(`${fileOption.value}: discovery block ${changed ? 'updated' : 'current'}\n`);
   } else {
-    throw new Error('usage: b10x-docs <validate|check-source|validate-page|registry|snapshot|collect|redirects|readme> ...');
+    throw new Error('usage: b10x-docs <validate|check-source|validate-page|registry|snapshot|collect|redirects|readme|ux> ...');
   }
 } catch (error) {
   process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);

@@ -449,12 +449,12 @@ test('s2-02: a graph description written in Markdown renders its code spans inst
     domain: {...data.domain, summary: 'Reads ``a `b` c`` and `` ` `` and \\`not code\\`; a lone ` stays.'},
     entities: data.entities.map((entity, index) => index ? entity : {...entity, summary: 'Owns the `frontier`.'})}}));
   assert.match(spans, /Reads <code>a `b` c<\/code> and <code>`<\/code> and `not code`; a lone ` stays\./);
-  assert.match(spans, /aria-label="Entity Agent\. Owns the frontier\."/);
+  assert.match(spans, /aria-label="Entity · 2 fields Agent Registered\. Owns the frontier\."/);
   const graph = await readJson('data/software-change.protocol-graph.json');
   const protocol = renderToStaticMarkup(createElement(ProtocolGraph, {data: {...graph,
     nodes: graph.nodes.map((node, index) => index ? node : {...node, description: 'Change `src/` on a branch.'})}}));
   assert.match(protocol, /<td>Change <code>src\/<\/code> on a branch\.<\/td>/);
-  assert.match(protocol, /aria-label="Action repository\.edit\. Change src\/ on a branch\."/);
+  assert.match(protocol, /aria-label="Action · Write repository\.edit\. Change src\/ on a branch\."/);
   const prose = renderToStaticMarkup(createElement(DomainGraph, {data, description: 'Given `as is`.'}));
   assert.match(prose, /Given `as is`\./, 'a description the page passes in is the author\'s and renders unchanged');
 });

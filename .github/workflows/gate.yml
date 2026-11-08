@@ -34,7 +34,9 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Verify package, contracts and bundle tooling
         run: npm run gate
-      - name: Verify the shared contract viewer and the product site in a browser
+      - name: Fetch main's UX baseline for the ratchet
+        run: git fetch --no-tags --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+      - name: Verify the shared contract viewer, the product site and the UX gate in a browser
         env:
           B10X_CHROME_BIN: /usr/bin/google-chrome
         run: npm run test:browser

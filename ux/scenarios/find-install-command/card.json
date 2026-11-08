@@ -1,0 +1,10 @@
+{
+  "id": "find-install-command",
+  "card": "anchor",
+  "persona": "A reader who wants to try Canon and looks for the command that installs its CLI.",
+  "task": "From the landing page, find the install command.",
+  "start": "",
+  "keywords": ["install", "get started", "code", "components"],
+  "truth": {"path": "docs/code", "text": "cargo install --locked --path crates/canon-cli"},
+  "expectations": {"maxActions": 8}
+}

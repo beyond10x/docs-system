@@ -1,0 +1,10 @@
+{
+  "id": "find-not-built",
+  "card": "rotating",
+  "persona": "An evaluator reading a chart page who wants to know what is not built yet.",
+  "task": "From the charts page, find the list of what is decided or planned and not built.",
+  "start": "docs/charts",
+  "keywords": ["status", "stands"],
+  "truth": {"path": "docs/status", "text": "Only what is not built yet"},
+  "expectations": {"maxActions": 6}
+}

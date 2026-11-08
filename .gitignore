@@ -6,3 +6,4 @@ target/
 tests/viewer-site/.docusaurus/
 examples/product-site/.docusaurus/
 examples/product-site/build/
+ux/rounds/*/shots/pages/

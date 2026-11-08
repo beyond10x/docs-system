@@ -1,6 +1,6 @@
 {
   "name": "@beyond10x/docs-system",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "private": true,
   "description": "Git-pinned documentation shell, components, renderers, and discovery contract for beyond10x.",
   "license": "Apache-2.0",
@@ -76,7 +76,10 @@
     "test:bundle": "cargo test --locked",
     "validate:fixtures": "node dist/cli.js validate fixtures/*.yaml",
     "gate": "npm run build:check && npm test && npm run test:bundle && npm run validate:fixtures",
-    "test:browser": "node tests/ess-viewer.browser.mjs && node tests/product-site.browser.mjs"
+    "test:browser": "node tests/ess-viewer.browser.mjs && node tests/product-site.browser.mjs && npm run ux:gate",
+    "ux:build": "node tests/ux/build-example.mjs",
+    "ux:gate": "node dist/cli.js ux gate --site .cache/product-site-build",
+    "ux:round": "node dist/cli.js ux round --site .cache/product-site-build --round"
   },
   "dependencies": {
     "ajv": "8.20.0",
@@ -93,7 +96,17 @@
     "@docusaurus/theme-common": "3.10.2",
     "@docusaurus/theme-mermaid": "3.10.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "axe-core": "^4.10.0",
+    "playwright": "^1.50.0"
+  },
+  "peerDependenciesMeta": {
+    "axe-core": {
+      "optional": true
+    },
+    "playwright": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@docusaurus/core": "3.10.2",
@@ -103,6 +116,7 @@
     "@mermaid-js/layout-elk": "0.1.9",
     "@types/node": "24.3.0",
     "@types/react": "19.1.12",
+    "axe-core": "4.14.0",
     "playwright": "1.62.1",
     "react": "19.1.1",
     "react-dom": "19.1.1",

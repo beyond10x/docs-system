@@ -195,6 +195,8 @@ a { text-underline-offset: 4px; }
 .markdown h3 { margin-top: 2rem; font-weight: 620; letter-spacing: -0.02em; }
 .markdown > p,
 .markdown li { color: var(--b10x-color-text); }
+/* UXF-003: a link in prose is underlined, not told apart by colour alone. */
+.markdown :is(p, li, td, blockquote, dd) a:not([class*='b10x-']) { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
 .markdown > p:first-of-type { color: var(--b10x-color-muted); font-size: 1.08rem; line-height: 1.75; }
 .markdown blockquote { border-left: 2px solid var(--b10x-color-accent); background: transparent; color: var(--b10x-color-muted); }
 
