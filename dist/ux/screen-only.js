@@ -137,9 +137,21 @@ async function visibleLinks(page, adapter) {
             const href = element.href;
             if (!href.startsWith(location.origin) || element.hash && href.split('#')[0] === location.href.split('#')[0])
                 return;
-            const copy = element.cloneNode(true);
-            copy.querySelectorAll('[aria-hidden="true"]').forEach((hidden) => hidden.remove());
-            const name = (element.getAttribute('aria-label') ?? copy.textContent ?? '').replace(/\s+/g, ' ').trim();
+            // Rendered text without aria-hidden parts; block children are separate words, as in the browser's accessible name.
+            const words = (node) => {
+                if (node.nodeType === 3)
+                    return node.textContent ?? '';
+                if (!(node instanceof HTMLElement))
+                    return '';
+                if (node.getAttribute('aria-hidden') === 'true')
+                    return '';
+                const style = getComputedStyle(node);
+                if (style.display === 'none' || style.visibility === 'hidden')
+                    return '';
+                const text = Array.from(node.childNodes).map(words).join('');
+                return style.display.startsWith('inline') || style.display === 'contents' ? text : ` ${text} `;
+            };
+            const name = (element.getAttribute('aria-label') ?? words(element)).replace(/\s+/g, ' ').trim();
             if (!name)
                 return;
             out.push({ name, href: href.split('#')[0], region: element.closest(primary) ? 'primary' : 'other', index });

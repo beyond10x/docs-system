@@ -1,0 +1,19 @@
+{
+  "id": "find-install-command",
+  "card": "rotating",
+  "persona": "A reader who wants to try ESS and looks for the command that installs its CLI.",
+  "task": "From the landing page, find the install command of the ess CLI.",
+  "keywords": [
+    "install",
+    "get started",
+    "start"
+  ],
+  "truth": {
+    "path": "docs/start/install",
+    "text": "cargo install --locked --git https://github.com/beyond10x/ess --tag"
+  },
+  "expectations": {
+    "maxActions": 6
+  },
+  "start": ""
+}

@@ -1,0 +1,19 @@
+{
+  "id": "find-first-command",
+  "card": "rotating",
+  "persona": "A reader who wants to run the LLM workspace tests first.",
+  "task": "From the landing page, find the command that tests the workspace.",
+  "keywords": [
+    "get started",
+    "getting started",
+    "documentation"
+  ],
+  "truth": {
+    "path": "docs/getting-started",
+    "text": "cargo test --workspace --locked"
+  },
+  "expectations": {
+    "maxActions": 6
+  },
+  "start": ""
+}

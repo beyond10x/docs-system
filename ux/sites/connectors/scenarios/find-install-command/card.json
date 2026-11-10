@@ -1,0 +1,19 @@
+{
+  "id": "find-install-command",
+  "card": "rotating",
+  "persona": "A reader who wants to try Connectors and looks for the commands that fetch its CLI.",
+  "task": "From the landing page, find the download commands of the connectors CLI.",
+  "keywords": [
+    "get started",
+    "getting started",
+    "install"
+  ],
+  "truth": {
+    "path": "docs/getting-started",
+    "text": "curl -fsSLO"
+  },
+  "expectations": {
+    "maxActions": 6
+  },
+  "start": ""
+}

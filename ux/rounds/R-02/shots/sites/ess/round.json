@@ -1,0 +1,7196 @@
+{
+  "round": "ess",
+  "date": "2026-11-10",
+  "commit": "bfd980fa42-dirty",
+  "headline": {
+    "gate_failures_gating": 15,
+    "gate_failures_all": 37,
+    "overflow_all": 0,
+    "hidden_all": 16,
+    "axe_serious_critical_all": 0,
+    "axe_moderate_minor_all": 0,
+    "optional_missing_all": 196,
+    "screen_only_incomplete_all": 7,
+    "screen_only_actions_median": 6.5,
+    "cls_max": 0
+  },
+  "gating": [
+    "1366x768",
+    "1280x720"
+  ],
+  "viewports": [
+    "1440x900",
+    "1280x800",
+    "1024x768",
+    "768x1024",
+    "390x844",
+    "1366x768",
+    "1280x720"
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "pages": [
+    "",
+    "docs",
+    "docs/concepts/adoption-modes",
+    "docs/examples/specification-to-contracts",
+    "docs/getting-started",
+    "docs/guides",
+    "docs/reference/cli",
+    "docs/reference/spec-versions",
+    "docs/releases/what-changed",
+    "docs/start/explore-the-example",
+    "docs/start/install",
+    "docs/status/limitations",
+    "docs/visualise",
+    "releases"
+  ],
+  "metrics": {
+    "site@1440x900@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1440x900@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-format-version@1440x900": {
+      "screen_only.keyboard_actions": 90,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 12,
+      "screen_only.looks": 13,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 11,
+      "glance_cost.median": 2.5,
+      "glance_cost.p95": 3
+    },
+    "find-install-command@1440x900": {
+      "screen_only.keyboard_actions": 46,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 5,
+      "screen_only.looks": 6,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1,
+      "glance_cost.p95": 1
+    },
+    "site@1280x800@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 2,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1280x800@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 2,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-format-version@1280x800": {
+      "screen_only.keyboard_actions": 92,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 14,
+      "screen_only.looks": 15,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 13,
+      "glance_cost.median": 2.5,
+      "glance_cost.p95": 3
+    },
+    "find-install-command@1280x800": {
+      "screen_only.keyboard_actions": 47,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 6,
+      "screen_only.looks": 7,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 2,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 3
+    },
+    "site@1024x768@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 2,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1024x768@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 2,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-format-version@1024x768": {
+      "screen_only.keyboard_actions": 93,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 15,
+      "screen_only.looks": 16,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 14,
+      "glance_cost.median": 2.5,
+      "glance_cost.p95": 3
+    },
+    "find-install-command@1024x768": {
+      "screen_only.keyboard_actions": 48,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 7,
+      "screen_only.looks": 8,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 2,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 3
+    },
+    "site@768x1024@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@768x1024@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-format-version@768x1024": {
+      "screen_only.keyboard_actions": 18,
+      "screen_only.incomplete": 2,
+      "screen_only.actions": 0,
+      "screen_only.looks": 0,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 0,
+      "glance_cost.median": 0,
+      "glance_cost.p95": 0
+    },
+    "find-install-command@768x1024": {
+      "screen_only.keyboard_actions": 15,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 4,
+      "screen_only.looks": 5,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1,
+      "glance_cost.p95": 1
+    },
+    "site@390x844@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 3,
+      "layout.hidden": 0,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@390x844@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 3,
+      "layout.hidden": 0,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-format-version@390x844": {
+      "screen_only.keyboard_actions": 18,
+      "screen_only.incomplete": 2,
+      "screen_only.actions": 0,
+      "screen_only.looks": 0,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 0,
+      "glance_cost.median": 0,
+      "glance_cost.p95": 0
+    },
+    "find-install-command@390x844": {
+      "screen_only.keyboard_actions": 17,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 6,
+      "screen_only.looks": 7,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1,
+      "glance_cost.p95": 1
+    },
+    "site@1366x768@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 2,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1366x768@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 2,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-format-version@1366x768": {
+      "screen_only.keyboard_actions": 93,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 16,
+      "screen_only.looks": 17,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 14,
+      "glance_cost.median": 3,
+      "glance_cost.p95": 3
+    },
+    "find-install-command@1366x768": {
+      "screen_only.keyboard_actions": 15,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 6,
+      "screen_only.looks": 7,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 2,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 3
+    },
+    "site@1280x720@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 2,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1280x720@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 2,
+      "layout.optional_missing": 14,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-format-version@1280x720": {
+      "screen_only.keyboard_actions": 93,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 15,
+      "screen_only.looks": 16,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 14,
+      "glance_cost.median": 2.5,
+      "glance_cost.p95": 3
+    },
+    "find-install-command@1280x720": {
+      "screen_only.keyboard_actions": 48,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 7,
+      "screen_only.looks": 8,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 2,
+      "glance_cost.median": 2,
+      "glance_cost.p95": 3
+    }
+  },
+  "failures_gating": [
+    "gate 2 always visible: 1366x768 light /docs/guides sidebar: 12,94..278,893 outside 1366x768",
+    "gate 2 always visible: 1366x768 light /docs/guides scrolled to 384px, sidebar: 12,94..278,893 outside 1366x768",
+    "gate 2 always visible: 1366x768 dark /docs/guides sidebar: 12,94..278,893 outside 1366x768",
+    "gate 2 always visible: 1366x768 dark /docs/guides scrolled to 384px, sidebar: 12,94..278,893 outside 1366x768",
+    "gate 2 always visible: 1280x720 light /docs/guides sidebar: 12,94..278,893 outside 1280x720",
+    "gate 2 always visible: 1280x720 light /docs/guides scrolled to 360px, sidebar: 12,94..278,893 outside 1280x720",
+    "gate 2 always visible: 1280x720 dark /docs/guides sidebar: 12,94..278,893 outside 1280x720",
+    "gate 2 always visible: 1280x720 dark /docs/guides scrolled to 360px, sidebar: 12,94..278,893 outside 1280x720",
+    "gate 4 screen-only user: 1366x768 light find-format-version (pointer) took 15 actions, card allows 6",
+    "gate 5 keyboard only: 1366x768 light find-install-command (keyboard) did not complete: link \"NextInstall ess\" on screen has a different accessible name",
+    "gate 4 screen-only user: 1366x768 dark find-format-version (pointer) took 16 actions, card allows 6",
+    "gate 4 screen-only user: 1280x720 light find-format-version (pointer) took 15 actions, card allows 6",
+    "gate 4 screen-only user: 1280x720 light find-install-command (pointer) took 7 actions, card allows 6",
+    "gate 4 screen-only user: 1280x720 dark find-format-version (pointer) took 15 actions, card allows 6",
+    "gate 4 screen-only user: 1280x720 dark find-install-command (pointer) took 7 actions, card allows 6"
+  ],
+  "failures_all": [
+    "gate 2 always visible: 1280x800 light /docs/guides sidebar: 12,94..278,893 outside 1280x800",
+    "gate 2 always visible: 1280x800 light /docs/guides scrolled to 400px, sidebar: 12,94..278,893 outside 1280x800",
+    "gate 2 always visible: 1280x800 dark /docs/guides sidebar: 12,94..278,893 outside 1280x800",
+    "gate 2 always visible: 1280x800 dark /docs/guides scrolled to 400px, sidebar: 12,94..278,893 outside 1280x800",
+    "gate 2 always visible: 1024x768 light /docs/guides sidebar: 12,94..278,893 outside 1024x768",
+    "gate 2 always visible: 1024x768 light /docs/guides scrolled to 384px, sidebar: 12,94..278,893 outside 1024x768",
+    "gate 2 always visible: 1024x768 dark /docs/guides sidebar: 12,94..278,893 outside 1024x768",
+    "gate 2 always visible: 1024x768 dark /docs/guides scrolled to 384px, sidebar: 12,94..278,893 outside 1024x768",
+    "gate 2 always visible: 1366x768 light /docs/guides sidebar: 12,94..278,893 outside 1366x768",
+    "gate 2 always visible: 1366x768 light /docs/guides scrolled to 384px, sidebar: 12,94..278,893 outside 1366x768",
+    "gate 2 always visible: 1366x768 dark /docs/guides sidebar: 12,94..278,893 outside 1366x768",
+    "gate 2 always visible: 1366x768 dark /docs/guides scrolled to 384px, sidebar: 12,94..278,893 outside 1366x768",
+    "gate 2 always visible: 1280x720 light /docs/guides sidebar: 12,94..278,893 outside 1280x720",
+    "gate 2 always visible: 1280x720 light /docs/guides scrolled to 360px, sidebar: 12,94..278,893 outside 1280x720",
+    "gate 2 always visible: 1280x720 dark /docs/guides sidebar: 12,94..278,893 outside 1280x720",
+    "gate 2 always visible: 1280x720 dark /docs/guides scrolled to 360px, sidebar: 12,94..278,893 outside 1280x720",
+    "gate 4 screen-only user: 1440x900 light find-format-version (pointer) took 12 actions, card allows 6",
+    "gate 4 screen-only user: 1440x900 dark find-format-version (pointer) took 12 actions, card allows 6",
+    "gate 4 screen-only user: 1280x800 light find-format-version (pointer) took 14 actions, card allows 6",
+    "gate 4 screen-only user: 1280x800 dark find-format-version (pointer) took 14 actions, card allows 6",
+    "gate 4 screen-only user: 1024x768 light find-format-version (pointer) took 15 actions, card allows 6",
+    "gate 4 screen-only user: 1024x768 light find-install-command (pointer) took 7 actions, card allows 6",
+    "gate 4 screen-only user: 1024x768 dark find-format-version (pointer) took 15 actions, card allows 6",
+    "gate 4 screen-only user: 1024x768 dark find-install-command (pointer) took 7 actions, card allows 6",
+    "gate 4 screen-only user: 768x1024 light find-format-version (pointer) did not complete: page.click: Timeout 30000ms exceeded.",
+    "gate 5 keyboard only: 768x1024 light find-format-version (keyboard) did not complete: more than 16 actions",
+    "gate 4 screen-only user: 768x1024 dark find-format-version (pointer) did not complete: page.click: Timeout 30000ms exceeded.",
+    "gate 4 screen-only user: 390x844 light find-format-version (pointer) did not complete: page.click: Timeout 30000ms exceeded.",
+    "gate 5 keyboard only: 390x844 light find-format-version (keyboard) did not complete: more than 16 actions",
+    "gate 4 screen-only user: 390x844 dark find-format-version (pointer) did not complete: page.click: Timeout 30000ms exceeded.",
+    "gate 4 screen-only user: 1366x768 light find-format-version (pointer) took 15 actions, card allows 6",
+    "gate 5 keyboard only: 1366x768 light find-install-command (keyboard) did not complete: link \"NextInstall ess\" on screen has a different accessible name",
+    "gate 4 screen-only user: 1366x768 dark find-format-version (pointer) took 16 actions, card allows 6",
+    "gate 4 screen-only user: 1280x720 light find-format-version (pointer) took 15 actions, card allows 6",
+    "gate 4 screen-only user: 1280x720 light find-install-command (pointer) took 7 actions, card allows 6",
+    "gate 4 screen-only user: 1280x720 dark find-format-version (pointer) took 15 actions, card allows 6",
+    "gate 4 screen-only user: 1280x720 dark find-install-command (pointer) took 7 actions, card allows 6"
+  ],
+  "bots": [
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 12,
+        "looks": 13,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          11,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "click \"CLI reference\"",
+          "click \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 90,
+        "looks": 13,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          11,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "Tab x55",
+          "Enter \"CLI reference\"",
+          "Tab x23",
+          "Enter \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 5,
+        "looks": 6,
+        "steers": 0,
+        "glances": [
+          1,
+          1
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 46,
+        "looks": 6,
+        "steers": 0,
+        "glances": [
+          1,
+          1
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "Tab x12",
+          "Enter \"Get started\"",
+          "Tab x29",
+          "Enter \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 12,
+        "looks": 13,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          11,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "click \"CLI reference\"",
+          "click \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 5,
+        "looks": 6,
+        "steers": 0,
+        "glances": [
+          1,
+          1
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 14,
+        "looks": 15,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          13,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "click \"CLI reference\"",
+          "click \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 92,
+        "looks": 15,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          13,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "Tab x55",
+          "Enter \"CLI reference\"",
+          "Tab x23",
+          "Enter \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 6,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 47,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "Tab x12",
+          "Enter \"Get started\"",
+          "Tab x29",
+          "Enter \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 14,
+        "looks": 15,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          13,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "click \"CLI reference\"",
+          "click \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 6,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 15,
+        "looks": 16,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          14,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "click \"CLI reference\"",
+          "click \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 93,
+        "looks": 16,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          14,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "Tab x55",
+          "Enter \"CLI reference\"",
+          "Tab x23",
+          "Enter \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 7,
+        "looks": 8,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 48,
+        "looks": 8,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "Tab x12",
+          "Enter \"Get started\"",
+          "Tab x29",
+          "Enter \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 15,
+        "looks": 16,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          14,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "click \"CLI reference\"",
+          "click \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 7,
+        "looks": 8,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": false,
+        "actions": 0,
+        "looks": 0,
+        "steers": 0,
+        "glances": [],
+        "timeToAct": [],
+        "trail": [],
+        "reason": "page.click: Timeout 30000ms exceeded."
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "keyboard",
+        "completed": false,
+        "actions": 18,
+        "looks": 12,
+        "steers": 0,
+        "glances": [],
+        "timeToAct": [],
+        "trail": [
+          "open menu",
+          "Escape",
+          "PageDown",
+          "open menu",
+          "Escape",
+          "PageDown",
+          "open menu",
+          "Escape",
+          "PageDown",
+          "open menu",
+          "Escape",
+          "PageDown",
+          "open menu",
+          "Escape",
+          "PageDown",
+          "open menu",
+          "Escape",
+          "PageDown"
+        ],
+        "reason": "more than 16 actions"
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          1,
+          1
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 15,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          1,
+          1
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "Tab x5",
+          "Enter \"Get started\"",
+          "Tab x6",
+          "Enter \"Install ess\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": false,
+        "actions": 0,
+        "looks": 0,
+        "steers": 0,
+        "glances": [],
+        "timeToAct": [],
+        "trail": [],
+        "reason": "page.click: Timeout 30000ms exceeded."
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 4,
+        "looks": 5,
+        "steers": 0,
+        "glances": [
+          1,
+          1
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": false,
+        "actions": 0,
+        "looks": 0,
+        "steers": 0,
+        "glances": [],
+        "timeToAct": [],
+        "trail": [],
+        "reason": "page.click: Timeout 30000ms exceeded."
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "keyboard",
+        "completed": false,
+        "actions": 18,
+        "looks": 12,
+        "steers": 0,
+        "glances": [],
+        "timeToAct": [],
+        "trail": [
+          "open menu",
+          "Escape",
+          "PageDown",
+          "open menu",
+          "Escape",
+          "PageDown",
+          "open menu",
+          "Escape",
+          "PageDown",
+          "open menu",
+          "Escape",
+          "PageDown",
+          "open menu",
+          "Escape",
+          "PageDown",
+          "open menu",
+          "Escape",
+          "PageDown"
+        ],
+        "reason": "more than 16 actions"
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 6,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          1,
+          1
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 17,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          1,
+          1
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "Tab x5",
+          "Enter \"Get started\"",
+          "Tab x6",
+          "Enter \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": false,
+        "actions": 0,
+        "looks": 0,
+        "steers": 0,
+        "glances": [],
+        "timeToAct": [],
+        "trail": [],
+        "reason": "page.click: Timeout 30000ms exceeded."
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 6,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          1,
+          1
+        ],
+        "timeToAct": [
+          1,
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 15,
+        "looks": 16,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          14,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "click \"CLI reference\"",
+          "click \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 93,
+        "looks": 16,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          14,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "Tab x55",
+          "Enter \"CLI reference\"",
+          "Tab x23",
+          "Enter \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 6,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": false,
+        "actions": 15,
+        "looks": 4,
+        "steers": 0,
+        "glances": [
+          3
+        ],
+        "timeToAct": [
+          2
+        ],
+        "trail": [
+          "PageDown",
+          "Tab x12",
+          "Enter \"Get started\"",
+          "PageDown"
+        ],
+        "reason": "link \"NextInstall ess\" on screen has a different accessible name"
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 16,
+        "looks": 17,
+        "steers": 0,
+        "glances": [
+          3,
+          3
+        ],
+        "timeToAct": [
+          14,
+          2
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "click \"CLI reference\"",
+          "PageDown",
+          "click \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 6,
+        "looks": 7,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 15,
+        "looks": 16,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          14,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "click \"CLI reference\"",
+          "click \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "theme": "light",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 93,
+        "looks": 16,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          14,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "Tab x55",
+          "Enter \"CLI reference\"",
+          "Tab x23",
+          "Enter \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 7,
+        "looks": 8,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "theme": "light",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 48,
+        "looks": 8,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "Tab x12",
+          "Enter \"Get started\"",
+          "Tab x29",
+          "Enter \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-format-version",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 15,
+        "looks": 16,
+        "steers": 0,
+        "glances": [
+          3,
+          2
+        ],
+        "timeToAct": [
+          14,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "click \"CLI reference\"",
+          "click \"Format version history\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-install-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 7,
+        "looks": 8,
+        "steers": 0,
+        "glances": [
+          3,
+          1
+        ],
+        "timeToAct": [
+          2,
+          1
+        ],
+        "trail": [
+          "PageDown",
+          "click \"Get started\"",
+          "click \"Install ess\"",
+          "PageDown",
+          "PageDown",
+          "PageDown",
+          "PageDown"
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "page": "",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1440x900-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1440x900-light.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-1440x900-light.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-1440x900-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1440x900-light.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-1440x900-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1440x900-light.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-1440x900-light.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-1440x900-light.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-1440x900-light.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-1440x900-light.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-1440x900-light.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-1440x900-light.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-1440x900-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1440x900-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1440x900-dark.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-1440x900-dark.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-1440x900-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1440x900-dark.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-1440x900-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1440x900-dark.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-1440x900-dark.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-1440x900-dark.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-1440x900-dark.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-1440x900-dark.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-1440x900-dark.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-1440x900-dark.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-1440x900-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1280x800-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1280x800-light.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-1280x800-light.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-1280x800-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1280x800-light.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [
+          "sidebar: 12,94..278,893 outside 1280x800",
+          "scrolled to 400px, sidebar: 12,94..278,893 outside 1280x800"
+        ],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-1280x800-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1280x800-light.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-1280x800-light.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-1280x800-light.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-1280x800-light.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-1280x800-light.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-1280x800-light.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-1280x800-light.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-1280x800-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1280x800-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1280x800-dark.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-1280x800-dark.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-1280x800-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1280x800-dark.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [
+          "sidebar: 12,94..278,893 outside 1280x800",
+          "scrolled to 400px, sidebar: 12,94..278,893 outside 1280x800"
+        ],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-1280x800-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1280x800-dark.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-1280x800-dark.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-1280x800-dark.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-1280x800-dark.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-1280x800-dark.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-1280x800-dark.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-1280x800-dark.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-1280x800-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1024x768-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1024x768-light.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-1024x768-light.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-1024x768-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1024x768-light.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [
+          "sidebar: 12,94..278,893 outside 1024x768",
+          "scrolled to 384px, sidebar: 12,94..278,893 outside 1024x768"
+        ],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-1024x768-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1024x768-light.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-1024x768-light.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-1024x768-light.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-1024x768-light.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-1024x768-light.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-1024x768-light.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-1024x768-light.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-1024x768-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1024x768-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1024x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-1024x768-dark.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-1024x768-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1024x768-dark.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [
+          "sidebar: 12,94..278,893 outside 1024x768",
+          "scrolled to 384px, sidebar: 12,94..278,893 outside 1024x768"
+        ],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-1024x768-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1024x768-dark.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-1024x768-dark.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-1024x768-dark.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-1024x768-dark.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-1024x768-dark.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-1024x768-dark.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-1024x768-dark.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-1024x768-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-768x1024-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-768x1024-light.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-768x1024-light.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-768x1024-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-768x1024-light.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-768x1024-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-768x1024-light.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-768x1024-light.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-768x1024-light.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-768x1024-light.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-768x1024-light.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-768x1024-light.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-768x1024-light.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-768x1024-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-768x1024-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-768x1024-dark.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-768x1024-dark.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-768x1024-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-768x1024-dark.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-768x1024-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-768x1024-dark.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-768x1024-dark.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-768x1024-dark.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-768x1024-dark.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-768x1024-dark.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-768x1024-dark.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-768x1024-dark.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-768x1024-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [
+          "span: \"ess / the billing example\"",
+          "span: \"ess / generate and synthesize\""
+        ],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-390x844-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-390x844-light.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-390x844-light.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-390x844-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-390x844-light.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-390x844-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-390x844-light.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-390x844-light.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-390x844-light.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-390x844-light.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-390x844-light.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-390x844-light.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [
+          "span: \"ess / the billing example\""
+        ],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-390x844-light.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-390x844-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [
+          "span: \"ess / the billing example\"",
+          "span: \"ess / generate and synthesize\""
+        ],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-390x844-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-390x844-dark.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-390x844-dark.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-390x844-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-390x844-dark.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-390x844-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-390x844-dark.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-390x844-dark.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-390x844-dark.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-390x844-dark.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-390x844-dark.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-390x844-dark.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [
+          "span: \"ess / the billing example\""
+        ],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-390x844-dark.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-390x844-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1366x768-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1366x768-light.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-1366x768-light.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-1366x768-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1366x768-light.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [
+          "sidebar: 12,94..278,893 outside 1366x768",
+          "scrolled to 384px, sidebar: 12,94..278,893 outside 1366x768"
+        ],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-1366x768-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1366x768-light.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-1366x768-light.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-1366x768-light.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-1366x768-light.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-1366x768-light.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-1366x768-light.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-1366x768-light.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-1366x768-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1366x768-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1366x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-1366x768-dark.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-1366x768-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1366x768-dark.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [
+          "sidebar: 12,94..278,893 outside 1366x768",
+          "scrolled to 384px, sidebar: 12,94..278,893 outside 1366x768"
+        ],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-1366x768-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1366x768-dark.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-1366x768-dark.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-1366x768-dark.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-1366x768-dark.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-1366x768-dark.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-1366x768-dark.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-1366x768-dark.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-1366x768-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1280x720-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1280x720-light.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-1280x720-light.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-1280x720-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1280x720-light.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [
+          "sidebar: 12,94..278,893 outside 1280x720",
+          "scrolled to 360px, sidebar: 12,94..278,893 outside 1280x720"
+        ],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-1280x720-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1280x720-light.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-1280x720-light.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-1280x720-light.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-1280x720-light.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-1280x720-light.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-1280x720-light.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-1280x720-light.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-1280x720-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1280x720-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1280x720-dark.png"
+    },
+    {
+      "page": "docs/concepts/adoption-modes",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-adoption-modes-1280x720-dark.png"
+    },
+    {
+      "page": "docs/examples/specification-to-contracts",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-specification-to-contracts-1280x720-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1280x720-dark.png"
+    },
+    {
+      "page": "docs/guides",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [
+          "sidebar: 12,94..278,893 outside 1280x720",
+          "scrolled to 360px, sidebar: 12,94..278,893 outside 1280x720"
+        ],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-guides-1280x720-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1280x720-dark.png"
+    },
+    {
+      "page": "docs/reference/spec-versions",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-spec-versions-1280x720-dark.png"
+    },
+    {
+      "page": "docs/releases/what-changed",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-releases-what-changed-1280x720-dark.png"
+    },
+    {
+      "page": "docs/start/explore-the-example",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-explore-the-example-1280x720-dark.png"
+    },
+    {
+      "page": "docs/start/install",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-start-install-1280x720-dark.png"
+    },
+    {
+      "page": "docs/status/limitations",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-limitations-1280x720-dark.png"
+    },
+    {
+      "page": "docs/visualise",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-visualise-1280x720-dark.png"
+    },
+    {
+      "page": "releases",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-releases-1280x720-dark.png"
+    }
+  ]
+}

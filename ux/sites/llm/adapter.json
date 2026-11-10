@@ -1,0 +1,22 @@
+{
+  "about": "UX round R-02 adapter for the llm product site, built from its origin/main sources against docs-system origin/main. Gating viewports 1366x768 and 1280x720; the five docs viewports are measured and not gated. Search is optional until UXF-005 is decided.",
+  "baseUrl": "/llm/",
+  "viewports": {
+    "gating": [
+      "1366x768",
+      "1280x720"
+    ],
+    "measured": [
+      "1440x900",
+      "1280x800",
+      "1024x768",
+      "768x1024",
+      "390x844"
+    ]
+  },
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "scenarios": "scenarios"
+}
