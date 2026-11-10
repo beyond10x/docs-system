@@ -1,0 +1,19 @@
+{
+  "id": "find-install-command",
+  "card": "rotating",
+  "persona": "A reader who wants to try AEP and looks for the command that installs its CLI.",
+  "task": "From the landing page, find the cargo install command of the aep CLI.",
+  "keywords": [
+    "get started",
+    "getting started",
+    "install"
+  ],
+  "truth": {
+    "path": "docs/getting-started",
+    "text": "cargo install --locked --git https://github.com/beyond10x/aep --tag"
+  },
+  "expectations": {
+    "maxActions": 6
+  },
+  "start": ""
+}

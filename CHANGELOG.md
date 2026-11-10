@@ -6,6 +6,27 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+## [0.15.1] - 2026-11-10
+
+### Fixed
+
+- The UX gate no longer reports a docs sidebar that is taller than the screen and scrolls inside its
+  own column as outside the viewport (UXF-012). Sites with a long or expanded sidebar (ess,
+  connectors, inference, llm, aep) failed gate 2 on every docs page at 1366x768 and 1280x720.
+- The screen-only user reads a link's name the way the browser does: the words of block children
+  are separate, so `Next` and `Install ess` in one pagination link are "Next Install ess" (UXF-014).
+- The landing hero is top-aligned with a shorter top padding, so its heading and primary action sit
+  on the first screen at 1366x768, 1280x720 and 1024x768 beside a tall terminal or code pair
+  (UXF-019).
+- A documentation card (generated category pages) wraps its title and description instead of
+  cutting them with an ellipsis (UXF-013).
+
+### Added
+
+- `ux/sites/<repo>/` holds the adapters and scenario cards round R-02 used on six real product
+  sites, and `ux/rounds/R-02/` the round: report, findings UXF-012 to UXF-022, triage and a
+  type-floor decision.
+
 ## [0.15.0] - 2026-11-08
 
 ### Added
@@ -399,7 +420,8 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 - Introduce the public manifest contract, deterministic registry CLI, Docusaurus integration,
   shared tokens, generic React components and read-only schema/diagram renderers.
 
-[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.15.0...HEAD
+[Unreleased]: https://github.com/beyond10x/docs-system/compare/0.15.1...HEAD
+[0.15.1]: https://github.com/beyond10x/docs-system/compare/0.15.0...0.15.1
 [0.15.0]: https://github.com/beyond10x/docs-system/compare/0.14.1...0.15.0
 [0.14.1]: https://github.com/beyond10x/docs-system/compare/0.14.0...0.14.1
 [0.14.0]: https://github.com/beyond10x/docs-system/compare/0.13.0...0.14.0

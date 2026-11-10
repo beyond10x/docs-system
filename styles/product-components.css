@@ -258,8 +258,8 @@
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   gap: 3.5rem;
-  align-items: center;
-  padding-block: 6rem 5.5rem;
+  align-items: start;
+  padding-block: 3.5rem 5rem;
 }
 .b10x-hero--solo { grid-template-columns: minmax(0, 46rem); }
 .b10x-hero h1 {
@@ -1007,3 +1007,6 @@ svg.b10x-graph__glyph { flex: none; inline-size: 14px; block-size: 14px; margin-
   .b10x-status-table table tbody tr.b10x-status-table__area { display: block; border-bottom-color: var(--b10x-color-line); }
   .b10x-status-table table tbody tr.b10x-status-table__area > th { display: block; padding: 1.4rem 0.25rem 0.5rem; }
 }
+
+/* A documentation card (generated category pages, DocCardList) shows its whole title and description. */
+.card .text--truncate { white-space: normal; overflow: visible; text-overflow: clip; }

@@ -1,0 +1,18 @@
+{
+  "id": "find-build-command",
+  "card": "rotating",
+  "persona": "A reader who wants to build the Spindle CLI.",
+  "task": "From the landing page, find the command that builds the spindle CLI.",
+  "keywords": [
+    "get started",
+    "getting started"
+  ],
+  "truth": {
+    "path": "docs/getting-started",
+    "text": "cargo build --locked --release -p spindle-cli"
+  },
+  "expectations": {
+    "maxActions": 6
+  },
+  "start": ""
+}

@@ -1,0 +1,19 @@
+{
+  "id": "find-format-version",
+  "card": "rotating",
+  "persona": "An integrator who needs to know which ESS format version a release writes.",
+  "task": "From the landing page, find the page that maps ESS format versions to releases.",
+  "keywords": [
+    "format",
+    "version",
+    "reference"
+  ],
+  "truth": {
+    "path": "docs/reference/spec-versions",
+    "text": "Format version history"
+  },
+  "expectations": {
+    "maxActions": 6
+  },
+  "start": ""
+}

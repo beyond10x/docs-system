@@ -105,13 +105,15 @@ export async function checkPage(page: Page, adapter: UxAdapter, viewport: Viewpo
       if (rule.whileFooterHidden && footerTop < window.innerHeight) continue;
       const element = Array.from(document.querySelectorAll(rule.selector)).find(shown);
       if (!element) { (rule.required === false ? missingOptional : hidden).push(`${rule.name}: absent`); continue; }
-      const rect = element.getBoundingClientRect();
+      // A menu taller than the screen that scrolls inside its own column stays reachable: the column is what must be in view.
+      const column = (() => { for (let parent: Element | null = element; parent && parent !== document.body; parent = parent.parentElement) { const {overflowY} = getComputedStyle(parent); if ((overflowY === "auto" || overflowY === "scroll") && parent.scrollHeight > parent.clientHeight + 1) return parent; } return undefined; })();
+      const rect = (column ?? element).getBoundingClientRect();
       if (rect.left < -0.5 || rect.top < -0.5 || rect.right > width + 0.5 || rect.bottom > window.innerHeight + 0.5) {
         hidden.push(`${rule.name}: ${Math.round(rect.left)},${Math.round(rect.top)}..${Math.round(rect.right)},${Math.round(rect.bottom)} outside ${width}x${window.innerHeight}`);
         continue;
       }
       const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + Math.min(rect.height / 2, 20));
-      if (!hit || !(element === hit || element.contains(hit) || hit.contains(element))) hidden.push(`${rule.name}: covered by ${hit ? describe(hit) : 'nothing'}`);
+      if (!hit || !((column ?? element) === hit || (column ?? element).contains(hit) || hit.contains(column ?? element))) hidden.push(`${rule.name}: covered by ${hit ? describe(hit) : 'nothing'}`);
     }
     const errors: string[] = [];
     const mode = root.getAttribute('data-theme');

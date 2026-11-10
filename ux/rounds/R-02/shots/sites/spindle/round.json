@@ -1,0 +1,5430 @@
+{
+  "round": "spindle",
+  "date": "2026-11-10",
+  "commit": "244fb60e-dirty",
+  "headline": {
+    "gate_failures_gating": 0,
+    "gate_failures_all": 0,
+    "overflow_all": 0,
+    "hidden_all": 0,
+    "axe_serious_critical_all": 0,
+    "axe_moderate_minor_all": 0,
+    "optional_missing_all": 168,
+    "screen_only_incomplete_all": 0,
+    "screen_only_actions_median": 2,
+    "cls_max": 0.002
+  },
+  "gating": [
+    "1366x768",
+    "1280x720"
+  ],
+  "viewports": [
+    "1440x900",
+    "1280x800",
+    "1024x768",
+    "768x1024",
+    "390x844",
+    "1366x768",
+    "1280x720"
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "pages": [
+    "",
+    "docs",
+    "docs/concepts/capabilities",
+    "docs/concepts/components-and-bindings",
+    "docs/concepts/deployment-targets",
+    "docs/concepts/environment-and-admission",
+    "docs/concepts/observe",
+    "docs/concepts/specification",
+    "docs/examples/rally",
+    "docs/getting-started",
+    "docs/reference/cli",
+    "docs/status"
+  ],
+  "metrics": {
+    "site@1440x900@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1440x900@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-build-command@1440x900": {
+      "screen_only.keyboard_actions": 11,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 2,
+      "screen_only.looks": 3,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1,
+      "glance_cost.p95": 1
+    },
+    "site@1280x800@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0.002,
+      "motion.running": 0
+    },
+    "site@1280x800@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-build-command@1280x800": {
+      "screen_only.keyboard_actions": 12,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 2,
+      "screen_only.looks": 3,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1,
+      "glance_cost.p95": 1
+    },
+    "site@1024x768@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1024x768@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-build-command@1024x768": {
+      "screen_only.keyboard_actions": 12,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 2,
+      "screen_only.looks": 3,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1,
+      "glance_cost.p95": 1
+    },
+    "site@768x1024@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@768x1024@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-build-command@768x1024": {
+      "screen_only.keyboard_actions": 5,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 1,
+      "screen_only.looks": 2,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1,
+      "glance_cost.p95": 1
+    },
+    "site@390x844@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@390x844@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-build-command@390x844": {
+      "screen_only.keyboard_actions": 6,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 2,
+      "screen_only.looks": 3,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1,
+      "glance_cost.p95": 1
+    },
+    "site@1366x768@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1366x768@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-build-command@1366x768": {
+      "screen_only.keyboard_actions": 11,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 1,
+      "screen_only.looks": 2,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1,
+      "glance_cost.p95": 1
+    },
+    "site@1280x720@light": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "site@1280x720@dark": {
+      "layout.overflow": 0,
+      "layout.truncated": 0,
+      "layout.hidden": 0,
+      "layout.optional_missing": 12,
+      "axe.serious_critical": 0,
+      "axe.moderate_minor": 0,
+      "layout_shift.cls_max": 0,
+      "motion.running": 0
+    },
+    "find-build-command@1280x720": {
+      "screen_only.keyboard_actions": 12,
+      "screen_only.incomplete": 0,
+      "screen_only.actions": 2,
+      "screen_only.looks": 3,
+      "screen_only.steers": 0,
+      "screen_only.time_to_act_steps.max": 1,
+      "glance_cost.median": 1,
+      "glance_cost.p95": 1
+    }
+  },
+  "failures_gating": [],
+  "failures_all": [],
+  "bots": [
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 11,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Tab x10",
+          "Enter \"Get started\""
+        ]
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 12,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Tab x10",
+          "Enter \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x800",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 12,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Tab x10",
+          "Enter \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1024x768",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\""
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 5,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Tab x4",
+          "Enter \"Get started\""
+        ]
+      }
+    },
+    {
+      "viewport": "768x1024",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\""
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 6,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Tab x4",
+          "Enter \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "390x844",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\""
+        ]
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 11,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Tab x10",
+          "Enter \"Get started\""
+        ]
+      }
+    },
+    {
+      "viewport": "1366x768",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 1,
+        "looks": 2,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\""
+        ]
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "theme": "light",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "keyboard",
+        "completed": true,
+        "actions": 12,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "Tab x10",
+          "Enter \"Get started\"",
+          "PageDown"
+        ]
+      }
+    },
+    {
+      "viewport": "1280x720",
+      "theme": "dark",
+      "result": {
+        "scenario": "find-build-command",
+        "mode": "pointer",
+        "completed": true,
+        "actions": 2,
+        "looks": 3,
+        "steers": 0,
+        "glances": [
+          1
+        ],
+        "timeToAct": [
+          1
+        ],
+        "trail": [
+          "click \"Get started\"",
+          "PageDown"
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "page": "",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1440x900-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1440x900-light.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-1440x900-light.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-1440x900-light.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-1440x900-light.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-1440x900-light.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-1440x900-light.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-1440x900-light.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-1440x900-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1440x900-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1440x900-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1440x900",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1440x900-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1440x900-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1440x900-dark.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-1440x900-dark.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-1440x900-dark.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-1440x900-dark.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-1440x900-dark.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-1440x900-dark.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-1440x900-dark.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-1440x900-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1440x900-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1440x900-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1440x900",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1440x900-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1280x800-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1280x800-light.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-1280x800-light.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-1280x800-light.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-1280x800-light.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-1280x800-light.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-1280x800-light.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-1280x800-light.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-1280x800-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1280x800-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1280x800-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1280x800",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0.002245650815963745,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1280x800-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1280x800-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1280x800-dark.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-1280x800-dark.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-1280x800-dark.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-1280x800-dark.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-1280x800-dark.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-1280x800-dark.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-1280x800-dark.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-1280x800-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1280x800-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1280x800-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1280x800",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1280x800-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1024x768-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1024x768-light.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-1024x768-light.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-1024x768-light.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-1024x768-light.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-1024x768-light.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-1024x768-light.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-1024x768-light.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-1024x768-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1024x768-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1024x768-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1024x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1024x768-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1024x768-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1024x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-1024x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-1024x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-1024x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-1024x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-1024x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-1024x768-dark.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-1024x768-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1024x768-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1024x768-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1024x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1024x768-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-768x1024-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-768x1024-light.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-768x1024-light.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-768x1024-light.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-768x1024-light.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-768x1024-light.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-768x1024-light.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-768x1024-light.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-768x1024-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-768x1024-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-768x1024-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "768x1024",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-768x1024-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-768x1024-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-768x1024-dark.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-768x1024-dark.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-768x1024-dark.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-768x1024-dark.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-768x1024-dark.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-768x1024-dark.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-768x1024-dark.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-768x1024-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-768x1024-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-768x1024-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "768x1024",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-768x1024-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-390x844-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-390x844-light.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-390x844-light.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-390x844-light.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-390x844-light.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-390x844-light.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-390x844-light.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-390x844-light.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-390x844-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-390x844-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-390x844-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "390x844",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-390x844-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-390x844-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-390x844-dark.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-390x844-dark.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-390x844-dark.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-390x844-dark.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-390x844-dark.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-390x844-dark.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-390x844-dark.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-390x844-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-390x844-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-390x844-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "390x844",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-390x844-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1366x768-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1366x768-light.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-1366x768-light.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-1366x768-light.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-1366x768-light.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-1366x768-light.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-1366x768-light.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-1366x768-light.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-1366x768-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1366x768-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1366x768-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1366x768",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1366x768-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1366x768-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1366x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-1366x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-1366x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-1366x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-1366x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-1366x768-dark.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-1366x768-dark.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-1366x768-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1366x768-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1366x768-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1366x768",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1366x768-dark.png"
+    },
+    {
+      "page": "",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1280x720-light.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1280x720-light.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-1280x720-light.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-1280x720-light.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-1280x720-light.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-1280x720-light.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-1280x720-light.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-1280x720-light.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-1280x720-light.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1280x720-light.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1280x720-light.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1280x720",
+      "theme": "light",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1280x720-light.png"
+    },
+    {
+      "page": "",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-index-1280x720-dark.png"
+    },
+    {
+      "page": "docs",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-1280x720-dark.png"
+    },
+    {
+      "page": "docs/concepts/capabilities",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-capabilities-1280x720-dark.png"
+    },
+    {
+      "page": "docs/concepts/components-and-bindings",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-components-and-bindings-1280x720-dark.png"
+    },
+    {
+      "page": "docs/concepts/deployment-targets",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-deployment-targets-1280x720-dark.png"
+    },
+    {
+      "page": "docs/concepts/environment-and-admission",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-environment-and-admission-1280x720-dark.png"
+    },
+    {
+      "page": "docs/concepts/observe",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-observe-1280x720-dark.png"
+    },
+    {
+      "page": "docs/concepts/specification",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-concepts-specification-1280x720-dark.png"
+    },
+    {
+      "page": "docs/examples/rally",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-examples-rally-1280x720-dark.png"
+    },
+    {
+      "page": "docs/getting-started",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-getting-started-1280x720-dark.png"
+    },
+    {
+      "page": "docs/reference/cli",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-reference-cli-1280x720-dark.png"
+    },
+    {
+      "page": "docs/status",
+      "viewport": "1280x720",
+      "theme": "dark",
+      "facts": {
+        "pageScrollX": 0,
+        "overflow": [],
+        "truncated": [],
+        "hidden": [],
+        "missingOptional": [
+          "search: absent"
+        ],
+        "errors": [],
+        "motion": [],
+        "cls": 0,
+        "axe": {
+          "serious": [],
+          "critical": [],
+          "moderate": [],
+          "minor": []
+        },
+        "axeNodes": {
+          "serious_critical": 0,
+          "moderate_minor": 0
+        }
+      },
+      "shot": "shots/pages/page-docs-status-1280x720-dark.png"
+    }
+  ]
+}
