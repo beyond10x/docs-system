@@ -14,6 +14,9 @@ test('documented Node-safe package subpaths load without Docusaurus theme aliase
     import('@beyond10x/docs-system/redirects'),
     import('@beyond10x/docs-system/types'),
     import('@beyond10x/docs-system/ess-document'),
+    import('@beyond10x/docs-system/cli-reference'),
+    import('@beyond10x/docs-system/reference-data'),
+    import('@beyond10x/docs-system/renderers'),
   ]);
   assert.equal(typeof modules[0].readManifest, 'function');
   assert.equal(typeof modules[0].readSourceLock, 'function');
@@ -28,6 +31,11 @@ test('documented Node-safe package subpaths load without Docusaurus theme aliase
   assert.equal(typeof modules[8].writeRedirectMap, 'function');
   assert.deepEqual(Object.keys(modules[9]), []);
   assert.equal(typeof modules[10].parseEssDocument, 'function');
+  assert.equal(typeof modules[11].parseCliReference, 'function');
+  assert.equal(typeof modules[11].cliReferenceFromEssPlan, 'function');
+  assert.equal(typeof modules[12].readReference, 'function');
+  assert.deepEqual([...modules[12].REFERENCE_KINDS], ['openapi', 'asyncapi', 'cli']);
+  assert.deepEqual(['ApiReference', 'AsyncApiReference', 'CliReference', 'JsonSchemaViewer', 'OpenApiReference'].map((name) => typeof modules[13][name]), Array(5).fill('function'));
 });
 
 test('product-site data, layout and plugin subpaths load without Docusaurus theme aliases', async () => {
@@ -74,6 +82,7 @@ test('published schema subpaths load as JSON in plain Node', async () => {
     import('@beyond10x/docs-system/schema/terminal/v1', {with: {type: 'json'}}),
     import('@beyond10x/docs-system/schema/product-landing/v1', {with: {type: 'json'}}),
     import('@beyond10x/docs-system/schema/session-composition/v0', {with: {type: 'json'}}),
+    import('@beyond10x/docs-system/schema/cli-reference/v1', {with: {type: 'json'}}),
   ]);
   assert.deepEqual(schemas.map((schema) => schema.default.$schema), Array(schemas.length).fill('https://json-schema.org/draft/2020-12/schema'));
 });

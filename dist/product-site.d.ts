@@ -1,6 +1,9 @@
 import type { DocsSystemBuild } from './family.js';
 import type { ProductLandingData } from './product-data.js';
 import type { ProductId } from './product-palette.js';
+import type { LoadedReference, ProductSiteReference } from './reference-data.js';
+export { checkReferenceOptions, readReference, REFERENCE_KINDS } from './reference-data.js';
+export type { LoadedReference, ProductSiteReference, ReferenceKind, ReferenceModule } from './reference-data.js';
 export interface ProductSiteOptions {
     /** A `b10x-product-landing/1` file (JSON or YAML), relative to the site directory. */
     landing?: string;
@@ -28,7 +31,32 @@ export interface ProductSiteOptions {
      * reaches the page instead of a 404. Default true.
      */
     trailingSlashRedirects?: boolean;
+    /**
+     * Reference pages: each source (OpenAPI 3.1, AsyncAPI 3.0 or `b10x-cli-reference/1`, JSON or
+     * YAML, relative to the site directory) is read and checked at build time, importable in MDX as
+     * `@b10x-reference/<id>.json` for `<ApiReference reference={...} />`, and served unchanged at
+     * `<baseUrl>reference/<id>.<ext>`.
+     */
+    references?: ProductSiteReference[];
 }
+/**
+ * The generated static directory of reference downloads, relative to the site directory (inside
+ * the Docusaurus generated-files directory): it holds `reference/<id>.<ext>`.
+ */
+export declare const PRODUCT_REFERENCE_STATIC = ".docusaurus/b10x-reference-files";
+/** The module prefix of reference data: `@b10x-reference/<id>.json`. */
+export declare const PRODUCT_REFERENCE_ALIAS = "@b10x-reference";
+/**
+ * The theme's MDX vocabulary loads the reference renderers with `import()`. Docusaurus's server
+ * Babel turns that into `require()`, which a bundler leaves alone in a `"type": "module"` package,
+ * so this one file is bundled as `javascript/auto` (webpack and rspack alike).
+ */
+export declare const PRODUCT_MDX_COMPONENTS: string;
+/**
+ * Each `@b10x-reference/<id>.json` resolves to a generated module that returns the data through
+ * this file, so the renderers ride in the importing page's own chunks (see `reference-preload.ts`).
+ */
+export declare const PRODUCT_REFERENCE_PRELOAD: string;
 /** Self-hosted font files, served from `styles/static` under `<baseUrl>b10x-fonts/`. */
 export declare const PRODUCT_FONT_DIRECTORY: string;
 /** The default share card, served from `styles/social` as `<baseUrl>b10x-social/card.png`. */
@@ -57,6 +85,7 @@ interface HeadTag {
 interface SiteContext {
     siteDir: string;
     baseUrl: string;
+    generatedFilesDir?: string;
     siteConfig?: {
         title?: string;
         url?: string;
@@ -86,11 +115,27 @@ export interface ProductSitePlugin {
     injectHtmlTags(): {
         headTags: HeadTag[];
     };
+    configureWebpack(): {
+        module: {
+            rules: Array<{
+                test: string;
+                type: string;
+            }>;
+        };
+        resolve?: {
+            alias: Record<string, string>;
+        };
+    };
     postBuild(input: {
         outDir: string;
     }): Promise<void>;
 }
 export default function productSitePlugin(context: SiteContext, options?: ProductSiteOptions): ProductSitePlugin;
+/**
+ * Write the unchanged source bytes as `<directory>/<id>.<ext>`, each atomically and only when it
+ * changed, and remove files of references that are gone.
+ */
+export declare function writeReferenceFiles(directory: string, loaded: LoadedReference[]): Promise<void>;
 /** Read a landing file and inline every referenced terminal session and graph document. */
 export declare function readLanding(file: string, watched?: Set<string>): Promise<ProductLandingData>;
 /**
@@ -118,4 +163,3 @@ export declare function productMermaidTheme(): {
  * config nor `options.favicon` names one, and a dark default.
  */
 export declare function withProductSite<T extends Record<string, unknown>>(config: T, options?: ProductSiteOptions): T;
-export {};

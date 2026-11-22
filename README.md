@@ -202,6 +202,9 @@ HTML redirects.
 - `Diagram` for Mermaid source or generated SVG; `DiagramFrame` for an existing renderer
 - `ScrollableTable` for native tables with keyboard access to overflowing columns
 - `OpenApiReference` and `JsonSchemaViewer` for read-only OpenAPI 3.1 documents
+- `AsyncApiReference` for read-only AsyncAPI 3.0 documents, `CliReference` for `b10x-cli-reference/1`
+  command lines, and `ApiReference`, which renders a reference a product site loaded (see
+  [Reference pages](#reference-pages))
 - `StatusBadge` and `EcosystemSwitcher`
 - `EcosystemFamilyGateway` for a metadata-driven public entry experience
 - `ChangeTimelineEntry` for ecosystem impact feeds
@@ -360,7 +363,8 @@ export default withProductSite(config, {landing: './product.json', mark: 'C'});
 Options: `landing`, `product` (`canon`, `els`, `loom`, `commission`, `ess` or `a2a`: the signature hue on
 the navbar mark, kicker dot and hero emphasis), `mark`, `favicon` (a path under one of the site's static
 directories, passed to Docusaurus as `favicon`; a `favicon` set in the config wins), `fonts` (default
-on) and `admonitionGuard` (default on: the build fails when a raw `:::kind Title` line reaches a page).
+on), `admonitionGuard` (default on: the build fails when a raw `:::kind Title` line reaches a page)
+and `references` (see [Reference pages](#reference-pages)).
 
 Colour roles are reserved and validated per mode: status is an ordinal ramp with ○ ◐ ● glyphs, truth
 values carry ✓ ? ✕, protocol kinds keep the graph colours, and the product hue is identity only.
@@ -488,6 +492,75 @@ excerpts, a role-named session record), served below `/product-site/` with `trai
 Build it from a Docusaurus 3.10 installation with `docusaurus build --out-dir <dir>` in that
 directory; with this checkout as the installation, link it first
 (`ln -s ../.. node_modules/@beyond10x/docs-system`).
+
+## Reference pages
+
+A product site shows an HTTP API, an event API or a command line as an ordinary documentation page
+in its docs layout (sidebar, theme, light and dark). Name each source in `withProductSite`:
+
+```ts
+export default withProductSite(config, {
+  landing: './product.json',
+  references: [
+    {id: 'http-api', kind: 'openapi', source: './generated/openapi.yaml'},
+    {id: 'events', kind: 'asyncapi', source: './generated/asyncapi.yaml'},
+    {id: 'cli', kind: 'cli', source: './generated/cli-reference.json', title: 'The command line'},
+  ],
+});
+```
+
+and write one MDX page per reference in the docs folder:
+
+```mdx
+import reference from '@b10x-reference/http-api.json';
+
+<ApiReference reference={reference} />
+```
+
+At build time the plugin reads each `source` (relative to the site directory, `.json`, `.yaml` or
+`.yml`), checks its kind and version, and fails the build with a message naming the id and the file
+when the file is missing, unparsable or of another kind or version. In `docusaurus start` the sources
+are watched. Each reference becomes a data module `@b10x-reference/<id>.json` holding
+`{id, kind, title, document, sourceUrl, sourceName}` (a `resolve.alias`, which webpack and rspack
+through `@docusaurus/faster` read alike), and the unchanged source bytes are served as a download at
+`<baseUrl>reference/<id>.<ext>` from a generated static directory inside `.docusaurus/`.
+`ApiReference`, `OpenApiReference`, `AsyncApiReference` and `CliReference` are in the global MDX
+vocabulary. Their code loads in its own chunk, only on a page that uses one, and the server render
+waits for it. A page that imports `@b10x-reference/<id>.json` carries that chunk with its own route,
+so the reference hydrates against its server HTML; a reference passed in some other way loads the
+chunk after the page and renders again once it arrives. Outside a product site import them from
+`@beyond10x/docs-system/renderers`, which loads without the Docusaurus theme.
+
+The three formats:
+
+- `openapi`: OpenAPI 3.1. Operations are grouped by their first tag (untagged ones under "Other")
+  behind an index with method chips and a text filter that narrows the list in the browser and
+  leaves the full list without JavaScript. Each operation is a closed disclosure with its
+  parameters (path-level ones included), request body (every content type, schema and examples)
+  and responses (status chip by class, schema per content type, headers). Servers and security
+  schemes are listed. The schema cards sit in one closed "Show all N schemas" disclosure; a link to
+  a card opens it.
+- `asyncapi`: AsyncAPI 3.0: info, servers, operations (`send` or `receive`), channels with their
+  parameters and messages, messages with payload and headers, and the component schemas.
+- `cli`: `b10x-cli-reference/1` ([schema](schema/b10x.cli-reference.v1.schema.json); `parseCliReference`
+  in `@beyond10x/docs-system/cli-reference` checks it and names the path of a problem): the binary,
+  its global options, commands with a path of one or more words, and per argument its kind
+  (`positional`, `option`, `switch`), flags, value name, required or default, environment variable,
+  repeatability, allowed values, help, conflicts, requires and argument groups (a required group
+  of one argument makes that argument required); environment
+  variables read outside flags; exit statuses. The page shows a command index by first word, a
+  synopsis per command, an argument table, the global options, the environment and the exit
+  statuses. `cliReferenceFromEssPlan` converts a compiled ESS CLI plan (`ess-cli-plan/2`, from
+  `ess specify cli --format json`) into this format.
+
+OpenAPI and AsyncAPI share one schema viewer. A `$ref` inside the document shows the referenced
+name as a link to its card in the schemas section and opens in place as a native `<details>` whose
+content renders only when opened, with a cycle guard. An external `$ref` is shown as text and never
+fetched. Descriptions are plain text: blank lines make paragraphs, backtick spans become code, and
+HTML in a document stays text. `x-*` members are ignored.
+
+The renderers are read-only. They never send a request, offer no "try it" console and accept no
+credential or token; security schemes are listed for reading only.
 
 ## ESS contract viewer
 

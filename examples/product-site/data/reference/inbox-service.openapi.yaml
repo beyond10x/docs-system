@@ -1,0 +1,4055 @@
+# generated from inbox v1
+# contract digest slice-sha256/2:8e2e22d2b822308ba6b7c105f39e0f55dc0c242f0e109e712ce096d5593136a5
+# do not edit: regenerate with `ess generate`
+openapi: 3.1.0
+info:
+  title: inbox-service
+  summary: The one service every client talks to (`inbox serve`). It holds the inboxes and their messages in the backend it was started with, checks every post and every answer through the SignatureVerifier port, and removes a message when it is handled or its `expires` passes.
+  description: |-
+    The HTTP surface of `inbox-service`, one of the components of `inbox` v1.
+
+    Every path here is one semantic command, so the method is always POST and the path is the command's wire name under its domain's: a command is not a resource, and this document does not invent one. A status code is the outcome the specification declares — 202 for a branch that was taken, 422 for a refusal the input decides, 502 for a refusal decided outside the request — and the `outcome` property of every response body names the branch. This component publishes `DecisionTakenOnSilence`, `InboxClosed`, `InboxOpened`, `MessageAnswered`, `MessageDelivered`, `MessageExpired`, `MessageHandled`, `MessagePosted`, `MessageRead` and `MessageRefused` to consumers through the event transport; an event a branch emits that is not among them stays inside the component. The `published` property of every response body lists every event its branch emitted, in the order it emits them, published or not.
+
+    The specification declares who may invoke what (`x-ess-may-invoke` on each operation), so every command is sent as a declared actor. How a request proves which actor it is belongs to the realization, which authenticates it and hands the surface the caller; nothing in the request itself names one. The grant is checked before the command runs, and a request authenticated as no actor, or as one without the grant, is answered 403 with one standard refusal, the same for every command: `{"refused": "not granted", "actor": <name or null>}`. A 403 a declared branch answers carries `outcome` and the declared `error` instead, so a client tells the two apart by the members present. A command no declared actor may invoke is refused to every caller. A view an actor's grant names is read-checked the same way (`x-ess-may-read` on its operation): a request authenticated as no actor, or as one the grant does not name, is answered 403 with the same standard refusal before the view is read. A view no grant names is open, and any caller may read what it publishes.
+
+    This component declares `reached_by: network`, so its callers are not deployed with it and this contract is the surface they reach it through. That declaration is also why the views its domains declare have paths here: a GET under `views` per projection, answering every row it holds. There is no page size, no cursor, no ordering and no filter parameter, because the specification states none — a view's filter is part of the projection, not of the request. A view that declares `params:` is the exception: each is a query parameter, described on its operation, and a view that declares `paging:` takes its page and size there.
+  version: v1
+  x-ess-provenance:
+    system: inbox
+    specification_version: v1
+    contract_digest: slice-sha256/2:8e2e22d2b822308ba6b7c105f39e0f55dc0c242f0e109e712ce096d5593136a5
+  x-ess-reached-by: network
+tags:
+- name: messaging
+  description: One addressable inbox per agent or person, and the messages that wait in them. A message is one signed envelope for one inbox. The service keeps it until it is handled or its `expires` passes, then removes it; nothing is kept as history.
+paths:
+  /messaging/commands/answer:
+    post:
+      operationId: inbox.messaging.Answer
+      summary: Answer
+      description: 'Answer a request or a decision. The input is the reply envelope: its kind is reply and its `to` is the sender of the message it answers. The service checks it as it checks a post.'
+      tags:
+      - messaging
+      x-ess-may-invoke:
+      - inbox.messaging.Client
+      x-ess-caller:
+      - inbox
+      - principal
+      requestBody:
+        description: The input `inbox.messaging.Answer` declares.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inbox.messaging.Answer.Input'
+      responses:
+        '202':
+          description: 'Outcome `answered`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Answer.answered.Response'
+        '403':
+          description: 'Outcomes `not-sender`, `foreign-message` and `not-recipient`: the caller is not one this branch admits: its guard compares the authenticated caller with the input or the record. The same request from an admitted caller is accepted. Or: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-invoke` does not list. It is checked before the command runs, so nothing was read, written or published, and the same request from a granted actor is decided by the command. Its body carries `refused` and `actor`, never the `outcome` and `error` a declared branch carries.'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - discriminator:
+                    mapping:
+                      foreign-message: '#/components/schemas/inbox.messaging.Answer.foreign-message.Response'
+                      not-recipient: '#/components/schemas/inbox.messaging.Answer.not-recipient.Response'
+                      not-sender: '#/components/schemas/inbox.messaging.Answer.not-sender.Response'
+                    propertyName: outcome
+                  oneOf:
+                  - $ref: '#/components/schemas/inbox.messaging.Answer.not-sender.Response'
+                  - $ref: '#/components/schemas/inbox.messaging.Answer.foreign-message.Response'
+                  - $ref: '#/components/schemas/inbox.messaging.Answer.not-recipient.Response'
+                - additionalProperties: false
+                  properties:
+                    actor:
+                      description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                      type:
+                      - string
+                      - 'null'
+                    refused:
+                      description: The standard refusal for an actor no grant admits.
+                      enum:
+                      - not granted
+                      type: string
+                  required:
+                  - refused
+                  - actor
+                  type: object
+        '404':
+          description: 'Outcome `unknown-message`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Answer.unknown-message.Response'
+        '409':
+          description: 'Outcomes `already-settled` and `note`: the input was acceptable and the subject is in a state this command does not act from. Resending the same request changes nothing until something else moves it.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    already-settled: '#/components/schemas/inbox.messaging.Answer.already-settled.Response'
+                    note: '#/components/schemas/inbox.messaging.Answer.note.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.Answer.already-settled.Response'
+                - $ref: '#/components/schemas/inbox.messaging.Answer.note.Response'
+        '422':
+          description: 'Outcomes `no-authority` and `already-expired`: the request was understood and refused on domain grounds. The body names the declared error and carries whatever that error declares.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    already-expired: '#/components/schemas/inbox.messaging.Answer.already-expired.Response'
+                    no-authority: '#/components/schemas/inbox.messaging.Answer.no-authority.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.Answer.no-authority.Response'
+                - $ref: '#/components/schemas/inbox.messaging.Answer.already-expired.Response'
+        '501':
+          description: 'No declared outcome: the realization is unfinished. Either a port this command runs reported an unmet obligation, and nothing was written: `committed` is `false`. Or the command''s effect was committed and delivering what this command published to a binding failed: `committed` is `true`, the effect and its events stand, and each binding whose delivery failed keeps its event and is attempted again on a later delivery, while no other binding receives it twice. Do not retry: after a failed delivery a retry performs the command a second time.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  committed:
+                    description: '`true` when the command''s effect and events were committed and delivering what it published failed; `false` when an unmet obligation stopped the command before anything was written.'
+                    type: boolean
+                  refused:
+                    description: What was left unfinished, in words.
+                    type: string
+                required:
+                - refused
+                - committed
+                type: object
+        '502':
+          description: 'Outcomes `signature-invalid`, `authority-invalid` and `shape-mismatch`: something outside the request refused. The input was acceptable, so the caller has nothing to correct and a retry is meaningful.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    authority-invalid: '#/components/schemas/inbox.messaging.Answer.authority-invalid.Response'
+                    shape-mismatch: '#/components/schemas/inbox.messaging.Answer.shape-mismatch.Response'
+                    signature-invalid: '#/components/schemas/inbox.messaging.Answer.signature-invalid.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.Answer.signature-invalid.Response'
+                - $ref: '#/components/schemas/inbox.messaging.Answer.authority-invalid.Response'
+                - $ref: '#/components/schemas/inbox.messaging.Answer.shape-mismatch.Response'
+  /messaging/commands/close-inbox:
+    post:
+      operationId: inbox.messaging.CloseInbox
+      summary: CloseInbox
+      description: Close an inbox. Posts to it are refused; the messages it holds stay until they expire.
+      tags:
+      - messaging
+      x-ess-may-invoke:
+      - inbox.messaging.Client
+      x-ess-caller:
+      - principal
+      requestBody:
+        description: The input `inbox.messaging.CloseInbox` declares.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inbox.messaging.CloseInbox.Input'
+      responses:
+        '202':
+          description: 'Outcomes `closed` and `already-closed`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    already-closed: '#/components/schemas/inbox.messaging.CloseInbox.already-closed.Response'
+                    closed: '#/components/schemas/inbox.messaging.CloseInbox.closed.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.CloseInbox.closed.Response'
+                - $ref: '#/components/schemas/inbox.messaging.CloseInbox.already-closed.Response'
+        '403':
+          description: 'Outcome `not-owner`: the caller is not one this branch admits: its guard compares the authenticated caller with the input or the record. The same request from an admitted caller is accepted. Or: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-invoke` does not list. It is checked before the command runs, so nothing was read, written or published, and the same request from a granted actor is decided by the command. Its body carries `refused` and `actor`, never the `outcome` and `error` a declared branch carries.'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.CloseInbox.not-owner.Response'
+                - additionalProperties: false
+                  properties:
+                    actor:
+                      description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                      type:
+                      - string
+                      - 'null'
+                    refused:
+                      description: The standard refusal for an actor no grant admits.
+                      enum:
+                      - not granted
+                      type: string
+                  required:
+                  - refused
+                  - actor
+                  type: object
+        '404':
+          description: 'Outcome `unknown-inbox`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.CloseInbox.unknown-inbox.Response'
+        '501':
+          description: 'No declared outcome: the realization is unfinished. Either a port this command runs reported an unmet obligation, and nothing was written: `committed` is `false`. Or the command''s effect was committed and delivering what this command published to a binding failed: `committed` is `true`, the effect and its events stand, and each binding whose delivery failed keeps its event and is attempted again on a later delivery, while no other binding receives it twice. Do not retry: after a failed delivery a retry performs the command a second time.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  committed:
+                    description: '`true` when the command''s effect and events were committed and delivering what it published failed; `false` when an unmet obligation stopped the command before anything was written.'
+                    type: boolean
+                  refused:
+                    description: What was left unfinished, in words.
+                    type: string
+                required:
+                - refused
+                - committed
+                type: object
+  /messaging/commands/collect:
+    post:
+      operationId: inbox.messaging.Collect
+      summary: Collect
+      description: The sender takes the answer or the refusal of its message. The message is handled by that and is removed.
+      tags:
+      - messaging
+      x-ess-may-invoke:
+      - inbox.messaging.Client
+      x-ess-caller:
+      - inbox
+      - principal
+      requestBody:
+        description: The input `inbox.messaging.Collect` declares.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inbox.messaging.Collect.Input'
+      responses:
+        '202':
+          description: 'Outcome `collected`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Collect.collected.Response'
+        '403':
+          description: 'Outcomes `foreign-message` and `not-sender`: the caller is not one this branch admits: its guard compares the authenticated caller with the input or the record. The same request from an admitted caller is accepted. Or: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-invoke` does not list. It is checked before the command runs, so nothing was read, written or published, and the same request from a granted actor is decided by the command. Its body carries `refused` and `actor`, never the `outcome` and `error` a declared branch carries.'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - discriminator:
+                    mapping:
+                      foreign-message: '#/components/schemas/inbox.messaging.Collect.foreign-message.Response'
+                      not-sender: '#/components/schemas/inbox.messaging.Collect.not-sender.Response'
+                    propertyName: outcome
+                  oneOf:
+                  - $ref: '#/components/schemas/inbox.messaging.Collect.foreign-message.Response'
+                  - $ref: '#/components/schemas/inbox.messaging.Collect.not-sender.Response'
+                - additionalProperties: false
+                  properties:
+                    actor:
+                      description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                      type:
+                      - string
+                      - 'null'
+                    refused:
+                      description: The standard refusal for an actor no grant admits.
+                      enum:
+                      - not granted
+                      type: string
+                  required:
+                  - refused
+                  - actor
+                  type: object
+        '404':
+          description: 'Outcome `unknown-message`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Collect.unknown-message.Response'
+        '422':
+          description: 'Outcome `not-settled`: the request was understood and refused on domain grounds. The body names the declared error and carries whatever that error declares.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Collect.not-settled.Response'
+        '501':
+          description: 'No declared outcome: the realization is unfinished. Either a port this command runs reported an unmet obligation, and nothing was written: `committed` is `false`. Or the command''s effect was committed and delivering what this command published to a binding failed: `committed` is `true`, the effect and its events stand, and each binding whose delivery failed keeps its event and is attempted again on a later delivery, while no other binding receives it twice. Do not retry: after a failed delivery a retry performs the command a second time.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  committed:
+                    description: '`true` when the command''s effect and events were committed and delivering what it published failed; `false` when an unmet obligation stopped the command before anything was written.'
+                    type: boolean
+                  refused:
+                    description: What was left unfinished, in words.
+                    type: string
+                required:
+                - refused
+                - committed
+                type: object
+  /messaging/commands/expire:
+    post:
+      operationId: inbox.messaging.Expire
+      summary: Expire
+      description: The service's expiry task removes one message whose `expires` has passed. `now` is the Clock port's reading. A decision that names a `default_on_silence` is answered by silence instead and kept until `keep_until`.
+      tags:
+      - messaging
+      x-ess-may-invoke:
+      - inbox.messaging.Sweeper
+      requestBody:
+        description: The input `inbox.messaging.Expire` declares.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inbox.messaging.Expire.Input'
+      responses:
+        '202':
+          description: 'Outcomes `decided-on-silence` and `expired`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    decided-on-silence: '#/components/schemas/inbox.messaging.Expire.decided-on-silence.Response'
+                    expired: '#/components/schemas/inbox.messaging.Expire.expired.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.Expire.decided-on-silence.Response'
+                - $ref: '#/components/schemas/inbox.messaging.Expire.expired.Response'
+        '403':
+          description: 'No declared outcome: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-invoke` does not list. It is checked before the command runs, so nothing was read, written or published, and the same request from a granted actor is decided by the command. Its body carries `refused` and `actor`, never the `outcome` and `error` a declared branch carries.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  actor:
+                    description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                    type:
+                    - string
+                    - 'null'
+                  refused:
+                    description: The standard refusal for an actor no grant admits.
+                    enum:
+                    - not granted
+                    type: string
+                required:
+                - refused
+                - actor
+                type: object
+        '404':
+          description: 'Outcome `unknown-message`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Expire.unknown-message.Response'
+        '409':
+          description: 'Outcome `not-due`: the input was acceptable and the subject is in a state this command does not act from. Resending the same request changes nothing until something else moves it.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Expire.not-due.Response'
+        '501':
+          description: 'No declared outcome: the realization is unfinished. Either a port this command runs reported an unmet obligation, and nothing was written: `committed` is `false`. Or the command''s effect was committed and delivering what this command published to a binding failed: `committed` is `true`, the effect and its events stand, and each binding whose delivery failed keeps its event and is attempted again on a later delivery, while no other binding receives it twice. Do not retry: after a failed delivery a retry performs the command a second time.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  committed:
+                    description: '`true` when the command''s effect and events were committed and delivering what it published failed; `false` when an unmet obligation stopped the command before anything was written.'
+                    type: boolean
+                  refused:
+                    description: What was left unfinished, in words.
+                    type: string
+                required:
+                - refused
+                - committed
+                type: object
+  /messaging/commands/mark-delivered:
+    post:
+      operationId: inbox.messaging.MarkDelivered
+      summary: MarkDelivered
+      description: An adapter reports that a live wake surface took the message. It is sent only after the surface took it.
+      tags:
+      - messaging
+      x-ess-may-invoke:
+      - inbox.messaging.Client
+      x-ess-caller:
+      - inbox
+      - principal
+      requestBody:
+        description: The input `inbox.messaging.MarkDelivered` declares.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inbox.messaging.MarkDelivered.Input'
+      responses:
+        '202':
+          description: 'Outcomes `delivered` and `already-delivered`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    already-delivered: '#/components/schemas/inbox.messaging.MarkDelivered.already-delivered.Response'
+                    delivered: '#/components/schemas/inbox.messaging.MarkDelivered.delivered.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.MarkDelivered.delivered.Response'
+                - $ref: '#/components/schemas/inbox.messaging.MarkDelivered.already-delivered.Response'
+        '403':
+          description: 'Outcomes `foreign-message` and `not-recipient`: the caller is not one this branch admits: its guard compares the authenticated caller with the input or the record. The same request from an admitted caller is accepted. Or: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-invoke` does not list. It is checked before the command runs, so nothing was read, written or published, and the same request from a granted actor is decided by the command. Its body carries `refused` and `actor`, never the `outcome` and `error` a declared branch carries.'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - discriminator:
+                    mapping:
+                      foreign-message: '#/components/schemas/inbox.messaging.MarkDelivered.foreign-message.Response'
+                      not-recipient: '#/components/schemas/inbox.messaging.MarkDelivered.not-recipient.Response'
+                    propertyName: outcome
+                  oneOf:
+                  - $ref: '#/components/schemas/inbox.messaging.MarkDelivered.foreign-message.Response'
+                  - $ref: '#/components/schemas/inbox.messaging.MarkDelivered.not-recipient.Response'
+                - additionalProperties: false
+                  properties:
+                    actor:
+                      description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                      type:
+                      - string
+                      - 'null'
+                    refused:
+                      description: The standard refusal for an actor no grant admits.
+                      enum:
+                      - not granted
+                      type: string
+                  required:
+                  - refused
+                  - actor
+                  type: object
+        '404':
+          description: 'Outcome `unknown-message`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.MarkDelivered.unknown-message.Response'
+        '501':
+          description: 'No declared outcome: the realization is unfinished. Either a port this command runs reported an unmet obligation, and nothing was written: `committed` is `false`. Or the command''s effect was committed and delivering what this command published to a binding failed: `committed` is `true`, the effect and its events stand, and each binding whose delivery failed keeps its event and is attempted again on a later delivery, while no other binding receives it twice. Do not retry: after a failed delivery a retry performs the command a second time.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  committed:
+                    description: '`true` when the command''s effect and events were committed and delivering what it published failed; `false` when an unmet obligation stopped the command before anything was written.'
+                    type: boolean
+                  refused:
+                    description: What was left unfinished, in words.
+                    type: string
+                required:
+                - refused
+                - committed
+                type: object
+  /messaging/commands/open-inbox:
+    post:
+      operationId: inbox.messaging.OpenInbox
+      summary: OpenInbox
+      description: Open the inbox at an address, or open it again. The caller becomes its owner. A client sends this after every reconnect, because a restarted service holds no inbox.
+      tags:
+      - messaging
+      x-ess-may-invoke:
+      - inbox.messaging.Client
+      x-ess-caller:
+      - inbox
+      - principal
+      requestBody:
+        description: The input `inbox.messaging.OpenInbox` declares.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inbox.messaging.OpenInbox.Input'
+      responses:
+        '202':
+          description: 'Outcomes `opened`, `reopened` and `already-open`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    already-open: '#/components/schemas/inbox.messaging.OpenInbox.already-open.Response'
+                    opened: '#/components/schemas/inbox.messaging.OpenInbox.opened.Response'
+                    reopened: '#/components/schemas/inbox.messaging.OpenInbox.reopened.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.OpenInbox.opened.Response'
+                - $ref: '#/components/schemas/inbox.messaging.OpenInbox.reopened.Response'
+                - $ref: '#/components/schemas/inbox.messaging.OpenInbox.already-open.Response'
+        '403':
+          description: 'Outcome `not-owner`: the caller is not one this branch admits: its guard compares the authenticated caller with the input or the record. The same request from an admitted caller is accepted. Or: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-invoke` does not list. It is checked before the command runs, so nothing was read, written or published, and the same request from a granted actor is decided by the command. Its body carries `refused` and `actor`, never the `outcome` and `error` a declared branch carries.'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.OpenInbox.not-owner.Response'
+                - additionalProperties: false
+                  properties:
+                    actor:
+                      description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                      type:
+                      - string
+                      - 'null'
+                    refused:
+                      description: The standard refusal for an actor no grant admits.
+                      enum:
+                      - not granted
+                      type: string
+                  required:
+                  - refused
+                  - actor
+                  type: object
+        '501':
+          description: 'No declared outcome: the realization is unfinished. Either a port this command runs reported an unmet obligation, and nothing was written: `committed` is `false`. Or the command''s effect was committed and delivering what this command published to a binding failed: `committed` is `true`, the effect and its events stand, and each binding whose delivery failed keeps its event and is attempted again on a later delivery, while no other binding receives it twice. Do not retry: after a failed delivery a retry performs the command a second time.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  committed:
+                    description: '`true` when the command''s effect and events were committed and delivering what it published failed; `false` when an unmet obligation stopped the command before anything was written.'
+                    type: boolean
+                  refused:
+                    description: What was left unfinished, in words.
+                    type: string
+                required:
+                - refused
+                - committed
+                type: object
+  /messaging/commands/post:
+    post:
+      operationId: inbox.messaging.PostMessage
+      summary: PostMessage
+      description: Post one signed envelope to one inbox. The input is the envelope. The service checks the signature and the authority before it stores anything; a refused post stores nothing and the refusal is the sender's answer.
+      tags:
+      - messaging
+      x-ess-may-invoke:
+      - inbox.messaging.Client
+      x-ess-caller:
+      - principal
+      requestBody:
+        description: The input `inbox.messaging.PostMessage` declares.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inbox.messaging.PostMessage.Input'
+      responses:
+        '202':
+          description: 'Outcome `posted`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.PostMessage.posted.Response'
+        '403':
+          description: 'Outcome `not-sender`: the caller is not one this branch admits: its guard compares the authenticated caller with the input or the record. The same request from an admitted caller is accepted. Or: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-invoke` does not list. It is checked before the command runs, so nothing was read, written or published, and the same request from a granted actor is decided by the command. Its body carries `refused` and `actor`, never the `outcome` and `error` a declared branch carries.'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.not-sender.Response'
+                - additionalProperties: false
+                  properties:
+                    actor:
+                      description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                      type:
+                      - string
+                      - 'null'
+                    refused:
+                      description: The standard refusal for an actor no grant admits.
+                      enum:
+                      - not granted
+                      type: string
+                  required:
+                  - refused
+                  - actor
+                  type: object
+        '409':
+          description: 'Outcomes `duplicate`, `duplicate-key`, `unknown-inbox`, `inbox-closed` and `id-taken`: the input was acceptable and the subject is in a state this command does not act from. Resending the same request changes nothing until something else moves it.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    duplicate: '#/components/schemas/inbox.messaging.PostMessage.duplicate.Response'
+                    duplicate-key: '#/components/schemas/inbox.messaging.PostMessage.duplicate-key.Response'
+                    id-taken: '#/components/schemas/inbox.messaging.PostMessage.id-taken.Response'
+                    inbox-closed: '#/components/schemas/inbox.messaging.PostMessage.inbox-closed.Response'
+                    unknown-inbox: '#/components/schemas/inbox.messaging.PostMessage.unknown-inbox.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.duplicate.Response'
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.duplicate-key.Response'
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.unknown-inbox.Response'
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.inbox-closed.Response'
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.id-taken.Response'
+        '422':
+          description: 'Outcomes `no-authority`, `already-expired`, `request-without-shape` and `decision-without-options`: the request was understood and refused on domain grounds. The body names the declared error and carries whatever that error declares.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    already-expired: '#/components/schemas/inbox.messaging.PostMessage.already-expired.Response'
+                    decision-without-options: '#/components/schemas/inbox.messaging.PostMessage.decision-without-options.Response'
+                    no-authority: '#/components/schemas/inbox.messaging.PostMessage.no-authority.Response'
+                    request-without-shape: '#/components/schemas/inbox.messaging.PostMessage.request-without-shape.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.no-authority.Response'
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.already-expired.Response'
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.request-without-shape.Response'
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.decision-without-options.Response'
+        '501':
+          description: 'No declared outcome: the realization is unfinished. Either a port this command runs reported an unmet obligation, and nothing was written: `committed` is `false`. Or the command''s effect was committed and delivering what this command published to a binding failed: `committed` is `true`, the effect and its events stand, and each binding whose delivery failed keeps its event and is attempted again on a later delivery, while no other binding receives it twice. Do not retry: after a failed delivery a retry performs the command a second time.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  committed:
+                    description: '`true` when the command''s effect and events were committed and delivering what it published failed; `false` when an unmet obligation stopped the command before anything was written.'
+                    type: boolean
+                  refused:
+                    description: What was left unfinished, in words.
+                    type: string
+                required:
+                - refused
+                - committed
+                type: object
+        '502':
+          description: 'Outcomes `unknown-option`, `signature-invalid` and `authority-invalid`: something outside the request refused. The input was acceptable, so the caller has nothing to correct and a retry is meaningful.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    authority-invalid: '#/components/schemas/inbox.messaging.PostMessage.authority-invalid.Response'
+                    signature-invalid: '#/components/schemas/inbox.messaging.PostMessage.signature-invalid.Response'
+                    unknown-option: '#/components/schemas/inbox.messaging.PostMessage.unknown-option.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.unknown-option.Response'
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.signature-invalid.Response'
+                - $ref: '#/components/schemas/inbox.messaging.PostMessage.authority-invalid.Response'
+  /messaging/commands/read:
+    post:
+      operationId: inbox.messaging.MarkRead
+      summary: MarkRead
+      description: The owner of the inbox read the message. A note is handled by that and is removed; a request or a decision waits for its answer.
+      tags:
+      - messaging
+      x-ess-may-invoke:
+      - inbox.messaging.Client
+      x-ess-caller:
+      - inbox
+      - principal
+      requestBody:
+        description: The input `inbox.messaging.MarkRead` declares.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inbox.messaging.MarkRead.Input'
+      responses:
+        '202':
+          description: 'Outcomes `handled`, `read` and `already-read`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    already-read: '#/components/schemas/inbox.messaging.MarkRead.already-read.Response'
+                    handled: '#/components/schemas/inbox.messaging.MarkRead.handled.Response'
+                    read: '#/components/schemas/inbox.messaging.MarkRead.read.Response'
+                  propertyName: outcome
+                oneOf:
+                - $ref: '#/components/schemas/inbox.messaging.MarkRead.handled.Response'
+                - $ref: '#/components/schemas/inbox.messaging.MarkRead.read.Response'
+                - $ref: '#/components/schemas/inbox.messaging.MarkRead.already-read.Response'
+        '403':
+          description: 'Outcomes `foreign-message` and `not-recipient`: the caller is not one this branch admits: its guard compares the authenticated caller with the input or the record. The same request from an admitted caller is accepted. Or: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-invoke` does not list. It is checked before the command runs, so nothing was read, written or published, and the same request from a granted actor is decided by the command. Its body carries `refused` and `actor`, never the `outcome` and `error` a declared branch carries.'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - discriminator:
+                    mapping:
+                      foreign-message: '#/components/schemas/inbox.messaging.MarkRead.foreign-message.Response'
+                      not-recipient: '#/components/schemas/inbox.messaging.MarkRead.not-recipient.Response'
+                    propertyName: outcome
+                  oneOf:
+                  - $ref: '#/components/schemas/inbox.messaging.MarkRead.foreign-message.Response'
+                  - $ref: '#/components/schemas/inbox.messaging.MarkRead.not-recipient.Response'
+                - additionalProperties: false
+                  properties:
+                    actor:
+                      description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                      type:
+                      - string
+                      - 'null'
+                    refused:
+                      description: The standard refusal for an actor no grant admits.
+                      enum:
+                      - not granted
+                      type: string
+                  required:
+                  - refused
+                  - actor
+                  type: object
+        '404':
+          description: 'Outcome `unknown-message`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.MarkRead.unknown-message.Response'
+        '501':
+          description: 'No declared outcome: the realization is unfinished. Either a port this command runs reported an unmet obligation, and nothing was written: `committed` is `false`. Or the command''s effect was committed and delivering what this command published to a binding failed: `committed` is `true`, the effect and its events stand, and each binding whose delivery failed keeps its event and is attempted again on a later delivery, while no other binding receives it twice. Do not retry: after a failed delivery a retry performs the command a second time.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  committed:
+                    description: '`true` when the command''s effect and events were committed and delivering what it published failed; `false` when an unmet obligation stopped the command before anything was written.'
+                    type: boolean
+                  refused:
+                    description: What was left unfinished, in words.
+                    type: string
+                required:
+                - refused
+                - committed
+                type: object
+  /messaging/commands/refuse:
+    post:
+      operationId: inbox.messaging.Refuse
+      summary: Refuse
+      description: The owner of the inbox refuses the message and says why. The sender collects the reason.
+      tags:
+      - messaging
+      x-ess-may-invoke:
+      - inbox.messaging.Client
+      x-ess-caller:
+      - inbox
+      - principal
+      requestBody:
+        description: The input `inbox.messaging.Refuse` declares.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inbox.messaging.Refuse.Input'
+      responses:
+        '202':
+          description: 'Outcome `refused`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Refuse.refused.Response'
+        '403':
+          description: 'Outcomes `foreign-message` and `not-recipient`: the caller is not one this branch admits: its guard compares the authenticated caller with the input or the record. The same request from an admitted caller is accepted. Or: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-invoke` does not list. It is checked before the command runs, so nothing was read, written or published, and the same request from a granted actor is decided by the command. Its body carries `refused` and `actor`, never the `outcome` and `error` a declared branch carries.'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - discriminator:
+                    mapping:
+                      foreign-message: '#/components/schemas/inbox.messaging.Refuse.foreign-message.Response'
+                      not-recipient: '#/components/schemas/inbox.messaging.Refuse.not-recipient.Response'
+                    propertyName: outcome
+                  oneOf:
+                  - $ref: '#/components/schemas/inbox.messaging.Refuse.foreign-message.Response'
+                  - $ref: '#/components/schemas/inbox.messaging.Refuse.not-recipient.Response'
+                - additionalProperties: false
+                  properties:
+                    actor:
+                      description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                      type:
+                      - string
+                      - 'null'
+                    refused:
+                      description: The standard refusal for an actor no grant admits.
+                      enum:
+                      - not granted
+                      type: string
+                  required:
+                  - refused
+                  - actor
+                  type: object
+        '404':
+          description: 'Outcome `unknown-message`: the branch the specification declares for this input. Events this branch emits are published to consumers and listed under `published`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Refuse.unknown-message.Response'
+        '409':
+          description: 'Outcome `already-settled`: the input was acceptable and the subject is in a state this command does not act from. Resending the same request changes nothing until something else moves it.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Refuse.already-settled.Response'
+        '501':
+          description: 'No declared outcome: the realization is unfinished. Either a port this command runs reported an unmet obligation, and nothing was written: `committed` is `false`. Or the command''s effect was committed and delivering what this command published to a binding failed: `committed` is `true`, the effect and its events stand, and each binding whose delivery failed keeps its event and is attempted again on a later delivery, while no other binding receives it twice. Do not retry: after a failed delivery a retry performs the command a second time.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  committed:
+                    description: '`true` when the command''s effect and events were committed and delivering what it published failed; `false` when an unmet obligation stopped the command before anything was written.'
+                    type: boolean
+                  refused:
+                    description: What was left unfinished, in words.
+                    type: string
+                required:
+                - refused
+                - committed
+                type: object
+  /messaging/views/due:
+    get:
+      operationId: inbox.messaging.Due
+      summary: Due
+      description: 'The messages whose `expires` is at or before a clock reading: what the expiry task sends Expire for.'
+      tags:
+      - messaging
+      x-ess-may-read:
+      - inbox.messaging.Sweeper
+      x-ess-consistency: read_your_writes
+      parameters:
+      - name: now
+        in: query
+        description: Read by the view's filter as `param.now`; it selects which rows the view holds.
+        required: true
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: 'Every row of `inbox.messaging.Due`, a projection of `inbox.messaging.Message`. Contains the instances where `expires <= param.now as timestamp` holds. Read-your-writes: a caller that has just issued a command sees its effect here.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Due.Response'
+        '403':
+          description: 'No declared outcome: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-read` does not list. It is checked before the view is read, so no row was read, and the same request from a granted actor answers the rows. Its body is the one a command answers an ungranted actor.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  actor:
+                    description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                    type:
+                    - string
+                    - 'null'
+                  refused:
+                    description: The standard refusal for an actor no grant admits.
+                    enum:
+                    - not granted
+                    type: string
+                required:
+                - refused
+                - actor
+                type: object
+  /messaging/views/inboxes:
+    get:
+      operationId: inbox.messaging.Inboxes
+      summary: Inboxes
+      tags:
+      - messaging
+      x-ess-may-read:
+      - inbox.messaging.Client
+      x-ess-consistency: read_your_writes
+      responses:
+        '200':
+          description: 'Every row of `inbox.messaging.Inboxes`, a projection of `inbox.messaging.Inbox`. Contains every instance. Read-your-writes: a caller that has just issued a command sees its effect here.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Inboxes.Response'
+        '403':
+          description: 'No declared outcome: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-read` does not list. It is checked before the view is read, so no row was read, and the same request from a granted actor answers the rows. Its body is the one a command answers an ungranted actor.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  actor:
+                    description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                    type:
+                    - string
+                    - 'null'
+                  refused:
+                    description: The standard refusal for an actor no grant admits.
+                    enum:
+                    - not granted
+                    type: string
+                required:
+                - refused
+                - actor
+                type: object
+  /messaging/views/messages:
+    get:
+      operationId: inbox.messaging.Messages
+      summary: Messages
+      tags:
+      - messaging
+      x-ess-may-read:
+      - inbox.messaging.Sweeper
+      x-ess-consistency: read_your_writes
+      responses:
+        '200':
+          description: 'Every row of `inbox.messaging.Messages`, a projection of `inbox.messaging.Message`. Contains every instance. Read-your-writes: a caller that has just issued a command sees its effect here.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Messages.Response'
+        '403':
+          description: 'No declared outcome: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-read` does not list. It is checked before the view is read, so no row was read, and the same request from a granted actor answers the rows. Its body is the one a command answers an ungranted actor.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  actor:
+                    description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                    type:
+                    - string
+                    - 'null'
+                  refused:
+                    description: The standard refusal for an actor no grant admits.
+                    enum:
+                    - not granted
+                    type: string
+                required:
+                - refused
+                - actor
+                type: object
+  /messaging/views/outbox:
+    get:
+      operationId: inbox.messaging.Outbox
+      summary: Outbox
+      description: Every live message a principal sent, in whatever state.
+      tags:
+      - messaging
+      x-ess-may-read:
+      - inbox.messaging.Client
+      x-ess-consistency: read_your_writes
+      parameters:
+      - name: sender
+        in: query
+        description: Read by the view's filter as `param.sender`; it selects which rows the view holds.
+        required: true
+        schema:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+      responses:
+        '200':
+          description: 'Every row of `inbox.messaging.Outbox`, a projection of `inbox.messaging.Message`. Contains the instances where `from == param.sender` holds. Read-your-writes: a caller that has just issued a command sees its effect here.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Outbox.Response'
+        '403':
+          description: 'No declared outcome: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-read` does not list. It is checked before the view is read, so no row was read, and the same request from a granted actor answers the rows. Its body is the one a command answers an ungranted actor.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  actor:
+                    description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                    type:
+                    - string
+                    - 'null'
+                  refused:
+                    description: The standard refusal for an actor no grant admits.
+                    enum:
+                    - not granted
+                    type: string
+                required:
+                - refused
+                - actor
+                type: object
+  /messaging/views/pending:
+    get:
+      operationId: inbox.messaging.Pending
+      summary: Pending
+      description: 'What an inbox holds that its owner has not read: the read a wake surface makes. `inbox wait` is this read held open until it has a row or the wait ends.'
+      tags:
+      - messaging
+      x-ess-may-read:
+      - inbox.messaging.Client
+      x-ess-consistency: read_your_writes
+      parameters:
+      - name: inbox
+        in: query
+        description: Read by the view's filter as `param.inbox`; it selects which rows the view holds.
+        required: true
+        schema:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+      responses:
+        '200':
+          description: 'Every row of `inbox.messaging.Pending`, a projection of `inbox.messaging.Message`. Contains the instances where `(to == param.inbox and (state == Sent or state == Delivered))` holds. Read-your-writes: a caller that has just issued a command sees its effect here.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Pending.Response'
+        '403':
+          description: 'No declared outcome: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-read` does not list. It is checked before the view is read, so no row was read, and the same request from a granted actor answers the rows. Its body is the one a command answers an ungranted actor.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  actor:
+                    description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                    type:
+                    - string
+                    - 'null'
+                  refused:
+                    description: The standard refusal for an actor no grant admits.
+                    enum:
+                    - not granted
+                    type: string
+                required:
+                - refused
+                - actor
+                type: object
+  /messaging/views/replies:
+    get:
+      operationId: inbox.messaging.Replies
+      summary: Replies
+      description: 'The answered messages of one thread: one row per recipient that answered, or that silence answered for.'
+      tags:
+      - messaging
+      x-ess-may-read:
+      - inbox.messaging.Client
+      x-ess-consistency: read_your_writes
+      parameters:
+      - name: thread
+        in: query
+        description: Read by the view's filter as `param.thread`; it selects which rows the view holds.
+        required: true
+        schema:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+      responses:
+        '200':
+          description: 'Every row of `inbox.messaging.Replies`, a projection of `inbox.messaging.Message`. Contains the instances where `(thread == param.thread and state == Answered)` holds. Read-your-writes: a caller that has just issued a command sees its effect here.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Replies.Response'
+        '403':
+          description: 'No declared outcome: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-read` does not list. It is checked before the view is read, so no row was read, and the same request from a granted actor answers the rows. Its body is the one a command answers an ungranted actor.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  actor:
+                    description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                    type:
+                    - string
+                    - 'null'
+                  refused:
+                    description: The standard refusal for an actor no grant admits.
+                    enum:
+                    - not granted
+                    type: string
+                required:
+                - refused
+                - actor
+                type: object
+  /messaging/views/settled:
+    get:
+      operationId: inbox.messaging.Settled
+      summary: Settled
+      description: The messages of a sender that carry an answer or a refusal to collect.
+      tags:
+      - messaging
+      x-ess-may-read:
+      - inbox.messaging.Client
+      x-ess-consistency: read_your_writes
+      parameters:
+      - name: sender
+        in: query
+        description: Read by the view's filter as `param.sender`; it selects which rows the view holds.
+        required: true
+        schema:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+      responses:
+        '200':
+          description: 'Every row of `inbox.messaging.Settled`, a projection of `inbox.messaging.Message`. Contains the instances where `(from == param.sender and (state == Answered or state == Refused))` holds. Read-your-writes: a caller that has just issued a command sees its effect here.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Settled.Response'
+        '403':
+          description: 'No declared outcome: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-read` does not list. It is checked before the view is read, so no row was read, and the same request from a granted actor answers the rows. Its body is the one a command answers an ungranted actor.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  actor:
+                    description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                    type:
+                    - string
+                    - 'null'
+                  refused:
+                    description: The standard refusal for an actor no grant admits.
+                    enum:
+                    - not granted
+                    type: string
+                required:
+                - refused
+                - actor
+                type: object
+  /messaging/views/thread:
+    get:
+      operationId: inbox.messaging.Thread
+      summary: Thread
+      description: 'Every live message of one thread: one row per recipient of a fan-out, with its state.'
+      tags:
+      - messaging
+      x-ess-may-read:
+      - inbox.messaging.Client
+      x-ess-consistency: read_your_writes
+      parameters:
+      - name: thread
+        in: query
+        description: Read by the view's filter as `param.thread`; it selects which rows the view holds.
+        required: true
+        schema:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+      responses:
+        '200':
+          description: 'Every row of `inbox.messaging.Thread`, a projection of `inbox.messaging.Message`. Contains the instances where `thread == param.thread` holds. Read-your-writes: a caller that has just issued a command sees its effect here.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Thread.Response'
+        '403':
+          description: 'No declared outcome: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-read` does not list. It is checked before the view is read, so no row was read, and the same request from a granted actor answers the rows. Its body is the one a command answers an ungranted actor.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  actor:
+                    description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                    type:
+                    - string
+                    - 'null'
+                  refused:
+                    description: The standard refusal for an actor no grant admits.
+                    enum:
+                    - not granted
+                    type: string
+                required:
+                - refused
+                - actor
+                type: object
+  /messaging/views/unanswered:
+    get:
+      operationId: inbox.messaging.Unanswered
+      summary: Unanswered
+      description: The requests and decisions the owner of an inbox has read and not answered.
+      tags:
+      - messaging
+      x-ess-may-read:
+      - inbox.messaging.Client
+      x-ess-consistency: read_your_writes
+      parameters:
+      - name: inbox
+        in: query
+        description: Read by the view's filter as `param.inbox`; it selects which rows the view holds.
+        required: true
+        schema:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+      responses:
+        '200':
+          description: 'Every row of `inbox.messaging.Unanswered`, a projection of `inbox.messaging.Message`. Contains the instances where `(to == param.inbox and state == Read)` holds. Read-your-writes: a caller that has just issued a command sees its effect here.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inbox.messaging.Unanswered.Response'
+        '403':
+          description: 'No declared outcome: the standard refusal for an actor no grant admits: the request was authenticated as no actor, or as one `x-ess-may-read` does not list. It is checked before the view is read, so no row was read, and the same request from a granted actor answers the rows. Its body is the one a command answers an ungranted actor.'
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  actor:
+                    description: The qualified name of the actor the request was authenticated as, or null where it was authenticated as none.
+                    type:
+                    - string
+                    - 'null'
+                  refused:
+                    description: The standard refusal for an actor no grant admits.
+                    enum:
+                    - not granted
+                    type: string
+                required:
+                - refused
+                - actor
+                type: object
+components:
+  schemas:
+    inbox.messaging.Adapter:
+      title: Adapter
+      description: The wake surface the owner of an inbox reads it through.
+      x-ess-name: inbox.messaging.Adapter
+      x-ess-kind: enum
+      type: string
+      enum:
+      - claude_code
+      - metaharness
+      - slack
+      - terminal
+    inbox.messaging.Address:
+      title: Address
+      description: 'The address of an inbox: `agent:<host>/<session-name>` or `human:<name>`. `group:<name>` is reserved; version 1 opens no group inbox, and a sender that addresses several inboxes posts one envelope to each under one `thread`.'
+      x-ess-name: inbox.messaging.Address
+      x-ess-kind: newtype
+      type: string
+    inbox.messaging.AlreadySettled.Error:
+      title: AlreadySettled payload
+      description: The message is already answered or refused.
+      x-ess-name: inbox.messaging.AlreadySettled
+      x-ess-kind: error-payload
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/inbox.messaging.Message.State'
+      required:
+      - state
+      additionalProperties: false
+    inbox.messaging.Answer.Input:
+      title: Answer input
+      description: 'Answer a request or a decision. The input is the reply envelope: its kind is reply and its `to` is the sender of the message it answers. The service checks it as it checks a post.'
+      x-ess-name: inbox.messaging.Answer
+      x-ess-kind: command-input
+      type: object
+      properties:
+        in_reply_to:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        reply_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        created:
+          type: string
+          format: date-time
+        expires:
+          description: How long the answer waits for the sender to collect it.
+          type: string
+          format: date-time
+        option:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+      required:
+      - in_reply_to
+      - reply_id
+      - from
+      - on_behalf_of
+      - created
+      - expires
+      - body
+      - signature
+      additionalProperties: false
+    inbox.messaging.Answer.already-expired.Response:
+      additionalProperties: false
+      description: 'Taken when `expires <= {fact: created} as timestamp` holds of the input.'
+      properties:
+        error:
+          const: inbox.messaging.AlreadyExpired
+          description: '`expires` is not after `created`.'
+          type: string
+        outcome:
+          const: already-expired
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Answer.already-settled.Response:
+      additionalProperties: false
+      description: Taken when the subject is in a state none of this command's declared moves start from. Which states those are is the lifecycle's answer, not this command's.
+      properties:
+        error:
+          const: inbox.messaging.AlreadySettled
+          description: The message is already answered or refused.
+          type: string
+        outcome:
+          const: already-settled
+          description: Which declared outcome the command took.
+        payload:
+          $ref: '#/components/schemas/inbox.messaging.AlreadySettled.Error'
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      - payload
+      type: object
+    inbox.messaging.Answer.answered.Response:
+      additionalProperties: false
+      description: Taken when no other outcome's condition matched. A `inbox.messaging.Message` has moved to `Answered`, along `answer`. The instance is the one `in_reply_to` names. Emits `MessageAnswered`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: answered
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.MessageAnswered
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.MessageAnswered.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.Answer.authority-invalid.Response:
+      additionalProperties: false
+      description: 'Decided outside the request: the SignatureVerifier port finds no live delegation with this id that lets `from` speak for `on_behalf_of`.'
+      properties:
+        error:
+          const: inbox.messaging.NoAuthority
+          description: '`on_behalf_of` differs from `from` and no valid delegation covers it.'
+          type: string
+        outcome:
+          const: authority-invalid
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Answer.foreign-message.Response:
+      additionalProperties: false
+      description: The caller is neither the recipient nor the sender of the message. The service answers it as `unknown-message`, so from this command a third principal cannot tell a message between others from no message. Taken when the existing subject's stored fields satisfy `(to != caller.inbox and from != caller.principal)`.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: foreign-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Answer.no-authority.Response:
+      additionalProperties: false
+      description: 'Taken when `(on_behalf_of != {fact: from} and not (defined(authority)))` holds of the input.'
+      properties:
+        error:
+          const: inbox.messaging.NoAuthority
+          description: '`on_behalf_of` differs from `from` and no valid delegation covers it.'
+          type: string
+        outcome:
+          const: no-authority
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Answer.not-recipient.Response:
+      additionalProperties: false
+      description: Taken when the existing subject's stored fields satisfy `to != caller.inbox`.
+      properties:
+        error:
+          const: inbox.messaging.NotRecipient
+          description: The caller does not own the inbox the message was sent to.
+          type: string
+        outcome:
+          const: not-recipient
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Answer.not-sender.Response:
+      additionalProperties: false
+      description: Taken when `from != caller.principal` holds of the input.
+      properties:
+        error:
+          const: inbox.messaging.NotSender
+          description: The caller did not send the message.
+          type: string
+        outcome:
+          const: not-sender
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Answer.note.Response:
+      additionalProperties: false
+      description: Taken when the existing subject's stored fields satisfy `kind == note`.
+      properties:
+        error:
+          const: inbox.messaging.NotAnswerable
+          description: A note takes no answer.
+          type: string
+        outcome:
+          const: note
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Answer.shape-mismatch.Response:
+      additionalProperties: false
+      description: 'Decided outside the request: the reply does not fit the message''s `reply_shape`, or names no option of the decision.'
+      properties:
+        error:
+          const: inbox.messaging.ShapeMismatch
+          description: The envelope does not fit its kind, or the reply does not fit what the message asked for.
+          type: string
+        outcome:
+          const: shape-mismatch
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Answer.signature-invalid.Response:
+      additionalProperties: false
+      description: 'Decided outside the request: the SignatureVerifier port does not know the key, finds it lapsed, or finds that the signature does not verify.'
+      properties:
+        error:
+          const: inbox.messaging.SignatureInvalid
+          description: 'The SignatureVerifier port refused the signature: the key is unknown or lapsed, or the signature does not verify.'
+          type: string
+        outcome:
+          const: signature-invalid
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Answer.unknown-message.Response:
+      additionalProperties: false
+      description: Taken when the request names an identity no record carries.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: unknown-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.AnsweredBy:
+      title: AnsweredBy
+      description: 'principal: the reply''s `on_behalf_of` answered. silence: nobody answered before `expires`, and the service took the decision''s `default_on_silence` (the convention of `sdc.decision.PrincipalKind`).'
+      x-ess-name: inbox.messaging.AnsweredBy
+      x-ess-kind: enum
+      type: string
+      enum:
+      - principal
+      - silence
+    inbox.messaging.Body:
+      title: Body
+      description: The text of a message or a reply, at most 65536 bytes of UTF-8.
+      x-ess-name: inbox.messaging.Body
+      x-ess-kind: newtype
+      type: string
+      x-ess-invariants:
+      - value.utf8_bytes <= 65536
+    inbox.messaging.CloseInbox.Input:
+      title: CloseInbox input
+      description: Close an inbox. Posts to it are refused; the messages it holds stay until they expire.
+      x-ess-name: inbox.messaging.CloseInbox
+      x-ess-kind: command-input
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+      required:
+      - address
+      additionalProperties: false
+    inbox.messaging.CloseInbox.already-closed.Response:
+      additionalProperties: false
+      description: Taken when no other outcome's condition matched. The existing `inbox.messaging.Inbox` is preserved without an error or event. The instance is the one `address` names.
+      properties:
+        outcome:
+          const: already-closed
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.CloseInbox.closed.Response:
+      additionalProperties: false
+      description: Taken when the existing subject is in Open. A `inbox.messaging.Inbox` has moved to `Closed`, along `close`. The instance is the one `address` names. Emits `InboxClosed`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: closed
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.InboxClosed
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.InboxClosed.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.CloseInbox.not-owner.Response:
+      additionalProperties: false
+      description: Taken when the existing subject's stored fields satisfy `owner != caller.principal`.
+      properties:
+        error:
+          const: inbox.messaging.NotRecipient
+          description: The caller does not own the inbox the message was sent to.
+          type: string
+        outcome:
+          const: not-owner
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.CloseInbox.unknown-inbox.Response:
+      additionalProperties: false
+      description: Taken when the request names an identity no record carries.
+      properties:
+        error:
+          const: inbox.messaging.UnknownInbox
+          description: No open inbox has this address.
+          type: string
+        outcome:
+          const: unknown-inbox
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Collect.Input:
+      title: Collect input
+      description: The sender takes the answer or the refusal of its message. The message is handled by that and is removed.
+      x-ess-name: inbox.messaging.Collect
+      x-ess-kind: command-input
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    inbox.messaging.Collect.collected.Response:
+      additionalProperties: false
+      description: Taken when the existing subject is in Answered or Refused. A `inbox.messaging.Message` no longer exists. The instance is the one `message_id` names. Emits `MessageHandled`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: collected
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.MessageHandled
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.MessageHandled.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.Collect.foreign-message.Response:
+      additionalProperties: false
+      description: The caller is neither the recipient nor the sender of the message. The service answers it as `unknown-message`, so from this command a third principal cannot tell a message between others from no message. Taken when the existing subject's stored fields satisfy `(to != caller.inbox and from != caller.principal)`.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: foreign-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Collect.not-sender.Response:
+      additionalProperties: false
+      description: Taken when the existing subject's stored fields satisfy `from != caller.principal`.
+      properties:
+        error:
+          const: inbox.messaging.NotSender
+          description: The caller did not send the message.
+          type: string
+        outcome:
+          const: not-sender
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Collect.not-settled.Response:
+      additionalProperties: false
+      description: Taken when no other outcome's condition matched.
+      properties:
+        error:
+          const: inbox.messaging.NotSettled
+          description: The message has no answer and no refusal to collect yet.
+          type: string
+        outcome:
+          const: not-settled
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Collect.unknown-message.Response:
+      additionalProperties: false
+      description: Taken when the request names an identity no record carries.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: unknown-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.DecisionAsk:
+      title: DecisionAsk
+      description: What a decision asks. The deadline is the envelope's `expires`; the option silence takes is the envelope's `default_on_silence`.
+      x-ess-name: inbox.messaging.DecisionAsk
+      x-ess-kind: struct
+      type: object
+      properties:
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/inbox.messaging.DecisionOption'
+        recommended_option:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        request_ref:
+          description: The id of the decision request this envelope carries, where another system records it (for example an `sdc.decision.DecisionRequest`). The inbox never records the decision.
+          type: string
+      required:
+      - options
+      additionalProperties: false
+    inbox.messaging.DecisionOption:
+      title: DecisionOption
+      x-ess-name: inbox.messaging.DecisionOption
+      x-ess-kind: struct
+      type: object
+      properties:
+        letter:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        text:
+          type: string
+      required:
+      - letter
+      - text
+      additionalProperties: false
+    inbox.messaging.DecisionTakenOnSilence.Event:
+      title: DecisionTakenOnSilence payload
+      x-ess-name: inbox.messaging.DecisionTakenOnSilence
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+      required:
+      - message_id
+      - to
+      - thread
+      additionalProperties: false
+    inbox.messaging.DedupKey:
+      title: DedupKey
+      description: The sender's key for one logical message. A sender with no key of its own writes the message id.
+      x-ess-name: inbox.messaging.DedupKey
+      x-ess-kind: newtype
+      type: string
+    inbox.messaging.DelegationId:
+      title: DelegationId
+      description: The id of a delegation that lets `from` speak for `on_behalf_of`. The SignatureVerifier port resolves it; the inbox stores no delegation.
+      x-ess-name: inbox.messaging.DelegationId
+      x-ess-kind: newtype
+      type: string
+    inbox.messaging.Due.Response:
+      additionalProperties: false
+      description: The rows of `inbox.messaging.Due`.
+      properties:
+        rows:
+          description: Every row the projection holds, in the order it holds them.
+          items:
+            $ref: '#/components/schemas/inbox.messaging.Due.Row'
+          type: array
+      required:
+      - rows
+      type: object
+    inbox.messaging.Due.Row:
+      title: Due row
+      description: 'The messages whose `expires` is at or before a clock reading: what the expiry task sends Expire for.'
+      x-ess-name: inbox.messaging.Due
+      x-ess-kind: view-row
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        kind:
+          $ref: '#/components/schemas/inbox.messaging.Kind'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+        reply_shape:
+          $ref: '#/components/schemas/inbox.messaging.ReplyShape'
+        decision:
+          $ref: '#/components/schemas/inbox.messaging.DecisionAsk'
+        default_on_silence:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        created:
+          type: string
+          format: date-time
+        expires:
+          type: string
+          format: date-time
+        dedup_key:
+          $ref: '#/components/schemas/inbox.messaging.DedupKey'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+        answered_by:
+          $ref: '#/components/schemas/inbox.messaging.AnsweredBy'
+        decided_option:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        reply:
+          $ref: '#/components/schemas/inbox.messaging.Reply'
+        refusal:
+          type: string
+        state:
+          $ref: '#/components/schemas/inbox.messaging.Message.State'
+      required:
+      - message_id
+      - from
+      - on_behalf_of
+      - to
+      - kind
+      - thread
+      - created
+      - expires
+      - dedup_key
+      - body
+      - signature
+      - state
+      additionalProperties: false
+    inbox.messaging.Expire.Input:
+      title: Expire input
+      description: The service's expiry task removes one message whose `expires` has passed. `now` is the Clock port's reading. A decision that names a `default_on_silence` is answered by silence instead and kept until `keep_until`.
+      x-ess-name: inbox.messaging.Expire
+      x-ess-kind: command-input
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        now:
+          type: string
+          format: date-time
+        keep_until:
+          description: Until when an answer taken on silence waits for the sender; the service sends `now` plus its answer retention.
+          type: string
+          format: date-time
+      required:
+      - message_id
+      - now
+      - keep_until
+      additionalProperties: false
+    inbox.messaging.Expire.decided-on-silence.Response:
+      additionalProperties: false
+      description: Taken when the existing subject's stored fields satisfy `(kind == decision and state in [Sent, Delivered, Read] and defined(default_on_silence))`. A `inbox.messaging.Message` has moved to `Answered`, along `decide_on_silence`. The instance is the one `message_id` names. Emits `DecisionTakenOnSilence`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: decided-on-silence
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.DecisionTakenOnSilence
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.DecisionTakenOnSilence.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.Expire.expired.Response:
+      additionalProperties: false
+      description: Taken when no other outcome's condition matched. A `inbox.messaging.Message` no longer exists. The instance is the one `message_id` names. Emits `MessageExpired`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: expired
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.MessageExpired
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.MessageExpired.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.Expire.not-due.Response:
+      additionalProperties: false
+      description: Taken when the existing subject's stored fields satisfy `expires > input.now as timestamp`.
+      properties:
+        error:
+          const: inbox.messaging.NotDue
+          description: '`expires` is after the clock reading sent.'
+          type: string
+        outcome:
+          const: not-due
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Expire.unknown-message.Response:
+      additionalProperties: false
+      description: Taken when the request names an identity no record carries.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: unknown-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.FreeShape:
+      title: FreeShape
+      x-ess-name: inbox.messaging.FreeShape
+      x-ess-kind: struct
+      type: object
+      additionalProperties: false
+    inbox.messaging.Inbox.State:
+      title: State
+      x-ess-name: inbox.messaging.Inbox.State
+      x-ess-kind: enum
+      type: string
+      enum:
+      - Closed
+      - Open
+    inbox.messaging.InboxClosed.Event:
+      title: InboxClosed payload
+      x-ess-name: inbox.messaging.InboxClosed
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+      required:
+      - address
+      additionalProperties: false
+    inbox.messaging.InboxOpened.Event:
+      title: InboxOpened payload
+      x-ess-name: inbox.messaging.InboxOpened
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+      required:
+      - address
+      additionalProperties: false
+    inbox.messaging.Inboxes.Response:
+      additionalProperties: false
+      description: The rows of `inbox.messaging.Inboxes`.
+      properties:
+        rows:
+          description: Every row the projection holds, in the order it holds them.
+          items:
+            $ref: '#/components/schemas/inbox.messaging.Inboxes.Row'
+          type: array
+      required:
+      - rows
+      type: object
+    inbox.messaging.Inboxes.Row:
+      title: Inboxes row
+      x-ess-name: inbox.messaging.Inboxes
+      x-ess-kind: view-row
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        owner:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        adapter:
+          $ref: '#/components/schemas/inbox.messaging.Adapter'
+        state:
+          $ref: '#/components/schemas/inbox.messaging.Inbox.State'
+      required:
+      - address
+      - owner
+      - adapter
+      - state
+      additionalProperties: false
+    inbox.messaging.Kind:
+      title: Kind
+      description: 'note: handled when read. request: handled when answered or refused. decision: a request with lettered options, which silence may answer.'
+      x-ess-name: inbox.messaging.Kind
+      x-ess-kind: enum
+      type: string
+      enum:
+      - note
+      - request
+      - decision
+    inbox.messaging.MarkDelivered.Input:
+      title: MarkDelivered input
+      description: An adapter reports that a live wake surface took the message. It is sent only after the surface took it.
+      x-ess-name: inbox.messaging.MarkDelivered
+      x-ess-kind: command-input
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    inbox.messaging.MarkDelivered.already-delivered.Response:
+      additionalProperties: false
+      description: Taken when no other outcome's condition matched. The existing `inbox.messaging.Message` is preserved without an error or event. The instance is the one `message_id` names.
+      properties:
+        outcome:
+          const: already-delivered
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.MarkDelivered.delivered.Response:
+      additionalProperties: false
+      description: Taken when the existing subject is in Sent. A `inbox.messaging.Message` has moved to `Delivered`, along `deliver`. The instance is the one `message_id` names. Emits `MessageDelivered`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: delivered
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.MessageDelivered
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.MessageDelivered.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.MarkDelivered.foreign-message.Response:
+      additionalProperties: false
+      description: The caller is neither the recipient nor the sender of the message. The service answers it as `unknown-message`, so from this command a third principal cannot tell a message between others from no message. Taken when the existing subject's stored fields satisfy `(to != caller.inbox and from != caller.principal)`.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: foreign-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.MarkDelivered.not-recipient.Response:
+      additionalProperties: false
+      description: Taken when the existing subject's stored fields satisfy `to != caller.inbox`.
+      properties:
+        error:
+          const: inbox.messaging.NotRecipient
+          description: The caller does not own the inbox the message was sent to.
+          type: string
+        outcome:
+          const: not-recipient
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.MarkDelivered.unknown-message.Response:
+      additionalProperties: false
+      description: Taken when the request names an identity no record carries.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: unknown-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.MarkRead.Input:
+      title: MarkRead input
+      description: The owner of the inbox read the message. A note is handled by that and is removed; a request or a decision waits for its answer.
+      x-ess-name: inbox.messaging.MarkRead
+      x-ess-kind: command-input
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    inbox.messaging.MarkRead.already-read.Response:
+      additionalProperties: false
+      description: Taken when no other outcome's condition matched. The existing `inbox.messaging.Message` is preserved without an error or event. The instance is the one `message_id` names.
+      properties:
+        outcome:
+          const: already-read
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.MarkRead.foreign-message.Response:
+      additionalProperties: false
+      description: The caller is neither the recipient nor the sender of the message. The service answers it as `unknown-message`, so from this command a third principal cannot tell a message between others from no message. Taken when the existing subject's stored fields satisfy `(to != caller.inbox and from != caller.principal)`.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: foreign-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.MarkRead.handled.Response:
+      additionalProperties: false
+      description: The note is read, so it is handled and gone. Taken when the existing subject's stored fields satisfy `(kind == note and state in [Sent, Delivered])`. A `inbox.messaging.Message` no longer exists. The instance is the one `message_id` names. Emits `MessageHandled`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: handled
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.MessageHandled
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.MessageHandled.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.MarkRead.not-recipient.Response:
+      additionalProperties: false
+      description: Taken when the existing subject's stored fields satisfy `to != caller.inbox`.
+      properties:
+        error:
+          const: inbox.messaging.NotRecipient
+          description: The caller does not own the inbox the message was sent to.
+          type: string
+        outcome:
+          const: not-recipient
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.MarkRead.read.Response:
+      additionalProperties: false
+      description: Taken when the existing subject is in Delivered or Sent. A `inbox.messaging.Message` has moved to `Read`, along `read`. The instance is the one `message_id` names. Emits `MessageRead`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: read
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.MessageRead
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.MessageRead.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.MarkRead.unknown-message.Response:
+      additionalProperties: false
+      description: Taken when the request names an identity no record carries.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: unknown-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Message.State:
+      title: State
+      x-ess-name: inbox.messaging.Message.State
+      x-ess-kind: enum
+      type: string
+      enum:
+      - Answered
+      - Delivered
+      - Read
+      - Refused
+      - Sent
+    inbox.messaging.MessageAnswered.Event:
+      title: MessageAnswered payload
+      x-ess-name: inbox.messaging.MessageAnswered
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        reply_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+      required:
+      - message_id
+      - reply_id
+      - to
+      - thread
+      additionalProperties: false
+    inbox.messaging.MessageDelivered.Event:
+      title: MessageDelivered payload
+      x-ess-name: inbox.messaging.MessageDelivered
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    inbox.messaging.MessageExpired.Event:
+      title: MessageExpired payload
+      x-ess-name: inbox.messaging.MessageExpired
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    inbox.messaging.MessageHandled.Event:
+      title: MessageHandled payload
+      x-ess-name: inbox.messaging.MessageHandled
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    inbox.messaging.MessageId:
+      title: MessageId
+      description: A ULID the sender sets. A sender that posts a message again sends the same id.
+      x-ess-name: inbox.messaging.MessageId
+      x-ess-kind: newtype
+      type: string
+      pattern: ^[0-9A-HJKMNP-TV-Z]*$
+      minLength: 26
+      maxLength: 26
+      x-ess-invariants:
+      - value.count == 26
+      x-ess-alphabet: 0123456789ABCDEFGHJKMNPQRSTVWXYZ
+    inbox.messaging.MessagePosted.Event:
+      title: MessagePosted payload
+      x-ess-name: inbox.messaging.MessagePosted
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+        kind:
+          $ref: '#/components/schemas/inbox.messaging.Kind'
+      required:
+      - message_id
+      - to
+      - from
+      - thread
+      - kind
+      additionalProperties: false
+    inbox.messaging.MessageRead.Event:
+      title: MessageRead payload
+      x-ess-name: inbox.messaging.MessageRead
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    inbox.messaging.MessageRefused.Event:
+      title: MessageRefused payload
+      x-ess-name: inbox.messaging.MessageRefused
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+      required:
+      - message_id
+      - to
+      - thread
+      additionalProperties: false
+    inbox.messaging.Messages.Response:
+      additionalProperties: false
+      description: The rows of `inbox.messaging.Messages`.
+      properties:
+        rows:
+          description: Every row the projection holds, in the order it holds them.
+          items:
+            $ref: '#/components/schemas/inbox.messaging.Messages.Row'
+          type: array
+      required:
+      - rows
+      type: object
+    inbox.messaging.Messages.Row:
+      title: Messages row
+      x-ess-name: inbox.messaging.Messages
+      x-ess-kind: view-row
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        kind:
+          $ref: '#/components/schemas/inbox.messaging.Kind'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+        reply_shape:
+          $ref: '#/components/schemas/inbox.messaging.ReplyShape'
+        decision:
+          $ref: '#/components/schemas/inbox.messaging.DecisionAsk'
+        default_on_silence:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        created:
+          type: string
+          format: date-time
+        expires:
+          type: string
+          format: date-time
+        dedup_key:
+          $ref: '#/components/schemas/inbox.messaging.DedupKey'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+        answered_by:
+          $ref: '#/components/schemas/inbox.messaging.AnsweredBy'
+        decided_option:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        reply:
+          $ref: '#/components/schemas/inbox.messaging.Reply'
+        refusal:
+          type: string
+        state:
+          $ref: '#/components/schemas/inbox.messaging.Message.State'
+      required:
+      - message_id
+      - from
+      - on_behalf_of
+      - to
+      - kind
+      - thread
+      - created
+      - expires
+      - dedup_key
+      - body
+      - signature
+      - state
+      additionalProperties: false
+    inbox.messaging.OpenInbox.Input:
+      title: OpenInbox input
+      description: Open the inbox at an address, or open it again. The caller becomes its owner. A client sends this after every reconnect, because a restarted service holds no inbox.
+      x-ess-name: inbox.messaging.OpenInbox
+      x-ess-kind: command-input
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        adapter:
+          $ref: '#/components/schemas/inbox.messaging.Adapter'
+      required:
+      - address
+      - adapter
+      additionalProperties: false
+    inbox.messaging.OpenInbox.already-open.Response:
+      additionalProperties: false
+      description: Taken when no other outcome's condition matched. The existing `inbox.messaging.Inbox` is preserved without an error or event. The instance is the one `address` names.
+      properties:
+        outcome:
+          const: already-open
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.OpenInbox.not-owner.Response:
+      additionalProperties: false
+      description: Taken when `address != caller.inbox` holds of the input.
+      properties:
+        error:
+          const: inbox.messaging.NotRecipient
+          description: The caller does not own the inbox the message was sent to.
+          type: string
+        outcome:
+          const: not-owner
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.OpenInbox.opened.Response:
+      additionalProperties: false
+      description: Taken when the request names an identity no record carries. A `inbox.messaging.Inbox` now exists, in `Open`. Its identity is published as `address` on `inbox.messaging.InboxOpened`. Emits `InboxOpened`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: opened
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.InboxOpened
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.InboxOpened.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.OpenInbox.reopened.Response:
+      additionalProperties: false
+      description: Taken when the existing subject is in Closed. A `inbox.messaging.Inbox` has moved to `Open`, along `reopen`. The instance is the one `address` names. Emits `InboxOpened`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: reopened
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.InboxOpened
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.InboxOpened.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.OptionLetter:
+      title: OptionLetter
+      x-ess-name: inbox.messaging.OptionLetter
+      x-ess-kind: newtype
+      type: string
+      pattern: ^[A-Z]*$
+      minLength: 1
+      maxLength: 1
+      x-ess-invariants:
+      - value.count == 1
+      x-ess-alphabet: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    inbox.messaging.Outbox.Response:
+      additionalProperties: false
+      description: The rows of `inbox.messaging.Outbox`.
+      properties:
+        rows:
+          description: Every row the projection holds, in the order it holds them.
+          items:
+            $ref: '#/components/schemas/inbox.messaging.Outbox.Row'
+          type: array
+      required:
+      - rows
+      type: object
+    inbox.messaging.Outbox.Row:
+      title: Outbox row
+      description: Every live message a principal sent, in whatever state.
+      x-ess-name: inbox.messaging.Outbox
+      x-ess-kind: view-row
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        kind:
+          $ref: '#/components/schemas/inbox.messaging.Kind'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+        reply_shape:
+          $ref: '#/components/schemas/inbox.messaging.ReplyShape'
+        decision:
+          $ref: '#/components/schemas/inbox.messaging.DecisionAsk'
+        default_on_silence:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        created:
+          type: string
+          format: date-time
+        expires:
+          type: string
+          format: date-time
+        dedup_key:
+          $ref: '#/components/schemas/inbox.messaging.DedupKey'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+        answered_by:
+          $ref: '#/components/schemas/inbox.messaging.AnsweredBy'
+        decided_option:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        reply:
+          $ref: '#/components/schemas/inbox.messaging.Reply'
+        refusal:
+          type: string
+        state:
+          $ref: '#/components/schemas/inbox.messaging.Message.State'
+      required:
+      - message_id
+      - from
+      - on_behalf_of
+      - to
+      - kind
+      - thread
+      - created
+      - expires
+      - dedup_key
+      - body
+      - signature
+      - state
+      additionalProperties: false
+    inbox.messaging.Pending.Response:
+      additionalProperties: false
+      description: The rows of `inbox.messaging.Pending`.
+      properties:
+        rows:
+          description: Every row the projection holds, in the order it holds them.
+          items:
+            $ref: '#/components/schemas/inbox.messaging.Pending.Row'
+          type: array
+      required:
+      - rows
+      type: object
+    inbox.messaging.Pending.Row:
+      title: Pending row
+      description: 'What an inbox holds that its owner has not read: the read a wake surface makes. `inbox wait` is this read held open until it has a row or the wait ends.'
+      x-ess-name: inbox.messaging.Pending
+      x-ess-kind: view-row
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        kind:
+          $ref: '#/components/schemas/inbox.messaging.Kind'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+        reply_shape:
+          $ref: '#/components/schemas/inbox.messaging.ReplyShape'
+        decision:
+          $ref: '#/components/schemas/inbox.messaging.DecisionAsk'
+        default_on_silence:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        created:
+          type: string
+          format: date-time
+        expires:
+          type: string
+          format: date-time
+        dedup_key:
+          $ref: '#/components/schemas/inbox.messaging.DedupKey'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+        state:
+          $ref: '#/components/schemas/inbox.messaging.Message.State'
+      required:
+      - message_id
+      - from
+      - on_behalf_of
+      - to
+      - kind
+      - thread
+      - created
+      - expires
+      - dedup_key
+      - body
+      - signature
+      - state
+      additionalProperties: false
+    inbox.messaging.PostMessage.Input:
+      title: PostMessage input
+      description: Post one signed envelope to one inbox. The input is the envelope. The service checks the signature and the authority before it stores anything; a refused post stores nothing and the refusal is the sender's answer.
+      x-ess-name: inbox.messaging.PostMessage
+      x-ess-kind: command-input
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+          examples:
+          - principal-262144
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+          description: The principal whose word this is; `from` itself when the sender speaks for nobody else.
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        kind:
+          $ref: '#/components/schemas/inbox.messaging.Kind'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+        reply_shape:
+          $ref: '#/components/schemas/inbox.messaging.ReplyShape'
+        decision:
+          $ref: '#/components/schemas/inbox.messaging.DecisionAsk'
+        default_on_silence:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        created:
+          type: string
+          format: date-time
+        expires:
+          description: Mandatory. A client that is given none writes `created` plus 24 hours.
+          type: string
+          format: date-time
+        dedup_key:
+          $ref: '#/components/schemas/inbox.messaging.DedupKey'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+      required:
+      - message_id
+      - from
+      - on_behalf_of
+      - to
+      - kind
+      - thread
+      - created
+      - expires
+      - dedup_key
+      - body
+      - signature
+      additionalProperties: false
+    inbox.messaging.PostMessage.already-expired.Response:
+      additionalProperties: false
+      description: 'Taken when `expires <= {fact: created} as timestamp` holds of the input.'
+      properties:
+        error:
+          const: inbox.messaging.AlreadyExpired
+          description: '`expires` is not after `created`.'
+          type: string
+        outcome:
+          const: already-expired
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.authority-invalid.Response:
+      additionalProperties: false
+      description: 'Decided outside the request: the SignatureVerifier port finds no live delegation with this id that lets `from` speak for `on_behalf_of`.'
+      properties:
+        error:
+          const: inbox.messaging.NoAuthority
+          description: '`on_behalf_of` differs from `from` and no valid delegation covers it.'
+          type: string
+        outcome:
+          const: authority-invalid
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.decision-without-options.Response:
+      additionalProperties: false
+      description: Taken when `(kind == decision and not (defined(decision)))` holds of the input.
+      properties:
+        error:
+          const: inbox.messaging.ShapeMismatch
+          description: The envelope does not fit its kind, or the reply does not fit what the message asked for.
+          type: string
+        outcome:
+          const: decision-without-options
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.duplicate-key.Response:
+      additionalProperties: false
+      description: Taken when, of the `inbox.messaging.Message` rows whose stored fields satisfy `(dedup_key == input.dedup_key and from == input.from)` before the outcome, at least one row is selected.
+      properties:
+        error:
+          const: inbox.messaging.Duplicate
+          description: A live message of this sender already carries this id or this dedup key; nothing was stored.
+          type: string
+        outcome:
+          const: duplicate-key
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.duplicate.Response:
+      additionalProperties: false
+      description: A live message of this sender carries this id. Taken when, of the `inbox.messaging.Message` rows whose stored fields satisfy `(message_id == input.message_id and from == input.from)` before the outcome, at least one row is selected.
+      properties:
+        error:
+          const: inbox.messaging.Duplicate
+          description: A live message of this sender already carries this id or this dedup key; nothing was stored.
+          type: string
+        outcome:
+          const: duplicate
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.id-taken.Response:
+      additionalProperties: false
+      description: A live message of another sender carries this id. Taken when, of the `inbox.messaging.Message` rows whose stored fields satisfy `message_id == input.message_id` before the outcome, at least one row is selected.
+      properties:
+        error:
+          const: inbox.messaging.MessageIdTaken
+          description: A live message of another sender carries this id; nothing was stored.
+          type: string
+        outcome:
+          const: id-taken
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.inbox-closed.Response:
+      additionalProperties: false
+      description: Taken when the `inbox.messaging.Inbox` that `input.to` names exists and its stored fields satisfy `state == Closed`.
+      properties:
+        error:
+          const: inbox.messaging.UnknownInbox
+          description: No open inbox has this address.
+          type: string
+        outcome:
+          const: inbox-closed
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.no-authority.Response:
+      additionalProperties: false
+      description: 'The sender speaks for another principal and names no delegation. Taken when `(on_behalf_of != {fact: from} and not (defined(authority)))` holds of the input.'
+      properties:
+        error:
+          const: inbox.messaging.NoAuthority
+          description: '`on_behalf_of` differs from `from` and no valid delegation covers it.'
+          type: string
+        outcome:
+          const: no-authority
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.not-sender.Response:
+      additionalProperties: false
+      description: Taken when `from != caller.principal` holds of the input.
+      properties:
+        error:
+          const: inbox.messaging.NotSender
+          description: The caller did not send the message.
+          type: string
+        outcome:
+          const: not-sender
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.posted.Response:
+      additionalProperties: false
+      description: Taken when no other outcome's condition matched. A `inbox.messaging.Message` now exists, in `Sent`. Its identity is published as `message_id` on `inbox.messaging.MessagePosted`. Emits `MessagePosted`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: posted
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.MessagePosted
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.MessagePosted.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.PostMessage.request-without-shape.Response:
+      additionalProperties: false
+      description: Taken when `(kind == request and not (defined(reply_shape)))` holds of the input.
+      properties:
+        error:
+          const: inbox.messaging.ShapeMismatch
+          description: The envelope does not fit its kind, or the reply does not fit what the message asked for.
+          type: string
+        outcome:
+          const: request-without-shape
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.signature-invalid.Response:
+      additionalProperties: false
+      description: 'Decided outside the request: the SignatureVerifier port does not know the key, finds it lapsed, or finds that the signature does not verify.'
+      properties:
+        error:
+          const: inbox.messaging.SignatureInvalid
+          description: 'The SignatureVerifier port refused the signature: the key is unknown or lapsed, or the signature does not verify.'
+          type: string
+        outcome:
+          const: signature-invalid
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.unknown-inbox.Response:
+      additionalProperties: false
+      description: Taken when no `inbox.messaging.Inbox` carries the identity `input.to` names.
+      properties:
+        error:
+          const: inbox.messaging.UnknownInbox
+          description: No open inbox has this address.
+          type: string
+        outcome:
+          const: unknown-inbox
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.PostMessage.unknown-option.Response:
+      additionalProperties: false
+      description: 'Decided outside the request: `recommended_option` or `default_on_silence` names no option of the decision, or two options carry one letter.'
+      properties:
+        error:
+          const: inbox.messaging.ShapeMismatch
+          description: The envelope does not fit its kind, or the reply does not fit what the message asked for.
+          type: string
+        outcome:
+          const: unknown-option
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Principal:
+      title: Principal
+      description: 'Who sends, or whose word a message is: `agent:<host>/<session-name>` or `human:<name>`. The SignatureVerifier port decides which key speaks for which principal.'
+      x-ess-name: inbox.messaging.Principal
+      x-ess-kind: newtype
+      type: string
+    inbox.messaging.Refuse.Input:
+      title: Refuse input
+      description: The owner of the inbox refuses the message and says why. The sender collects the reason.
+      x-ess-name: inbox.messaging.Refuse
+      x-ess-kind: command-input
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        reason:
+          type: string
+      required:
+      - message_id
+      - reason
+      additionalProperties: false
+    inbox.messaging.Refuse.already-settled.Response:
+      additionalProperties: false
+      description: Taken when the subject is in a state none of this command's declared moves start from. Which states those are is the lifecycle's answer, not this command's.
+      properties:
+        error:
+          const: inbox.messaging.AlreadySettled
+          description: The message is already answered or refused.
+          type: string
+        outcome:
+          const: already-settled
+          description: Which declared outcome the command took.
+        payload:
+          $ref: '#/components/schemas/inbox.messaging.AlreadySettled.Error'
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      - payload
+      type: object
+    inbox.messaging.Refuse.foreign-message.Response:
+      additionalProperties: false
+      description: The caller is neither the recipient nor the sender of the message. The service answers it as `unknown-message`, so from this command a third principal cannot tell a message between others from no message. Taken when the existing subject's stored fields satisfy `(to != caller.inbox and from != caller.principal)`.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: foreign-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Refuse.not-recipient.Response:
+      additionalProperties: false
+      description: Taken when the existing subject's stored fields satisfy `to != caller.inbox`.
+      properties:
+        error:
+          const: inbox.messaging.NotRecipient
+          description: The caller does not own the inbox the message was sent to.
+          type: string
+        outcome:
+          const: not-recipient
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Refuse.refused.Response:
+      additionalProperties: false
+      description: Taken when no other outcome's condition matched. A `inbox.messaging.Message` has moved to `Refused`, along `refuse`. The instance is the one `message_id` names. Emits `MessageRefused`, published to consumers and listed under `published`.
+      properties:
+        outcome:
+          const: refused
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          items: false
+          maxItems: 1
+          minItems: 1
+          prefixItems:
+          - additionalProperties: false
+            properties:
+              event:
+                const: inbox.messaging.MessageRefused
+                type: string
+              payload:
+                $ref: '#/components/schemas/inbox.messaging.MessageRefused.Event'
+            required:
+            - event
+            - payload
+            type: object
+          type: array
+      required:
+      - outcome
+      - published
+      type: object
+    inbox.messaging.Refuse.unknown-message.Response:
+      additionalProperties: false
+      description: Taken when the request names an identity no record carries.
+      properties:
+        error:
+          const: inbox.messaging.UnknownMessage
+          description: 'No live message has this id: it was never posted, it was handled, or it expired.'
+          type: string
+        outcome:
+          const: unknown-message
+          description: Which declared outcome the command took.
+        published:
+          description: 'Every event this branch published, in publication order: its qualified name and its payload.'
+          maxItems: 0
+          type: array
+      required:
+      - outcome
+      - published
+      - error
+      type: object
+    inbox.messaging.Replies.Response:
+      additionalProperties: false
+      description: The rows of `inbox.messaging.Replies`.
+      properties:
+        rows:
+          description: Every row the projection holds, in the order it holds them.
+          items:
+            $ref: '#/components/schemas/inbox.messaging.Replies.Row'
+          type: array
+      required:
+      - rows
+      type: object
+    inbox.messaging.Replies.Row:
+      title: Replies row
+      description: 'The answered messages of one thread: one row per recipient that answered, or that silence answered for.'
+      x-ess-name: inbox.messaging.Replies
+      x-ess-kind: view-row
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        kind:
+          $ref: '#/components/schemas/inbox.messaging.Kind'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+        reply_shape:
+          $ref: '#/components/schemas/inbox.messaging.ReplyShape'
+        decision:
+          $ref: '#/components/schemas/inbox.messaging.DecisionAsk'
+        default_on_silence:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        created:
+          type: string
+          format: date-time
+        expires:
+          type: string
+          format: date-time
+        dedup_key:
+          $ref: '#/components/schemas/inbox.messaging.DedupKey'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+        answered_by:
+          $ref: '#/components/schemas/inbox.messaging.AnsweredBy'
+        decided_option:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        reply:
+          $ref: '#/components/schemas/inbox.messaging.Reply'
+        state:
+          $ref: '#/components/schemas/inbox.messaging.Message.State'
+      required:
+      - message_id
+      - from
+      - on_behalf_of
+      - to
+      - kind
+      - thread
+      - created
+      - expires
+      - dedup_key
+      - body
+      - signature
+      - state
+      additionalProperties: false
+    inbox.messaging.Reply:
+      title: Reply
+      description: 'The signed reply envelope: the answer to a request or a decision. Its kind is reply, its `in_reply_to` is the message that holds it and its `to` is that message''s sender. It stays on the message it answers until the sender collects it.'
+      x-ess-name: inbox.messaging.Reply
+      x-ess-kind: struct
+      type: object
+      properties:
+        reply_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        created:
+          type: string
+          format: date-time
+        option:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+      required:
+      - reply_id
+      - from
+      - on_behalf_of
+      - created
+      - body
+      - signature
+      additionalProperties: false
+    inbox.messaging.ReplyShape:
+      title: ReplyShape
+      description: 'What a reply to a request must look like. free: any text. lines: at most this many lines. schema: a reference to a JSON Schema the reply body must satisfy.'
+      x-ess-name: inbox.messaging.ReplyShape
+      x-ess-kind: union
+      oneOf:
+      - title: free
+        type: object
+        properties:
+          shape:
+            type: string
+            const: free
+          value:
+            $ref: '#/components/schemas/inbox.messaging.FreeShape'
+        required:
+        - shape
+        - value
+        additionalProperties: false
+      - title: lines
+        type: object
+        properties:
+          shape:
+            type: string
+            const: lines
+          value:
+            type: integer
+        required:
+        - shape
+        - value
+        additionalProperties: false
+      - title: schema
+        type: object
+        properties:
+          shape:
+            type: string
+            const: schema
+          value:
+            type: string
+        required:
+        - shape
+        - value
+        additionalProperties: false
+      x-ess-union-tag: shape
+    inbox.messaging.Settled.Response:
+      additionalProperties: false
+      description: The rows of `inbox.messaging.Settled`.
+      properties:
+        rows:
+          description: Every row the projection holds, in the order it holds them.
+          items:
+            $ref: '#/components/schemas/inbox.messaging.Settled.Row'
+          type: array
+      required:
+      - rows
+      type: object
+    inbox.messaging.Settled.Row:
+      title: Settled row
+      description: The messages of a sender that carry an answer or a refusal to collect.
+      x-ess-name: inbox.messaging.Settled
+      x-ess-kind: view-row
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        kind:
+          $ref: '#/components/schemas/inbox.messaging.Kind'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+        reply_shape:
+          $ref: '#/components/schemas/inbox.messaging.ReplyShape'
+        decision:
+          $ref: '#/components/schemas/inbox.messaging.DecisionAsk'
+        default_on_silence:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        created:
+          type: string
+          format: date-time
+        expires:
+          type: string
+          format: date-time
+        dedup_key:
+          $ref: '#/components/schemas/inbox.messaging.DedupKey'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+        answered_by:
+          $ref: '#/components/schemas/inbox.messaging.AnsweredBy'
+        decided_option:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        reply:
+          $ref: '#/components/schemas/inbox.messaging.Reply'
+        refusal:
+          type: string
+        state:
+          $ref: '#/components/schemas/inbox.messaging.Message.State'
+      required:
+      - message_id
+      - from
+      - on_behalf_of
+      - to
+      - kind
+      - thread
+      - created
+      - expires
+      - dedup_key
+      - body
+      - signature
+      - state
+      additionalProperties: false
+    inbox.messaging.Signature:
+      title: Signature
+      description: The key id and the Ed25519 signature over the canonical JSON of every other envelope field.
+      x-ess-name: inbox.messaging.Signature
+      x-ess-kind: struct
+      type: object
+      properties:
+        key_id:
+          type: string
+        value:
+          type: string
+      required:
+      - key_id
+      - value
+      additionalProperties: false
+    inbox.messaging.Thread.Response:
+      additionalProperties: false
+      description: The rows of `inbox.messaging.Thread`.
+      properties:
+        rows:
+          description: Every row the projection holds, in the order it holds them.
+          items:
+            $ref: '#/components/schemas/inbox.messaging.Thread.Row'
+          type: array
+      required:
+      - rows
+      type: object
+    inbox.messaging.Thread.Row:
+      title: Thread row
+      description: 'Every live message of one thread: one row per recipient of a fan-out, with its state.'
+      x-ess-name: inbox.messaging.Thread
+      x-ess-kind: view-row
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        kind:
+          $ref: '#/components/schemas/inbox.messaging.Kind'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+        reply_shape:
+          $ref: '#/components/schemas/inbox.messaging.ReplyShape'
+        decision:
+          $ref: '#/components/schemas/inbox.messaging.DecisionAsk'
+        default_on_silence:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        created:
+          type: string
+          format: date-time
+        expires:
+          type: string
+          format: date-time
+        dedup_key:
+          $ref: '#/components/schemas/inbox.messaging.DedupKey'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+        answered_by:
+          $ref: '#/components/schemas/inbox.messaging.AnsweredBy'
+        decided_option:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        reply:
+          $ref: '#/components/schemas/inbox.messaging.Reply'
+        refusal:
+          type: string
+        state:
+          $ref: '#/components/schemas/inbox.messaging.Message.State'
+      required:
+      - message_id
+      - from
+      - on_behalf_of
+      - to
+      - kind
+      - thread
+      - created
+      - expires
+      - dedup_key
+      - body
+      - signature
+      - state
+      additionalProperties: false
+    inbox.messaging.ThreadId:
+      title: ThreadId
+      description: 'The ULID that ties the envelopes of one fan-out together: a request sent to 11 inboxes is 11 messages with one thread. A message sent to one inbox carries its own id.'
+      x-ess-name: inbox.messaging.ThreadId
+      x-ess-kind: newtype
+      type: string
+      pattern: ^[0-9A-HJKMNP-TV-Z]*$
+      minLength: 26
+      maxLength: 26
+      x-ess-invariants:
+      - value.count == 26
+      x-ess-alphabet: 0123456789ABCDEFGHJKMNPQRSTVWXYZ
+    inbox.messaging.Unanswered.Response:
+      additionalProperties: false
+      description: The rows of `inbox.messaging.Unanswered`.
+      properties:
+        rows:
+          description: Every row the projection holds, in the order it holds them.
+          items:
+            $ref: '#/components/schemas/inbox.messaging.Unanswered.Row'
+          type: array
+      required:
+      - rows
+      type: object
+    inbox.messaging.Unanswered.Row:
+      title: Unanswered row
+      description: The requests and decisions the owner of an inbox has read and not answered.
+      x-ess-name: inbox.messaging.Unanswered
+      x-ess-kind: view-row
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/inbox.messaging.MessageId'
+        from:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        on_behalf_of:
+          $ref: '#/components/schemas/inbox.messaging.Principal'
+        authority:
+          $ref: '#/components/schemas/inbox.messaging.DelegationId'
+        to:
+          $ref: '#/components/schemas/inbox.messaging.Address'
+        kind:
+          $ref: '#/components/schemas/inbox.messaging.Kind'
+        thread:
+          $ref: '#/components/schemas/inbox.messaging.ThreadId'
+        reply_shape:
+          $ref: '#/components/schemas/inbox.messaging.ReplyShape'
+        decision:
+          $ref: '#/components/schemas/inbox.messaging.DecisionAsk'
+        default_on_silence:
+          $ref: '#/components/schemas/inbox.messaging.OptionLetter'
+        created:
+          type: string
+          format: date-time
+        expires:
+          type: string
+          format: date-time
+        dedup_key:
+          $ref: '#/components/schemas/inbox.messaging.DedupKey'
+        body:
+          $ref: '#/components/schemas/inbox.messaging.Body'
+        signature:
+          $ref: '#/components/schemas/inbox.messaging.Signature'
+        state:
+          $ref: '#/components/schemas/inbox.messaging.Message.State'
+      required:
+      - message_id
+      - from
+      - on_behalf_of
+      - to
+      - kind
+      - thread
+      - created
+      - expires
+      - dedup_key
+      - body
+      - signature
+      - state
+      additionalProperties: false
+x-ess-entities:
+  inbox.messaging.Adapter:
+    title: Adapter
+    description: The wake surface the owner of an inbox reads it through.
+    x-ess-name: inbox.messaging.Adapter
+    x-ess-kind: enum
+    type: string
+    enum:
+    - claude_code
+    - metaharness
+    - slack
+    - terminal
+  inbox.messaging.Address:
+    title: Address
+    description: 'The address of an inbox: `agent:<host>/<session-name>` or `human:<name>`. `group:<name>` is reserved; version 1 opens no group inbox, and a sender that addresses several inboxes posts one envelope to each under one `thread`.'
+    x-ess-name: inbox.messaging.Address
+    x-ess-kind: newtype
+    type: string
+  inbox.messaging.AnsweredBy:
+    title: AnsweredBy
+    description: 'principal: the reply''s `on_behalf_of` answered. silence: nobody answered before `expires`, and the service took the decision''s `default_on_silence` (the convention of `sdc.decision.PrincipalKind`).'
+    x-ess-name: inbox.messaging.AnsweredBy
+    x-ess-kind: enum
+    type: string
+    enum:
+    - principal
+    - silence
+  inbox.messaging.Body:
+    title: Body
+    description: The text of a message or a reply, at most 65536 bytes of UTF-8.
+    x-ess-name: inbox.messaging.Body
+    x-ess-kind: newtype
+    type: string
+    x-ess-invariants:
+    - value.utf8_bytes <= 65536
+  inbox.messaging.DecisionAsk:
+    title: DecisionAsk
+    description: What a decision asks. The deadline is the envelope's `expires`; the option silence takes is the envelope's `default_on_silence`.
+    x-ess-name: inbox.messaging.DecisionAsk
+    x-ess-kind: struct
+    type: object
+    properties:
+      options:
+        type: array
+        items:
+          $ref: '#/x-ess-entities/inbox.messaging.DecisionOption'
+      recommended_option:
+        $ref: '#/x-ess-entities/inbox.messaging.OptionLetter'
+      request_ref:
+        description: The id of the decision request this envelope carries, where another system records it (for example an `sdc.decision.DecisionRequest`). The inbox never records the decision.
+        type: string
+    required:
+    - options
+    additionalProperties: false
+  inbox.messaging.DecisionOption:
+    title: DecisionOption
+    x-ess-name: inbox.messaging.DecisionOption
+    x-ess-kind: struct
+    type: object
+    properties:
+      letter:
+        $ref: '#/x-ess-entities/inbox.messaging.OptionLetter'
+      text:
+        type: string
+    required:
+    - letter
+    - text
+    additionalProperties: false
+  inbox.messaging.DedupKey:
+    title: DedupKey
+    description: The sender's key for one logical message. A sender with no key of its own writes the message id.
+    x-ess-name: inbox.messaging.DedupKey
+    x-ess-kind: newtype
+    type: string
+  inbox.messaging.DelegationId:
+    title: DelegationId
+    description: The id of a delegation that lets `from` speak for `on_behalf_of`. The SignatureVerifier port resolves it; the inbox stores no delegation.
+    x-ess-name: inbox.messaging.DelegationId
+    x-ess-kind: newtype
+    type: string
+  inbox.messaging.FreeShape:
+    title: FreeShape
+    x-ess-name: inbox.messaging.FreeShape
+    x-ess-kind: struct
+    type: object
+    additionalProperties: false
+  inbox.messaging.Inbox:
+    title: Inbox
+    description: A named address that messages are posted to. It belongs to the principal the address names; only a caller authenticated for the address opens it, closes it or handles its messages.
+    x-ess-name: inbox.messaging.Inbox
+    x-ess-kind: entity
+    type: object
+    properties:
+      address:
+        $ref: '#/x-ess-entities/inbox.messaging.Address'
+      owner:
+        $ref: '#/x-ess-entities/inbox.messaging.Principal'
+        description: The principal that opened the inbox.
+      adapter:
+        $ref: '#/x-ess-entities/inbox.messaging.Adapter'
+      state:
+        $ref: '#/x-ess-entities/inbox.messaging.Inbox.State'
+    required:
+    - address
+    - owner
+    - adapter
+    - state
+    additionalProperties: false
+  inbox.messaging.Inbox.State:
+    title: State
+    x-ess-name: inbox.messaging.Inbox.State
+    x-ess-kind: enum
+    type: string
+    enum:
+    - Closed
+    - Open
+  inbox.messaging.Kind:
+    title: Kind
+    description: 'note: handled when read. request: handled when answered or refused. decision: a request with lettered options, which silence may answer.'
+    x-ess-name: inbox.messaging.Kind
+    x-ess-kind: enum
+    type: string
+    enum:
+    - note
+    - request
+    - decision
+  inbox.messaging.Message:
+    title: Message
+    description: One envelope for one inbox, and where its handling stands. The envelope fields never change. `expires` is the instant the service removes the record; an answer replaces it with the reply's own.
+    x-ess-name: inbox.messaging.Message
+    x-ess-kind: entity
+    type: object
+    properties:
+      message_id:
+        $ref: '#/x-ess-entities/inbox.messaging.MessageId'
+      from:
+        $ref: '#/x-ess-entities/inbox.messaging.Principal'
+      on_behalf_of:
+        $ref: '#/x-ess-entities/inbox.messaging.Principal'
+      authority:
+        $ref: '#/x-ess-entities/inbox.messaging.DelegationId'
+      to:
+        $ref: '#/x-ess-entities/inbox.messaging.Address'
+        x-ess-relation:
+          name: inbox
+          kind: references
+          source: inbox.messaging.Message
+          target: inbox.messaging.Inbox
+          cardinality: one
+          via: to
+          $ref: '#/x-ess-entities/inbox.messaging.Inbox'
+      kind:
+        $ref: '#/x-ess-entities/inbox.messaging.Kind'
+      thread:
+        $ref: '#/x-ess-entities/inbox.messaging.ThreadId'
+      reply_shape:
+        $ref: '#/x-ess-entities/inbox.messaging.ReplyShape'
+      decision:
+        $ref: '#/x-ess-entities/inbox.messaging.DecisionAsk'
+      default_on_silence:
+        $ref: '#/x-ess-entities/inbox.messaging.OptionLetter'
+      created:
+        type: string
+        format: date-time
+      expires:
+        type: string
+        format: date-time
+      dedup_key:
+        $ref: '#/x-ess-entities/inbox.messaging.DedupKey'
+      body:
+        $ref: '#/x-ess-entities/inbox.messaging.Body'
+      signature:
+        $ref: '#/x-ess-entities/inbox.messaging.Signature'
+      answered_by:
+        $ref: '#/x-ess-entities/inbox.messaging.AnsweredBy'
+      decided_option:
+        $ref: '#/x-ess-entities/inbox.messaging.OptionLetter'
+        description: 'The option a decision was answered with: the reply''s, or `default_on_silence` when silence answered.'
+      reply:
+        $ref: '#/x-ess-entities/inbox.messaging.Reply'
+        description: Absent when silence answered.
+      refusal:
+        type: string
+      state:
+        $ref: '#/x-ess-entities/inbox.messaging.Message.State'
+    required:
+    - message_id
+    - from
+    - on_behalf_of
+    - to
+    - kind
+    - thread
+    - created
+    - expires
+    - dedup_key
+    - body
+    - signature
+    - state
+    additionalProperties: false
+  inbox.messaging.Message.State:
+    title: State
+    x-ess-name: inbox.messaging.Message.State
+    x-ess-kind: enum
+    type: string
+    enum:
+    - Answered
+    - Delivered
+    - Read
+    - Refused
+    - Sent
+  inbox.messaging.MessageId:
+    title: MessageId
+    description: A ULID the sender sets. A sender that posts a message again sends the same id.
+    x-ess-name: inbox.messaging.MessageId
+    x-ess-kind: newtype
+    type: string
+    pattern: ^[0-9A-HJKMNP-TV-Z]*$
+    minLength: 26
+    maxLength: 26
+    x-ess-invariants:
+    - value.count == 26
+    x-ess-alphabet: 0123456789ABCDEFGHJKMNPQRSTVWXYZ
+  inbox.messaging.OptionLetter:
+    title: OptionLetter
+    x-ess-name: inbox.messaging.OptionLetter
+    x-ess-kind: newtype
+    type: string
+    pattern: ^[A-Z]*$
+    minLength: 1
+    maxLength: 1
+    x-ess-invariants:
+    - value.count == 1
+    x-ess-alphabet: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  inbox.messaging.Principal:
+    title: Principal
+    description: 'Who sends, or whose word a message is: `agent:<host>/<session-name>` or `human:<name>`. The SignatureVerifier port decides which key speaks for which principal.'
+    x-ess-name: inbox.messaging.Principal
+    x-ess-kind: newtype
+    type: string
+  inbox.messaging.Reply:
+    title: Reply
+    description: 'The signed reply envelope: the answer to a request or a decision. Its kind is reply, its `in_reply_to` is the message that holds it and its `to` is that message''s sender. It stays on the message it answers until the sender collects it.'
+    x-ess-name: inbox.messaging.Reply
+    x-ess-kind: struct
+    type: object
+    properties:
+      reply_id:
+        $ref: '#/x-ess-entities/inbox.messaging.MessageId'
+      from:
+        $ref: '#/x-ess-entities/inbox.messaging.Principal'
+      on_behalf_of:
+        $ref: '#/x-ess-entities/inbox.messaging.Principal'
+      authority:
+        $ref: '#/x-ess-entities/inbox.messaging.DelegationId'
+      created:
+        type: string
+        format: date-time
+      option:
+        $ref: '#/x-ess-entities/inbox.messaging.OptionLetter'
+      body:
+        $ref: '#/x-ess-entities/inbox.messaging.Body'
+      signature:
+        $ref: '#/x-ess-entities/inbox.messaging.Signature'
+    required:
+    - reply_id
+    - from
+    - on_behalf_of
+    - created
+    - body
+    - signature
+    additionalProperties: false
+  inbox.messaging.ReplyShape:
+    title: ReplyShape
+    description: 'What a reply to a request must look like. free: any text. lines: at most this many lines. schema: a reference to a JSON Schema the reply body must satisfy.'
+    x-ess-name: inbox.messaging.ReplyShape
+    x-ess-kind: union
+    oneOf:
+    - title: free
+      type: object
+      properties:
+        shape:
+          type: string
+          const: free
+        value:
+          $ref: '#/x-ess-entities/inbox.messaging.FreeShape'
+      required:
+      - shape
+      - value
+      additionalProperties: false
+    - title: lines
+      type: object
+      properties:
+        shape:
+          type: string
+          const: lines
+        value:
+          type: integer
+      required:
+      - shape
+      - value
+      additionalProperties: false
+    - title: schema
+      type: object
+      properties:
+        shape:
+          type: string
+          const: schema
+        value:
+          type: string
+      required:
+      - shape
+      - value
+      additionalProperties: false
+    x-ess-union-tag: shape
+  inbox.messaging.Signature:
+    title: Signature
+    description: The key id and the Ed25519 signature over the canonical JSON of every other envelope field.
+    x-ess-name: inbox.messaging.Signature
+    x-ess-kind: struct
+    type: object
+    properties:
+      key_id:
+        type: string
+      value:
+        type: string
+    required:
+    - key_id
+    - value
+    additionalProperties: false
+  inbox.messaging.ThreadId:
+    title: ThreadId
+    description: 'The ULID that ties the envelopes of one fan-out together: a request sent to 11 inboxes is 11 messages with one thread. A message sent to one inbox carries its own id.'
+    x-ess-name: inbox.messaging.ThreadId
+    x-ess-kind: newtype
+    type: string
+    pattern: ^[0-9A-HJKMNP-TV-Z]*$
+    minLength: 26
+    maxLength: 26
+    x-ess-invariants:
+    - value.count == 26
+    x-ess-alphabet: 0123456789ABCDEFGHJKMNPQRSTVWXYZ

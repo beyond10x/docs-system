@@ -219,8 +219,9 @@
         "tolerance": 0
       },
       "layout.optional_missing": {
-        "value": 12,
-        "tolerance": 0
+        "value": 15,
+        "tolerance": 0,
+        "decision": "UXF-005"
       },
       "layout.overflow": {
         "value": 0,
@@ -253,8 +254,9 @@
         "tolerance": 0
       },
       "layout.optional_missing": {
-        "value": 12,
-        "tolerance": 0
+        "value": 15,
+        "tolerance": 0,
+        "decision": "UXF-005"
       },
       "layout.overflow": {
         "value": 0,
@@ -287,8 +289,9 @@
         "tolerance": 0
       },
       "layout.optional_missing": {
-        "value": 12,
-        "tolerance": 0
+        "value": 15,
+        "tolerance": 0,
+        "decision": "UXF-005"
       },
       "layout.overflow": {
         "value": 0,
@@ -321,8 +324,9 @@
         "tolerance": 0
       },
       "layout.optional_missing": {
-        "value": 12,
-        "tolerance": 0
+        "value": 15,
+        "tolerance": 0,
+        "decision": "UXF-005"
       },
       "layout.overflow": {
         "value": 0,

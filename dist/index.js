@@ -9,6 +9,7 @@ export * from './manifest.js';
 export * from './navigation.js';
 export * from './redirects.js';
 export * from './renderers.js';
+export * from './cli-reference.js';
 export * from './types.js';
 export { default as docsSystemPlugin } from './docusaurus.js';
 export * from './ess-document.js';
