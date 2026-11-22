@@ -134,17 +134,17 @@ test('OpenApiReference embeds as a section with configurable coherent headings',
   const document = {
     openapi: '3.1.1',
     info: {title: 'Example API', version: '1.4.0', description: 'A small example.'},
-    paths: {'/widgets': {get: {operationId: 'listWidgets', summary: 'List widgets', responses: {'200': {description: 'Widgets'}}}}},
+    paths: {'/widgets': {get: {operationId: 'listWidgets', summary: 'List widgets', parameters: [{name: 'limit', in: 'query', schema: {type: 'integer'}}], responses: {'200': {description: 'Widgets'}}}}},
     components: {schemas: {Widget: {type: 'object', properties: {id: {type: 'string'}}}}},
   };
   const markup = renderToStaticMarkup(createElement(OpenApiReference, {document, headingLevel: 3}));
-  assert.match(markup, /^<section class="b10x-openapi"/);
+  assert.match(markup, /^<section class="b10x-openapi[ "]/);
   assert.doesNotMatch(markup, /<(?:main|h1)(?:\s|>)/);
   assert.match(markup, /<h3 id="openapi-example-api-title">Example API<\/h3>/);
   assert.match(markup, /<h4>List widgets<\/h4>/);
   assert.match(markup, /<h4 id="openapi-example-api-schemas">Schemas<\/h4>/);
-  assert.match(markup, /<th scope="col">Status<\/th>/);
-  assert.match(markup, /<p class="b10x-table-guidance" id="[^"]+" hidden="" data-pagefind-ignore="true">/, '#27: the responses table carries the overflow guidance');
+  assert.match(markup, /<span class="b10x-api-chip b10x-api-status b10x-api-status--2xx">200<\/span>/);
+  assert.match(markup, /<p class="b10x-table-guidance" id="[^"]+" hidden="" data-pagefind-ignore="true">/, '#27: the parameters table carries the overflow guidance');
 
   const defaultMarkup = renderToStaticMarkup(createElement(OpenApiReference, {document}));
   assert.match(defaultMarkup, /<h2 id="openapi-example-api-title">Example API<\/h2>/);

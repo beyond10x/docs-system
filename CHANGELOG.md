@@ -6,6 +6,47 @@ All notable changes to this project are documented in this file. From 0.11.0 the
 
 ## [Unreleased]
 
+### Added
+
+- Reference pages for product sites: `withProductSite(config, {references: [{id, kind, source,
+  title?}]})` reads each OpenAPI 3.1, AsyncAPI 3.0 or `b10x-cli-reference/1` source (JSON or YAML)
+  at build time, fails the build naming the id and the file when it is missing or of another kind
+  or version, watches it in dev, publishes it as the data module `@b10x-reference/<id>.json`
+  (webpack and rspack) and serves the unchanged bytes at `<baseUrl>reference/<id>.<ext>`.
+- `ApiReference` renders such a module by its kind; it, `OpenApiReference`, `AsyncApiReference`
+  and `CliReference` are in the product MDX vocabulary (loaded in their own chunk, so other docs
+  pages do not carry them) and in `SharedComponentName` and the `b10x-docs/v5` component list.
+- `AsyncApiReference` for AsyncAPI 3.0: servers, operations with `send` and `receive` chips,
+  channels with parameters, messages with payload and headers, and component schemas.
+- The `b10x-cli-reference/1` format (`schema/b10x.cli-reference.v1.schema.json`, export
+  `./schema/cli-reference/v1`), `parseCliReference` and `cliReferenceFromEssPlan` (from an ESS
+  `ess-cli-plan/2`) in the Node-safe `./cli-reference` subpath, and `CliReference`: a command index
+  by first word, a synopsis per command, argument tables, global options, environment variables
+  and exit statuses.
+- `./reference-data` (Node-safe): `checkReferenceOptions` and `readReference`.
+- Method, status and action tone tokens (`--b10x-api-get` … `--b10x-api-delete`,
+  `--b10x-api-status-1xx` … `--b10x-api-status-5xx`, `--b10x-api-send`, `--b10x-api-receive`).
+- The example product site has an "API reference" sidebar category with the HTTP API, events and
+  command line of the inbox service.
+
+### Changed
+
+- `OpenApiReference` groups operations by their first tag (untagged ones under "Other") behind an
+  index of operations with method chips and a client-side filter (absent without JavaScript),
+  and shows each operation as a closed disclosure with path-level and operation parameters, the
+  request body with every content type, schema and examples, and responses with status chips by
+  class, every content type and response headers. Servers and security schemes are listed read-only.
+  New optional props: `sourceName` and `title`. Existing props and anchors are unchanged.
+- The schema viewer (`JsonSchemaViewer`, now with an optional `document`) resolves `$ref` inside the
+  document: the name links to its schema card and opens in place in a native `<details>` that
+  renders only when opened, with a cycle guard; external references stay text. It shows `items`,
+  `additionalProperties`, labelled `oneOf` / `anyOf` / `allOf`, the discriminator and the
+  constraints `enum`, `const`, `format`, `pattern`, bounds, lengths, `default` and `examples`, at
+  any depth. Descriptions render as plain-text paragraphs with backtick code; `x-*` members are
+  ignored.
+- Responses render as a list of toned cards instead of a three-column table; the parameters table
+  carries the overflow guidance (#27).
+
 ## [0.15.1] - 2026-11-10
 
 ### Fixed

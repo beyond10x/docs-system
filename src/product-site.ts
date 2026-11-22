@@ -25,6 +25,11 @@ import {rawAdmonitionHtmlProblems} from './admonition-guard.js';
 import {isProductId, PRODUCT_SIGNATURES, productSignatureCss} from './product-palette.js';
 import type {ProductId} from './product-palette.js';
 import rehypeSemanticChips, {PROTOCOL_KIND_MAGIC_COMMENTS} from './rehype-semantic-chips.js';
+import {checkReferenceOptions, readReference} from './reference-data.js';
+import type {LoadedReference, ProductSiteReference} from './reference-data.js';
+
+export {checkReferenceOptions, readReference, REFERENCE_KINDS} from './reference-data.js';
+export type {LoadedReference, ProductSiteReference, ReferenceKind, ReferenceModule} from './reference-data.js';
 
 export interface ProductSiteOptions {
   /** A `b10x-product-landing/1` file (JSON or YAML), relative to the site directory. */
@@ -53,7 +58,33 @@ export interface ProductSiteOptions {
    * reaches the page instead of a 404. Default true.
    */
   trailingSlashRedirects?: boolean;
+  /**
+   * Reference pages: each source (OpenAPI 3.1, AsyncAPI 3.0 or `b10x-cli-reference/1`, JSON or
+   * YAML, relative to the site directory) is read and checked at build time, importable in MDX as
+   * `@b10x-reference/<id>.json` for `<ApiReference reference={...} />`, and served unchanged at
+   * `<baseUrl>reference/<id>.<ext>`.
+   */
+  references?: ProductSiteReference[];
 }
+
+/**
+ * The generated static directory of reference downloads, relative to the site directory (inside
+ * the Docusaurus generated-files directory): it holds `reference/<id>.<ext>`.
+ */
+export const PRODUCT_REFERENCE_STATIC = '.docusaurus/b10x-reference-files';
+/** The module prefix of reference data: `@b10x-reference/<id>.json`. */
+export const PRODUCT_REFERENCE_ALIAS = '@b10x-reference';
+/**
+ * The theme's MDX vocabulary loads the reference renderers with `import()`. Docusaurus's server
+ * Babel turns that into `require()`, which a bundler leaves alone in a `"type": "module"` package,
+ * so this one file is bundled as `javascript/auto` (webpack and rspack alike).
+ */
+export const PRODUCT_MDX_COMPONENTS = fileURLToPath(new URL('./theme/MDXComponents.js', import.meta.url));
+/**
+ * Each `@b10x-reference/<id>.json` resolves to a generated module that returns the data through
+ * this file, so the renderers ride in the importing page's own chunks (see `reference-preload.ts`).
+ */
+export const PRODUCT_REFERENCE_PRELOAD = fileURLToPath(new URL('./reference-preload.js', import.meta.url));
 
 /** Self-hosted font files, served from `styles/static` under `<baseUrl>b10x-fonts/`. */
 export const PRODUCT_FONT_DIRECTORY = fileURLToPath(new URL('../styles/static', import.meta.url));
@@ -110,7 +141,7 @@ export function fontHeadTags(baseUrl: string): HeadTag[] {
 
 interface HeadTag {tagName: string; innerHTML?: string; attributes?: Record<string, string>}
 
-interface SiteContext {siteDir: string; baseUrl: string; siteConfig?: {title?: string; url?: string; trailingSlash?: boolean}}
+interface SiteContext {siteDir: string; baseUrl: string; generatedFilesDir?: string; siteConfig?: {title?: string; url?: string; trailingSlash?: boolean}}
 interface PluginActions {
   createData(name: string, content: string): Promise<string>;
   addRoute(route: {path: string; component: string; exact?: boolean; modules?: Record<string, string>}): void;
@@ -125,6 +156,7 @@ export interface ProductSitePlugin {
   loadContent(): Promise<ProductLandingData | null>;
   contentLoaded(input: {content: ProductLandingData | null; actions: PluginActions}): Promise<void>;
   injectHtmlTags(): {headTags: HeadTag[]};
+  configureWebpack(): {module: {rules: Array<{test: string; type: string}>}; resolve?: {alias: Record<string, string>}};
   postBuild(input: {outDir: string}): Promise<void>;
 }
 
@@ -136,6 +168,10 @@ export default function productSitePlugin(context: SiteContext, options: Product
   if (options.product !== undefined && !isProductId(options.product)) throw new Error(`product-site product must be one of ${Object.keys(PRODUCT_SIGNATURES).join(', ')}, received ${JSON.stringify(options.product)}`);
   const mark = options.mark ?? (options.product ? PRODUCT_SIGNATURES[options.product].mark : context.siteConfig?.title?.slice(0, 1)) ?? '';
   if (mark && !/^[\p{L}\p{N}]{1,3}$/u.test(mark)) throw new Error(`product-site mark must be one to three letters or digits, received ${JSON.stringify(mark)}`);
+  const references = checkReferenceOptions(options.references);
+  for (const reference of references) watched.add(path.resolve(context.siteDir, reference.source));
+  const generated = context.generatedFilesDir ?? path.join(context.siteDir, '.docusaurus');
+  let referenceModules = path.join(generated, 'b10x-product-site', 'default', 'reference');
   return {
     name: 'b10x-product-site',
     getThemePath: () => fileURLToPath(new URL('./theme', import.meta.url)),
@@ -149,6 +185,16 @@ export default function productSitePlugin(context: SiteContext, options: Product
     async contentLoaded({content, actions}) {
       const global: ProductSiteGlobalData = {...(options.product ? {product: options.product} : {}), build: await docsSystemBuild(context.siteDir)};
       actions.setGlobalData?.(global);
+      if (references.length) {
+        const loaded = await Promise.all(references.map((reference) => readReference(reference, context.siteDir, context.baseUrl)));
+        await writeReferenceFiles(path.resolve(context.siteDir, PRODUCT_REFERENCE_STATIC, 'reference'), loaded);
+        for (const reference of loaded) {
+          const {id} = reference.module;
+          await actions.createData(`reference/${id}.data.json`, JSON.stringify(reference.module));
+          const module = `import reference from ${JSON.stringify(`./${id}.data.json`)};\nimport {withReferenceRenderers} from ${JSON.stringify(PRODUCT_REFERENCE_PRELOAD)};\n\nexport default withReferenceRenderers(reference);\n`;
+          referenceModules = path.dirname(await actions.createData(`reference/${id}.js`, module));
+        }
+      }
       if (!content) return;
       const data = await actions.createData('b10x-product-landing.json', JSON.stringify(content));
       actions.addRoute({path: joinRoute(context.baseUrl, options.landingPath ?? '/'), component: '@theme/ProductLandingPage', exact: true, modules: {landing: data}});
@@ -158,6 +204,11 @@ export default function productSitePlugin(context: SiteContext, options: Product
       ...(mark ? [{tagName: 'style', innerHTML: `:root{--b10x-product-mark:"${mark}"}`}] : []),
       ...(options.product ? [{tagName: 'style', innerHTML: productSignatureCss(options.product)}] : []),
     ]}),
+    // `resolve.alias` has the same meaning in webpack and in rspack (`@docusaurus/faster`).
+    configureWebpack: () => ({
+      module: {rules: [{test: PRODUCT_MDX_COMPONENTS, type: 'javascript/auto'}]},
+      ...(references.length ? {resolve: {alias: Object.fromEntries(references.map(({id}) => [`${PRODUCT_REFERENCE_ALIAS}/${id}.json$`, path.join(referenceModules, `${id}.js`)]))}} : {}),
+    }),
     async postBuild({outDir}) {
       if (options.admonitionGuard !== false) {
         const found: string[] = [];
@@ -176,6 +227,24 @@ export default function productSitePlugin(context: SiteContext, options: Product
       if (!(await exists(nojekyll))) await fs.writeFile(nojekyll, '');
     },
   };
+}
+
+/**
+ * Write the unchanged source bytes as `<directory>/<id>.<ext>`, each atomically and only when it
+ * changed, and remove files of references that are gone.
+ */
+export async function writeReferenceFiles(directory: string, loaded: LoadedReference[]): Promise<void> {
+  await fs.mkdir(directory, {recursive: true});
+  const keep = new Set(loaded.map((reference) => reference.served));
+  for (const name of await fs.readdir(directory)) if (!keep.has(name)) await fs.rm(path.join(directory, name), {force: true, recursive: true});
+  for (const reference of loaded) {
+    const target = path.join(directory, reference.served);
+    const current = await fs.readFile(target).catch(() => undefined);
+    if (current?.equals(reference.bytes)) continue;
+    const partial = `${target}.${process.pid}.partial`;
+    await fs.writeFile(partial, reference.bytes);
+    await fs.rename(partial, target);
+  }
 }
 
 /** Read a landing file and inline every referenced terminal session and graph document. */
@@ -376,17 +445,19 @@ export function withProductSite<T extends Record<string, unknown>>(config: T, op
   const product = isProductId(options.product) ? options.product : undefined;
   const mark = options.mark ?? (product ? PRODUCT_SIGNATURES[product].mark : (config.title as string | undefined)?.slice(0, 1)) ?? '';
   const faviconDirectory = ownFavicon === undefined ? writeProductFavicon(productFaviconSvg(mark, product)) : undefined;
+  const references = checkReferenceOptions(options.references);
   const staticDirectories = [
     ...(config.staticDirectories as string[] | undefined) ?? ['static'],
     ...(fonts ? [PRODUCT_FONT_DIRECTORY] : []),
     ...(card ? [PRODUCT_SOCIAL_DIRECTORY] : []),
     ...(faviconDirectory ? [faviconDirectory] : []),
+    ...(references.length ? [PRODUCT_REFERENCE_STATIC] : []),
   ].filter((directory, index, all) => all.indexOf(directory) === index);
   const highlight = {className: 'theme-code-block-highlighted-line', line: 'highlight-next-line', block: {start: 'highlight-start', end: 'highlight-end'}};
   return {
     ...config,
     favicon: ownFavicon ?? PRODUCT_FAVICON,
-    ...(fonts || card || faviconDirectory ? {staticDirectories} : {}),
+    ...(fonts || card || faviconDirectory || references.length ? {staticDirectories} : {}),
     ...(config.presets ? {presets: withChips(config.presets as unknown[], 'preset')} : {}),
     // Standalone themes load after plugins, so the Mermaid override goes right after theme-mermaid.
     ...(mermaid ? {themes: themes.flatMap((theme) => theme === '@docusaurus/theme-mermaid' || (Array.isArray(theme) && theme[0] === '@docusaurus/theme-mermaid') ? [theme, productMermaidTheme] : [theme])} : {}),

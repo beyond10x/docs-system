@@ -1,0 +1,459 @@
+{
+  "format": "ess-cli-plan/2",
+  "binary": "inbox",
+  "about": "The inbox, one durable addressable inbox per agent or person",
+  "globals": {
+    "state": "state-dir",
+    "output": "output"
+  },
+  "callables": {
+    "close": {
+      "target": {
+        "kind": "service_forward",
+        "owner": "inbox-service",
+        "operation": "inbox.messaging.CloseInbox"
+      },
+      "input": {
+        "type_ref": "inbox.messaging.CliAddressInput",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "address": {
+              "kind": "string"
+            }
+          }
+        }
+      },
+      "result": {
+        "type_ref": "inbox.messaging.CliInboxRow",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "adapter": {
+              "kind": "enum",
+              "variants": [
+                "claude_code",
+                "metaharness",
+                "slack",
+                "terminal"
+              ]
+            },
+            "address": {
+              "kind": "string"
+            },
+            "owner": {
+              "kind": "string"
+            },
+            "state": {
+              "kind": "enum",
+              "variants": [
+                "Closed",
+                "Open"
+              ]
+            }
+          }
+        }
+      },
+      "errors": {
+        "not_recipient": {
+          "type_ref": "inbox.messaging.CliRefusal",
+          "shape": {
+            "kind": "struct",
+            "fields": {}
+          }
+        },
+        "unknown_inbox": {
+          "type_ref": "inbox.messaging.CliRefusal",
+          "shape": {
+            "kind": "struct",
+            "fields": {}
+          }
+        }
+      }
+    },
+    "open": {
+      "target": {
+        "kind": "service_forward",
+        "owner": "inbox-service",
+        "operation": "inbox.messaging.OpenInbox"
+      },
+      "input": {
+        "type_ref": "inbox.messaging.CliOpenInput",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "adapter": {
+              "kind": "enum",
+              "variants": [
+                "claude_code",
+                "metaharness",
+                "slack",
+                "terminal"
+              ]
+            },
+            "address": {
+              "kind": "string"
+            }
+          }
+        }
+      },
+      "result": {
+        "type_ref": "inbox.messaging.CliInboxRow",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "adapter": {
+              "kind": "enum",
+              "variants": [
+                "claude_code",
+                "metaharness",
+                "slack",
+                "terminal"
+              ]
+            },
+            "address": {
+              "kind": "string"
+            },
+            "owner": {
+              "kind": "string"
+            },
+            "state": {
+              "kind": "enum",
+              "variants": [
+                "Closed",
+                "Open"
+              ]
+            }
+          }
+        }
+      },
+      "errors": {
+        "not_recipient": {
+          "type_ref": "inbox.messaging.CliRefusal",
+          "shape": {
+            "kind": "struct",
+            "fields": {}
+          }
+        }
+      },
+      "invalid_input": "not_recipient"
+    },
+    "pending": {
+      "target": {
+        "kind": "local",
+        "owner": "inbox.cli",
+        "action": "pending"
+      },
+      "input": {
+        "type_ref": "inbox.messaging.CliLocalPendingInput",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "inbox": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            }
+          }
+        }
+      },
+      "result": {
+        "type_ref": "Json",
+        "shape": {
+          "kind": "json"
+        }
+      },
+      "errors": {}
+    },
+    "post": {
+      "target": {
+        "kind": "local",
+        "owner": "inbox.cli",
+        "action": "post"
+      },
+      "input": {
+        "type_ref": "inbox.messaging.CliPostInput",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "authority": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            },
+            "body": {
+              "kind": "string"
+            },
+            "dedup_key": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            },
+            "default_on_silence": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            },
+            "expires": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            },
+            "kind": {
+              "kind": "enum",
+              "variants": [
+                "note",
+                "request",
+                "decision"
+              ]
+            },
+            "on_behalf_of": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            },
+            "options": {
+              "kind": "optional",
+              "of": {
+                "kind": "list",
+                "of": {
+                  "kind": "string"
+                }
+              }
+            },
+            "recommended_option": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            },
+            "reply_shape": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            },
+            "request_ref": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            },
+            "thread": {
+              "kind": "optional",
+              "of": {
+                "kind": "string"
+              }
+            },
+            "to": {
+              "kind": "string"
+            }
+          }
+        }
+      },
+      "result": {
+        "type_ref": "inbox.messaging.CliPosted",
+        "shape": {
+          "kind": "struct",
+          "fields": {
+            "message_id": {
+              "kind": "string"
+            }
+          }
+        }
+      },
+      "errors": {
+        "duplicate": {
+          "type_ref": "inbox.messaging.CliRefusal",
+          "shape": {
+            "kind": "struct",
+            "fields": {}
+          }
+        },
+        "signature_invalid": {
+          "type_ref": "inbox.messaging.CliRefusal",
+          "shape": {
+            "kind": "struct",
+            "fields": {}
+          }
+        }
+      }
+    }
+  },
+  "commands": [
+    {
+      "path": [
+        "close"
+      ],
+      "aliases": [],
+      "callable": "close",
+      "about": "Close the caller's own inbox",
+      "arguments": [
+        {
+          "field": "address",
+          "source": {
+            "kind": "option",
+            "long": "address"
+          }
+        }
+      ]
+    },
+    {
+      "path": [
+        "open"
+      ],
+      "aliases": [],
+      "callable": "open",
+      "about": "Open the caller's own inbox (again after every restart of the service)",
+      "arguments": [
+        {
+          "field": "address",
+          "source": {
+            "kind": "option",
+            "long": "address"
+          }
+        },
+        {
+          "field": "adapter",
+          "source": {
+            "kind": "option",
+            "long": "adapter"
+          }
+        }
+      ]
+    },
+    {
+      "path": [
+        "pending"
+      ],
+      "aliases": [],
+      "callable": "pending",
+      "about": "What an inbox holds that its owner has not read",
+      "arguments": [
+        {
+          "field": "inbox",
+          "source": {
+            "kind": "option",
+            "long": "inbox"
+          }
+        }
+      ]
+    },
+    {
+      "path": [
+        "post"
+      ],
+      "aliases": [],
+      "callable": "post",
+      "about": "Post a note, a request or a decision, signed with the caller's key",
+      "arguments": [
+        {
+          "field": "to",
+          "source": {
+            "kind": "option",
+            "long": "to"
+          }
+        },
+        {
+          "field": "kind",
+          "source": {
+            "kind": "option",
+            "long": "kind"
+          }
+        },
+        {
+          "field": "body",
+          "source": {
+            "kind": "document",
+            "inline": "body",
+            "file": "body-file",
+            "stdin": "body-stdin"
+          }
+        },
+        {
+          "field": "thread",
+          "source": {
+            "kind": "option",
+            "long": "thread"
+          }
+        },
+        {
+          "field": "dedup_key",
+          "source": {
+            "kind": "option",
+            "long": "dedup-key"
+          }
+        },
+        {
+          "field": "on_behalf_of",
+          "source": {
+            "kind": "option",
+            "long": "on-behalf-of"
+          }
+        },
+        {
+          "field": "authority",
+          "source": {
+            "kind": "option",
+            "long": "authority"
+          }
+        },
+        {
+          "field": "reply_shape",
+          "source": {
+            "kind": "option",
+            "long": "reply-shape"
+          }
+        },
+        {
+          "field": "options",
+          "source": {
+            "kind": "option",
+            "long": "option"
+          }
+        },
+        {
+          "field": "recommended_option",
+          "source": {
+            "kind": "option",
+            "long": "recommended-option"
+          }
+        },
+        {
+          "field": "default_on_silence",
+          "source": {
+            "kind": "option",
+            "long": "default-on-silence"
+          }
+        },
+        {
+          "field": "request_ref",
+          "source": {
+            "kind": "option",
+            "long": "request-ref"
+          }
+        },
+        {
+          "field": "expires",
+          "source": {
+            "kind": "option",
+            "long": "expires"
+          }
+        }
+      ]
+    }
+  ],
+  "obligations": [
+    "handler:close: implement the owner-qualified callable and its declared result/error contract",
+    "handler:open: implement the owner-qualified callable and its declared result/error contract",
+    "handler:pending: implement the owner-qualified callable and its declared result/error contract",
+    "handler:post: implement the owner-qualified callable and its declared result/error contract"
+  ]
+}
+

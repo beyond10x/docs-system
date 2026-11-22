@@ -109,6 +109,8 @@ check(22, 'a table stays inside the article column and scrolls in a labelled reg
   for (const width of widths) {
     const {page, close} = await open('docs/reference', {width});
     try {
+      // The region and its cue are set by an effect: wait for hydration, not for a fixed time.
+      await page.waitForFunction(() => document.documentElement.dataset.hasHydrated === 'true');
       await page.waitForTimeout(200);
       const tables = await page.evaluate(() => {
         const column = document.querySelector('article .markdown').getBoundingClientRect();
@@ -263,7 +265,7 @@ check(26, 'the not-found page links back to the docs and the home page', async (
   for (const width of [1440, 390]) {
     const {page, errors, close} = await open('docs/does-not-exist', {width});
     try {
-      await page.waitForFunction(() => document.querySelector('main h1'));
+      await page.waitForFunction(() => document.querySelector('main h1') && document.documentElement.dataset.hasHydrated === 'true');
       const content = await page.evaluate(() => {
         const main = document.querySelector('main');
         return {
@@ -294,6 +296,7 @@ check(27, 'a chart or graph text table wider than a phone is a named region with
   for (const url of ['docs/charts', 'docs/status', 'session']) {
     const {page, errors, close} = await open(url, {width: 390});
     try {
+      await page.waitForFunction(() => document.documentElement.dataset.hasHydrated === 'true');
       await page.evaluate(() => { for (const details of document.querySelectorAll('.b10x-graph__table, .b10x-chart__table')) details.open = true; });
       await page.waitForTimeout(300);
       const frames = await page.evaluate(() => [...document.querySelectorAll('.b10x-graph__table .b10x-table-wrap, .b10x-chart__table .b10x-table-wrap, .b10x-status-table .b10x-table-wrap')]
@@ -582,6 +585,71 @@ check('favicon', 'the site names a generated SVG favicon that is served, and not
 
 check('nojekyll', 'the build output carries .nojekyll', async () => {
   assert.equal(await readFile(path.join(server.output, '.nojekyll'), 'utf8'), '');
+});
+
+check('api-reference', 'the HTTP, event and CLI reference pages render in the docs layout, read-only, with working downloads and disclosures', async () => {
+  const pages = [['docs/reference/http-api', '.b10x-openapi', 'reference/http-api.yaml', 'data/reference/inbox-service.openapi.yaml', 'HTTP API'], ['docs/reference/events', '.b10x-asyncapi', 'reference/events.yaml', 'data/reference/inbox-service.asyncapi.yaml', 'Events'], ['docs/reference/cli', '.b10x-cli', 'reference/cli.json', 'data/reference/inbox-cli.json', 'Command line']];
+  for (const [url, root, download, source, label] of pages) for (const theme of themes) for (const width of [1280, 390]) {
+    const {page, errors, close} = await open(url, {width, theme});
+    try {
+      const facts = await page.evaluate(([rootSelector]) => {
+        const reference = document.querySelector(`article .markdown ${rootSelector}`);
+        const sidebar = document.querySelector('.theme-doc-sidebar-container');
+        const chips = [...document.querySelectorAll('.b10x-api-chip')].slice(0, 12).map(chip => { const style = getComputedStyle(chip); return {color: style.color, background: style.backgroundColor, size: parseFloat(style.fontSize)}; });
+        return {reference: !!reference, sidebar: sidebar ? getComputedStyle(sidebar).display !== 'none' : false, active: [...document.querySelectorAll('.theme-doc-sidebar-container .menu__link--active')].map(link => link.textContent.trim()), overflow: document.documentElement.scrollWidth - innerWidth, inputs: document.querySelectorAll('.b10x-api input:not([type="search"]), .b10x-api button, .b10x-api form').length, chips};
+      }, [root]);
+      assert.ok(facts.reference, `${url} ${theme} ${width}px: the reference renders inside the docs article`);
+      assert.equal(facts.sidebar, width >= 997, `${url} ${width}px: the docs sidebar shows on desktop`);
+      if (width >= 997) assert.ok(facts.active.includes(label), `${url}: its sidebar entry "${label}" is active, active: ${JSON.stringify(facts.active)}`);
+      assert.ok(facts.overflow <= 1, `${url} ${theme} ${width}px: the page scrolls sideways by ${facts.overflow}px`);
+      assert.equal(facts.inputs, 0, `${url}: no request form, button or credential field`);
+      for (const chip of facts.chips) {
+        assert.ok(contrastOf(chip.color, chip.background) >= 4.5, `${url} ${theme}: chip ${chip.color} on ${chip.background} is ${contrastOf(chip.color, chip.background).toFixed(2)}:1`);
+        assert.ok(chip.size >= 11.5, `${url}: chip text ${chip.size}px`);
+      }
+      if (theme === 'light' && width === 1280) {
+        const href = await page.locator('.b10x-api-download').getAttribute('href');
+        assert.equal(href, `/product-site/${download}`);
+        const response = await page.request.get(new URL(href, server.url).href);
+        assert.equal(response.status(), 200);
+        assert.ok(Buffer.compare(await response.body(), await readFile(path.join(import.meta.dirname, '../examples/product-site', source))) === 0, `${download} is the unchanged source`);
+      }
+      assert.deepEqual(errors, []);
+    } finally { await close(); }
+  }
+  for (const [url, root] of pages) {
+    const context = await browser.newContext({viewport: {width: 1280, height: 900}});
+    await context.addInitScript(() => {
+      window.__b10xReferenceDropped = false;
+      new MutationObserver(records => {
+        for (const record of records) for (const node of record.removedNodes) if (node instanceof Element && (node.matches('section.b10x-api') || node.querySelector('section.b10x-api'))) window.__b10xReferenceDropped = true;
+      }).observe(document, {childList: true, subtree: true});
+    });
+    try {
+      const page = await context.newPage();
+      await page.goto(new URL(url, server.url).href, {waitUntil: 'load'});
+      await page.waitForFunction(selector => { const node = document.querySelector(`article .markdown ${selector}`); return !!node && Object.keys(node).some(key => key.startsWith('__reactFiber')); }, root, {timeout: 30000});
+      assert.equal(await page.evaluate(() => window.__b10xReferenceDropped), false, `${url}: hydration keeps the server-rendered reference instead of rendering it again`);
+    } finally { await context.close(); }
+  }
+  const {page, errors, close} = await open('docs/reference/http-api', {width: 1280});
+  try {
+    const filter = page.getByLabel('Filter operations');
+    await filter.fill('views due');
+    await page.waitForFunction(() => document.querySelectorAll('.b10x-api-operation:not([hidden])').length === 1);
+    assert.match(await page.locator('.b10x-api-filter p').innerText(), /^1 of 18 operations$/);
+    await filter.fill('');
+    await page.waitForFunction(() => document.querySelectorAll('.b10x-api-operation:not([hidden])').length === 18);
+    await page.locator('.b10x-api-index a[href="#operation-inbox.messaging.PostMessage"]').click();
+    await page.waitForFunction(() => document.getElementById('operation-inbox.messaging.PostMessage')?.open === true);
+    const operation = page.locator('[id="operation-inbox.messaging.PostMessage"]');
+    await operation.locator('.b10x-schema-more > summary').first().focus();
+    await page.keyboard.press('Enter');
+    await operation.locator('.b10x-schema-more[open] .b10x-schema-expanded').first().waitFor();
+    await page.locator('a[href="#schema-inbox.messaging.PostMessage.Input"]').first().click();
+    await page.waitForFunction(() => { const card = document.getElementById('schema-inbox.messaging.PostMessage.Input'); return card?.open === true && card.checkVisibility(); });
+    assert.deepEqual(errors, []);
+  } finally { await close(); }
 });
 
 // UX loop findings (ux/findings/UXF-nnn.md): each check is the finding's regression asset.

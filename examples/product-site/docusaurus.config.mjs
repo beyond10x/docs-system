@@ -59,4 +59,10 @@ const config = {
   },
 };
 
-export default withProductSite(config, {landing: './product.json', product: 'canon'});
+const references = [
+  {id: 'http-api', kind: 'openapi', source: './data/reference/inbox-service.openapi.yaml'},
+  {id: 'events', kind: 'asyncapi', source: './data/reference/inbox-service.asyncapi.yaml'},
+  {id: 'cli', kind: 'cli', source: './data/reference/inbox-cli.json'},
+];
+
+export default withProductSite(config, {landing: './product.json', product: 'canon', references});

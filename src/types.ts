@@ -106,9 +106,12 @@ export interface AdoptionAction {
 
 export type SharedComponentName =
   | 'AdoptionCard'
+  | 'ApiReference'
+  | 'AsyncApiReference'
   | 'BoundaryNotice'
   | 'Callout'
   | 'CardGrid'
+  | 'CliReference'
   | 'CodeExample'
   | 'CodeTabs'
   | 'CommandExample'

@@ -23,5 +23,16 @@ export default {
       ],
     },
     {type: 'doc', id: 'adopt', label: 'Adopt the template'},
+    {
+      type: 'category',
+      label: 'API reference',
+      collapsible: true,
+      collapsed: true,
+      items: [
+        {type: 'doc', id: 'reference/http-api', label: 'HTTP API'},
+        {type: 'doc', id: 'reference/events', label: 'Events'},
+        {type: 'doc', id: 'reference/cli', label: 'Command line'},
+      ],
+    },
   ],
 };

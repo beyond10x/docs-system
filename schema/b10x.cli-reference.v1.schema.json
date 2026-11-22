@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyond10x.github.io/schema/b10x.cli-reference.v1.json",
+  "title": "b10x command-line reference",
+  "description": "A command-line interface as data for a CLI reference page: the binary, its global options, its commands with their arguments and argument groups, the environment variables it reads outside its flags, and its exit statuses. parseCliReference also checks what a schema cannot: unique command paths and argument names, flags used once per command, conflicts, requires and group members that name arguments of the command (a group member is an argument of the command itself, not a global option), a default that is one of the allowed values, a trailing positional that is the last positional, environment commands that name a command of the document, and exit codes used once.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "binary", "commands"],
+  "properties": {
+    "format": {"const": "b10x-cli-reference/1"},
+    "binary": {"$ref": "#/$defs/word", "description": "The name the binary is invoked by."},
+    "about": {"$ref": "#/$defs/text", "description": "One line on what the binary is."},
+    "description": {"$ref": "#/$defs/text", "description": "Plain text; blank lines separate paragraphs and backtick spans are code."},
+    "version": {"$ref": "#/$defs/text"},
+    "globalOptions": {
+      "type": "array",
+      "description": "Options and switches every command accepts.",
+      "items": {"allOf": [{"$ref": "#/$defs/argument"}, {"type": "object", "properties": {"kind": {"enum": ["option", "switch"]}}}]}
+    },
+    "commands": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/command"}},
+    "environment": {
+      "type": "array",
+      "description": "Environment variables read outside any flag's env.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": {"$ref": "#/$defs/env"},
+          "description": {"$ref": "#/$defs/text"},
+          "commands": {"type": "array", "description": "The command paths that read it; absent, every command may.", "items": {"$ref": "#/$defs/path"}}
+        }
+      }
+    },
+    "exitStatuses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "meaning"],
+        "properties": {
+          "code": {"type": "integer", "minimum": 0, "maximum": 255},
+          "meaning": {"$ref": "#/$defs/text"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "word": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"},
+    "env": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+    "path": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/word"}},
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {"$ref": "#/$defs/path", "description": "The words after the binary name, one or more."},
+        "aliases": {"type": "array", "items": {"$ref": "#/$defs/path"}},
+        "about": {"$ref": "#/$defs/text"},
+        "description": {"$ref": "#/$defs/text"},
+        "arguments": {"type": "array", "items": {"$ref": "#/$defs/argument"}},
+        "groups": {
+          "type": "array",
+          "description": "Arguments that are given together or instead of each other.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "arguments"],
+            "properties": {
+              "name": {"$ref": "#/$defs/word"},
+              "arguments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/word"}},
+              "required": {"type": "boolean", "description": "One of the group must be given."},
+              "multiple": {"type": "boolean", "description": "More than one of the group may be given. Default false."}
+            }
+          }
+        }
+      }
+    },
+    "argument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind"],
+      "properties": {
+        "name": {"$ref": "#/$defs/word", "description": "The argument's id inside its command."},
+        "kind": {"enum": ["positional", "option", "switch"], "description": "A positional value, an option that takes a value, or a switch that takes none."},
+        "long": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9-]*$", "description": "Long flag without dashes."},
+        "short": {"type": "string", "pattern": "^[A-Za-z0-9]$", "description": "Short flag without the dash."},
+        "valueName": {"$ref": "#/$defs/text", "description": "The value placeholder; defaults to the name in capitals."},
+        "required": {"type": "boolean"},
+        "default": {"type": "string", "description": "The value used when the argument is absent, as typed."},
+        "env": {"$ref": "#/$defs/env", "description": "Read when the flag is absent."},
+        "repeatable": {"type": "boolean"},
+        "trailing": {"type": "boolean", "description": "A positional that follows -- and takes every remaining word."},
+        "values": {"type": "array", "items": {"$ref": "#/$defs/text"}, "description": "The only values accepted."},
+        "help": {"$ref": "#/$defs/text"},
+        "conflicts": {"type": "array", "items": {"$ref": "#/$defs/word"}},
+        "requires": {"type": "array", "items": {"$ref": "#/$defs/word"}}
+      },
+      "allOf": [
+        {"if": {"type": "object", "properties": {"kind": {"const": "positional"}}}, "then": {"type": "object", "properties": {"long": false, "short": false}}, "else": {"type": "object", "anyOf": [{"type": "object", "properties": {"long": true}, "required": ["long"]}, {"type": "object", "properties": {"short": true}, "required": ["short"]}], "properties": {"trailing": {"const": false}}}},
+        {"if": {"type": "object", "properties": {"kind": {"const": "switch"}}}, "then": {"type": "object", "properties": {"valueName": false, "values": false, "default": false}}},
+        {"if": {"type": "object", "properties": {"required": {"const": true}}, "required": ["required"]}, "then": {"type": "object", "properties": {"default": false}}}
+      ]
+    }
+  }
+}

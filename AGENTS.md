@@ -21,6 +21,18 @@ rules live in `atlas/AGENTS.md`.
   consumer establishes the shared contract.
 - OpenAPI rendering is read-only. It never sends a request or accepts a credential.
 - Rendered SVG must contain no scripts, event handlers, foreign objects, or external resources.
+- A site compiles these components with Docusaurus's Babel in loose mode, so `[...x]` becomes
+  `[].concat(x)`. Spread only arrays. A `Map`, `Set`, iterator or string goes through `Array.from`.
+  The server render runs the untranspiled code, so this bug shows only in the browser: the page
+  crashes on the client and the build still passes.
+- A component that `src/theme/MDXComponents.tsx` loads with `lazy` must be loaded before the page
+  hydrates. Docusaurus re-renders after mount and a context change reaches every Suspense boundary
+  that is still waiting. React then silently drops the server HTML and renders the boundary again,
+  and `memo` does not stop it. The reference renderers ride in the route chunks of the page that
+  imports `@b10x-reference/<id>.json`, through `src/reference-preload.ts`. The `api-reference`
+  browser check catches a regression. One known exception: a reference component given its
+  document in another way than that import loads its chunk after the page and renders a second
+  time (README, "Reference pages"). Do not add a second exception.
 
 ## Gate
 
@@ -29,7 +41,8 @@ npm ci --ignore-scripts
 npm run gate
 ```
 
-The gate builds committed distribution files, checks they are current, runs tests, validates the
+The gate builds committed distribution files, checks they are current, checks the declared
+documentation sources (`npm run check:source`, the forge job `b10x-docs-check`), runs tests, validates the
 fixture manifests, and exercises package exports.
 
 ## UX loop

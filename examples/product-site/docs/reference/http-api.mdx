@@ -1,0 +1,11 @@
+---
+title: HTTP API
+description: The inbox service's HTTP API, rendered from its OpenAPI 3.1 document inside the docs layout.
+---
+
+import reference from '@b10x-reference/http-api.json';
+
+The HTTP surface of `inbox serve`, from the OpenAPI 3.1 document the inbox repository generates. The
+page only reads the document: it sends no request and takes no credential.
+
+<ApiReference reference={reference} />

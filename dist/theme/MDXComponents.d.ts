@@ -1,9 +1,14 @@
 import { DomainGraph, ProtocolGraph } from '../charts.js';
 import { EmptyState, Kind, ScrollableTable, Truth } from '../components.js';
 import { CompositionGraph, SessionKpis, SessionTimeline, StatTiles, StepBars } from '../session-charts.js';
+import type { ReactNode } from 'react';
+import type { ApiReferenceProps, AsyncApiReferenceProps, CliReferenceProps, OpenApiReferenceProps } from '../renderers.js';
 import { CaseCard, CodePair, FamilyStrip, Feature, FeatureGrid, Flow, FlowStep, HeroArt, KindIcon, RelatedTools, StatusBadge, StatusStrip, StatusTable, Terminal } from '../product.js';
 declare const _default: {
+    ApiReference: (props: ApiReferenceProps) => ReactNode;
+    AsyncApiReference: (props: AsyncApiReferenceProps) => ReactNode;
     CaseCard: typeof CaseCard;
+    CliReference: (props: CliReferenceProps) => ReactNode;
     CodePair: typeof CodePair;
     CompositionGraph: typeof CompositionGraph;
     DomainGraph: typeof DomainGraph;
@@ -16,6 +21,7 @@ declare const _default: {
     HeroArt: typeof HeroArt;
     Kind: typeof Kind;
     KindIcon: typeof KindIcon;
+    OpenApiReference: (props: OpenApiReferenceProps) => ReactNode;
     ProtocolGraph: typeof ProtocolGraph;
     RelatedTools: typeof RelatedTools;
     SessionKpis: typeof SessionKpis;

@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-22T10:05:00Z",
+  "actor": "agent:inbox",
+  "artifact": "story:reference-pages-for-openapi-asyncapi-and-cli",
+  "kind": "story",
+  "revision": 4,
+  "change": {
+    "change": "evidence",
+    "kind": "test_result",
+    "source": "npm test: 228 of 228; node tests/product-site.browser.mjs: 25 checks, exit 0; node tests/ess-viewer.browser.mjs exit 0; cargo test --locked: 8 of 8; npm run build:check exit 0"
+  }
+}

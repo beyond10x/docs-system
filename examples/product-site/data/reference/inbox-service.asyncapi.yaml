@@ -1,0 +1,465 @@
+# generated from inbox v1
+# contract digest slice-sha256/2:43e481f9e63227e5548459a03d98af38ea413fd4d467b90bad25e4c8b1b8b178
+# do not edit: regenerate with `ess generate`
+asyncapi: 3.0.0
+info:
+  title: inbox-service
+  version: v1
+  description: |-
+    `inbox-service` in the `inbox` specification.
+
+    The one service every client talks to (`inbox serve`). It holds the inboxes and their messages in the backend it was started with, checks every post and every answer through the SignatureVerifier port, and removes a message when it is handled or its `expires` passes.
+
+    The specification declares no transport, so each address below is a name and not a topic on a named broker. Servers, protocol bindings, security schemes, message keys, partitioning, retention and ordering are absent because the model does not state them.
+  x-ess-component: inbox-service
+  x-ess-provenance:
+    system: inbox
+    specification_version: v1
+    contract_digest: slice-sha256/2:43e481f9e63227e5548459a03d98af38ea413fd4d467b90bad25e4c8b1b8b178
+defaultContentType: application/json
+channels:
+  inbox.messaging.DecisionTakenOnSilence:
+    address: inbox.messaging.DecisionTakenOnSilence
+    title: DecisionTakenOnSilence
+    messages:
+      inbox.messaging.DecisionTakenOnSilence:
+        $ref: '#/components/messages/inbox.messaging.DecisionTakenOnSilence'
+    x-ess-event: inbox.messaging.DecisionTakenOnSilence
+    x-ess-address-source: qualified-name
+  inbox.messaging.InboxClosed:
+    address: inbox.messaging.InboxClosed
+    title: InboxClosed
+    messages:
+      inbox.messaging.InboxClosed:
+        $ref: '#/components/messages/inbox.messaging.InboxClosed'
+    x-ess-event: inbox.messaging.InboxClosed
+    x-ess-address-source: qualified-name
+  inbox.messaging.InboxOpened:
+    address: inbox.messaging.InboxOpened
+    title: InboxOpened
+    messages:
+      inbox.messaging.InboxOpened:
+        $ref: '#/components/messages/inbox.messaging.InboxOpened'
+    x-ess-event: inbox.messaging.InboxOpened
+    x-ess-address-source: qualified-name
+  inbox.messaging.MessageAnswered:
+    address: inbox.messaging.MessageAnswered
+    title: MessageAnswered
+    messages:
+      inbox.messaging.MessageAnswered:
+        $ref: '#/components/messages/inbox.messaging.MessageAnswered'
+    x-ess-event: inbox.messaging.MessageAnswered
+    x-ess-address-source: qualified-name
+  inbox.messaging.MessageDelivered:
+    address: inbox.messaging.MessageDelivered
+    title: MessageDelivered
+    messages:
+      inbox.messaging.MessageDelivered:
+        $ref: '#/components/messages/inbox.messaging.MessageDelivered'
+    x-ess-event: inbox.messaging.MessageDelivered
+    x-ess-address-source: qualified-name
+  inbox.messaging.MessageExpired:
+    address: inbox.messaging.MessageExpired
+    title: MessageExpired
+    messages:
+      inbox.messaging.MessageExpired:
+        $ref: '#/components/messages/inbox.messaging.MessageExpired'
+    x-ess-event: inbox.messaging.MessageExpired
+    x-ess-address-source: qualified-name
+  inbox.messaging.MessageHandled:
+    address: inbox.messaging.MessageHandled
+    title: MessageHandled
+    messages:
+      inbox.messaging.MessageHandled:
+        $ref: '#/components/messages/inbox.messaging.MessageHandled'
+    x-ess-event: inbox.messaging.MessageHandled
+    x-ess-address-source: qualified-name
+  inbox.messaging.MessagePosted:
+    address: inbox.messaging.MessagePosted
+    title: MessagePosted
+    messages:
+      inbox.messaging.MessagePosted:
+        $ref: '#/components/messages/inbox.messaging.MessagePosted'
+    x-ess-event: inbox.messaging.MessagePosted
+    x-ess-address-source: qualified-name
+  inbox.messaging.MessageRead:
+    address: inbox.messaging.MessageRead
+    title: MessageRead
+    messages:
+      inbox.messaging.MessageRead:
+        $ref: '#/components/messages/inbox.messaging.MessageRead'
+    x-ess-event: inbox.messaging.MessageRead
+    x-ess-address-source: qualified-name
+  inbox.messaging.MessageRefused:
+    address: inbox.messaging.MessageRefused
+    title: MessageRefused
+    messages:
+      inbox.messaging.MessageRefused:
+        $ref: '#/components/messages/inbox.messaging.MessageRefused'
+    x-ess-event: inbox.messaging.MessageRefused
+    x-ess-address-source: qualified-name
+operations:
+  send.inbox.messaging.DecisionTakenOnSilence:
+    action: send
+    channel:
+      $ref: '#/channels/inbox.messaging.DecisionTakenOnSilence'
+    title: Publish DecisionTakenOnSilence
+    summary: Publishes `inbox.messaging.DecisionTakenOnSilence`.
+    description: |-
+      Nothing in this specification reacts to `inbox.messaging.DecisionTakenOnSilence`.
+      `inbox.messaging.Expire` emits it on `decided-on-silence`, which moves a `inbox.messaging.Message` to `Answered` along `decide_on_silence`.
+    messages:
+    - $ref: '#/channels/inbox.messaging.DecisionTakenOnSilence/messages/inbox.messaging.DecisionTakenOnSilence'
+  send.inbox.messaging.InboxClosed:
+    action: send
+    channel:
+      $ref: '#/channels/inbox.messaging.InboxClosed'
+    title: Publish InboxClosed
+    summary: Publishes `inbox.messaging.InboxClosed`.
+    description: |-
+      Nothing in this specification reacts to `inbox.messaging.InboxClosed`.
+      `inbox.messaging.CloseInbox` emits it on `closed`, which moves a `inbox.messaging.Inbox` to `Closed` along `close`.
+    messages:
+    - $ref: '#/channels/inbox.messaging.InboxClosed/messages/inbox.messaging.InboxClosed'
+  send.inbox.messaging.InboxOpened:
+    action: send
+    channel:
+      $ref: '#/channels/inbox.messaging.InboxOpened'
+    title: Publish InboxOpened
+    summary: Publishes `inbox.messaging.InboxOpened`.
+    description: |-
+      Nothing in this specification reacts to `inbox.messaging.InboxOpened`.
+      `inbox.messaging.OpenInbox` emits it on `opened`, which creates a `inbox.messaging.Inbox` in `Open`. It carries the new instance's identity in `address`.
+      `inbox.messaging.OpenInbox` emits it on `reopened`, which moves a `inbox.messaging.Inbox` to `Open` along `reopen`.
+    messages:
+    - $ref: '#/channels/inbox.messaging.InboxOpened/messages/inbox.messaging.InboxOpened'
+  send.inbox.messaging.MessageAnswered:
+    action: send
+    channel:
+      $ref: '#/channels/inbox.messaging.MessageAnswered'
+    title: Publish MessageAnswered
+    summary: Publishes `inbox.messaging.MessageAnswered`.
+    description: |-
+      Nothing in this specification reacts to `inbox.messaging.MessageAnswered`.
+      `inbox.messaging.Answer` emits it on `answered`, which moves a `inbox.messaging.Message` to `Answered` along `answer`.
+    messages:
+    - $ref: '#/channels/inbox.messaging.MessageAnswered/messages/inbox.messaging.MessageAnswered'
+  send.inbox.messaging.MessageDelivered:
+    action: send
+    channel:
+      $ref: '#/channels/inbox.messaging.MessageDelivered'
+    title: Publish MessageDelivered
+    summary: Publishes `inbox.messaging.MessageDelivered`.
+    description: |-
+      Nothing in this specification reacts to `inbox.messaging.MessageDelivered`.
+      `inbox.messaging.MarkDelivered` emits it on `delivered`, which moves a `inbox.messaging.Message` to `Delivered` along `deliver`.
+    messages:
+    - $ref: '#/channels/inbox.messaging.MessageDelivered/messages/inbox.messaging.MessageDelivered'
+  send.inbox.messaging.MessageExpired:
+    action: send
+    channel:
+      $ref: '#/channels/inbox.messaging.MessageExpired'
+    title: Publish MessageExpired
+    summary: Publishes `inbox.messaging.MessageExpired`.
+    description: |-
+      Nothing in this specification reacts to `inbox.messaging.MessageExpired`.
+      `inbox.messaging.Expire` emits it on `expired`, which removes a `inbox.messaging.Message`.
+    messages:
+    - $ref: '#/channels/inbox.messaging.MessageExpired/messages/inbox.messaging.MessageExpired'
+  send.inbox.messaging.MessageHandled:
+    action: send
+    channel:
+      $ref: '#/channels/inbox.messaging.MessageHandled'
+    title: Publish MessageHandled
+    summary: Publishes `inbox.messaging.MessageHandled`.
+    description: |-
+      Nothing in this specification reacts to `inbox.messaging.MessageHandled`.
+      `inbox.messaging.Collect` emits it on `collected`, which removes a `inbox.messaging.Message`.
+      `inbox.messaging.MarkRead` emits it on `handled`, which removes a `inbox.messaging.Message`.
+    messages:
+    - $ref: '#/channels/inbox.messaging.MessageHandled/messages/inbox.messaging.MessageHandled'
+  send.inbox.messaging.MessagePosted:
+    action: send
+    channel:
+      $ref: '#/channels/inbox.messaging.MessagePosted'
+    title: Publish MessagePosted
+    summary: Publishes `inbox.messaging.MessagePosted`.
+    description: |-
+      Nothing in this specification reacts to `inbox.messaging.MessagePosted`.
+      `inbox.messaging.PostMessage` emits it on `posted`, which creates a `inbox.messaging.Message` in `Sent`. It carries the new instance's identity in `message_id`.
+    messages:
+    - $ref: '#/channels/inbox.messaging.MessagePosted/messages/inbox.messaging.MessagePosted'
+  send.inbox.messaging.MessageRead:
+    action: send
+    channel:
+      $ref: '#/channels/inbox.messaging.MessageRead'
+    title: Publish MessageRead
+    summary: Publishes `inbox.messaging.MessageRead`.
+    description: |-
+      Nothing in this specification reacts to `inbox.messaging.MessageRead`.
+      `inbox.messaging.MarkRead` emits it on `read`, which moves a `inbox.messaging.Message` to `Read` along `read`.
+    messages:
+    - $ref: '#/channels/inbox.messaging.MessageRead/messages/inbox.messaging.MessageRead'
+  send.inbox.messaging.MessageRefused:
+    action: send
+    channel:
+      $ref: '#/channels/inbox.messaging.MessageRefused'
+    title: Publish MessageRefused
+    summary: Publishes `inbox.messaging.MessageRefused`.
+    description: |-
+      Nothing in this specification reacts to `inbox.messaging.MessageRefused`.
+      `inbox.messaging.Refuse` emits it on `refused`, which moves a `inbox.messaging.Message` to `Refused` along `refuse`.
+    messages:
+    - $ref: '#/channels/inbox.messaging.MessageRefused/messages/inbox.messaging.MessageRefused'
+components:
+  messages:
+    inbox.messaging.DecisionTakenOnSilence:
+      name: inbox.messaging.DecisionTakenOnSilence
+      title: DecisionTakenOnSilence
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/event.inbox.messaging.DecisionTakenOnSilence'
+    inbox.messaging.InboxClosed:
+      name: inbox.messaging.InboxClosed
+      title: InboxClosed
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/event.inbox.messaging.InboxClosed'
+    inbox.messaging.InboxOpened:
+      name: inbox.messaging.InboxOpened
+      title: InboxOpened
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/event.inbox.messaging.InboxOpened'
+    inbox.messaging.MessageAnswered:
+      name: inbox.messaging.MessageAnswered
+      title: MessageAnswered
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/event.inbox.messaging.MessageAnswered'
+    inbox.messaging.MessageDelivered:
+      name: inbox.messaging.MessageDelivered
+      title: MessageDelivered
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/event.inbox.messaging.MessageDelivered'
+    inbox.messaging.MessageExpired:
+      name: inbox.messaging.MessageExpired
+      title: MessageExpired
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/event.inbox.messaging.MessageExpired'
+    inbox.messaging.MessageHandled:
+      name: inbox.messaging.MessageHandled
+      title: MessageHandled
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/event.inbox.messaging.MessageHandled'
+    inbox.messaging.MessagePosted:
+      name: inbox.messaging.MessagePosted
+      title: MessagePosted
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/event.inbox.messaging.MessagePosted'
+    inbox.messaging.MessageRead:
+      name: inbox.messaging.MessageRead
+      title: MessageRead
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/event.inbox.messaging.MessageRead'
+    inbox.messaging.MessageRefused:
+      name: inbox.messaging.MessageRefused
+      title: MessageRefused
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/event.inbox.messaging.MessageRefused'
+  schemas:
+    event.inbox.messaging.DecisionTakenOnSilence:
+      title: DecisionTakenOnSilence payload
+      x-ess-name: inbox.messaging.DecisionTakenOnSilence
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/type.inbox.messaging.MessageId'
+        to:
+          $ref: '#/components/schemas/type.inbox.messaging.Principal'
+        thread:
+          $ref: '#/components/schemas/type.inbox.messaging.ThreadId'
+      required:
+      - message_id
+      - to
+      - thread
+      additionalProperties: false
+    event.inbox.messaging.InboxClosed:
+      title: InboxClosed payload
+      x-ess-name: inbox.messaging.InboxClosed
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/type.inbox.messaging.Address'
+      required:
+      - address
+      additionalProperties: false
+    event.inbox.messaging.InboxOpened:
+      title: InboxOpened payload
+      x-ess-name: inbox.messaging.InboxOpened
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/type.inbox.messaging.Address'
+      required:
+      - address
+      additionalProperties: false
+    event.inbox.messaging.MessageAnswered:
+      title: MessageAnswered payload
+      x-ess-name: inbox.messaging.MessageAnswered
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/type.inbox.messaging.MessageId'
+        reply_id:
+          $ref: '#/components/schemas/type.inbox.messaging.MessageId'
+        to:
+          $ref: '#/components/schemas/type.inbox.messaging.Principal'
+        thread:
+          $ref: '#/components/schemas/type.inbox.messaging.ThreadId'
+      required:
+      - message_id
+      - reply_id
+      - to
+      - thread
+      additionalProperties: false
+    event.inbox.messaging.MessageDelivered:
+      title: MessageDelivered payload
+      x-ess-name: inbox.messaging.MessageDelivered
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/type.inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    event.inbox.messaging.MessageExpired:
+      title: MessageExpired payload
+      x-ess-name: inbox.messaging.MessageExpired
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/type.inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    event.inbox.messaging.MessageHandled:
+      title: MessageHandled payload
+      x-ess-name: inbox.messaging.MessageHandled
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/type.inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    event.inbox.messaging.MessagePosted:
+      title: MessagePosted payload
+      x-ess-name: inbox.messaging.MessagePosted
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/type.inbox.messaging.MessageId'
+        to:
+          $ref: '#/components/schemas/type.inbox.messaging.Address'
+        from:
+          $ref: '#/components/schemas/type.inbox.messaging.Principal'
+        thread:
+          $ref: '#/components/schemas/type.inbox.messaging.ThreadId'
+        kind:
+          $ref: '#/components/schemas/type.inbox.messaging.Kind'
+      required:
+      - message_id
+      - to
+      - from
+      - thread
+      - kind
+      additionalProperties: false
+    event.inbox.messaging.MessageRead:
+      title: MessageRead payload
+      x-ess-name: inbox.messaging.MessageRead
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/type.inbox.messaging.MessageId'
+      required:
+      - message_id
+      additionalProperties: false
+    event.inbox.messaging.MessageRefused:
+      title: MessageRefused payload
+      x-ess-name: inbox.messaging.MessageRefused
+      x-ess-kind: event-payload
+      type: object
+      properties:
+        message_id:
+          $ref: '#/components/schemas/type.inbox.messaging.MessageId'
+        to:
+          $ref: '#/components/schemas/type.inbox.messaging.Principal'
+        thread:
+          $ref: '#/components/schemas/type.inbox.messaging.ThreadId'
+      required:
+      - message_id
+      - to
+      - thread
+      additionalProperties: false
+    type.inbox.messaging.Address:
+      title: Address
+      description: 'The address of an inbox: `agent:<host>/<session-name>` or `human:<name>`. `group:<name>` is reserved; version 1 opens no group inbox, and a sender that addresses several inboxes posts one envelope to each under one `thread`.'
+      x-ess-name: inbox.messaging.Address
+      x-ess-kind: newtype
+      type: string
+    type.inbox.messaging.Kind:
+      title: Kind
+      description: 'note: handled when read. request: handled when answered or refused. decision: a request with lettered options, which silence may answer.'
+      x-ess-name: inbox.messaging.Kind
+      x-ess-kind: enum
+      type: string
+      enum:
+      - note
+      - request
+      - decision
+    type.inbox.messaging.MessageId:
+      title: MessageId
+      description: A ULID the sender sets. A sender that posts a message again sends the same id.
+      x-ess-name: inbox.messaging.MessageId
+      x-ess-kind: newtype
+      type: string
+      pattern: ^[0-9A-HJKMNP-TV-Z]*$
+      minLength: 26
+      maxLength: 26
+      x-ess-invariants:
+      - value.count == 26
+      x-ess-alphabet: 0123456789ABCDEFGHJKMNPQRSTVWXYZ
+    type.inbox.messaging.Principal:
+      title: Principal
+      description: 'Who sends, or whose word a message is: `agent:<host>/<session-name>` or `human:<name>`. The SignatureVerifier port decides which key speaks for which principal.'
+      x-ess-name: inbox.messaging.Principal
+      x-ess-kind: newtype
+      type: string
+    type.inbox.messaging.ThreadId:
+      title: ThreadId
+      description: 'The ULID that ties the envelopes of one fan-out together: a request sent to 11 inboxes is 11 messages with one thread. A message sent to one inbox carries its own id.'
+      x-ess-name: inbox.messaging.ThreadId
+      x-ess-kind: newtype
+      type: string
+      pattern: ^[0-9A-HJKMNP-TV-Z]*$
+      minLength: 26
+      maxLength: 26
+      x-ess-invariants:
+      - value.count == 26
+      x-ess-alphabet: 0123456789ABCDEFGHJKMNPQRSTVWXYZ
