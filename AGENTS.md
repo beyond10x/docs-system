@@ -41,7 +41,8 @@ npm ci --ignore-scripts
 npm run gate
 ```
 
-The gate builds committed distribution files, checks they are current, runs tests, validates the
+The gate builds committed distribution files, checks they are current, checks the declared
+documentation sources (`npm run check:source`, the forge job `b10x-docs-check`), runs tests, validates the
 fixture manifests, and exercises package exports.
 
 ## UX loop

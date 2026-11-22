@@ -511,7 +511,7 @@ export default withProductSite(config, {
 
 and write one MDX page per reference in the docs folder:
 
-```mdx
+```tsx
 import reference from '@b10x-reference/http-api.json';
 
 <ApiReference reference={reference} />
