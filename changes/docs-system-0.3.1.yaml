@@ -11,8 +11,8 @@ source:
   version: 0.3.1
 journeys: [understand, specify, build-agents, operate-services]
 affected:
-  repositories: [agentic-principles, docs-system, ess, website]
-  surfaces: [agentic-principles/docs, docs-system/docs, ess/docs, website/docs]
+  repositories: [agentic-principles, docs-system, website]
+  surfaces: [agentic-principles/docs, docs-system/docs, website/docs]
   components: [docs-system/collector, docs-system/data-catalog, docs-system/dependency-graph]
   apis: [docs-system/manifest-v3]
 relations:
